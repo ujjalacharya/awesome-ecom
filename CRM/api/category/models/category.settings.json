@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "categories",
+  "info": {
+    "name": "category"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "systemName": {
+      "type": "string"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "sub_category": {
+      "via": "category",
+      "model": "category"
+    },
+    "category": {
+      "via": "sub_category",
+      "model": "category"
+    }
+  }
+}
