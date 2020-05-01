@@ -30,11 +30,6 @@
       "model": "product-description",
       "via": "product"
     },
-    "sold_by": {
-      "plugin": "users-permissions",
-      "model": "user",
-      "via": "user"
-    },
     "category": {
       "model": "category"
     },
@@ -57,6 +52,11 @@
     },
     "Slug": {
       "type": "uid"
+    },
+    "user": {
+      "via": "products",
+      "plugin": "users-permissions",
+      "model": "user"
     }
   }
 }

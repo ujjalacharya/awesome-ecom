@@ -65,9 +65,9 @@
       "type": "biginteger",
       "max": "9999999999"
     },
-    "user": {
-      "via": "sold_by",
-      "model": "product"
+    "products": {
+      "collection": "product",
+      "via": "user"
     }
   }
 }
