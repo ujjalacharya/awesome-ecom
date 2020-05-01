@@ -52,7 +52,11 @@ const userSchema = new mongoose.Schema({
         type:String
     },
     resetPasswordLink: {
-        data: String,
+        type: String,
+        default: ""
+    },
+    emailVerifyLink: {
+        type: String,
         default: ""
     },
     salt: String,

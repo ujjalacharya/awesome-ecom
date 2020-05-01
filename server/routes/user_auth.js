@@ -7,9 +7,9 @@ const {
     socialLogin,
     resetPassword,
     forgotPassword,
-} = require("../controllers/admin_auth");
+} = require("../controllers/user_auth");
 
-const { validateSignUp, passwordResetValidator } = require("..//middleware/validator");
+const { validateSignUp, passwordResetValidator } = require("../middleware/validator");
 
 const router = express.Router();
 

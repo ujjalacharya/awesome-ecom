@@ -16,18 +16,15 @@ const adminSchema = new mongoose.Schema({
     address: {
         type: String,
         trim: true,
-        required: true,
         maxlength: 32
     },
     documents: {
         type: Schema.Types.ObjectId,
-        ref: "admin",
-        required: true
+        ref: "admin"
     },
     phone: {
         type: Number,
         max: 9999999999,
-        required: true,
         unique: true
     },
     isVerified: {
@@ -50,6 +47,14 @@ const adminSchema = new mongoose.Schema({
         type: String,
         enum: ["admin", "superadmin"],
         default: "admin"
+    },
+    resetPasswordLink: {
+        type: String,
+        default: ""
+    },
+    emailVerifyLink: {
+        type: String,
+        default: ""
     },
     isDeleted: {
         type: Date,
