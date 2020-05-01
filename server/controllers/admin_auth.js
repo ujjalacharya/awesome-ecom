@@ -3,6 +3,24 @@ const { sendEmail } = require("../middleware/helpers");
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
 
+/**
+ * @swagger
+ *
+ * /admin-signup:
+ *   post:
+ *     description: Admin Signup
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: admin
+ *         description: User object
+ *         in:  body
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: users
+ */
 exports.signup = async (req, res) => {
     try {
         let adminExists = await Admin.findOne({ email: req.body.email });

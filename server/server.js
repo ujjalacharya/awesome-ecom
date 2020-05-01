@@ -4,7 +4,8 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 // Import methods
 const { dbConnection} = require('./middleware/helpers');
 
@@ -18,6 +19,23 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(expressValidator());
 
+// Extended: https://swagger.io/specification/#infoObject
+const swaggerOptions = {
+    swaggerDefinition: {
+        info: {
+            title: "Ecom API",
+            description: "ecommerce API information",
+            contact: {
+                name: "Amazing Developer"
+            },
+            servers: ["http://localhost:3001/api"]
+        }
+    },
+    apis: ['./controllers/*.js']
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes
 app.use("/api/admin-auth", require("./routes/admin_auth"));
 
