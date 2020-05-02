@@ -4,58 +4,46 @@ const jwt = require("jsonwebtoken");
 const _ = require('lodash')
 
 exports.signup = async (req, res) => {
-    try {
-        let userExists = await User.findOne({ email: req.body.email });
-        if (userExists)
-            return res.status(403).json({
-                error: "Email is taken!"
-            });
-        const token = jwt.sign(
-            {email: req.body.email },
-            process.env.JWT_EMAIL_VERIFICATION_KEY,
-            { expiresIn: '1h' }
-            );
-        req.body.emailVerifyLink=token
-        console.log(req.body);
-        let user = new User(req.body);
-        await user.save();
-        const mailingData = {
-            from: "Ecom",
-            to: user.email,
-            subject: "email verification",
-            html: `<p>Hi, ${user.name} . </p></br>
+    let userExists = await User.findOne({ email: req.body.email });
+    if (userExists)
+        return res.status(403).json({
+            error: "Email is taken!"
+        });
+    const token = jwt.sign(
+        { email: req.body.email },
+        process.env.JWT_EMAIL_VERIFICATION_KEY,
+        { expiresIn: '1h' }
+    );
+    req.body.emailVerifyLink = token
+    console.log(req.body);
+    let user = new User(req.body);
+    await user.save();
+    const mailingData = {
+        from: "Ecom",
+        to: user.email,
+        subject: "email verification",
+        html: `<p>Hi, ${user.name} . </p></br>
                     <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`
-        };
-        await sendEmail(mailingData)
-        res
-            .status(200)
-            .json({
-                msg: `Email has been sent to ${req.body.email} to verify your email address.`
-            });
-    } catch (error) {
-        console.log('USER_SIGNUP_ERROR==>', error);
-        res
-            .status(500)
-            .json({ error: error.message });
-    }
+    };
+    await sendEmail(mailingData)
+    res
+        .status(200)
+        .json({
+            msg: `Email has been sent to ${req.body.email} to verify your email address.`
+        });
 };
 // verify email link
 exports.emailverify = async (req, res) => {
-    try {
-        const { token } = req.query;
-        let user = await User.findOne({ emailVerifyLink: token })
-        if (!user)
-            return res.status(401).json({
-                error: "Token is invalid!"
-            });
-        user.emailVerifyLink = ''
-        user.updated = Date.now()
-        await user.save()
-        res.status(200).json({ msg: "Successfully signup!" });
-    } catch (error) {
-        console.log('USER_EMAIL_VERIFY_ERROR==>', error);
-        res.status(500).json({ error: error.message });
-    }
+    const { token } = req.query;
+    let user = await User.findOne({ emailVerifyLink: token })
+    if (!user || (user && user.emailVerifyLink === ''))
+        return res.status(401).json({
+            error: "Token is invalid!"
+        });
+    user.emailVerifyLink = ''
+    user.updated = Date.now()
+    await user.save()
+    res.status(200).json({ msg: "Successfully signup!" });
 };
 
 exports.signin = async (req, res) => {
@@ -87,45 +75,40 @@ exports.signin = async (req, res) => {
 };
 
 exports.socialLogin = async (req, res) => {
-    try {
-        let user = await User.findOne({ email: req.body.email });
-        if (!user) {
-            // create a new user and login
-            user = new User(req.body);
-            user = await user.save();
-            req.user = user;
-            const payload = {
-                _id: user.id,
-                name: user.name,
-                email: user.email
-            };
-            const token = jwt.sign(
-                payload,
-                process.env.JWT_SIGNIN_KEY,
-                { expiresIn: "10h" }
-            );
-            return res.json({ token });
-        } else {
-            // update existing user with new social info and login
+    let user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        // create a new user and login
+        user = new User(req.body);
+        user = await user.save();
+        req.user = user;
+        const payload = {
+            _id: user.id,
+            name: user.name,
+            email: user.email
+        };
+        const token = jwt.sign(
+            payload,
+            process.env.JWT_SIGNIN_KEY,
+            { expiresIn: "10h" }
+        );
+        return res.json({ token });
+    } else {
+        // update existing user with new social info and login
 
-            user = _.extend(user, req.body);
-            user = await user.save();
-            req.user = user;
-            const payload = {
-                _id: user.id,
-                name: user.name,
-                email: user.email
-            };
-            const token = jwt.sign(
-                payload,
-                process.env.JWT_SIGNIN_KEY,
-                { expiresIn: "10h" }
-            );
-            return res.json({ token });
-        }
-    } catch (error) {
-        console.log('SOCIAL_LOGIN_ERROR==>', error);
-        res.status(500).json({ error: error.message });
+        user = _.extend(user, req.body);
+        user = await user.save();
+        req.user = user;
+        const payload = {
+            _id: user.id,
+            name: user.name,
+            email: user.email
+        };
+        const token = jwt.sign(
+            payload,
+            process.env.JWT_SIGNIN_KEY,
+            { expiresIn: "10h" }
+        );
+        return res.json({ token });
     }
 
 };
@@ -154,15 +137,11 @@ exports.forgotPassword = async (req, res) => {
                     <a href="${process.env.CLIENT_URL}/reset-password?token=${token}">Click me to reset your password</a>`
     };
 
-    return user.updateOne({ resetPasswordLink: token }, (err, success) => {
-        if (err) {
-            return res.status(400).json({ error: err });
-        } else {
-            return sendEmail(mailingData).then(() => res.status(200).json({
-                msg: `Email has been sent to ${email}. Follow the instructions to reset your password.`
-            })).catch(error => res.status(500).json({ error: error.message }));
-        }
-    });
+    await user.updateOne({ resetPasswordLink: token })
+    await sendEmail(mailingData)
+    res.status(200).json({
+        msg: `Email has been sent to ${email}. Follow the instructions to reset your password.`
+    })
 };
 
 exports.resetPassword = async (req, res) => {
@@ -170,7 +149,7 @@ exports.resetPassword = async (req, res) => {
 
     let user = await User.findOne({ resetPasswordLink });
     // if err or no user
-    if (!user)
+    if (!user || (user && user.resetPasswordLink === ''))
         return res.status(401).json({
             error: "Invalid Link!"
         });
@@ -183,15 +162,9 @@ exports.resetPassword = async (req, res) => {
     user = _.extend(user, updatedFields);
     user.updated = Date.now();
 
-    user.save((err, result) => {
-        if (err) {
-            return res.status(400).json({
-                error: err
-            });
-        }
-        res.json({
-            msg: `Great! Now you can login with your new password.`
-        });
+    await user.save()
+    res.json({
+        msg: `Great! Now you can login with your new password.`
     });
 };
 
