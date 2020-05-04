@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const RefreshToken = require("../models/RefereshToken")
 const { sendEmail } = require("../middleware/helpers");
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
@@ -12,10 +13,9 @@ exports.signup = async (req, res) => {
     const token = jwt.sign(
         { email: req.body.email },
         process.env.JWT_EMAIL_VERIFICATION_KEY,
-        { expiresIn: '1h' }
+        { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
     );
-    req.body.emailVerifyLink = token
-    console.log(req.body);
+    // req.body.emailVerifyLink = token
     let user = new User(req.body);
     await user.save();
     const mailingData = {
@@ -51,7 +51,7 @@ exports.signin = async (req, res) => {
     let user = await User.findByCredentials(email, password)
     if (!user) {
         return res.status(400).json({
-            error: "User with that email does not exist."
+            error: "Email or password is invaild."
         });
     }
     if (user.emailVerifyLink !== '') {
@@ -61,17 +61,20 @@ exports.signin = async (req, res) => {
     }
 
     const payload = {
-        _id: user.id,
+        _id: user._id,
         name: user.name,
         email: user.email
     };
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
         payload,
         process.env.JWT_SIGNIN_KEY,
-        { expiresIn: "10h" }
+        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
     );
-
-    return res.json({ token });
+    let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+    refreshToken = new RefreshToken(refreshToken)
+    await refreshToken.save()
+    res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+    return res.json({ accessToken});
 };
 
 exports.socialLogin = async (req, res) => {
@@ -82,16 +85,20 @@ exports.socialLogin = async (req, res) => {
         user = await user.save();
         req.user = user;
         const payload = {
-            _id: user.id,
+            _id: user._id,
             name: user.name,
             email: user.email
         };
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             payload,
             process.env.JWT_SIGNIN_KEY,
-            { expiresIn: "10h" }
+            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
         );
-        return res.json({ token });
+        let refreshToken = {refreshToken:jwt.sign(payload, process.env.REFRESH_TOKEN_KEY)}
+        refreshToken = new RefreshToken(refreshToken)
+        await refreshToken.save()
+        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+        return res.json({ accessToken });
     } else {
         // update existing user with new social info and login
 
@@ -99,19 +106,48 @@ exports.socialLogin = async (req, res) => {
         user = await user.save();
         req.user = user;
         const payload = {
-            _id: user.id,
+            _id: user._id,
             name: user.name,
             email: user.email
         };
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             payload,
             process.env.JWT_SIGNIN_KEY,
-            { expiresIn: "10h" }
+            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
         );
-        return res.json({ token });
+        let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+        refreshToken = new RefreshToken(refreshToken)
+        await refreshToken.save()
+        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+        return res.json({ accessToken });
     }
 
 };
+
+exports.refreshToken = async (req,res) => {
+    const {refreshToken} = req.body
+    if(refreshToken == null) return res.status(401).json({error:" Token is Null"})
+    let token = await RefreshToken.findOne({refreshToken})
+    if(!token) return res.status(403).json({error:"Invalid refresh token"})
+    const user = await jwt.verify(token.refreshToken,process.env.REFRESH_TOKEN_KEY)
+    const payload = {
+        _id: user._id,
+        name: user.name,
+        email: user.email
+    };
+    const accessToken = jwt.sign(
+        payload,
+        process.env.JWT_SIGNIN_KEY,
+        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+    );
+    return res.json({ accessToken });
+}
+
+exports.logout = async (req, res) => {
+    const { refreshToken } = req.body
+    await RefreshToken.deleteOne({ refreshToken })
+    res.status(204).json({ msg: "Logged Out" })
+}
 
 exports.forgotPassword = async (req, res) => {
     if (!req.body) return res.status(400).json({ error: "No request body" });
@@ -127,7 +163,7 @@ exports.forgotPassword = async (req, res) => {
     const token = jwt.sign(
         { _id: user._id },
         process.env.JWT_EMAIL_VERIFICATION_KEY,
-        { expiresIn: '1h' }
+        { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
     );
     const mailingData = {
         from: "Ecom",
@@ -174,9 +210,9 @@ exports.auth = async (req, res, next) => {
     try {
 
         if (token) {
-            const user = await parseToken(token)
-            if (user._id) {
-                const user = await User.findById(user._id).select('-password -salt')
+            const u = await parseToken(token)
+            if (u._id) {
+                const user = await User.findById(u._id).select('-password -salt')
                 if (user) {
                     req.user = user
                     return next();
@@ -187,6 +223,8 @@ exports.auth = async (req, res, next) => {
         }
         throw 'Token not found'
     } catch (error) {
+        console.log('******AUTH ERROR******');
+        console.log(error);
         res.status(401).json({ error: error })
     }
 }

@@ -43,10 +43,8 @@ exports.errorHandler = error => {
       }
     }
   }
-  console.log("Error--> ", error);
   if(message.includes('Path')){
     message = message.slice(6);
   }
-  console.log("Message--> ", message);
   return message;
 };

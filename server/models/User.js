@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema({
     address: {
         type: String,
         trim: true,
-        required: true,
         maxlength: 32
     },
     email: {
@@ -33,7 +32,6 @@ const userSchema = new mongoose.Schema({
     phone: {
         type: Number,
         max: 9999999999,
-        required: true
     },
     password: {
         type: String,
@@ -44,12 +42,6 @@ const userSchema = new mongoose.Schema({
     },
     photo: {
         type: String
-    },
-    googleID:{
-        type:String,
-    },
-    facebookID:{
-        type:String
     },
     resetPasswordLink: {
         type: String,

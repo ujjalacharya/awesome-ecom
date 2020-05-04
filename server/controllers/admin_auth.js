@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const { sendEmail } = require("../middleware/helpers");
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
+const RefreshToken = require("../models/RefereshToken")
 
 /**
  * @swagger
@@ -30,7 +31,7 @@ exports.signup = async (req, res) => {
     const token = jwt.sign(
         { email: req.body.email },
         process.env.JWT_EMAIL_VERIFICATION_KEY,
-        { expiresIn: '1h' }
+        { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
     );
     req.body.emailVerifyLink = token
     let admin = new Admin(req.body);
@@ -68,7 +69,7 @@ exports.signin = async (req, res) => {
     let admin = await Admin.findByCredentials(email, password)
     if (!admin) {
         return res.status(400).json({
-            error: "Admin with that email does not exist."
+            error: "Email or password is invalid."
         });
     }
     if (admin.emailVerifyLink !== '') {
@@ -78,17 +79,21 @@ exports.signin = async (req, res) => {
     }
 
     const payload = {
-        _id: admin.id,
+        _id: admin._id,
         name: admin.name,
         email: admin.email,
         role: admin.role
     };
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
         payload,
         process.env.JWT_SIGNIN_KEY,
-        { expiresIn: "10h" }
+        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
     );
-    return res.json({ token });
+    let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+    refreshToken = new RefreshToken(refreshToken)
+    await refreshToken.save()
+    res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+    return res.json({ accessToken });
 };
 
 exports.socialLogin = async (req, res) => {
@@ -99,17 +104,21 @@ exports.socialLogin = async (req, res) => {
         admin = await admin.save();
         req.admin = admin;
         const payload = {
-            _id: admin.id,
+            _id: admin._id,
             name: admin.name,
             email: admin.email,
             role: admin.role
         };
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             payload,
             process.env.JWT_SIGNIN_KEY,
-            { expiresIn: "10h" }
+            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
         );
-        return res.json({ token });
+        let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+        refreshToken = new RefreshToken(refreshToken)
+        await refreshToken.save()
+        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+        return res.json({ accessToken });
     } else {
         // update existing admin with new social info and login
 
@@ -117,20 +126,48 @@ exports.socialLogin = async (req, res) => {
         admin = await admin.save();
         req.admin = admin;
         const payload = {
-            _id: admin.id,
+            _id: admin._id,
             name: admin.name,
             email: admin.email,
             role: admin.role
         };
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             payload,
             process.env.JWT_SIGNIN_KEY,
-            { expiresIn: "10h" }
+            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
         );
-        return res.json({ token });
+        let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+        refreshToken = new RefreshToken(refreshToken)
+        await refreshToken.save()
+        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+        return res.json({ accessToken });
     }
 
 };
+exports.refreshToken = async (req, res) => {
+    const { refreshToken } = req.body
+    if (refreshToken == null) return res.status(401).json({ error: " Token is Null" })
+    let token = await RefreshToken.findOne({ refreshToken })
+    if (!token) return res.status(403).json({ error: "Invalid refresh token" })
+    const admin = await jwt.verify(token.refreshToken, process.env.REFRESH_TOKEN_KEY)
+    const payload = {
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role
+    };
+    const accessToken = jwt.sign(
+        payload,
+        process.env.JWT_SIGNIN_KEY,
+        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+    );
+    return res.json({ accessToken });
+}
+exports.logout = async (req,res) => {
+    const {refreshToken} = req.body
+    await RefreshToken.deleteOne({refreshToken})
+    res.status(204).json({msg:"Logged Out"})
+}
 
 exports.forgotPassword = async (req, res) => {
     if (!req.body) return res.status(400).json({ error: "No request body" });
@@ -146,7 +183,7 @@ exports.forgotPassword = async (req, res) => {
     const token = jwt.sign(
         { _id: admin._id },
         process.env.JWT_EMAIL_VERIFICATION_KEY,
-        { expiresIn: '1h' }
+        { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
     );
     const mailingData = {
         from: "Ecom",
@@ -193,9 +230,9 @@ exports.auth = async (req, res, next) => {
     try {
 
         if (token) {
-            const admin = await parseToken(token)
-            if (admin._id) {
-                const admin = await Admin.findById(admin._id).select('-password -salt')
+            const user = await parseToken(token)
+            if (user._id) {
+                const admin = await Admin.findById(user._id).select('-password -salt')
                 if (admin) {
                     req.admin = admin
                     return next();
@@ -206,6 +243,8 @@ exports.auth = async (req, res, next) => {
         }
         throw 'Token not found'
     } catch (error) {
+        console.log('******AUTH ERROR******');
+        console.log(error);
         res.status(401).json({ error: error })
     }
 }
@@ -222,10 +261,23 @@ function parseToken(token) {
 exports.hasAuthorization = async (req, res, next) => {
     try {
         const sameAdmin = req.profile && req.admin && req.profile._id.toString() === req.admin._id.toString()
-        if (sameAdmin) {
+        const superadmin = req.admin && req.admin.role === 'superadmin'
+        const canAccess = superadmin || sameAdmin
+        if (canAccess) {
             return next();
         }
         throw 'Admin is not authorized to perform this action'
+    } catch (error) {
+        res.status(403).json({ error: error })
+    }
+}
+exports.isSuperAdmin = async (req, res, next) => {
+    try {
+        const isSuperAdmin = req.admin && req.admin.role === 'superadmin'
+        if (isSuperAdmin) {
+            return next();
+        }
+        throw 'Unauthorized Admin'
     } catch (error) {
         res.status(403).json({ error: error })
     }

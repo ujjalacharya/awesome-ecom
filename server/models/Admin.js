@@ -18,6 +18,19 @@ const adminSchema = new mongoose.Schema({
         trim: true,
         maxlength: 32
     },
+    district: {
+        type: String,
+        trim: true,
+        maxlength: 32
+    },
+    muncipality:{
+        type: String,
+        trim: true,
+        maxlength: 32
+    },
+    wardno:{
+        type: Number
+    },
     documents: {
         type: Schema.Types.ObjectId,
         ref: "admin"

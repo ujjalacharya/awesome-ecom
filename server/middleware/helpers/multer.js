@@ -12,9 +12,9 @@ const busImage = multer.diskStorage({
     }
   })
 
-  const ownerAvatar = multer.diskStorage({
+  const profilePic = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './public/uploads/ownerAvatar')
+      cb(null, './public/uploads')
     },
     filename: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now()  + path.extname(file.originalname))
@@ -24,4 +24,5 @@ const busImage = multer.diskStorage({
  //management of the storage and the file that will be uploaded 
  //.single expects the name of the file input field
 exports.uploadBusImage= multer({storage: busImage}).single("image");
-exports.uploadOwnerAvatar= multer({storage: ownerAvatar}).single("photo");
+exports.uploadAdminPhoto= multer({storage: profilePic}).single("photo");
+exports.uploadUserPhoto = multer({ storage: profilePic }).single("photo");
