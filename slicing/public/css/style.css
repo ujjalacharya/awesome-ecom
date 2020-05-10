@@ -345,4 +345,59 @@ button.primary {
   margin-top: 25px;
 }
 
+.footer {
+  margin-top: 40px;
+  background: #222222;
+  color: #c5c5c5;
+  padding: 20px 30px;
+}
+.footer .company-info .logo {
+  margin-bottom: 15px;
+}
+.footer .company-info .logo img {
+  height: 60px;
+}
+.footer .company-info .company-details,
+.footer .company-info .comp-address,
+.footer .company-info .comp-phone,
+.footer .company-info .comp-email {
+  margin-bottom: 10px;
+}
+.footer .footer-ul-design h4 {
+  color: #fff;
+}
+.footer .footer-ul-design ul li {
+  display: block;
+  list-style: none;
+  line-height: 30px;
+}
+.footer .footer-newsletter h4 {
+  color: #fff;
+}
+.footer .footer-newsletter .news-details .let-det {
+  margin-bottom: 10px;
+}
+.footer .footer-newsletter .news-details input {
+  background: #2b2b2b;
+  border: #2b2b2b;
+  color: #6d6d6d;
+}
+.footer .footer-newsletter .news-details button {
+  border-radius: 0 !important;
+  background: #2b2b2b;
+  border-color: #2b2b2b;
+  color: #c2c2c2;
+}
+.footer .footer-newsletter ul.footer-social-media {
+  padding: 0px;
+  margin-top: 15px;
+}
+.footer .footer-newsletter ul.footer-social-media li {
+  display: inline-block;
+  padding-right: 15px;
+}
+.footer .footer-newsletter ul.footer-social-media li img {
+  height: 35px;
+}
+
 /*# sourceMappingURL=style.css.map */

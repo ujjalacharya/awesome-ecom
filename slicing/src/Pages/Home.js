@@ -6,6 +6,7 @@ import SliderHeader from "../Components/SliderHeader";
 import { Row, Col } from "antd";
 import Popular from "../Components/Popular";
 import LatestSLider from "../Components/LatestSlider";
+import Footer from "../Components/Footer";
 
 class Home extends Component {
   render() {
@@ -37,7 +38,7 @@ class Home extends Component {
           removePaddingTop="paddingTopZero"
         />
         <ProductSlider />
-        Body
+        <Footer />
       </div>
     );
   }
