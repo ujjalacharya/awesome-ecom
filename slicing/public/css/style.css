@@ -238,10 +238,35 @@ button.primary {
 .product-card {
   padding: 0 30px;
 }
-.product-card .image {
+.product-card .hover-items-image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.product-card .hover-items-image .card-hover-items {
+  position: absolute;
+  bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  padding: 5px;
+  box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
+}
+.product-card .hover-items-image .card-hover-items .card-items {
+  padding-left: 15px;
+  padding-right: 15px;
+  border-right: 1px solid #D1D1D1;
+}
+.product-card .hover-items-image .card-hover-items .card-items:last-child {
+  border-right: 0px;
+}
+.product-card .hover-items-image .card-hover-items .card-items img {
+  height: 18px;
+}
+.product-card .hover-items-image .image {
   width: 100%;
 }
-.product-card .image img {
+.product-card .hover-items-image .image img {
   width: 100%;
   object-fit: cover;
   object-position: center;
