@@ -1,5 +1,119 @@
+@font-face {
+  font-family: "Quicksand";
+  src: url("../fonts/Quicksand Regular 400.ttf");
+  /* IE9 Compat Modes */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Quicksand";
+  src: url("../fonts/Quicksand Light 300.ttf");
+  /* IE9 Compat Modes */
+  font-weight: lighter;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Quicksand";
+  src: url("../fonts/Quicksand Medium 500.ttf");
+  /* IE9 Compat Modes */
+  font-weight: medium;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Quicksand";
+  src: url("../fonts/Quicksand Bold 700.ttf");
+  /* IE9 Compat Modes */
+  font-weight: bold;
+  font-style: normal;
+}
+body {
+  font-family: "Quicksand" !important;
+  font-size: 14px !important;
+  color: #00263D !important;
+  margin: 0px;
+}
+body.overflow {
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 35px;
+}
+
+h2 {
+  font-size: 29px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
+h5, p {
+  font-size: 16px;
+}
+
+h6 {
+  font-size: 14px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  line-height: 40px;
+}
+
+.clear {
+  clear: both;
+}
+
+a {
+  text-decoration: none;
+  color: #00263D;
+}
+a:hover {
+  color: #00263D;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+button.btn {
+  height: 35px;
+  padding: 0 20px;
+  border-radius: 0px;
+}
+
+.noDisplay {
+  display: none !important;
+}
+
+.showDisplay {
+  display: block !important;
+}
+
 .abcd {
   color: red;
+}
+
+.main-header .menu-logo .logo {
+  width: 50px;
+  height: 50px;
+}
+.main-header .menu-logo .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.main-header .menu-logo .menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /*# sourceMappingURL=style.css.map */

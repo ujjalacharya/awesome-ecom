@@ -1,6 +1,9 @@
-// @import 'fontFaces';
+@import 'fonts';
 @import 'variables';
-// @import 'base';
+@import 'base';
 
 // Pages
 @import './Pages/home';
+
+//Components
+@import './Components/header'
