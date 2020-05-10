@@ -1,0 +1,16 @@
+font-size -14px
+menu-left-right - 30px
+box shadow: 0 4px 12px rgba(199,197,197,0.5)
+h6 - 7
+h5 - 14
+h4 - 21
+h3 - 28
+h2 - 35
+h1 - 42
+
+border-color - #D1D1D1
+background-color - #F1F1F1
+
+primary color - #48b5dc
+secondary color - #f2c900
+tertiary color - #61ce70

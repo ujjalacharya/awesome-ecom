@@ -1,0 +1,28 @@
+.popular-slider {
+  padding: 30px;
+  border: 1px solid $border-color;
+  min-height: 317px;
+  .popular-left-text{
+    display: flex;
+    align-items: center;
+      .popular-text {
+        text-align: left;
+        position: relative;
+        color: #707070;
+        h1{
+            color: #707070;
+        }
+        .title-bottom-hr{
+            width: 40px;
+            display: block;
+            position: absolute;
+            height: 4px;
+            background: #707070;
+            border: 0px;
+        }
+        button{
+            margin-top: 25px;
+        }
+      }
+  }
+}
