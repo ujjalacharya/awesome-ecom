@@ -78,3 +78,17 @@ exports.validateAdminBankInfo = (req, res, next) => {
     }
     next()
 }
+exports.validateWareHouse = (req,res, next) => {
+    req.check("name", "Warehouse name is required").notEmpty()
+    req.check("address", "Warehouse address is required").notEmpty()
+    req.check("phoneno", "Warehouse phone number is required").notEmpty()
+    req.check("city", "City of warehouse is required").notEmpty()
+    // check for errors
+    const errors = req.validationErrors();
+    // if error show the first one as they happen
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    next()
+}

@@ -1,6 +1,7 @@
 const Admin = require("../models/Admin");
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
+const AdminWarehouse = require("../models/AdminWarehouse")
 const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
@@ -140,4 +141,22 @@ exports.bankinfo = async (req, res) => {
         .update(req.profile, { adminBank: docs._id })//handle update issue todo..
         .run({ useMongoose: true })
     res.json(docs)
+}
+
+exports.warehouse = async(req,res) => {
+    let profile = req.profile
+    const { adminWareHouse} = profile
+    if (adminWareHouse) {
+        let warehouseInfo = await AdminWarehouse.findById(adminWareHouse)
+        warehouseInfo = _.extend(warehouseInfo,req.body)
+        await warehouseInfo.save()
+        return res.json(warehouseInfo)
+    }
+    let newWareHouse = new AdminWarehouse(req.body)
+    newWareHouse.admin = profile._id
+    await task
+        .save(newWareHouse)
+        .update(req.profile, { adminWareHouse: newWareHouse._id })//handle update issue todo..
+        .run({ useMongoose: true })
+    res.json(newWareHouse)
 }

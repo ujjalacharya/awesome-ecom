@@ -39,6 +39,10 @@ const adminSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "adminbank"
     },
+    adminWareHouse: {
+        type: Schema.Types.ObjectId,
+        ref: "adminwarehouse"
+    },
     phone: {
         type: Number,
         max: 9999999999,
