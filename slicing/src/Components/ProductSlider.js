@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Slider from "react-slick";
 
 // includes
-import ProductCard from ".Includes/ProductCard";
+import ProductCard from "./Includes/ProductCard";
 import PrevArrow from "./Includes/PrevArrow";
 import NextArrow from "./Includes/NextArrow";
 
