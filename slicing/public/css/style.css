@@ -250,6 +250,7 @@ button.primary {
 
 .product-card {
   padding: 0 30px;
+  padding-bottom: 10px;
   cursor: pointer;
 }
 .product-card:hover .product-box-shadow {
