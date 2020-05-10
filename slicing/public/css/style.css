@@ -96,24 +96,57 @@ button.btn {
   display: block !important;
 }
 
+input {
+  background: #F8F8F8;
+  font-size: 12px;
+  height: 35px;
+}
+input:hover, input .ant-input-focused, input:focus {
+  border-color: #d9d9d9 !important;
+  box-shadow: unset !important;
+}
+
 .abcd {
   color: red;
 }
 
+.main-header {
+  padding: 10px 20px;
+  box-shadow: 0 4px 12px rgba(199, 197, 197, 0.5);
+}
 .main-header .menu-logo .logo {
-  width: 50px;
   height: 50px;
 }
 .main-header .menu-logo .logo img {
-  width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 .main-header .menu-logo .menu {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: 500px;
+}
+.main-header .search {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+.main-header .search input {
+  width: 300px;
+}
+.main-header .menu-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+}
+.main-header .menu-right .menu-right-items {
+  padding-left: 20px;
+}
+.main-header .menu-right .menu-right-items .list-icon img {
+  height: 16px;
 }
 
 /*# sourceMappingURL=style.css.map */

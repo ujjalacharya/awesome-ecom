@@ -1,0 +1,9 @@
+input{
+    background: $light-bg;
+    font-size: 12px;
+    height: 35px;
+    &:hover, .ant-input-focused, &:focus{
+        border-color: #d9d9d9 !important;
+        box-shadow: unset !important;
+    }
+}
