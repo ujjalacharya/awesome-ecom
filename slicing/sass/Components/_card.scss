@@ -1,5 +1,17 @@
 .product-card {
   padding: 0 30px;
+  cursor: pointer;
+  &:hover {
+    .product-box-shadow {
+      box-shadow: $box-shadow;
+      transition: all ease-in-out 0.3s;
+    }
+    .hover-items-image {
+      .card-hover-items {
+        visibility: visible;
+      }
+    }
+  }
   .hover-items-image {
     position: relative;
     display: flex;
@@ -11,12 +23,15 @@
       justify-content: space-between;
       background: #fff;
       padding: 5px;
-      box-shadow:1px 1px 1px 0px rgba(0,0,0,0.08);
+      box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
+      visibility: hidden;
+      // transition: all ease-in-out 0.3s;
       .card-items {
         padding-left: 15px;
         padding-right: 15px;
         border-right: 1px solid $border-color;
-        &:last-child{
+        cursor: pointer;
+        &:last-child {
           border-right: 0px;
         }
         img {
@@ -34,7 +49,9 @@
     }
   }
   .card-body {
-    margin-top: 10px;
+    padding: 5px 10px;
+    border: 1px solid #f7f7f7;
+    border-top: 0px;
     .card-category {
       display: flex;
       align-items: center;

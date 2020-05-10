@@ -12,7 +12,8 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
-    "react-slick": "^0.25.2"
+    "react-slick": "^0.25.2",
+    "react-tooltip": "^4.2.6"
   },
   "scripts": {
     "start": "react-scripts start",

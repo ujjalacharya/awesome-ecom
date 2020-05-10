@@ -97,6 +97,10 @@ button.btn {
   display: block !important;
 }
 
+.__react_component_tooltip {
+  padding: 5px 8px !important;
+}
+
 input {
   background: #F8F8F8;
   font-size: 12px;
@@ -237,6 +241,14 @@ button.primary {
 
 .product-card {
   padding: 0 30px;
+  cursor: pointer;
+}
+.product-card:hover .product-box-shadow {
+  box-shadow: 0 4px 12px rgba(199, 197, 197, 0.5);
+  transition: all ease-in-out 0.3s;
+}
+.product-card:hover .hover-items-image .card-hover-items {
+  visibility: visible;
 }
 .product-card .hover-items-image {
   position: relative;
@@ -251,11 +263,13 @@ button.primary {
   background: #fff;
   padding: 5px;
   box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
+  visibility: hidden;
 }
 .product-card .hover-items-image .card-hover-items .card-items {
   padding-left: 15px;
   padding-right: 15px;
   border-right: 1px solid #D1D1D1;
+  cursor: pointer;
 }
 .product-card .hover-items-image .card-hover-items .card-items:last-child {
   border-right: 0px;
@@ -272,7 +286,9 @@ button.primary {
   object-position: center;
 }
 .product-card .card-body {
-  margin-top: 10px;
+  padding: 5px 10px;
+  border: 1px solid #f7f7f7;
+  border-top: 0px;
 }
 .product-card .card-body .card-category {
   display: flex;
