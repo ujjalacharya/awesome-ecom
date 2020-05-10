@@ -89,6 +89,10 @@ button.btn {
   border-radius: 0px;
 }
 
+.paddingTopZero {
+  padding-top: 0px;
+}
+
 .noDisplay {
   display: none !important;
 }
