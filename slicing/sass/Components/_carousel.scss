@@ -21,9 +21,14 @@
   }
 }
 
+.slick-dots{
+  width: auto !important;
+}
+
 .ant-carousel {
   .slick-dots {
     li {
+      width: 10px !important;
       &.slick-active {
         width: 10px !important;
         button {
@@ -64,4 +69,8 @@
 
 .ant-carousel .slick-slide h3 {
   color: #fff;
+}
+
+.slick-next, .slick-prev{
+  height: 35px !important;
 }

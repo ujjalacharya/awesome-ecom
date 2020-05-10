@@ -31,12 +31,6 @@ class MainCarousel extends Component {
           <div className="carousel-text"></div>
           <img src="/images/carousel-img.jpg" />
         </div>
-        {/* <div>
-            <h3>3</h3>
-          </div>
-          <div>
-            <h3>4</h3>
-          </div> */}
       </Carousel>
     );
   }

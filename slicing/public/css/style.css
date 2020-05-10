@@ -118,8 +118,8 @@ button.primary {
   color: #fff;
 }
 
-.abcd {
-  color: red;
+.product-slider {
+  padding: 0 40px;
 }
 
 .main-header {
@@ -182,6 +182,13 @@ button.primary {
   width: 100%;
 }
 
+.slick-dots {
+  width: auto !important;
+}
+
+.ant-carousel .slick-dots li {
+  width: 10px !important;
+}
 .ant-carousel .slick-dots li.slick-active {
   width: 10px !important;
 }
@@ -216,6 +223,22 @@ button.primary {
 
 .ant-carousel .slick-slide h3 {
   color: #fff;
+}
+
+.slick-next, .slick-prev {
+  height: 35px !important;
+}
+
+.product-card {
+  padding: 0 30px;
+}
+.product-card .image {
+  width: 100%;
+}
+.product-card .image img {
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /*# sourceMappingURL=style.css.map */
