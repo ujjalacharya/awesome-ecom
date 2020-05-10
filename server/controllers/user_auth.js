@@ -54,7 +54,7 @@ exports.signin = async (req, res) => {
             error: "Email or password is invaild."
         });
     }
-    if (user.emailVerifyLink !== '') {
+    if (user.emailVerifyLink) {
         return res.status(400).json({
             error: "Please verify your email address."
         });

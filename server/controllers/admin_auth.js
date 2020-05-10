@@ -72,7 +72,7 @@ exports.signin = async (req, res) => {
             error: "Email or password is invalid."
         });
     }
-    if (admin.emailVerifyLink !== '') {
+    if (admin.emailVerifyLink) {
         return res.status(400).json({
             error: "Please verify your email address."
         });
@@ -94,55 +94,6 @@ exports.signin = async (req, res) => {
     await refreshToken.save()
     res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
     return res.json({ accessToken });
-};
-
-exports.socialLogin = async (req, res) => {
-    let admin = await Admin.findOne({ email: req.body.email });
-    if (!admin) {
-        // create a new admin and login
-        admin = new Admin(req.body);
-        admin = await admin.save();
-        req.admin = admin;
-        const payload = {
-            _id: admin._id,
-            name: admin.name,
-            email: admin.email,
-            role: admin.role
-        };
-        const accessToken = jwt.sign(
-            payload,
-            process.env.JWT_SIGNIN_KEY,
-            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-        );
-        let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
-        refreshToken = new RefreshToken(refreshToken)
-        await refreshToken.save()
-        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-        return res.json({ accessToken });
-    } else {
-        // update existing admin with new social info and login
-
-        admin = _.extend(admin, req.body);
-        admin = await admin.save();
-        req.admin = admin;
-        const payload = {
-            _id: admin._id,
-            name: admin.name,
-            email: admin.email,
-            role: admin.role
-        };
-        const accessToken = jwt.sign(
-            payload,
-            process.env.JWT_SIGNIN_KEY,
-            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-        );
-        let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
-        refreshToken = new RefreshToken(refreshToken)
-        await refreshToken.save()
-        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-        return res.json({ accessToken });
-    }
-
 };
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body
@@ -239,7 +190,7 @@ exports.auth = async (req, res, next) => {
                 }
                 throw 'Invalid Admin'
             }
-            throw admin.error
+            throw user.error
         }
         throw 'Token not found'
     } catch (error) {

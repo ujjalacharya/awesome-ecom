@@ -4,7 +4,6 @@ const {
     signup,
     signin,
     emailverify,
-    socialLogin,
     resetPassword,
     forgotPassword,
     refreshToken,
@@ -18,7 +17,6 @@ const router = express.Router();
 router.post("/signup", validateSignUp, signup);
 router.post("/signin", signin);
 router.put('/email-verify',emailverify)
-router.post('/social-login',socialLogin)
 router.put("/forgot-password", forgotPassword);
 router.put("/reset-password", passwordResetValidator, resetPassword);
 router.post("/refresh-token",refreshToken)
