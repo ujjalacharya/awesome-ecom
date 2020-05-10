@@ -17,29 +17,13 @@ class MainCarousel extends Component {
         draggable: true
       };
     return (
-      //   <Carousel>
-      //     <div className="img-text">
-      //       <div className="carousel-text">
-      //         <h2>GET UPTO 60% OFF</h2>
-      //         <div className="main-text">SUMMER SALE</div>
-      //         <h4 className="sub-text"></h4>
-      //         <Button>Shop Now</Button>
-      //       </div>
-      //       <img src="/images/banner.jpg" />
-      //     </div>
-      //     <div className="img-text">
-      //       <div className="carousel-text">
-      //       </div>
-      //         <img src="/images/carousel-img.jpg" />
-      //     </div>
-      //   </Carousel>
-      <Carousel {...settings}>
+      <Carousel {...settings} autoplay>
         <div className="img-text">
           <div className="carousel-text">
             <h2>GET UPTO 60% OFF</h2>
             <div className="main-text">SUMMER SALE</div>
-            <h4 className="sub-text"></h4>
-            <Button>Shop Now</Button>
+            <h4 className="sub-text">Limited items available at this Price</h4>
+            <Button className="primary">Shop Now</Button>
           </div>
           <img src="/images/banner.jpg" />
         </div>

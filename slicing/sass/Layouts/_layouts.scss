@@ -7,3 +7,15 @@ input{
         box-shadow: unset !important;
     }
 }
+
+button{
+    width: 120px !important;
+    height: 35px !important;
+    border-radius: 5px !important;
+    text-transform: capitalize !important;
+    border: 0px;
+    &.primary{
+        background-color: #61ce70;
+        color: #fff;
+    }
+}

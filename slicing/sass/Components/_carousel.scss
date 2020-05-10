@@ -5,6 +5,15 @@
       position: absolute;
       top: 25%;
       left: 8%;
+      text-align: left;
+      h2 {
+        margin-bottom: 0px;
+      }
+      .main-text {
+        font-size: 75px;
+        font-weight: bold;
+        line-height: 60px;
+      }
     }
     img {
       width: 100%;
@@ -30,10 +39,14 @@
       }
     }
   }
+  .slick-dots-bottom{
+    bottom: 25px !important;
+  }
 }
 
-.ant-carousel .slick-dots li button:focus, .ant-carousel .slick-dots li button:hover{
-    opacity: 1 !important;
+.ant-carousel .slick-dots li button:focus,
+.ant-carousel .slick-dots li button:hover {
+  opacity: 1 !important;
 }
 
 .ant-carousel .slick-dots li,
