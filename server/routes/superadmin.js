@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, approveAdminBank,approveAdminBusiness,approveAdminWarehouse,approveAdminAccount
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval,flipCategoryAvailablity, createCategory, getCategories
 } = require("../controllers/superadmin");
 const {profile} = require("../controllers/admin")
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
@@ -14,10 +14,14 @@ const router = express.Router();
 //     .get(getProfile)
 
 router.get('/admins', auth, isSuperAdmin, getAllAdmins )
-router.put('/approve-business-info/:b_id',auth,isSuperAdmin,approveAdminBusiness)
-router.put('/approve-bank-info/:bank_id', auth, isSuperAdmin, approveAdminBank)
-router.put('/approve-warehouse-info/:w_id', auth, isSuperAdmin, approveAdminWarehouse)
-router.put('/approve-account/:a_id', auth, isSuperAdmin, approveAdminAccount)
+router.patch('/flipAdminBusinessApproval/:b_id',auth,isSuperAdmin,flipAdminBusinessApproval)
+router.patch('/flipAdminBankApproval/:bank_id', auth, isSuperAdmin, flipAdminBankApproval)
+router.patch('/flipAdminWarehouseApproval/:w_id', auth, isSuperAdmin, flipAdminWarehouseApproval)
+router.patch('/approve-account/:a_id', auth, isSuperAdmin, flipAdminAccountApproval)
+
+router.post('/create-category/',auth, isSuperAdmin,createCategory)
+router.get('/categories',auth, isSuperAdmin,getCategories)
+router.patch('/flipCategoryAvailablity',auth, isSuperAdmin,flipCategoryAvailablity)
 
 
 // router.param('id', profile)

@@ -13,11 +13,11 @@ const categorySchema = new mongoose.Schema({
         required: true,
         maxlength: 32
     },
-    subCategory: {
+    parent: {
         type: Schema.Types.ObjectId,
-        ref: 'category',
+        ref: 'category'
     },
-    isDeleted: {
+    isDisabled: {
         type: Date,
         default:null
     }
