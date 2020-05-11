@@ -54,26 +54,26 @@ exports.signup = async (req, res) => {
 exports.emailverify = async (req, res) => {
     const { token } = req.query;
     let admin = await Admin.findOne({ emailVerifyLink: token })
-    if (!admin || (admin && admin.emailVerifyLink === ''))
+    if (!admin || (admin && !admin.emailVerifyLink ))
         return res.status(401).json({
             error: "Token is invalid!"
         });
     admin.emailVerifyLink = ''
     admin.updated = Date.now()
     await admin.save()
-    res.status(200).json({ msg: "Successfully signup!" });
+    res.status(201).json({ msg: "Successfully signup!" });
 };
 
 exports.signin = async (req, res) => {
     const { email, password } = req.body;
     let admin = await Admin.findByCredentials(email, password)
     if (!admin) {
-        return res.status(400).json({
+        return res.status(404).json({
             error: "Email or password is invalid."
         });
     }
     if (admin.emailVerifyLink) {
-        return res.status(400).json({
+        return res.status(401).json({
             error: "Please verify your email address."
         });
     }
@@ -97,7 +97,7 @@ exports.signin = async (req, res) => {
 };
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body
-    if (refreshToken == null) return res.status(401).json({ error: " Token is Null" })
+    if (refreshToken == null) return res.status(400).json({ error: " Token is Null" })
     let token = await RefreshToken.findOne({ refreshToken })
     if (!token) return res.status(403).json({ error: "Invalid refresh token" })
     const admin = await jwt.verify(token.refreshToken, process.env.REFRESH_TOKEN_KEY)
@@ -117,7 +117,7 @@ exports.refreshToken = async (req, res) => {
 exports.logout = async (req,res) => {
     const {refreshToken} = req.body
     await RefreshToken.deleteOne({refreshToken})
-    res.status(204).json({msg:"Logged Out"})
+    res.status(200).json({msg:"Logged Out"})
 }
 
 exports.forgotPassword = async (req, res) => {
@@ -127,7 +127,7 @@ exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
     const admin = await Admin.findOne({ email });
     if (!admin)
-        return res.status(401).json({
+        return res.status(404).json({
             error: "Admin with that email does not exist!"
         });
 
@@ -156,8 +156,8 @@ exports.resetPassword = async (req, res) => {
 
     let admin = await Admin.findOne({ resetPasswordLink });
     // if err or no admin
-    if (!admin || (admin && admin.resetPasswordLink === ''))
-        return res.status(401).json({
+    if (!admin || (admin && !admin.resetPasswordLink ))
+        return res.status(404).json({
             error: "Invalid Link!"
         });
 

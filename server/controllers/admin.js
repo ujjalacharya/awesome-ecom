@@ -12,7 +12,7 @@ const task = Fawn.Task();
 exports.profile = async (req, res, next) => {
     const admin = await Admin.findById(req.params.id).select("-password -salt")
     if (!admin) {
-        return res.status(400).json({ error: 'Admin not found with this id' })
+        return res.status(404).json({ error: 'Admin not found with this id' })
     }
     req.profile = admin
     next();
@@ -41,7 +41,7 @@ exports.updateProfile = async (req, res) => {
     if (req.body.oldPassword && req.body.newPassword) {
         let admin = await Admin.findByCredentials(profile.email, req.body.oldPassword)
         if (!admin) {
-            return res.status(400).json({
+            return res.status(403).json({
                 error: "Wrong Password."
             });
         }
@@ -161,7 +161,7 @@ exports.bankinfo = async (req, res) => {
 exports.getWareHouse = async (req, res) => {
     let warehouseinfo = await AdminWarehouse.findOne({ admin: req.profile._id })
     if (!warehouseinfo) {
-        return res.status(404).json({error:"No warehouse information."})
+        return res.status(404).json({error:"No warehouse information available."})
     }
     res.json(warehouseinfo)
 }

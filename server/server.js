@@ -47,7 +47,9 @@ app.use("/api/user", require("./routes/user"));
 // Error handling middleware
 app.use(function (err, req, res, next) {
     console.log('****SERVER_ERROR****');
-    console.log(err);
+    if (err.message=='Not Image') {
+        return res.status(415).json({error:'Images are only allowed'})
+    }
     return res.status(500).json({
         error: errorHandler(err) || err.message || "Something went wrong!"
     });

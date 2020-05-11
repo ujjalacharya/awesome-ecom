@@ -6,7 +6,7 @@ const _ = require('lodash')
 exports.profile = async (req, res, next) => {
     const user = await User.findById(req.params.id).select("-password -salt")
     if (!user) {
-        return res.status(400).json({ error: 'User not found with this id' })
+        return res.status(404).json({ error: 'User not found with this id' })
     }
     req.profile = user
     next();
@@ -35,7 +35,7 @@ exports.updateProfile = async (req, res) => {
     if (req.body.oldPassword && req.body.newPassword) {
         let user = await User.findByCredentials(profile.email, req.body.oldPassword)
         if (!user) {
-            return res.status(400).json({
+            return res.status(403).json({
                 error: "Wrong Password."
             });
         }
@@ -51,7 +51,6 @@ exports.updateProfile = async (req, res) => {
 
     }
     profile = _.extend(profile, req.body)
-    console.log(profile);
     profile = await profile.save();
     profile.salt = undefined;
     profile.password = undefined;

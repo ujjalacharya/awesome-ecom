@@ -99,6 +99,12 @@ exports.validateAdminProfile = (req,res,next) => {
     req.check("muncipality", "Muncipality is required").notEmpty()
     req.check("district", "district is required").notEmpty()
     req.check("wardno", "wardno is required").notEmpty()
+    req.newPassword && req.check("newPassword")
+        .isLength({ min: 6 })
+        .withMessage("Password must be at least 6 chars long")
+        .matches(/\d/)
+        .withMessage("must contain a number")
+        .withMessage("Password must contain a number");
     // check for errors
     const errors = req.validationErrors();
     // if error show the first one as they happen

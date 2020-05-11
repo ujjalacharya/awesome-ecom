@@ -8,26 +8,31 @@ const fs = require("fs");
 const _ = require('lodash');
 const Fawn = require("fawn");
 const task = Fawn.Task();
+const perPage = 10;
 
-exports.getAllAdmins = async(req,res) => {
-    const admins = await Admin.find({}).select("-password -salt")
+exports.getAllAdmins = async (req, res) => {
+    const page = req.query.page || 1;
+    const admins = await Admin.find({})
+        .select("-password -salt").skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
     if (!admins) {
-        return res.status(400).json({ error: 'No Admins are Available' })
+        return res.status(404).json({ error: 'No Admins are Available' })
     }
     res.json(admins)
 }
 
-exports.approveAdminBusiness = async(req,res) => {
+exports.approveAdminBusiness = async (req, res) => {
     let businessInfo = await BusinessInfo.findById(req.params.b_id)
     if (!businessInfo) {
-        return res.status(404).json({error:"No business information available"})
+        return res.status(404).json({ error: "No business information available" })
     }
     businessInfo.isVerified = Date.now()
     await businessInfo.save()
     res.json(businessInfo)
 }
 
-exports.approveAdminBank = async(req, res) => {
+exports.approveAdminBank = async (req, res) => {
     let bankInfo = await AdminBank.findById(req.params.bank_id)
     if (!bankInfo) {
         return res.status(404).json({ error: "No bank information available" })
@@ -37,7 +42,7 @@ exports.approveAdminBank = async(req, res) => {
     res.json(bankInfo)
 }
 
-exports.approveAdminWarehouse = async(req, res) => {
+exports.approveAdminWarehouse = async (req, res) => {
     let warehouse = await AdminWarehouse.findById(req.params.w_id)
     if (!warehouse) {
         return res.status(404).json({ error: "No warehouse information available" })
@@ -47,9 +52,9 @@ exports.approveAdminWarehouse = async(req, res) => {
     res.json(warehouse)
 }
 
-exports.approveAdminAccount = async(req,res) => {
+exports.approveAdminAccount = async (req, res) => {
     let adminAccount = await Admin.findById(req.params.a_id)
-    .populate('businessInfo','isVerified')
+        .populate('businessInfo', 'isVerified')
         .populate('adminBank', 'isVerified')
         .populate('adminWareHouse', 'isVerified')
     if (!adminAccount) {
@@ -59,7 +64,7 @@ exports.approveAdminAccount = async(req,res) => {
         return res.status(404).json({ error: "Admin is blocked." })
     }
     if (adminAccount.emailVerifyLink) {
-        return res.status(404).json({error:"Admin's email has not been verified."})
+        return res.status(404).json({ error: "Admin's email has not been verified." })
     }
     if (adminAccount.businessInfo.isVerified) {
         return res.status(404).json({ error: "Admin's business information has not been verified." })
