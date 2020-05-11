@@ -33,10 +33,6 @@ const warehouseSchema = new mongoose.Schema({
     isVerified: {
         type: Date,//as we may need verified date
         default: null
-    },
-    isDeleted: {
-        type: Date,
-        default: null
     }
 }, { timestamps: true });
 

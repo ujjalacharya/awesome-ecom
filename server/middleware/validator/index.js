@@ -92,3 +92,19 @@ exports.validateWareHouse = (req,res, next) => {
     }
     next()
 }
+exports.validateAdminProfile = (req,res,next) => {
+    req.check("shopName", "Shop name is required").notEmpty()
+    req.check("address", "address is required").notEmpty()
+    req.check("phone", "phone number is required").notEmpty()
+    req.check("muncipality", "Muncipality is required").notEmpty()
+    req.check("district", "district is required").notEmpty()
+    req.check("wardno", "wardno is required").notEmpty()
+    // check for errors
+    const errors = req.validationErrors();
+    // if error show the first one as they happen
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    next()
+}

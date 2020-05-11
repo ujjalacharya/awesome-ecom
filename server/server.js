@@ -41,6 +41,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/api/admin-auth", require("./routes/admin_auth"));
 app.use("/api/user-auth", require("./routes/user_auth"));
 app.use("/api/admin", require("./routes/admin"));
+app.use("/api/superadmin", require("./routes/superadmin"));
 app.use("/api/user", require("./routes/user"));
 
 // Error handling middleware

@@ -48,13 +48,21 @@ exports.updateProfile = async (req, res) => {
         profile.password = req.body.newPassword
     }
     profile.holidayMode.start = req.body.holidayStart && req.body.holidayStart
-    profile.holidayMode.start = req.body.holidayEnd && req.body.holidayEnd
+    profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
     profile = _.extend(profile, req.body)
     profile = await profile.save();
     profile.salt = undefined;
     profile.password = undefined;
 
     res.json(profile);
+}
+
+exports.getBusinessInfo = async(req,res) => {
+    let businessinfo = await BusinessInfo.findOne({admin:req.profile._id})
+    if (!businessinfo) {
+        return res.status(404).json({ error: "No business information." })
+    }
+    res.json(businessinfo)
 }
 
 exports.businessinfo = async (req, res) => {
@@ -103,6 +111,13 @@ exports.businessinfo = async (req, res) => {
     res.json(docs)
 }
 
+exports.getBankInfo = async (req, res) => {
+    let bankinfo = await AdminBank.findOne({ admin: req.profile._id })
+    if (!bankinfo) {
+        return res.status(404).json({ error: "No bank information." })
+    }
+    res.json(bankinfo)
+}
 
 exports.bankinfo = async (req, res) => {
     if (req.file) {
@@ -141,6 +156,14 @@ exports.bankinfo = async (req, res) => {
         .update(req.profile, { adminBank: docs._id })//handle update issue todo..
         .run({ useMongoose: true })
     res.json(docs)
+}
+
+exports.getWareHouse = async (req, res) => {
+    let warehouseinfo = await AdminWarehouse.findOne({ admin: req.profile._id })
+    if (!warehouseinfo) {
+        return res.status(404).json({error:"No warehouse information."})
+    }
+    res.json(warehouseinfo)
 }
 
 exports.warehouse = async(req,res) => {
