@@ -31,9 +31,17 @@ const adminSchema = new mongoose.Schema({
     wardno:{
         type: Number
     },
-    documents: {
+    businessInfo: {
         type: Schema.Types.ObjectId,
-        ref: "admin"
+        ref: "businessinfo"
+    },
+    adminBank: {
+        type: Schema.Types.ObjectId,
+        ref: "adminbank"
+    },
+    adminWareHouse: {
+        type: Schema.Types.ObjectId,
+        ref: "adminwarehouse"
     },
     phone: {
         type: Number,
@@ -55,6 +63,14 @@ const adminSchema = new mongoose.Schema({
     photo: {
         type: String
     },
+    holidayMode: {
+        start:{
+            type: Date
+        },
+        end: {
+            type: Date
+        }
+    },
     salt: String,
     role: {
         type: String,
@@ -69,7 +85,11 @@ const adminSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    isDeleted: {
+    isVerified: {
+        type: Date,
+        default: null
+    },
+    isBlocked: {
         type: Date,
         default: null
     }

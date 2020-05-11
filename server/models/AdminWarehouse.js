@@ -1,46 +1,36 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema
-const documentSchema = new mongoose.Schema({
+const warehouseSchema = new mongoose.Schema({
     admin: {
         type: Schema.Types.ObjectId,
         ref: "admin",
         required: true
     },
-    citizenshipNumber: {
+    name: {
         type: String,
         trim: true,
         required: true,
         maxlength: 32
     },
-    panID: {
+    address: {
         type: String,
         trim: true,
+        required: true,
         maxlength: 32
     },
-    VATNo:{
+    phoneno: {
         type: String,
         trim: true,
+        required: true,
         maxlength: 32
     },
-    vatClearance: {
-        type: String
+    city: {
+        type: String,
+        trim: true,
+        required: true,
+        maxlength: 32
     },
-    pan:{
-        type:String
-    },
-    citizenship: {
-        type:String
-    },
-    businessLicence:[{
-        type: String
-    }],
-    companyRegister:[{
-        type:String
-    }],
-    ourAgreement: [{
-        type: String
-    }],
-    isVerified:{
+    isVerified: {
         type: Date,//as we may need verified date
         default: null
     },
@@ -50,4 +40,4 @@ const documentSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model("admindocument", documentSchema);
+module.exports = mongoose.model("adminwarehouse", warehouseSchema);

@@ -1,28 +1,21 @@
-const path= require("path");
-const multer= require("multer");
+const path = require("path");
+const multer = require("multer");
 
-//storage management for the file
-//that will be uploaded
-const busImage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './public/uploads/busimage')
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now()  + path.extname(file.originalname))
-    }
-  })
-
-  const profilePic = multer.diskStorage({
+const storageMechanism = () => {
+  return multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, './public/uploads')
     },
     filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now()  + path.extname(file.originalname))
+      cb(null, file.fieldname + '-' + req.admin._id + '-' + Date.now() + path.extname(file.originalname))
     }
   })
-
- //management of the storage and the file that will be uploaded 
- //.single expects the name of the file input field
-exports.uploadBusImage= multer({storage: busImage}).single("image");
-exports.uploadAdminPhoto= multer({storage: profilePic}).single("photo");
-exports.uploadUserPhoto = multer({ storage: profilePic }).single("photo");
+}
+exports.uploadAdminDoc = multer({ storage: storageMechanism() }).fields([
+  { name: "citizenshipFront", maxCount: 1 },
+  { name: "citizenshipBack", maxCount: 1 },
+  { name: "businessLicence", maxCount: 1 }
+]);
+exports.uploadCheque = multer({ storage: storageMechanism() }).single("chequeCopy");
+exports.uploadAdminPhoto = multer({ storage: storageMechanism() }).single("photo");
+exports.uploadUserPhoto = multer({ storage: storageMechanism() }).single("photo");

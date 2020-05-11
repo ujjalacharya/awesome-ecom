@@ -47,3 +47,48 @@ exports.passwordResetValidator = (req, res, next) => {
     // proceed to next middleware
     next();
 };
+
+exports.validateBusinessInfo = (req,res, next) => {
+    req.check("ownerName","Owner name is required").notEmpty()
+    req.check("address", "Address is required").notEmpty()
+    req.check("city", "City is required").notEmpty()
+    req.check("citizenshipNumber", "Citizenship number is required").notEmpty()
+    req.check("businessRegisterNumber", "Business register number is required").notEmpty()
+    // check for errors
+    const errors = req.validationErrors();
+    // if error show the first one as they happen
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    next()
+}
+exports.validateAdminBankInfo = (req, res, next) => {
+    req.check("accountHolder", "Account holder name is required").notEmpty()
+    req.check("bankName", "Bank name is required").notEmpty()
+    req.check("branchName", "Branch name is required").notEmpty()
+    req.check("accountNumber", "Account number is required").notEmpty()
+    req.check("routingNumber", "Bank number is required").notEmpty()
+    // check for errors
+    const errors = req.validationErrors();
+    // if error show the first one as they happen
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    next()
+}
+exports.validateWareHouse = (req,res, next) => {
+    req.check("name", "Warehouse name is required").notEmpty()
+    req.check("address", "Warehouse address is required").notEmpty()
+    req.check("phoneno", "Warehouse phone number is required").notEmpty()
+    req.check("city", "City of warehouse is required").notEmpty()
+    // check for errors
+    const errors = req.validationErrors();
+    // if error show the first one as they happen
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    next()
+}
