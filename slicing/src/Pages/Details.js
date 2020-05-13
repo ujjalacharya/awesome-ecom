@@ -3,6 +3,7 @@ import { Row, Col, Breadcrumb } from "antd";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import DetailSlider from "../Includes/Details/DetailSlider";
+import ProductSpecs from "../Includes/Details/ProductSpecs";
 
 class Details extends Component {
   render() {
@@ -28,12 +29,12 @@ class Details extends Component {
               <Col lg={10} xs={24} md={24}>
                 <DetailSlider />
               </Col>
-              <Col lg={10} xs={24} md={18}>
-                {/* <ProductSpecs /> */}
+              <Col lg={14} xs={24} md={18}>
+                <ProductSpecs />
               </Col>
-              <Col lg={4} xs={24} md={6}>
+              {/* <Col lg={4} xs={24} md={6}> */}
                 {/* <DeliveryOptions /> */}
-              </Col>
+              {/* </Col> */}
             </Row>
             {/* <SimilarOccasion /> */}
           </div>

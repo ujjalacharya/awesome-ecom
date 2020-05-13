@@ -17,5 +17,9 @@ button{
     &.primary{
         background-color: #61ce70;
         color: #fff;
+        &:hover{
+            color: #61ce70;
+            border-color: #61ce70;
+        }
     }
 }
