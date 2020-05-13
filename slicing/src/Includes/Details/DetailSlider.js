@@ -2,7 +2,6 @@ import React, { useState, Component } from "react";
 import Slider from "react-slick";
 import PrevArrow from "../../Components/Includes/PrevArrow";
 import NextArrow from "../../Components/Includes/NextArrow";
-import ReactImageZoom from "react-image-zoom";
 import ReactImageMagnify from "react-image-magnify";
 
 class DetailSlider extends Component {
