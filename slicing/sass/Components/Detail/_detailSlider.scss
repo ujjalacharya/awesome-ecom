@@ -1,0 +1,49 @@
+.slider{
+    .image-show{
+        height: 500px;
+        @media screen and (max-width:767px) {
+            height: 180px;
+        }
+        img{
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+    .product-slider{
+        margin-top: 15px;
+        z-index: 9;
+        position: relative;
+        img{
+            &.prod-img{
+                height: 70px;
+                object-fit: contain;
+                object-position: center;
+                padding: 5px;
+                cursor: pointer;
+                @media screen and (max-width:767px) {
+                    height: 55px;
+                }
+            }
+            &.arr{
+                height: 30px;
+                width: 15px;
+                @media screen and (max-width:767px) {
+                    height: 20px;
+                    width: 10px;
+                }
+            }
+            &.slick-prev{
+                @media screen and (max-width:767px) {
+                    left: -15px;
+                }
+            }
+            &.slick-next{
+                @media screen and (max-width:767px) {
+                    right: -15px;
+                }
+            }
+        }
+    }
+}

@@ -41,6 +41,13 @@ body.overflow {
   margin: auto;
 }
 
+.breadcrumb-all {
+  margin: 30px 0;
+  background: #f7f7f7;
+  padding: 10px 0;
+  padding-left: 15px;
+}
+
 h1 {
   font-size: 35px;
 }
@@ -606,6 +613,58 @@ button.primary {
 }
 .sticky-filter .filter-type img {
   height: 25px;
+}
+
+.slider .image-show {
+  height: 500px;
+}
+@media screen and (max-width: 767px) {
+  .slider .image-show {
+    height: 180px;
+  }
+}
+.slider .image-show img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.slider .product-slider {
+  margin-top: 15px;
+  z-index: 9;
+  position: relative;
+}
+.slider .product-slider img.prod-img {
+  height: 70px;
+  object-fit: contain;
+  object-position: center;
+  padding: 5px;
+  cursor: pointer;
+}
+@media screen and (max-width: 767px) {
+  .slider .product-slider img.prod-img {
+    height: 55px;
+  }
+}
+.slider .product-slider img.arr {
+  height: 30px;
+  width: 15px;
+}
+@media screen and (max-width: 767px) {
+  .slider .product-slider img.arr {
+    height: 20px;
+    width: 10px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .slider .product-slider img.slick-prev {
+    left: -15px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .slider .product-slider img.slick-next {
+    right: -15px;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */
