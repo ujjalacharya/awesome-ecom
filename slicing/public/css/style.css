@@ -43,7 +43,6 @@ body.overflow {
 
 .breadcrumb-all {
   margin: 30px 0;
-  background: #f7f7f7;
   padding: 10px 0;
   padding-left: 15px;
 }
@@ -626,6 +625,9 @@ button.primary:hover {
   .slider .image-show {
     height: 180px;
   }
+}
+.slider .image-show .enlargedImage {
+  z-index: 9;
 }
 .slider .image-show img {
   height: 100%;
