@@ -903,5 +903,42 @@ button.primary:hover {
 .other-details .add-info .add-info-details .detail {
   width: 400px;
 }
+.other-details .details-reviews .title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.other-details .details-reviews .no-reviews {
+  margin-bottom: 10px;
+}
+.other-details .details-reviews .all-reviews .user-review {
+  border-bottom: 1px solid #f7f7f7;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.other-details .details-reviews .all-reviews .user-review:last-child {
+  border-bottom: 0px;
+}
+.other-details .details-reviews .all-reviews .user-review .review-stars i {
+  color: #f2c900;
+  margin-right: 5px;
+}
+.other-details .details-reviews .all-reviews .user-review .reviewd-by {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.other-details .details-reviews .all-reviews .user-review .reviewd-by .reivewer-name {
+  color: #adadad;
+  font-size: 12px;
+}
+.other-details .details-reviews .all-reviews .user-review .reviewd-by .ver {
+  margin-left: 10px;
+  color: #61ce70;
+}
+.other-details .details-reviews .all-reviews .user-review .reviewd-by .ver img {
+  height: 20px;
+  margin-right: 4px;
+}
 
 /*# sourceMappingURL=style.css.map */

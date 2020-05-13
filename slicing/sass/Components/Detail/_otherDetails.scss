@@ -87,4 +87,47 @@
       }
     }
   }
+  .details-reviews {
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .no-reviews{
+        margin-bottom: 10px;
+    }
+    .all-reviews {
+      .user-review {
+        border-bottom: 1px solid #f7f7f7;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        &:last-child {
+          border-bottom: 0px;
+        }
+        .review-stars {
+          i {
+            color: $tertiary-color;
+            margin-right: 5px;
+          }
+        }
+        .reviewd-by {
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          .reivewer-name {
+            color: #adadad;
+            font-size: 12px;
+          }
+          .ver{
+            margin-left: 10px;
+            color: #61ce70;
+            img{
+                height: 20px;
+                margin-right: 4px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Tabs } from "antd";
 import QA from "./Includes/Q&A";
 import AdditionalInformation from "./Includes/AdditionalInfo";
+import Reviews from "./Includes/Reviews";
 
 const { TabPane } = Tabs;
 
@@ -32,7 +33,7 @@ class OtherDetails extends Component {
             <AdditionalInformation />
           </TabPane>
           <TabPane tab="Reviews" key="4">
-            Content of Tab Pane 4
+            <Reviews />
           </TabPane>
         </Tabs>
       </div>
