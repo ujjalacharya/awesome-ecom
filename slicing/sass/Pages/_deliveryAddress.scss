@@ -1,0 +1,43 @@
+.delivery-address{
+    padding-bottom: 80px;
+    margin-top: 60px;
+    @media screen and (max-width: 767px){
+        padding-bottom: 20px;
+    }
+    .address-form{
+        border-right: 1px solid $border-color;
+        padding-right: 40px;
+        margin-right: 40px;
+        @media screen and (max-width: 767px){
+            padding-right: 0px;
+            margin-right: 0px;
+            border-right: 0px;
+        }
+        .ant-form-item{
+            @media screen and (max-width: 767px){
+                margin-bottom: 15px;
+            }
+        }
+        .add-title{
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .save-address{
+            text-align: center;
+            button{
+                width: 250px;
+                border-color: $text;
+                color: #fff;
+                background: $text;
+                @media screen and (max-width: 992px){
+                    width: 100%;
+                }
+                @media screen and (max-width: 767px){
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+}

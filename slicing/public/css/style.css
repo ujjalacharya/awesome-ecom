@@ -47,6 +47,10 @@ body.overflow {
   padding-left: 15px;
 }
 
+.ant-form-item-label {
+  text-align: left !important;
+}
+
 h1 {
   font-size: 35px;
 }
@@ -163,6 +167,58 @@ button.primary:hover {
   .cart-page {
     margin-top: 10px;
     padding-bottom: 20px;
+  }
+}
+
+.delivery-address {
+  padding-bottom: 80px;
+  margin-top: 60px;
+}
+@media screen and (max-width: 767px) {
+  .delivery-address {
+    padding-bottom: 20px;
+  }
+}
+.delivery-address .address-form {
+  border-right: 1px solid #f7f7f7;
+  padding-right: 40px;
+  margin-right: 40px;
+}
+@media screen and (max-width: 767px) {
+  .delivery-address .address-form {
+    padding-right: 0px;
+    margin-right: 0px;
+    border-right: 0px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .delivery-address .address-form .ant-form-item {
+    margin-bottom: 15px;
+  }
+}
+.delivery-address .address-form .add-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.delivery-address .address-form .save-address {
+  text-align: center;
+}
+.delivery-address .address-form .save-address button {
+  width: 250px;
+  border-color: #00263D;
+  color: #fff;
+  background: #00263D;
+}
+@media screen and (max-width: 992px) {
+  .delivery-address .address-form .save-address button {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 767px) {
+  .delivery-address .address-form .save-address button {
+    margin-top: 10px;
   }
 }
 
