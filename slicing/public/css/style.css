@@ -822,4 +822,62 @@ button.primary:hover {
   margin-left: 10px;
 }
 
+.other-details {
+  margin-top: 40px;
+}
+.other-details .ant-tabs-nav-scroll {
+  text-align: center;
+}
+.other-details .q-a-tab .not-logged-in {
+  margin: 15px 0;
+}
+.other-details .q-a-tab .qns-ans-section .title {
+  margin: 10px 0;
+  border-bottom: 1px solid #f7f7f7;
+  padding-bottom: 10px;
+  font-size: 14px;
+}
+.other-details .q-a-tab .qns-ans-section .qns-details .qns,
+.other-details .q-a-tab .qns-ans-section .qns-details .ans {
+  display: flex;
+  align-items: start;
+  margin-bottom: 15px;
+}
+.other-details .q-a-tab .qns-ans-section .qns-details .qns .q-icon,
+.other-details .q-a-tab .qns-ans-section .qns-details .ans .q-icon {
+  background-color: #48b5dc;
+  color: #fff;
+  padding: 3px 7px;
+  font-size: 10px;
+  position: relative;
+  margin-top: 3px;
+}
+.other-details .q-a-tab .qns-ans-section .qns-details .qns .q-icon.a-btn,
+.other-details .q-a-tab .qns-ans-section .qns-details .ans .q-icon.a-btn {
+  background-color: #adadad;
+}
+.other-details .q-a-tab .qns-ans-section .qns-details .qns .q-icon.a-btn .arrow-bottom,
+.other-details .q-a-tab .qns-ans-section .qns-details .ans .q-icon.a-btn .arrow-bottom {
+  border-top: 5px solid #adadad;
+}
+.other-details .q-a-tab .qns-ans-section .qns-details .qns .q-icon .arrow-bottom,
+.other-details .q-a-tab .qns-ans-section .qns-details .ans .q-icon .arrow-bottom {
+  width: 0;
+  height: 0;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #48b5dc;
+  position: absolute;
+  bottom: -5px;
+  left: 0px;
+}
+.other-details .q-a-tab .qns-ans-section .qns-details .qns .q-title,
+.other-details .q-a-tab .qns-ans-section .qns-details .ans .q-title {
+  margin-left: 10px;
+}
+.other-details .q-a-tab .qns-ans-section .qns-details .qns .q-title .user,
+.other-details .q-a-tab .qns-ans-section .qns-details .ans .q-title .user {
+  font-size: 10px;
+  color: #adadad;
+}
+
 /*# sourceMappingURL=style.css.map */

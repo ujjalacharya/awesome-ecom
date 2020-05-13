@@ -4,6 +4,7 @@ import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import DetailSlider from "../Includes/Details/DetailSlider";
 import ProductSpecs from "../Includes/Details/ProductSpecs";
+import OtherDetails from "../Includes/Details/OtherDetails";
 
 class Details extends Component {
   render() {
@@ -32,11 +33,12 @@ class Details extends Component {
               <Col lg={14} xs={24} md={18}>
                 <ProductSpecs />
               </Col>
-              {/* <Col lg={4} xs={24} md={6}> */}
-                {/* <DeliveryOptions /> */}
-              {/* </Col> */}
             </Row>
-            {/* <SimilarOccasion /> */}
+            <Row>
+                <Col lg={24}>
+                    <OtherDetails />
+                </Col>
+            </Row>
           </div>
         </section>
         <Footer />

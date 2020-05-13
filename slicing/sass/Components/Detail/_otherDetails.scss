@@ -1,0 +1,60 @@
+.other-details {
+  margin-top: 40px;
+  .ant-tabs-nav-scroll {
+    text-align: center;
+  }
+  .q-a-tab {
+    .not-logged-in {
+        margin: 15px 0;
+    }
+    .qns-ans-section {
+      .title {
+        margin: 10px 0;
+        border-bottom: 1px solid #f7f7f7;
+        padding-bottom: 10px;
+        font-size: 14px;
+      }
+      .qns-details {
+        .qns,
+        .ans {
+          display: flex;
+          align-items: start;
+          margin-bottom: 15px;
+          .q-icon {
+            background-color: $secondary-color;
+            color: #fff;
+            padding: 3px 7px;
+            font-size: 10px;
+            position: relative;
+            margin-top: 3px;
+            &.a-btn {
+              background-color: $light-text-color;
+              .arrow-bottom {
+                border-top: 5px solid $light-text-color;
+              }
+            }
+            .arrow-bottom {
+              width: 0;
+              height: 0;
+              border-right: 5px solid transparent;
+              border-top: 5px solid $secondary-color;
+              position: absolute;
+              bottom: -5px;
+              left: 0px;
+            }
+          }
+          .q-title {
+            margin-left: 10px;
+            // .q-text {
+            //   margin-left: 10px;
+            // }
+            .user {
+              font-size: 10px;
+              color: $light-text-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
