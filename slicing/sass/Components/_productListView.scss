@@ -1,0 +1,128 @@
+.product-list-view {
+  border: 1px solid $border-color;
+  padding: 15px 10px;
+  .pd-img {
+    @media screen and (max-width: 992px) {
+      border-bottom: 1px solid $border-color;
+    }
+    img {
+      height: 140px;
+      object-fit: contain;
+      object-position: center;
+      width: 100%;
+      @media screen and (max-width: 767px) {
+        height: 150px;
+      }
+    }
+  }
+  .pd-details {
+    padding: 0 10px;
+    .name-price {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      @media screen and (max-width: 992px) {
+        display: block;
+      }
+      .name {
+        @media screen and (max-width: 992px) {
+          margin-top: 10px;
+        }
+        .pd-name {
+          font-weight: bold;
+          font-size: 14px;
+          cursor: pointer;
+          &:hover {
+            color: $primary-color;
+          }
+        }
+        .sold-by {
+          color: #8d94ac;
+          font-size: 12px;
+        }
+      }
+      .price {
+        @media screen and (max-width: 992px) {
+          display: flex;
+          margin-top: 10px;
+        }
+        .new-price {
+          font-size: 14px;
+          font-weight: bold;
+          text-align: right;
+          @media screen and (max-width: 992px) {
+            margin-right: 10px;
+          }
+
+          .old-price {
+            text-decoration: line-through;
+            color: #8d94ac;
+            padding-right: 5px;
+            border-right: 1px solid $border-color;
+            margin-right: 5px;
+            font-size: 12px;
+          }
+        }
+        .price-disc {
+          font-size: 13px;
+          .disc {
+            color: $secondary-color;
+          }
+        }
+      }
+    }
+    .qty {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      .qty-title {
+        margin-right: 10px;
+      }
+      .qty-inc-dcs {
+        display: flex;
+        align-items: center;
+        i {
+          font-size: 10px;
+          padding: 0 12px;
+          border: 1px solid #e0e0e0;
+          cursor: pointer;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          &.disabled {
+            background: #f7f7f7;
+            border: 0px;
+          }
+        }
+        input {
+          margin: 0 10px;
+          height: 30px;
+          width: 45px;
+          text-align: center;
+          @media screen and (max-width: 767px) {
+            width: 70px;
+          }
+          &:hover,
+          &:focus,
+          :active {
+            border-color: #d9d9d9;
+          }
+        }
+      }
+    }
+    .delete-product {
+      margin-top: 15px;
+      button {
+        color: $primary-color;
+        border-color: $primary-color;
+        @media screen and (max-width: 767px) {
+          width: 100%;
+        }
+        &:hover {
+          background: $primary-color;
+          color: $white;
+        }
+      }
+    }
+  }
+}

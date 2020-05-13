@@ -1,0 +1,65 @@
+.cart-items{
+    border-right: 1px solid $border-color;
+    padding-right: 40px;
+    margin-right: 40px;
+    @media screen and (max-width:767px) {
+        padding-right: 0px;
+        margin-right: 0px;
+        border-right: 0px;
+    }
+    .delivery-free{
+        padding: 10px 20px;
+        border: 1px solid $border-color;
+        
+        img{
+            height: 20px;
+            margin-right: 10px;
+        }
+    }
+    .delivery-price{
+        padding: 10px 20px;
+        border: 1px solid $border-color;
+        margin-top: 20px;
+        .delivery-icon{
+            @media screen and (max-width:992px) {
+                display: block;
+                margin-bottom: 10px;
+                border-right: 0px;
+            }
+        }
+        .delivery-icon, .delivery-date{
+            border-right: 1px solid $border-color;
+            margin-right: 10px;
+            padding-right: 10px;
+            img{
+                height: 20px;
+                margin-right: 10px;
+            }
+        }
+    }
+    .bag-items{
+        .title{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            @media screen and (max-width:767px) {
+                font-size: 16px;
+            };
+            h4{
+                font-weight: normal;
+                @media screen and (max-width:767px) {
+                    font-size: 18px;
+                    margin-bottom: 0px;
+                }
+            }
+            .price{
+                @media screen and (max-width:767px) {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}
