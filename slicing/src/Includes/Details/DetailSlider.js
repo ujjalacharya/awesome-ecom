@@ -21,7 +21,7 @@ class DetailSlider extends Component {
       dots: false,
       infinite: true,
       speed: 500,
-      slidesToShow: 4,
+      slidesToShow: 5,
       slidesToScroll: 1,
       prevArrow: <PrevArrow />,
       nextArrow: <NextArrow />,
@@ -53,7 +53,7 @@ class DetailSlider extends Component {
           {/* <ReactImageZoom {...props} /> */}
           {/* <img src={this.state.imageUrl} alt="main image" /> */}
         </div>
-        <Slider {...settings} className="product-slider">
+        <Slider {...settings} className="product-detail-slider">
           <img
             src="/images/prod-bag.jpg"
             alt="product image"

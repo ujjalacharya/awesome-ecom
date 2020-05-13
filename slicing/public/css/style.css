@@ -635,40 +635,40 @@ button.primary:hover {
   object-fit: cover;
   object-position: center;
 }
-.slider .product-slider {
+.slider .product-detail-slider {
   margin-top: 15px;
   z-index: 9;
   position: relative;
 }
-.slider .product-slider img.prod-img {
-  height: 70px;
+.slider .product-detail-slider img.prod-img {
+  height: 90px;
   object-fit: contain;
   object-position: center;
   padding: 5px;
   cursor: pointer;
 }
 @media screen and (max-width: 767px) {
-  .slider .product-slider img.prod-img {
+  .slider .product-detail-slider img.prod-img {
     height: 55px;
   }
 }
-.slider .product-slider img.arr {
+.slider .product-detail-slider img.arr {
   height: 30px;
   width: 15px;
 }
 @media screen and (max-width: 767px) {
-  .slider .product-slider img.arr {
+  .slider .product-detail-slider img.arr {
     height: 20px;
     width: 10px;
   }
 }
 @media screen and (max-width: 767px) {
-  .slider .product-slider img.slick-prev {
+  .slider .product-detail-slider img.slick-prev {
     left: -15px;
   }
 }
 @media screen and (max-width: 767px) {
-  .slider .product-slider img.slick-next {
+  .slider .product-detail-slider img.slick-next {
     right: -15px;
   }
 }
