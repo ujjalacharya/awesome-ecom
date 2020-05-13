@@ -159,6 +159,10 @@ button.primary:hover {
   padding: 50px 30px;
 }
 
+.checkout {
+  margin-top: 60px;
+}
+
 .cart-page {
   padding-bottom: 80px;
   margin-top: 60px;
@@ -1239,7 +1243,7 @@ button.primary:hover {
 .order-shipping .ti-pr .ti .name-add {
   display: flex;
 }
-.order-shipping .ti-pr .ti .name-add i {
+.order-shipping .ti-pr .ti .name-add span.anticon {
   margin-right: 5px;
   font-size: 12px;
   position: relative;
