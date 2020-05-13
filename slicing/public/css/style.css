@@ -815,5 +815,11 @@ button.primary:hover {
 .product-specs .qty-cart-btn .wish-comp-btn .comp-btn span {
   margin-left: 10px;
 }
+.product-specs .prod-cate-specs .tags {
+  margin-bottom: 5px;
+}
+.product-specs .prod-cate-specs .share i {
+  margin-left: 10px;
+}
 
 /*# sourceMappingURL=style.css.map */

@@ -53,44 +53,57 @@ class ProductSpecs extends Component {
           </div>
         </div>
         <div className="qty-cart-btn">
-            <div className="qty-cart">
+          <div className="qty-cart">
             <div className="qty">
-                <span className="qty-title">Qty:</span>
-                <span className="qty-inc-dcs">
+              <span className="qty-title">Qty:</span>
+              <span className="qty-inc-dcs">
                 <i
-                    aria-hidden="true"
-                    onClick={() => this.changePdValue(-1)}
-                    className={
+                  aria-hidden="true"
+                  onClick={() => this.changePdValue(-1)}
+                  className={
                     "fa fa-minus " + (this.state.pdQty === 1 ? "disabled" : "")
-                    }
+                  }
                 />
                 <Input
-                    defaultValue={this.state.pdQty}
-                    value={this.state.pdQty}
-                    onChange={(e) => {
+                  defaultValue={this.state.pdQty}
+                  value={this.state.pdQty}
+                  onChange={(e) => {
                     this.setState({ pdQty: e.target.value });
-                    }}
+                  }}
                 />
                 <i
-                    class="fa fa-plus"
-                    aria-hidden="true"
-                    onClick={() => this.changePdValue(1)}
+                  class="fa fa-plus"
+                  aria-hidden="true"
+                  onClick={() => this.changePdValue(1)}
                 />
-                </span>
+              </span>
             </div>
 
             <Button className="primary">Add to Cart</Button>
-            </div>
-            <div className="wish-comp-btn">
+          </div>
+          <div className="wish-comp-btn">
             <div className="wish-btn">
-                <img data-tip="Add to Wishlist" src="/images/heart.png" />
-                <span>Add to Wishlist</span>
+              <img data-tip="Add to Wishlist" src="/images/heart.png" />
+              <span>Add to Wishlist</span>
             </div>
             <div className="comp-btn">
-                <img data-tip="Add to Compare" src="/images/sliders.png" />
-                <span>Add to Compare</span>
+              <img data-tip="Add to Compare" src="/images/sliders.png" />
+              <span>Add to Compare</span>
             </div>
-            </div>
+          </div>
+        </div>
+        <div className="prod-cate-specs">
+          <div className="tags">
+            <b>Tags:</b> Bags, Black, Mens Bags
+          </div>
+          <div className="share">
+            <b>Share this product:</b>
+            <span>
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+              <i class="fa fa-instagram" aria-hidden="true"></i>
+              <i class="fa fa-twitter" aria-hidden="true"></i>
+            </span>
+          </div>
         </div>
       </div>
     );
