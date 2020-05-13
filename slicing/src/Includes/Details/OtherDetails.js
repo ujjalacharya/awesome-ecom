@@ -3,6 +3,7 @@ import { Tabs } from "antd";
 import QA from "./Includes/Q&A";
 import AdditionalInformation from "./Includes/AdditionalInfo";
 import Reviews from "./Includes/Reviews";
+import ReviewsForm from "./Includes/ReviewForm";
 
 const { TabPane } = Tabs;
 
@@ -15,7 +16,7 @@ class OtherDetails extends Component {
     return (
       <div className="other-details">
         <Tabs defaultActiveKey="1" onChange={this.callback}>
-          <TabPane tab="Q/A" key="1">
+          <TabPane tab="Q & A" key="1">
             <QA />
           </TabPane>
           <TabPane tab="Description" key="2">
@@ -34,6 +35,7 @@ class OtherDetails extends Component {
           </TabPane>
           <TabPane tab="Reviews" key="4">
             <Reviews />
+            <ReviewsForm />
           </TabPane>
         </Tabs>
       </div>

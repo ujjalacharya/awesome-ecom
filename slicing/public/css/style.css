@@ -940,5 +940,13 @@ button.primary:hover {
   height: 20px;
   margin-right: 4px;
 }
+.other-details .reviews-form {
+  max-width: 400px;
+}
+.other-details .reviews-form .title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
 /*# sourceMappingURL=style.css.map */
