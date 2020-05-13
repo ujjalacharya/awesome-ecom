@@ -879,5 +879,29 @@ button.primary:hover {
   font-size: 10px;
   color: #adadad;
 }
+.other-details .desc-tab .title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.other-details .add-info .title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.other-details .add-info .add-info-details .feature {
+  font-weight: bold;
+}
+.other-details .add-info .add-info-details .feature-detail {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding-top: 10px;
+  border-top: 1px solid #ececec;
+}
+.other-details .add-info .add-info-details .feature,
+.other-details .add-info .add-info-details .detail {
+  width: 400px;
+}
 
 /*# sourceMappingURL=style.css.map */
