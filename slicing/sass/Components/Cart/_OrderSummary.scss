@@ -1,0 +1,75 @@
+.order-shipping {
+  .os-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    border-bottom: 1px dashed $border-color;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  .ti-pr {
+    display: flex;
+    justify-content: space-between;
+    color: #8d94ac;
+    margin-bottom: 5px;
+    .ti {
+      .name-add {
+        display: flex;
+        // align-items: center;
+        i {
+          margin-right: 5px;
+          font-size: 12px;
+          position: relative;
+          top: 4px;
+        }
+      }
+    }
+    .edit {
+      color: #3366ff;
+    }
+  }
+  .shipping-details {
+    margin-bottom: 10px;
+    display: none;
+  }
+  .order-summary {
+    @media screen and (max-width: 767px) {
+      margin-top: 30px;
+    }
+    .price-details {
+      .price-title {
+        margin-bottom: 5px;
+      }
+      .total-price {
+        margin: 15px 0;
+        padding-top: 10px;
+        border-top: 1px dashed $border-color;
+      }
+      .cupon-voucher {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        input {
+          height: 35px;
+          border-radius: 0px;
+          border-right: 0px;
+        }
+        button {
+            background: $text;
+            color: #fff;
+            border: 0px;
+            border-top-left-radius: 0px !important;
+            border-bottom-left-radius: 0px !important;
+        }
+      }
+      .order-procced {
+        margin-top: 30px;
+        button {
+          width: 100%;
+          background: $secondary-color;
+          color: #fff;
+          border: $secondary-color;
+        }
+      }
+    }
+  }
+}
