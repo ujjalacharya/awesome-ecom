@@ -1,7 +1,6 @@
 import Router from 'next/router';
 import axios from 'axios';
 import { AUTHENTICATE, DEAUTHENTICATE } from '../types';
-import { API } from '../../config';
 import { setCookie, removeCookie } from '../../utils/cookie';
 
 // gets token from the api and stores it in the redux store and in cookie
@@ -10,7 +9,7 @@ const authenticate = ({ email, password }, type) => {
     throw new Error('Wrong API call!');
   }
   return (dispatch) => {
-    axios.post(`${API}/${type}`, { email, password })
+    axios.post(`/api/token`, { email, password })
       .then((response) => {
         setCookie('token', response.data.token);
         Router.push('/');

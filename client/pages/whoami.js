@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { API } from '../config';
 import initialize from '../utils/initialize';
 import Layout from '../components/Layout';
 
@@ -22,7 +21,7 @@ Whoami.getInitialProps = async ctx => {
   initialize(ctx);
   const token = ctx.store.getState().authentication.token;
   if (token) {
-    const response = await axios.get(`${API}/user`, {
+    const response = await axios.get(`/api/user`, {
       headers: {
         authorization: token
       }
