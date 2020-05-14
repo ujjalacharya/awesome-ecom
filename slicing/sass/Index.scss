@@ -1,10 +1,14 @@
 @import 'fonts';
 @import 'variables';
 @import 'base';
+
+// Layout
 @import './Layouts/layouts';
 
 // Pages
 @import './Pages/home';
+@import './Pages/cart';
+@import './Pages/deliveryAddress';
 
 //Components
 @import './Components/header';
@@ -13,10 +17,19 @@
 @import './Components/popularSlider';
 @import './Components/footer';
 @import './Components/listing';
+@import './Components/productListView';
 
 // Components > Listing
 @import './Components/Listing/filter';
 @import './Components/Listing/productList';
 @import './Components/Listing/stickyFilter';
 
+//Components > Details
+@import './Components/Detail/detailSlider';
+@import './Components/Detail/productSpecs';
+@import './Components/Detail/otherDetails';
+
+//Components > Cart
+@import './Components/Cart/CartItems';
+@import './Components/Cart/OrderSummary';
 

@@ -9,7 +9,7 @@ input{
 }
 
 button{
-    width: 120px !important;
+    // width: 120px !important;
     height: 35px !important;
     border-radius: 5px !important;
     text-transform: capitalize !important;
@@ -17,5 +17,9 @@ button{
     &.primary{
         background-color: #61ce70;
         color: #fff;
+        &:hover{
+            color: #61ce70;
+            border-color: #61ce70;
+        }
     }
 }

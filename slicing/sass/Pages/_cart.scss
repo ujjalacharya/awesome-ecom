@@ -1,0 +1,8 @@
+.cart-page{
+    padding-bottom: 80px;
+    margin-top: 60px;
+    @media screen and (max-width:767px) {
+        margin-top: 10px;
+        padding-bottom: 20px;
+    };
+}
