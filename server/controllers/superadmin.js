@@ -3,6 +3,8 @@ const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
 const Category = require("../models/Category")
+const Product = require("../models/Product")
+const Remark = require("../models/Remark")
 const shortid = require('shortid');
 const sharp = require("sharp")
 const path = require("path");
@@ -146,4 +148,26 @@ exports.flipCategoryAvailablity = async (req, res) => {
     category.isDisabled = Date.now()
     await category.save()
     res.json(category)
+}
+exports.approveProduct = async (req, res) => {
+    const product = await Product.findOne({ slug: req.params.p_slug })
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" })
+    }
+    product.isVerified = Date.now()
+    await product.save()
+    res.json(product)
+}
+exports.disApproveProduct = async (req, res) => {
+    const product = await Product.findOne({ slug: req.params.p_slug })
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" })
+    }
+    const newRemark = new Remark(req.body)
+    const results = await task
+        .save(newRemark)
+        .update(product, { isVerified: null, remark: newRemark._id })
+        .run({ useMongoose: true })
+    console.log(results);
+    return res.json(results[0])
 }

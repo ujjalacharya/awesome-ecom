@@ -104,7 +104,11 @@ const productSchema = mongoose.Schema({
     slug: {
         type: String,
         unique: true
-    }
+    },
+    remark: {
+        type: Schema.Types.ObjectId,
+        ref: 'remark'
+    },
     // slug: {
     //     type: String,
     //     slug: "brand",

@@ -65,3 +65,4 @@ exports.createProduct = async (req, res) => {
 
     return res.json(newProduct)
 }
+
