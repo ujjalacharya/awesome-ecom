@@ -154,9 +154,18 @@ exports.approveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    product.isVerified = Date.now()
-    await product.save()
-    res.json(product)
+    if (!product.remark) {
+        product.isVerified = Date.now()
+        await product.save()
+        return res.json(product)
+    }
+    const results = await task
+        .update(Remark,{_id:product.remark}, {isDeleted:Date.now()})
+        .update(product, { isVerified: null, remark: newRemark._id })
+        .run({ useMongoose: true })
+    console.log(results);
+    return res.json(results[0])
+
 }
 exports.disApproveProduct = async (req, res) => {
     const product = await Product.findOne({ slug: req.params.p_slug })
@@ -170,4 +179,84 @@ exports.disApproveProduct = async (req, res) => {
         .run({ useMongoose: true })
     console.log(results);
     return res.json(results[0])
+}
+
+exports.deleteProduct = async (req, res) => {
+    const product = await Product.findOne({ slug: req.params.p_slug })
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" })
+    }
+    product.isDeleted = Date.now()
+    await product.save()
+    res.json(product)
+}
+exports.getProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find()
+        .populate("category", "displayName")
+        .populate("soldBy", "name shopName")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.verifiedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({isVerified:!null})
+        .populate("category", "displayName")
+        .populate("soldBy", "name shopName")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.notVerifiedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ isVerified: null })
+        .populate("category", "displayName")
+        .populate("soldBy", "name shopName")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.deletedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ isDeleted: !null })
+        .populate("category", "displayName")
+        .populate("soldBy", "name shopName")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.notDeletedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ isDeleted: null })
+        .populate("category", "displayName")
+        .populate("soldBy", "name shopName")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
 }

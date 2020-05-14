@@ -10,21 +10,6 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
 
-exports.getProducts = async (req, res) => {
-    const page = req.query.page || 1
-    const products = await Product.find()
-        .populate("category", "displayName")
-        .populate("soldBy", "name shopName")
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ created: -1 })
-    if (!products.length) {
-        return res.status(404).json({ error: 'No products are available.' })
-    }
-    res.json(products);
-}
-
 exports.createProduct = async (req, res) => {
     if (!req.files.length) {
         return res.status(400).error({ error: "Product images are required" })

@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, createCategory, getCategories, approveProduct, disApproveProduct
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, createCategory, getCategories, approveProduct, disApproveProduct, deleteProduct, verifiedProducts,notDeletedProducts,notVerifiedProducts,deletedProducts
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 
@@ -22,6 +22,12 @@ router.patch('/flip-category-availablity',auth, isSuperAdmin,flipCategoryAvailab
 // product's..
 router.patch('/approve-product/:p_slug',auth,isSuperAdmin,approveProduct)
 router.put('/disapprove-product/:p_slug',auth,isSuperAdmin,disApproveProduct)
+router.patch('/delete-product/:p_slug', auth, isSuperAdmin,deleteProduct)
+router.get("/get-products", auth, isSuperAdmin, getProducts)
+router.get("/get-verified-products", auth, isSuperAdmin, verifiedProducts)
+router.get("/get-unverified-products", auth, isSuperAdmin, notVerifiedProducts)
+router.get("/get-deleted-products", auth, isSuperAdmin, deletedProducts)
+router.get("/get-not-deleted-products", auth, isSuperAdmin, notDeletedProducts)
 
 
 module.exports = router;
