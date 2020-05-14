@@ -131,7 +131,7 @@ exports.blockUnblockAdmin = async(req,res) => {
     await admin.save()
     res.json(admin)
 }
-exports.getBlockedAdmins = (req,res) => {
+exports.getBlockedAdmins = async(req,res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isBlocked: !null })
         .select('-password -salt')
@@ -143,7 +143,7 @@ exports.getBlockedAdmins = (req,res) => {
     }
     res.json(admins)
 }
-exports.getNotBlockedAdmins = (req, res) => {
+exports.getNotBlockedAdmins = async(req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isBlocked: null })
         .select('-password -salt')
@@ -155,7 +155,7 @@ exports.getNotBlockedAdmins = (req, res) => {
     }
     res.json(admins)
 }
-exports.getVerifiedAdmins = (req, res) => {
+exports.getVerifiedAdmins = async(req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isVerified: !null })
         .select('-password -salt')
@@ -167,7 +167,7 @@ exports.getVerifiedAdmins = (req, res) => {
     }
     res.json(admins)
 }
-exports.getUnverifiedAdmins = (req, res) => {
+exports.getUnverifiedAdmins = async(req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isVerified: null })
         .select('-password -salt')
