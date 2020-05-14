@@ -246,6 +246,6 @@ exports.hasAuthorization = async (req, res, next) => {
         }
         throw 'User is not authorized to perform this action'
     } catch (error) {
-        res.status(403).json({ error: error })
+        res.status(401).json({ error: error })
     }
 }

@@ -43,10 +43,12 @@ app.use("/api/user-auth", require("./routes/user_auth"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/superadmin", require("./routes/superadmin"));
 app.use("/api/user", require("./routes/user"));
+app.use("/api/product", require("./routes/product"));
 
 // Error handling middleware
 app.use(function (err, req, res, next) {
     console.log('****SERVER_ERROR****');
+    console.log(err);
     if (err.message=='Not Image') {
         return res.status(415).json({error:'Images are only allowed'})
     }
