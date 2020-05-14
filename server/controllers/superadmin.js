@@ -34,7 +34,7 @@ exports.flipAdminBusinessApproval = async (req, res) => {
     if (businessInfo.isVerified) {
         const results = await task
             .update(businessInfo, { isVerified: null })
-            .update(Admin,{_id:businessInfo.admin}, { isVerified: null })
+            .update(Admin, { _id: businessInfo.admin }, { isVerified: null })
             .run({ useMongoose: true })
         return res.json(results[0])
     }
@@ -55,7 +55,7 @@ exports.flipAdminBankApproval = async (req, res) => {
         //     .update("Admin", { _id: bankInfo.admin }, { isVerified: null })
         //     .run({ useMongoose: true })
         const results = await task
-            .update(bankInfo,{isVerified:null})
+            .update(bankInfo, { isVerified: null })
             .update(Admin, { _id: bankInfo.admin }, { isVerified: null })
             .run({ useMongoose: true })
         return res.json(results[0])
@@ -116,21 +116,85 @@ exports.flipAdminAccountApproval = async (req, res) => {
     res.json(adminAccount)
 }
 
-exports.createCategory = async (req,res) => {
-    const {displayName,parent_id} = req.body
-    const systemName = shortid.generate()
-    let category = await Category.findOne({displayName})
-    if (category) {
-        return res.status(403).json({ error:"Category already exist"})
+exports.blockUnblockAdmin = async(req,res) => {
+    let admin = await await Admin.findById(req.params.id)
+    if (!admin) {
+        return res.status(404).json({error:"Admin not found"})
     }
-    category = new Category({systemName,displayName,parent:parent_id})
+    if (admin.isBlocked) {
+        admin.isBlocked = null
+        await admin.save()
+        return res.json(admin)    
+    }
+    admin.isBlocked = Date.now()
+    admin.isVerified = null
+    await admin.save()
+    res.json(admin)
+}
+exports.getBlockedAdmins = (req,res) => {
+    const page = req.query.page || 1
+    let admins = await Admin.find({ isBlocked: !null })
+        .select('-password -salt')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    if (!admins.length) {
+        return res.status(404).json({error: "No admins are blocked"})
+    }
+    res.json(admins)
+}
+exports.getNotBlockedAdmins = (req, res) => {
+    const page = req.query.page || 1
+    let admins = await Admin.find({ isBlocked: null })
+        .select('-password -salt')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    if (!admins.length) {
+        return res.status(404).json({ error: "Every admins are blocked" })
+    }
+    res.json(admins)
+}
+exports.getVerifiedAdmins = (req, res) => {
+    const page = req.query.page || 1
+    let admins = await Admin.find({ isVerified: !null })
+        .select('-password -salt')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    if (!admins.length) {
+        return res.status(404).json({ error: "No admins are verified" })
+    }
+    res.json(admins)
+}
+exports.getUnverifiedAdmins = (req, res) => {
+    const page = req.query.page || 1
+    let admins = await Admin.find({ isVerified: null })
+        .select('-password -salt')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    if (!admins.length) {
+        return res.status(404).json({ error: "All admins are verified" })
+    }
+    res.json(admins)
+}
+
+exports.createCategory = async (req, res) => {
+    const { displayName, parent_id } = req.body
+    const systemName = shortid.generate()
+    let category = await Category.findOne({ displayName })
+    if (category) {
+        return res.status(403).json({ error: "Category already exist" })
+    }
+    category = new Category({ systemName, displayName, parent: parent_id })
     await category.save()
     res.json(category)
 }
-exports.getCategories = async (req,res) => {
+exports.getCategories = async (req, res) => {
     let categories = await Category.find({})
     if (!categories.length) {
-        return res.status(404).json({error:"No categories are available"})
+        return res.status(404).json({ error: "No categories are available" })
     }
     res.json(categories)
 }
@@ -160,7 +224,7 @@ exports.approveProduct = async (req, res) => {
         return res.json(product)
     }
     const results = await task
-        .update(Remark,{_id:product.remark}, {isDeleted:Date.now()})
+        .update(Remark, { _id: product.remark }, { isDeleted: Date.now() })
         .update(product, { isVerified: null, remark: newRemark._id })
         .run({ useMongoose: true })
     console.log(results);
@@ -206,7 +270,7 @@ exports.getProducts = async (req, res) => {
 }
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
-    const products = await Product.find({isVerified:!null})
+    const products = await Product.find({ isVerified: !null })
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
         .skip(perPage * page - perPage)

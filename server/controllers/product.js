@@ -10,6 +10,19 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
 
+exports.product = async (req, res, next) => {
+    const product = await Product.findOne({slug:req.params.p_slug})
+    if (!product) {
+        return res.status(404).json({ error: 'Product not found.' })
+    }
+    req.product = product
+    next();
+}
+
+exports.getProduct = (req,res) => {
+    res.json(req.product)
+}
+
 exports.createProduct = async (req, res) => {
     if (!req.files.length) {
         return res.status(400).error({ error: "Product images are required" })
@@ -43,11 +56,15 @@ exports.createProduct = async (req, res) => {
         fs.unlinkSync(Path);
     })
     // add images path to the product collection
-    newProduct.productLarge = req.files.map(file => `productLarge/${file.filename}` )
+    newProduct.productLarge = req.files.map(file => `productLarge/${file.filename}`)
 
     // save the product
     newProduct = await newProduct.save()
 
     return res.json(newProduct)
+}
+
+exports.updateProduct = async (req,res) => {
+    
 }
 
