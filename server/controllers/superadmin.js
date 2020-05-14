@@ -30,9 +30,11 @@ exports.flipAdminBusinessApproval = async (req, res) => {
         return res.status(404).json({ error: "No business information available" })
     }
     if (businessInfo.isVerified) {
-        businessInfo.isVerified = null
-        await businessInfo.save()
-        return res.json(businessInfo)
+        const results = await task
+            .update(businessInfo, { isVerified: null })
+            .update(Admin,{_id:businessInfo.admin}, { isVerified: null })
+            .run({ useMongoose: true })
+        return res.json(results[0])
     }
     businessInfo.isVerified = Date.now()
     await businessInfo.save()
@@ -43,6 +45,18 @@ exports.flipAdminBankApproval = async (req, res) => {
     let bankInfo = await AdminBank.findById(req.params.bank_id)
     if (!bankInfo) {
         return res.status(404).json({ error: "No bank information available" })
+    }
+    if (bankInfo.isVerified) {
+        // bankInfo.isVerified = null
+        // await task
+        //      
+        //     .update("Admin", { _id: bankInfo.admin }, { isVerified: null })
+        //     .run({ useMongoose: true })
+        const results = await task
+            .update(bankInfo,{isVerified:null})
+            .update(Admin, { _id: bankInfo.admin }, { isVerified: null })
+            .run({ useMongoose: true })
+        return res.json(results[0])
     }
     bankInfo.isVerified = Date.now()
     await bankInfo.save()
@@ -55,9 +69,11 @@ exports.flipAdminWarehouseApproval = async (req, res) => {
         return res.status(404).json({ error: "No warehouse information available" })
     }
     if (warehouse.isVerified) {
-        warehouse.isVerified = null
-        await warehouse.save()
-        return res.json(warehouse)
+        const results = await task
+            .update(warehouse, { isVerified: null })
+            .update(Admin, { _id: warehouse.admin }, { isVerified: null })
+            .run({ useMongoose: true })
+        return res.json(results[0])
     }
     warehouse.isVerified = Date.now()
     await warehouse.save()
@@ -112,7 +128,7 @@ exports.createCategory = async (req,res) => {
 exports.getCategories = async (req,res) => {
     let categories = await Category.find({})
     if (!categories.length) {
-        return res.status(404).json({error:"No child categories are available"})
+        return res.status(404).json({error:"No categories are available"})
     }
     res.json(categories)
 }
@@ -122,5 +138,12 @@ exports.flipCategoryAvailablity = async (req, res) => {
     if (!category) {
         return res.status(404).json({ error: "Category not found" })
     }
+    if (category.isDisabled) {
+        category.isDisabled = null
+        await category.save()
+        return res.json(category)
+    }
+    category.isDisabled = Date.now()
+    await category.save()
     res.json(category)
 }

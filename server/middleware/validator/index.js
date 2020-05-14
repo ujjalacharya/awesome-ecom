@@ -114,3 +114,21 @@ exports.validateAdminProfile = (req,res,next) => {
     }
     next()
 }
+exports.validateProduct = (req, res, next) => {
+    req.check("name", "Product name is required").notEmpty()
+    req.check("price", "Selling price of product is required").notEmpty()
+    req.check("quantity", "Product quantity is required").notEmpty()
+    req.check("return", "Product returning time peroid required").notEmpty()
+    req.check("description", "Product description is required").notEmpty()
+    req.check("warranty", "Product warranty is required").notEmpty()
+    req.check("description", "Product description is required").notEmpty()
+
+    // check for errors
+    const errors = req.validationErrors();
+    // if error show the first one as they happen
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    next()
+}

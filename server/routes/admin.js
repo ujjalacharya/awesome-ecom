@@ -10,7 +10,7 @@ const { validateAdminBankInfo, validateBusinessInfo, validateWareHouse, validate
 
 const router = express.Router();
 
-// admin route..
+// admin profile..
 router
     .route("/:id")
     .get(getProfile)
@@ -29,5 +29,6 @@ router.route('/warehouse/:id')
     .get(auth, hasAuthorization, getWareHouse)
 
 router.param('id', profile)
+
 
 module.exports = router;

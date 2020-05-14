@@ -12,12 +12,12 @@ const storage =  multer.diskStorage({
 
 const fileFilter = (req, file, callback) => {
   const ext = path.extname(file.originalname);
-  if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+  if (ext !== '.png' && ext !== '.jpg' && ext !== '.JPG' && ext !== '.jpeg') {
     return callback(new Error('Not Image'))
   }
   callback(null, true)
 }
-const limits = { fileSize: 1024 * 1024 }
+const limits = { fileSize: 2480 * 3230 }
 
 exports.uploadAdminDoc = multer({ storage, fileFilter, limits }).fields([
   { name: "citizenshipFront", maxCount: 1 },
@@ -27,3 +27,5 @@ exports.uploadAdminDoc = multer({ storage, fileFilter, limits }).fields([
 exports.uploadCheque = multer({ storage,fileFilter,limits }).single("chequeCopy");
 exports.uploadAdminPhoto = multer({ storage, fileFilter, limits }).single("photo");
 exports.uploadUserPhoto = multer({ storage, fileFilter, limits }).single("photo");
+
+exports.uploadProductImages = multer({ storage, fileFilter, limits }).array("productImages",5)

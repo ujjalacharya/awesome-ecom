@@ -219,7 +219,7 @@ exports.hasAuthorization = async (req, res, next) => {
         }
         throw 'Admin is not authorized to perform this action'
     } catch (error) {
-        res.status(403).json({ error: error })
+        res.status(401).json({ error: error })
     }
 }
 exports.isSuperAdmin = async (req, res, next) => {
@@ -230,6 +230,17 @@ exports.isSuperAdmin = async (req, res, next) => {
         }
         throw 'Unauthorized Admin'
     } catch (error) {
-        res.status(403).json({ error: error })
+        res.status(401).json({ error: error })
+    }
+}
+exports.isAdmin = async (req, res, next) => {
+    try {
+        const isAdmin = req.admin && req.admin.role === 'admin'
+        if (isAdmin) {
+            return next();
+        }
+        throw 'Unauthorized Admin'
+    } catch (error) {
+        res.status(401).json({ error: error })
     }
 }

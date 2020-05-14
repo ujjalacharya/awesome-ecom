@@ -74,7 +74,7 @@ exports.businessinfo = async (req, res) => {
     files.forEach(async file => {
         const { filename, fieldname, destination, path: filepath } = file;
         await sharp(filepath)
-            .resize(500)
+            .resize(400)
             .toFile(path.resolve(destination, fieldname === 'businessLicence' ? "businessLicence" : "citizenship", filename))//add file from uploads to doc folder
         fs.unlinkSync(filepath);//and remove file from public/uploads
     })
@@ -123,7 +123,7 @@ exports.bankinfo = async (req, res) => {
     if (req.file) {
         const { filename, destination, path: filepath } = req.file;
         await sharp(filepath)
-            .resize(500)
+            .resize(400)
             .toFile(path.resolve(destination, "bank", filename))//add file from uploads to doc folder
         fs.unlinkSync(filepath);//and remove file from public/uploads
     }
