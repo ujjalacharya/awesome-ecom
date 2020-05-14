@@ -2,6 +2,12 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { connect } from 'react-redux';
 import actions from '../redux/actions';
+import NProgress from "nprogress";
+import Router from "next/router"
+
+Router.onRouteChangeStart = url => NProgress.start();
+Router.onRouteChangeComplete = url => NProgress.done();
+Router.onRouteChangeError = url => NProgress.done();
 
 const Layout = ({ children, title, isAuthenticated, deauthenticate }) => (
   <div>
