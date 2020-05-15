@@ -33,9 +33,9 @@ exports.signup = async (req, res) => {
         process.env.JWT_EMAIL_VERIFICATION_KEY,
         { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
     );
-    req.body.emailVerifyLink = token
+    // req.body.emailVerifyLink = token
     let admin = new Admin(req.body);
-    // await admin.save();
+    await admin.save();
     const mailingData = {
         from: "Ecom",
         to: admin.email,
@@ -43,7 +43,7 @@ exports.signup = async (req, res) => {
         html: `<p>Hi, ${admin.name} . </p></br>
                     <a href="${process.env.ADMIN_CRM_ROUTE}/email-verify?token=${token}">Click me to verify email for your admin account</a>`
     };
-    await sendEmail(mailingData)
+    // await sendEmail(mailingData)
     res
         .status(200)
         .json({
@@ -77,7 +77,11 @@ exports.signin = async (req, res) => {
             error: "Please verify your email address."
         });
     }
-
+    if (admin.isBlocked) {
+        return res.status(401).json({
+            error: "Your account has been blocked."
+        });
+    }
     const payload = {
         _id: admin._id,
         name: admin.name,

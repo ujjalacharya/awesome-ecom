@@ -28,6 +28,12 @@ exports.createProduct = async (req, res) => {
         return res.status(400).error({ error: "Product images are required" })
     }
     if (!req.profile.isVerified) {
+        req.files.forEach(file => {
+            const { filename } = file;
+            // remove image from public/uploads
+            const Path = `public/uploads/${filename}`;
+            fs.unlinkSync(Path);
+        })
         return res.status(403).json({error:"Admin is not verified"})
     }
     let newProduct = new Product(req.body)
