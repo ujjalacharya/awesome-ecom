@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "antd": "^4.2.2",
     "axios": "^0.19.2",
     "cookie-parser": "^1.4.5",
     "isomorphic-unfetch": "^3.0.0",
