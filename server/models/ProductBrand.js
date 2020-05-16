@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
-const modelSchema = new mongoose.Schema({
-    brand: [String]
-
+const URLSlugs = require('mongoose-url-slugs');
+const brandSchema = new mongoose.Schema({
+    brandName: {
+        type : String
+    },
+    systemName: {
+        type: String,
+        unique: true
+    },
+    slug:{
+        type: String
+    }
 })
-module.exports = mongoose.model("productbrand", modelSchema);
+brandSchema.plugin(URLSlugs('brandName', { field: 'slug', update: true }));
+module.exports = mongoose.model("productbrand", brandSchema);

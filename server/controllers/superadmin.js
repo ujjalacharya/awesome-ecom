@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
+const ProductBrand = require("../models/ProductBrand")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
 const Remark = require("../models/Remark")
@@ -116,22 +117,22 @@ exports.flipAdminAccountApproval = async (req, res) => {
     res.json(adminAccount)
 }
 
-exports.blockUnblockAdmin = async(req,res) => {
+exports.blockUnblockAdmin = async (req, res) => {
     let admin = await await Admin.findById(req.params.id)
     if (!admin) {
-        return res.status(404).json({error:"Admin not found"})
+        return res.status(404).json({ error: "Admin not found" })
     }
     if (admin.isBlocked) {
         admin.isBlocked = null
         await admin.save()
-        return res.json(admin)    
+        return res.json(admin)
     }
     admin.isBlocked = Date.now()
     admin.isVerified = null
     await admin.save()
     res.json(admin)
 }
-exports.getBlockedAdmins = async(req,res) => {
+exports.getBlockedAdmins = async (req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isBlocked: { "$ne": null } })
         .select('-password -salt')
@@ -139,11 +140,11 @@ exports.getBlockedAdmins = async(req,res) => {
         .limit(perPage)
         .lean()
     if (!admins.length) {
-        return res.status(404).json({error: "No admins are blocked"})
+        return res.status(404).json({ error: "No admins are blocked" })
     }
     res.json(admins)
 }
-exports.getNotBlockedAdmins = async(req, res) => {
+exports.getNotBlockedAdmins = async (req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isBlocked: null })
         .select('-password -salt')
@@ -155,9 +156,9 @@ exports.getNotBlockedAdmins = async(req, res) => {
     }
     res.json(admins)
 }
-exports.getVerifiedAdmins = async(req, res) => {
+exports.getVerifiedAdmins = async (req, res) => {
     const page = req.query.page || 1
-    let admins = await Admin.find({ isVerified: {"$ne":null} })
+    let admins = await Admin.find({ isVerified: { "$ne": null } })
         .select('-password -salt')
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -167,7 +168,7 @@ exports.getVerifiedAdmins = async(req, res) => {
     }
     res.json(admins)
 }
-exports.getUnverifiedAdmins = async(req, res) => {
+exports.getUnverifiedAdmins = async (req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isVerified: null })
         .select('-password -salt')
@@ -180,9 +181,23 @@ exports.getUnverifiedAdmins = async(req, res) => {
     res.json(admins)
 }
 
-exports.createCategory = async (req, res) => {
-    const { displayName, parent_id } = req.body
+exports.category = async (req, res) => {
+    const { displayName, parent_id, category_id } = req.body
     const systemName = shortid.generate()
+    let updateCategory;
+    if (category_id) {
+        updateCategory = await Category.findById(category_id)
+        if (!updateCategory) {
+            return res.status(404).json({ error: "Category not found." })
+        }
+    }
+    if (updateCategory) {
+        // then update
+        updateCategory.displayName = displayName
+        updateCategory.parent = parent_id
+        await updateCategory.save()
+        return res.json(updateCategory)
+    }
     let category = await Category.findOne({ displayName })
     if (category) {
         return res.status(403).json({ error: "Category already exist" })
@@ -192,7 +207,7 @@ exports.createCategory = async (req, res) => {
     res.json(category)
 }
 exports.getCategories = async (req, res) => {
-    let categories = await Category.find({})
+    let categories = await Category.find()
     if (!categories.length) {
         return res.status(404).json({ error: "No categories are available" })
     }
@@ -200,7 +215,7 @@ exports.getCategories = async (req, res) => {
 }
 
 exports.flipCategoryAvailablity = async (req, res) => {
-    let category = await Category.findById(req.query.cat_id)
+    let category = await Category.findById(req.query.category_id)
     if (!category) {
         return res.status(404).json({ error: "Category not found" })
     }
@@ -323,4 +338,37 @@ exports.notDeletedProducts = async (req, res) => {
         return res.status(404).json({ error: 'No products are available.' })
     }
     res.json(products);
+}
+
+exports.productBrand = async(req, res) => {
+    const { brandName, brand_id } = req.body
+    const systemName = shortid.generate()
+    let updateBrand;
+    if (brand_id) {
+        updateBrand = await ProductBrand.findById(brand_id)
+        if (!updateBrand) {
+            return res.status(404).json({ error: "Product brand not found." })
+        }
+    }
+    if (updateBrand) {
+        // then update
+        updateBrand.brandName = brandName
+        await updateBrand.save()
+        return res.json(updateBrand)
+    }
+    let newBrand = await ProductBrand.findOne({ brandName })
+    if (newBrand) {
+        return res.status(403).json({ error: "Product brand already exist" })
+    }
+    newBrand = new ProductBrand({ systemName, brandName})
+    await newBrand.save()
+    res.json(newBrand)
+}
+
+exports.getProductBrands = async (req,res) => {
+    let productbrands = await ProductBrand.find()
+    if (!productbrands.length) {
+        return res.status(404).json({ error: "No product brands are available" })
+    }
+    res.json(productbrands)
 }

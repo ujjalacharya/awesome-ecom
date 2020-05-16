@@ -35,4 +35,4 @@ const miningSchema = new mongoose.Schema({
     }]
 });
 
-module.exports = mongoose.model("minedProduct", miningSchema);
+module.exports = mongoose.model("minedproduct", miningSchema);
