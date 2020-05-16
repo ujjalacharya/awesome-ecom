@@ -6,7 +6,7 @@ const storage =  multer.diskStorage({
       cb(null, './public/uploads')
     },
     filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + req.admin._id + '-' + Date.now() + path.extname(file.originalname))
+      cb(null, file.fieldname + '-' + req.profile._id + '-' + Date.now() + path.extname(file.originalname))
     }
   })
 
@@ -17,7 +17,7 @@ const fileFilter = (req, file, callback) => {
   }
   callback(null, true)
 }
-const limits = { fileSize: 2480 * 3230 }
+const limits = { fileSize: 1480 * 1230 }
 
 exports.uploadAdminDoc = multer({ storage, fileFilter, limits }).fields([
   { name: "citizenshipFront", maxCount: 1 },
