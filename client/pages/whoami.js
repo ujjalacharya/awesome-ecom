@@ -18,7 +18,6 @@ const Whoami = ({ user }) => (
 );
 
 Whoami.getInitialProps = async (ctx) => {
-  console.log("who am I");
   initialize(ctx);
   const token = ctx.store.getState().authentication.token;
   // if (token) {
