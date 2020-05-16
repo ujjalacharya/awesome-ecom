@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import Layout from "../../components/Layout";
+import SinglePostComponent from "../../components/SinglePostComponent";
+import initialize from "../../utils/initialize";
 
 export class Post extends Component {
-  static getInitialProps({ query: { id } }) {
+  static getInitialProps(ctx) {
+    initialize(ctx);
+
+    const {
+      query: { id },
+    } = ctx;
+
     return {
       id,
     };
@@ -10,8 +18,8 @@ export class Post extends Component {
   render() {
     return (
       <Layout>
-        <h1>Single post number {this.props.id}</h1>
-       </Layout>
+        <SinglePostComponent id={this.props.id}/>
+      </Layout>
     );
   }
 }
