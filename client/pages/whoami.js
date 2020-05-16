@@ -1,13 +1,14 @@
-import axios from 'axios';
-import { connect } from 'react-redux';
-import initialize from '../utils/initialize';
-import Layout from '../components/Layout';
+import axios from "axios";
+import { connect } from "react-redux";
+import initialize from "../utils/initialize";
+import Layout from "../components/Layout";
+import fetch from "isomorphic-unfetch";
 
 const Whoami = ({ user }) => (
   <Layout title="Who Am I">
     {(user && (
       <h3 className="title is-3">
-        You are logged in as{' '}
+        You are logged in as{" "}
         <strong className="is-size-2 has-text-primary">{user}</strong>.
       </h3>
     )) || (
@@ -16,21 +17,22 @@ const Whoami = ({ user }) => (
   </Layout>
 );
 
-Whoami.getInitialProps = async ctx => {
-  console.log("who am I")
+Whoami.getInitialProps = async (ctx) => {
+  console.log("who am I");
   initialize(ctx);
   const token = ctx.store.getState().authentication.token;
-  if (token) {
-    const response = await axios.get(`/api/user`, {
+  // if (token) {
+    const data = await fetch(`http://localhost:3000/api/user`, {
       headers: {
-        authorization: token
-      }
+        authorization: token,
+      },
     });
-    const user = response.data.user;
+    const response = await data.json();
+    const user = response.user;
     return {
-      user
+      user,
     };
-  }
+  // }
 };
 
-export default connect(state => state)(Whoami);
+export default connect((state) => state)(Whoami);
