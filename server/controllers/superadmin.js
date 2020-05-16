@@ -133,7 +133,7 @@ exports.blockUnblockAdmin = async(req,res) => {
 }
 exports.getBlockedAdmins = async(req,res) => {
     const page = req.query.page || 1
-    let admins = await Admin.find({ isBlocked: !null })
+    let admins = await Admin.find({ isBlocked: { "$ne": null } })
         .select('-password -salt')
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -157,7 +157,7 @@ exports.getNotBlockedAdmins = async(req, res) => {
 }
 exports.getVerifiedAdmins = async(req, res) => {
     const page = req.query.page || 1
-    let admins = await Admin.find({ isVerified: !null })
+    let admins = await Admin.find({ isVerified: {"$ne":null} })
         .select('-password -salt')
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -270,7 +270,7 @@ exports.getProducts = async (req, res) => {
 }
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
-    const products = await Product.find({ isVerified: !null })
+    const products = await Product.find({ isVerified: { "$ne": null } })
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
         .skip(perPage * page - perPage)
@@ -298,7 +298,7 @@ exports.notVerifiedProducts = async (req, res) => {
 }
 exports.deletedProducts = async (req, res) => {
     const page = req.query.page || 1
-    const products = await Product.find({ isDeleted: !null })
+    const products = await Product.find({ isDeleted: { "$ne": null } })
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
         .skip(perPage * page - perPage)

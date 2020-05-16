@@ -1,3 +1,6 @@
+const ProductBrand = require("../../models/ProductBrand")
+const path = require("path");
+const fs = require("fs");
 exports.validateSignUp = (req, res, next) => {
     // name is not null and between 4-10 characters
     req.check("name", "Name is required").notEmpty();
@@ -58,6 +61,14 @@ exports.validateBusinessInfo = (req,res, next) => {
     const errors = req.validationErrors();
     // if error show the first one as they happen
     if (errors) {
+        //make req.files to array of objs
+        let files = []
+        if (req.files) for (const file in req.files) {
+            files.push(req.files[file][0]);
+        }
+        files.forEach(file => {
+            fs.unlinkSync(file.path);//and remove file from public/uploads
+        })
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }
@@ -73,6 +84,7 @@ exports.validateAdminBankInfo = (req, res, next) => {
     const errors = req.validationErrors();
     // if error show the first one as they happen
     if (errors) {
+        req.file && fs.unlinkSync(req.file.path);//remove file from public/uploads
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }
@@ -109,24 +121,45 @@ exports.validateAdminProfile = (req,res,next) => {
     const errors = req.validationErrors();
     // if error show the first one as they happen
     if (errors) {
+        req.file && fs.unlinkSync(req.file.path);//remove file from public/uploads
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }
     next()
 }
-exports.validateProduct = (req, res, next) => {
+exports.validateProduct = async (req, res, next) => {
     req.check("name", "Product name is required").notEmpty()
     req.check("price", "Selling price of product is required").notEmpty()
     req.check("quantity", "Product quantity is required").notEmpty()
     req.check("return", "Product returning time peroid required").notEmpty()
     req.check("description", "Product description is required").notEmpty()
     req.check("warranty", "Product warranty is required").notEmpty()
-    req.check("description", "Product description is required").notEmpty()
+    req.check("brand", "Product brand is required").notEmpty()
 
     // check for errors
-    const errors = req.validationErrors();
+    const errors = req.validationErrors() || [];
+
+    // validate product brand
+    let text = req.body.brand;
+    let brands = await ProductBrand.find().select('-_id brand')
+    brands = brands[0].brand
+    if (!brands.length) {
+        errors.push({msg:"Could not find product brands."})
+    }
+    const brand = brands.find(brand => brand.toLowerCase().trim() === text.toLowerCase().trim())
+    if (!brand) {
+        errors.push({msg:"Invalid product brand"})
+    } else {
+        req.body.brand = brand
+    }
     // if error show the first one as they happen
     if (errors) {
+        req.files && req.files.forEach(file => {
+            const { filename } = file;
+            // remove image from public/uploads
+            const Path = `public/uploads/${filename}`;
+            fs.unlinkSync(Path);
+        })
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }

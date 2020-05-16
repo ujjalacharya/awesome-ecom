@@ -47,9 +47,6 @@ const adminSchema = new mongoose.Schema({
         type: Number,
         max: 9999999999
     },
-    isVerified: {
-        default: false
-    },
     email: {
         type: String,
         trim: true,
