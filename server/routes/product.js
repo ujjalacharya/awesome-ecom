@@ -1,6 +1,6 @@
 const express = require("express");
 
-const {createProduct,product,getProduct} = require("../controllers/product")
+const {createProduct,product,getProduct,updateProduct} = require("../controllers/product")
 const {profile} = require("../controllers/admin")
 const {uploadProductImages } = require("../middleware/helpers");
 const { validateProduct } = require("../middleware/validator")

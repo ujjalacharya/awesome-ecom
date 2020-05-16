@@ -45,8 +45,7 @@ const adminSchema = new mongoose.Schema({
     },
     phone: {
         type: Number,
-        max: 9999999999,
-        unique: true
+        max: 9999999999
     },
     isVerified: {
         default: false
