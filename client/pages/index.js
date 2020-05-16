@@ -3,9 +3,9 @@ import initialize from "../utils/initialize";
 import Layout from "../components/Layout";
 import { Card } from "antd";
 import fetch from "isomorphic-unfetch";
+import Link from "next/link";
 
 const Index = ({ response }) => {
-
   return (
     <Layout title="Home">
       <h2 className="title is-2">Authentication with Next.js and JWT</h2>
@@ -13,16 +13,18 @@ const Index = ({ response }) => {
       <p>A rock solid boilerplate by Uzz !</p>
       <div>
         {response.map((datum) => (
-          <Card
-            title={datum.title}
-            style={{
-              width: "100%",
-              backgroundColor: "lightblue",
-              margin: "2rem",
-            }}
-          >
-            <p>{datum.body}</p>
-          </Card>
+          <Link href={"/posts/[id]"} key={datum.id} as={`/posts/${datum.id}`}>
+            <Card
+              title={datum.title}
+              style={{
+                width: "100%",
+                backgroundColor: "lightblue",
+                margin: "2rem",
+              }}
+            >
+              <p>{datum.body}</p>
+            </Card>
+          </Link>
         ))}
       </div>
       ,

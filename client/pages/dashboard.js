@@ -4,7 +4,7 @@ import Private from "../auth/Private";
 
 const Dashboard = ({ isAuth }) => (
   <Private isAuth={isAuth}>
-    <Layout title="Who Am I">
+    <Layout title="Dashboard">
       <h3>Dashboard</h3>
     </Layout>
   </Private>
