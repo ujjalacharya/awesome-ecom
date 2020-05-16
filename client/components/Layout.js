@@ -12,20 +12,11 @@ Router.onRouteChangeError = (url) => NProgress.done();
 
 class Layout extends Component {
   render() {
-    const { children, title, isAuthenticated, deauthenticate } = this.props;
+    const { children, title="Home", isAuthenticated, deauthenticate } = this.props;
     return (
       <div>
         <Head>
           <title>{title || ""}</title>
-          <meta charSet="utf-8" />
-          <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
-          />
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"
-          />
         </Head>
         <div className="tabs is-centered">
           <ul>

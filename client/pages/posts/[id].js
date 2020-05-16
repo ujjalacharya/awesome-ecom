@@ -17,8 +17,8 @@ export class Post extends Component {
   }
   render() {
     return (
-      <Layout>
-        <SinglePostComponent id={this.props.id}/>
+      <Layout title={`Post ${this.props.id}`}>
+        <SinglePostComponent id={this.props.id} />
       </Layout>
     );
   }
