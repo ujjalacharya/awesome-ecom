@@ -18,6 +18,14 @@ body{
     min-height: calc(100vh - 415px);
 }
 
+.ant-input{
+    height: auto;
+}
+
+.ant-input-affix-wrapper{
+    height: 35px;
+}
+
 .breadcrumb-all{
     margin: 30px 0;
     padding: 10px 0;

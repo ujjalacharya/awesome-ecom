@@ -46,6 +46,14 @@ body.overflow {
   min-height: calc(100vh - 415px);
 }
 
+.ant-input {
+  height: auto;
+}
+
+.ant-input-affix-wrapper {
+  height: 35px;
+}
+
 .breadcrumb-all {
   margin: 30px 0;
   padding: 10px 0;
@@ -288,6 +296,12 @@ button.secondary:hover {
 }
 .my-profile .table-item-img {
   height: 60px;
+}
+.my-profile .my-orders h3 {
+  margin-bottom: 20px;
+}
+.my-profile .my-orders .orders-table {
+  margin-top: 20px;
 }
 
 .main-header {

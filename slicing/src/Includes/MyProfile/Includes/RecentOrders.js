@@ -98,7 +98,7 @@ class RecentOrders extends Component {
     ];
     return (
       <div className="recent-orders">
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table columns={columns} dataSource={data} />
       </div>
     );
   }
