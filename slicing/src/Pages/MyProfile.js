@@ -10,7 +10,7 @@ class MyProfile extends Component {
     return (
       <div className="my-profile">
         <Header />
-        <div className="container">
+        <div className="container min-height">
           <Row>
             <Col span={6}>
               <Menu />

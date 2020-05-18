@@ -42,8 +42,8 @@ body.overflow {
   margin-top: 40px;
 }
 
-.ant-table-tbody > tr > td {
-  padding-left: 0px;
+.min-height {
+  min-height: calc(100vh - 415px);
 }
 
 .breadcrumb-all {
@@ -148,6 +148,14 @@ button.primary {
 button.primary:hover {
   color: #61ce70;
   border-color: #61ce70;
+}
+button.secondary {
+  background-color: #48b5dc;
+  color: #fff;
+}
+button.secondary:hover {
+  color: #48b5dc;
+  border-color: #48b5dc;
 }
 
 .product-slider {
@@ -255,8 +263,16 @@ button.primary:hover {
   border: 1px solid #efefef;
   padding: 20px;
 }
-.my-profile .profile-details .ant-table-tbody > tr:last-child td {
+.ant-table-tbody > tr .my-profile .profile-details .profile-bottom:last-child td {
   border-bottom: 0px;
+}
+.my-profile .profile-details .profile-bottom td {
+  padding-left: 0px;
+}
+.my-profile .address-details .title-add {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .main-header {

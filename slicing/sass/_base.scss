@@ -14,8 +14,8 @@ body{
     margin-top: 40px;
 }
 
-.ant-table-tbody>tr>td{
-    padding-left: 0px;
+.min-height{
+    min-height: calc(100vh - 415px);
 }
 
 .breadcrumb-all{

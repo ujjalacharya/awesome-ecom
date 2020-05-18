@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Tabs } from "antd";
 import { StickyContainer, Sticky } from "react-sticky";
 import ProfileDetails from "./ProfileDetails";
+import AddressDetails from "./AddressDetails";
 
 const { TabPane } = Tabs;
 
@@ -26,8 +27,8 @@ class MenuDetails extends Component {
             <TabPane tab="My Profile" key="1">
               <ProfileDetails />
             </TabPane>
-            <TabPane tab="Tab 2" key="2">
-              Content of Tab Pane 2
+            <TabPane tab="My Address" key="2">
+              <AddressDetails />
             </TabPane>
             <TabPane tab="Tab 3" key="3">
               Content of Tab Pane 3
