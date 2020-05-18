@@ -280,6 +280,10 @@ button.secondary:hover {
 }
 .my-profile .profile-menu ul li {
   margin-bottom: 10px;
+  cursor: pointer;
+}
+.my-profile .profile-menu ul li:hover {
+  color: #61ce70;
 }
 .my-profile .menu-details h3 {
   margin-bottom: 20px;

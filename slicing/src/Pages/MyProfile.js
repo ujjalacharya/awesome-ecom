@@ -6,6 +6,7 @@ import { Row, Col } from "antd";
 import MenuDetails from "../Includes/MyProfile/MenuDetails";
 import MyOrders from "../Includes/MyProfile/MyOrders";
 import MyWishlist from "../Includes/MyProfile/MyWishlist";
+import MyReviews from "../Includes/MyProfile/MyReviews";
 
 class MyProfile extends Component {
   state = {
@@ -38,10 +39,10 @@ class MyProfile extends Component {
                 <MyOrders />
               }
               
-              {/* {
+              {
                 this.state.currentMenu === "my-reviews" &&
-                <MenuDetails />
-              } */}
+                <MyReviews />
+              }
               
               {
                 this.state.currentMenu === "my-whishlist" &&

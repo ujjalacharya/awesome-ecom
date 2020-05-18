@@ -8,6 +8,10 @@
       list-style: none;
       li {
         margin-bottom: 10px;
+        cursor: pointer;
+        &:hover{
+          color: $primary-color;
+        }
       }
     }
   }
