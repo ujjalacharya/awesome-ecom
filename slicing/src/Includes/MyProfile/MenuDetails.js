@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Tabs } from "antd";
 import { StickyContainer, Sticky } from "react-sticky";
-import ProfileDetails from "./ProfileDetails";
-import AddressDetails from "./AddressDetails";
-import RecentOrders from "./RecentOrders";
+import ProfileDetails from "./Includes/ProfileDetails";
+import AddressDetails from "./Includes/AddressDetails";
+import RecentOrders from "./Includes/RecentOrders";
 
 const { TabPane } = Tabs;
 
