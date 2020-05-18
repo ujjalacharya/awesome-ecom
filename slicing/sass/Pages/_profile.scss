@@ -1,10 +1,20 @@
 .my-profile {
+  .left-menu{
+    border-right: 1px solid #efefef;
+  }
   .profile-menu {
+    margin-top: 10px;
     ul {
       list-style: none;
       li {
         margin-bottom: 10px;
       }
+    }
+  }
+
+  .menu-details{
+    h3{
+      margin-bottom: 20px;
     }
   }
 
@@ -52,5 +62,9 @@
     .edit-address{
       margin-top: 25px;
     }
+  }
+
+  .table-item-img{
+    height: 60px;
   }
 }

@@ -12,10 +12,10 @@ class MyProfile extends Component {
         <Header />
         <div className="container min-height">
           <Row>
-            <Col span={6}>
+            <Col span={4} className="left-menu">
               <Menu />
             </Col>
-            <Col span={18}>
+            <Col span={20} style={{paddingLeft:40}}>
                 <MenuDetails />
             </Col>
           </Row>
