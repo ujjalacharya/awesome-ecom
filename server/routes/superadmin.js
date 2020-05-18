@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, createCategory, getCategories, approveProduct, disApproveProduct, deleteProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin,getVerifiedAdmins,getUnverifiedAdmins,getBlockedAdmins,getNotBlockedAdmins,getProducts
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, deleteProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand,getProductBrands
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 
@@ -20,9 +20,13 @@ router.get('/blocked-admins', auth, isSuperAdmin, getBlockedAdmins)
 router.get('/unblocked-admins', auth, isSuperAdmin, getNotBlockedAdmins)
 
 // category's..
-router.post('/create-category/', auth, isSuperAdmin, createCategory)
-router.get('/categories', getCategories)
+router.put('/product-category', auth, isSuperAdmin, category)//create and update
+router.get('/product-categories', getCategories)
 router.patch('/flip-category-availablity', auth, isSuperAdmin, flipCategoryAvailablity)
+
+// brand's..
+router.put('/product-brand',auth,isSuperAdmin,productBrand)//create and update
+router.get('/product-brands',getProductBrands)
 
 // product's..
 router.patch('/approve-product/:p_slug', auth, isSuperAdmin, approveProduct)

@@ -17,7 +17,7 @@ const fileFilter = (req, file, callback) => {
   }
   callback(null, true)
 }
-const limits = { fileSize: 1480 * 1230 }
+const limits = { fileSize: 2480 * 3230 }
 
 exports.uploadAdminDoc = multer({ storage, fileFilter, limits }).fields([
   { name: "citizenshipFront", maxCount: 1 },
