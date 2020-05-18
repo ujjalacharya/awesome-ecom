@@ -9,7 +9,7 @@ class Menu extends Component {
           <li onClick={() => this.props.changeMenuTab('my-orders')}>My Orders</li>
           <li onClick={() => this.props.changeMenuTab('my-reviews')}>My Reviews</li>
           <li onClick={() => this.props.changeMenuTab('my-whishlist')}>My Wishlist</li>
-          <li onClick={() => this.props.changeMenuTab('sell-on-daraz')}>Sell on Daraz</li>
+          <li onClick={() => this.props.changeMenuTab('sell-on-daraz')}>Sell on our site</li>
         </ul>
       </div>
     );
