@@ -26,17 +26,6 @@ exports.getProfile = async (req, res) => {
 // update or complete profile
 exports.updateProfile = async (req, res) => {
     let profile = req.profile
-    if (req.file !== undefined) {
-        const { filename: image } = req.file;
-        //Compress image
-        await sharp(req.file.path)
-            .resize(300)
-            .jpeg({ quality: 100 })
-            .toFile(path.resolve(req.file.destination, "admin", image))
-        fs.unlinkSync(req.file.path);
-        if (profile.photo) fs.unlinkSync(`public/uploads/${profile.photo}`)
-        profile.photo = "admin/" + image;
-    }
     // password update
     if (req.body.oldPassword && req.body.newPassword) {
         let admin = await Admin.findByCredentials(profile.email, req.body.oldPassword)
@@ -55,6 +44,24 @@ exports.updateProfile = async (req, res) => {
     profile.password = undefined;
 
     res.json(profile);
+}
+
+exports.uploadPhoto = async (req,res) => {
+    let profile = req.profile
+    if (req.file !== undefined) {
+        const { filename: image } = req.file;
+        //Compress image
+        await sharp(req.file.path)
+            .resize(300)
+            .jpeg({ quality: 100 })
+            .toFile(path.resolve(req.file.destination, "admin", image))
+        fs.unlinkSync(req.file.path);//remove from public/uploads
+        // if update then remove old photo
+        if (profile.photo) fs.unlinkSync(`public/uploads/${profile.photo}`)
+        profile.photo = "admin/" + image;
+    }
+    await profile.save()
+    res.json({photo:profile.photo})
 }
 
 exports.getBusinessInfo = async(req,res) => {
@@ -109,6 +116,10 @@ exports.businessinfo = async (req, res) => {
         .update(req.profile, { businessInfo: docs._id })//handle update issue todo..
         .run({ useMongoose: true })
     res.json(docs)
+}
+
+exports.uploadBusinessFile = async(req,res) => {
+    
 }
 
 exports.getBankInfo = async (req, res) => {

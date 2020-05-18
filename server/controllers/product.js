@@ -43,18 +43,9 @@ exports.productBrand = async (req, res) => {
 }
 
 exports.createProduct = async (req, res) => {
-    if (!req.files.length) {
-        return res.status(400).error({ error: "Product images are required" })
-    }
+    
     const category = await Category.findById(req.body.category)
-    if (!req.profile.isVerified || !category || category.isDisabled) {
-        req.files.forEach(file => {
-            const { filename } = file;
-            // remove image from public/uploads
-            const Path = `public/uploads/${filename}`;
-            fs.unlinkSync(Path);
-        })
-    }
+    
     if (!category) return res.status(404).json({ error: "Category not found." })
     if (category.isDisabled) return res.status(403).json({ error: "Category has been disabled" })
     if (!req.profile.isVerified) return res.status(403).json({ error: "Admin is not verified" })
@@ -93,6 +84,21 @@ exports.createProduct = async (req, res) => {
     newProduct = await newProduct.save()
 
     return res.json(newProduct)
+}
+
+exports.productImages = async(req,res) => {
+    if (!req.files.length) {
+        return res.status(400).error({ error: "Product images are required" })
+    }
+    if (!req.profile.isVerified ) {
+        req.files.forEach(file => {
+            const { filename } = file;
+            // remove image from public/uploads
+            const Path = `public/uploads/${filename}`;
+            fs.unlinkSync(Path);
+        })
+        return res.status(403).json({ error: "Admin is not verified" })
+    }
 }
 
 exports.updateProduct = async (req, res) => {
