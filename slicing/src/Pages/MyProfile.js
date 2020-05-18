@@ -5,6 +5,7 @@ import Footer from "../Components/Footer";
 import { Row, Col } from "antd";
 import MenuDetails from "../Includes/MyProfile/MenuDetails";
 import MyOrders from "../Includes/MyProfile/MyOrders";
+import MyWishlist from "../Includes/MyProfile/MyWishlist";
 
 class MyProfile extends Component {
   state = {
@@ -40,14 +41,14 @@ class MyProfile extends Component {
               {/* {
                 this.state.currentMenu === "my-reviews" &&
                 <MenuDetails />
-              }
+              } */}
               
               {
                 this.state.currentMenu === "my-whishlist" &&
-                <MenuDetails />
+                <MyWishlist />
               }
               
-              {
+              {/* {
                 this.state.currentMenu === "sell-on-daraz" &&
                 <MenuDetails />
               } */}

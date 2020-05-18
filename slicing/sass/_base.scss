@@ -14,6 +14,28 @@ body{
     margin-top: 40px;
 }
 
+.action-btn{
+    border: 1px solid;
+    padding: 5px;
+    font-size: 12px;
+    &.action-btn-delete{
+        color: red;
+        border-color: red;
+        &:hover{
+            background-color: red;
+            color: #fff;
+        }
+    }
+    &.action-btn-add{
+        color: $secondary-color;
+        border-color: $secondary-color;
+        &:hover{
+            background-color: $secondary-color;
+            color: #fff;
+        }
+    }
+}
+
 .min-height{
     min-height: calc(100vh - 415px);
 }

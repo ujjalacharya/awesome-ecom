@@ -3,15 +3,9 @@ import { Input, Row, Col, Select } from "antd";
 import { Table, Tag, Space } from "antd";
 
 const { Search } = Input;
-const { Option } = Select;
+// const { Option } = Select;
 
-class MyOrders extends Component {
-  onChange = (value) => {
-    console.log(`selected ${value}`);
-  }
-  onSearch = (val) => {
-    console.log('search:', val);
-  }
+class MyWishlist extends Component {
   render() {
     const columns = [
       {
@@ -25,30 +19,6 @@ class MyOrders extends Component {
         dataIndex: "itemName",
         key: "itemName",
         render: (text) => <a>{text}</a>,
-      },
-      {
-        title: 'Status',
-        key: 'status',
-        dataIndex: 'status',
-        render: tags => (
-          <>
-            {tags.map(tag => {
-              let color = 'green';
-              if (tag === 'purchased') {
-                color = 'green';
-              }else if(tag === 'cancelled'){
-                  color = 'blue'
-              }else{
-                  color='red'
-              }
-              return (
-                <Tag color={color} key={tag}>
-                  {tag.toUpperCase()}
-                </Tag>
-              );
-            })}
-          </>
-        ),
       },
       {
         title: "Sold By",
@@ -66,23 +36,20 @@ class MyOrders extends Component {
         dataIndex: "price",
         key: "price",
       },
-    //   {
-    //     title: "Action",
-    //     key: "action",
-    //     render: (text, record) => (
-    //       <Space size="middle">
-    //         <a
-    //           onClick={() =>
-    //             this.setState({
-    //               show: "form",
-    //             })
-    //           }
-    //         >
-    //           Edit
-    //         </a>
-    //       </Space>
-    //     ),
-    //   },
+      {
+        title: "Action",
+        key: "action",
+        render: (text, record) => (
+          <Space size="middle">
+            <a className="action-btn action-btn-delete">
+              <i class="fa fa-trash-o" aria-hidden="true"></i> Delete 
+            </a>
+            <a className="action-btn action-btn-add">
+              <i class="fa fa-plus" aria-hidden="true"></i> Add to Cart 
+            </a>
+          </Space>
+        ),
+      },
     ];
 
     const data = [
@@ -90,7 +57,6 @@ class MyOrders extends Component {
         key: "1",
         image: <img src="/images/helmet.jpg" className="table-item-img" />,
         itemName: "Studds D2 Matte Double Visor Full Helmet - Black/white/grey",
-        status: ["purchased"],
         soldBy: "STUDDS",
         qty: "1",
         price: "4000",
@@ -99,15 +65,14 @@ class MyOrders extends Component {
         key: "2",
         image: <img src="/images/prod-bag.jpg" className="table-item-img" />,
         itemName: "Auctor Sem Argu",
-        status: ["cancelled"],
         soldBy: "Fashionista",
         qty: "2",
         price: "1500",
       },
     ];
     return (
-      <div className="my-orders">
-        <h3>My Orders</h3>
+      <div className="my-wishlist">
+        <h3>My Wishlist</h3>
         <Row>
           <Col span={8}>
             <Search
@@ -117,7 +82,7 @@ class MyOrders extends Component {
             />
           </Col>
           <Col span={8}>
-            <Select
+            {/* <Select
               showSearch
               style={{ width: 200 }}
               placeholder="Select a status"
@@ -133,7 +98,7 @@ class MyOrders extends Component {
               <Option value="toPay">To Pay</Option>
               <Option value="toShip">To Ship</Option>
               <Option value="toReceive">To Receive</Option>
-            </Select>
+            </Select> */}
           </Col>
           <Col span={6}></Col>
         </Row>
@@ -143,4 +108,4 @@ class MyOrders extends Component {
   }
 }
 
-export default MyOrders;
+export default MyWishlist;

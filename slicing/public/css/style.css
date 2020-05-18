@@ -42,6 +42,28 @@ body.overflow {
   margin-top: 40px;
 }
 
+.action-btn {
+  border: 1px solid;
+  padding: 5px;
+  font-size: 12px;
+}
+.action-btn.action-btn-delete {
+  color: red;
+  border-color: red;
+}
+.action-btn.action-btn-delete:hover {
+  background-color: red;
+  color: #fff;
+}
+.action-btn.action-btn-add {
+  color: #48b5dc;
+  border-color: #48b5dc;
+}
+.action-btn.action-btn-add:hover {
+  background-color: #48b5dc;
+  color: #fff;
+}
+
 .min-height {
   min-height: calc(100vh - 415px);
 }
@@ -301,6 +323,12 @@ button.secondary:hover {
   margin-bottom: 20px;
 }
 .my-profile .my-orders .orders-table {
+  margin-top: 20px;
+}
+.my-profile .my-wishlist h3 {
+  margin-bottom: 20px;
+}
+.my-profile .my-wishlist .orders-table {
   margin-top: 20px;
 }
 
