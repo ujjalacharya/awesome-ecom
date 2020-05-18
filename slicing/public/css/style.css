@@ -436,6 +436,9 @@ button.primary:hover {
   background: #222222;
   color: #c5c5c5;
   padding: 20px 30px;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }
 .footer .company-info .logo {
   margin-bottom: 15px;
