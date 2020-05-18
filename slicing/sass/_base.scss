@@ -11,6 +11,11 @@ body{
 .container {
     padding: 0 80px;
     margin: auto;
+    margin-top: 40px;
+}
+
+.ant-table-tbody>tr>td{
+    padding-left: 0px;
 }
 
 .breadcrumb-all{

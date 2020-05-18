@@ -1,0 +1,42 @@
+.my-profile {
+  .profile-menu {
+    ul {
+      list-style: none;
+      li {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .profile-details {
+    .main-profile {
+      border: 1px solid #efefef;
+      padding: 20px;
+      .left-prof {
+        img {
+          height: 150px;
+          width: 150px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+      .right-prof{
+          .em-det{
+              div{
+                  margin-bottom: 5px;
+              }
+          }
+      }
+    }
+    .profile-bottom {
+      margin-top: 20px;
+      border: 1px solid #efefef;
+      padding: 20px;
+    }
+    .ant-table-tbody > tr:last-child{
+        td{
+            border-bottom: 0px;
+        }
+    }
+  }
+}

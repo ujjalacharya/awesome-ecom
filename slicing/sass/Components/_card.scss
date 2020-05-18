@@ -13,6 +13,9 @@
       }
     }
   }
+  .product-box-shadow{
+    border: 1px solid $border-color;
+  }
   .hover-items-image {
     position: relative;
     display: flex;
@@ -51,7 +54,6 @@
   }
   .card-body {
     padding: 5px 10px;
-    border: 1px solid #f7f7f7;
     border-top: 0px;
     .card-category {
       display: flex;
