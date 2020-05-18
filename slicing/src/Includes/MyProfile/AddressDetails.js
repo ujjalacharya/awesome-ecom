@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import { Row, Col, Button } from "antd";
 import { Table, Tag, Space } from "antd";
+import EditAddressForm from "./EditAddressForm";
 
 class AddressDetails extends Component {
+  state = {
+    show: "table",
+  };
   render() {
     const columns = [
       {
@@ -27,7 +31,15 @@ class AddressDetails extends Component {
         key: "action",
         render: (text, record) => (
           <Space size="middle">
-            <a>Edit</a>
+            <a
+              onClick={() =>
+                this.setState({
+                  show: "form",
+                })
+              }
+            >
+              Edit
+            </a>
           </Space>
         ),
       },
@@ -53,7 +65,11 @@ class AddressDetails extends Component {
           <h4>Profile Details</h4>
           <Button className="secondary">Add new address</Button>
         </div>
-        <Table columns={columns} dataSource={data} pagination={false} />
+        {this.state.show === "form" ? (
+          <EditAddressForm />
+        ) : (
+          <Table columns={columns} dataSource={data} pagination={false} />
+        )}
       </div>
     );
   }

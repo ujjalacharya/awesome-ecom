@@ -274,6 +274,9 @@ button.secondary:hover {
   align-items: center;
   justify-content: space-between;
 }
+.my-profile .address-details .edit-address {
+  margin-top: 25px;
+}
 
 .main-header {
   padding: 10px 20px;
