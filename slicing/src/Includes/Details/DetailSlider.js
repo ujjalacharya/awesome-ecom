@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { Component } from "react";
 import Slider from "react-slick";
 import PrevArrow from "../../Components/Includes/PrevArrow";
 import NextArrow from "../../Components/Includes/NextArrow";
@@ -55,37 +55,37 @@ class DetailSlider extends Component {
         <Slider {...settings} className="product-detail-slider">
           <img
             src="/images/prod-bag.jpg"
-            alt="product image"
+            alt="product image1"
             onClick={() => this.changeImage("/images/prod-bag.jpg")}
             className="prod-img"
           />
           <img
             src="/images/jacket.jpg"
-            alt="product image"
+            alt="product image2"
             onClick={() => this.changeImage("/images/jacket.jpg")}
             className="prod-img"
           />
           <img
             src="/images/top-viewed-1.jpg"
-            alt="product image"
+            alt="product image3"
             onClick={() => this.changeImage("/images/top-viewed-1.jpg")}
             className="prod-img"
           />
           <img
             src="/images/new-arrivals.jpg"
-            alt="product image"
+            alt="product image4"
             onClick={() => this.changeImage("/images/new-arrivals.jpg")}
             className="prod-img"
           />
           <img
             src="/images/prod-bag-2.jpg"
-            alt="product image"
+            alt="product image5"
             onClick={() => this.changeImage("/images/prod-bag-2.jpg")}
             className="prod-img"
           />
           <img
             src="/images/prod-bag-3.jpg"
-            alt="product image"
+            alt="product image6"
             onClick={() => this.changeImage("/images/prod-bag-3.jpg")}
             className="prod-img"
           />

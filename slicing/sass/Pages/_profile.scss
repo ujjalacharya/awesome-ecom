@@ -1,0 +1,92 @@
+.my-profile {
+  .left-menu{
+    border-right: 1px solid #efefef;
+  }
+  .profile-menu {
+    margin-top: 10px;
+    ul {
+      list-style: none;
+      li {
+        margin-bottom: 10px;
+        cursor: pointer;
+        &:hover{
+          color: $primary-color;
+        }
+      }
+    }
+  }
+
+  .menu-details{
+    h3{
+      margin-bottom: 20px;
+    }
+  }
+
+  .profile-details {
+    .main-profile {
+      border: 1px solid #efefef;
+      padding: 20px;
+      .left-prof {
+        img {
+          height: 150px;
+          width: 150px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+      .right-prof {
+        .em-det {
+          div {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+    .profile-bottom {
+      margin-top: 20px;
+      border: 1px solid #efefef;
+      padding: 20px;
+      .ant-table-tbody > tr &:last-child {
+        td {
+          border-bottom: 0px;
+        }
+      }
+      td {
+        padding-left: 0px;
+      }
+    }
+  }
+
+  .address-details{
+    .title-add{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .edit-address{
+      margin-top: 25px;
+    }
+  }
+
+  .table-item-img{
+    height: 60px;
+  }
+
+  .my-orders{
+    h3{
+      margin-bottom: 20px;
+    }
+    .orders-table{
+      margin-top: 20px;
+    }
+  }
+
+  .my-wishlist{
+    h3{
+      margin-bottom: 20px;
+    }
+    .orders-table{
+      margin-top: 20px;
+    }
+  }
+}

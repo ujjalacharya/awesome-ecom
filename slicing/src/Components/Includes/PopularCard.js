@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactTooltip from "react-tooltip";
 
 class PopularCard extends Component {
   render() {
@@ -8,7 +7,7 @@ class PopularCard extends Component {
         <div className="product-box-shadow">
           <div className="hover-items-image">
             <div className="image">
-              <img src="/images/prod-bag.jpg" />
+              <img src="/images/prod-bag.jpg" alt="img"/>
             </div>
           </div>
           <div className="card-body">

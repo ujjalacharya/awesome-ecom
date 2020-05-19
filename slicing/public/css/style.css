@@ -39,6 +39,41 @@ body.overflow {
 .container {
   padding: 0 80px;
   margin: auto;
+  margin-top: 40px;
+}
+
+.action-btn {
+  border: 1px solid;
+  padding: 5px;
+  font-size: 12px;
+}
+.action-btn.action-btn-delete {
+  color: red;
+  border-color: red;
+}
+.action-btn.action-btn-delete:hover {
+  background-color: red;
+  color: #fff;
+}
+.action-btn.action-btn-add {
+  color: #48b5dc;
+  border-color: #48b5dc;
+}
+.action-btn.action-btn-add:hover {
+  background-color: #48b5dc;
+  color: #fff;
+}
+
+.min-height {
+  min-height: calc(100vh - 415px);
+}
+
+.ant-input {
+  height: auto;
+}
+
+.ant-input-affix-wrapper {
+  height: 35px;
 }
 
 .breadcrumb-all {
@@ -144,6 +179,14 @@ button.primary:hover {
   color: #61ce70;
   border-color: #61ce70;
 }
+button.secondary {
+  background-color: #48b5dc;
+  color: #fff;
+}
+button.secondary:hover {
+  color: #48b5dc;
+  border-color: #48b5dc;
+}
 
 .product-slider {
   padding: 0 40px;
@@ -224,6 +267,73 @@ button.primary:hover {
   .delivery-address .address-form .save-address button {
     margin-top: 10px;
   }
+}
+
+.my-profile .left-menu {
+  border-right: 1px solid #efefef;
+}
+.my-profile .profile-menu {
+  margin-top: 10px;
+}
+.my-profile .profile-menu ul {
+  list-style: none;
+}
+.my-profile .profile-menu ul li {
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.my-profile .profile-menu ul li:hover {
+  color: #61ce70;
+}
+.my-profile .menu-details h3 {
+  margin-bottom: 20px;
+}
+.my-profile .profile-details .main-profile {
+  border: 1px solid #efefef;
+  padding: 20px;
+}
+.my-profile .profile-details .main-profile .left-prof img {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.my-profile .profile-details .main-profile .right-prof .em-det div {
+  margin-bottom: 5px;
+}
+.my-profile .profile-details .profile-bottom {
+  margin-top: 20px;
+  border: 1px solid #efefef;
+  padding: 20px;
+}
+.ant-table-tbody > tr .my-profile .profile-details .profile-bottom:last-child td {
+  border-bottom: 0px;
+}
+.my-profile .profile-details .profile-bottom td {
+  padding-left: 0px;
+}
+.my-profile .address-details .title-add {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.my-profile .address-details .edit-address {
+  margin-top: 25px;
+}
+.my-profile .table-item-img {
+  height: 60px;
+}
+.my-profile .my-orders h3 {
+  margin-bottom: 20px;
+}
+.my-profile .my-orders .orders-table {
+  margin-top: 20px;
+}
+.my-profile .my-wishlist h3 {
+  margin-bottom: 20px;
+}
+.my-profile .my-wishlist .orders-table {
+  margin-top: 20px;
 }
 
 .main-header {
@@ -345,6 +455,9 @@ button.primary:hover {
 .product-card:hover .hover-items-image .card-hover-items {
   visibility: visible;
 }
+.product-card .product-box-shadow {
+  border: 1px solid #f7f7f7;
+}
 .product-card .hover-items-image {
   position: relative;
   display: flex;
@@ -382,7 +495,6 @@ button.primary:hover {
 }
 .product-card .card-body {
   padding: 5px 10px;
-  border: 1px solid #f7f7f7;
   border-top: 0px;
 }
 .product-card .card-body .card-category {
