@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import ReactTooltip from "react-tooltip";
-import { Tooltip, Button } from "antd";
+import { Tooltip } from "antd";
 
 class ProductCard extends Component {
   render() {
@@ -18,7 +17,7 @@ class ProductCard extends Component {
                   title="Quick View"
                   arrowPointAtCenter
                 >
-                  <img src="/images/medical.png" />
+                  <img src="/images/medical.png" alt="medical.png"/>
                 </Tooltip>
               </div>
               <div className="card-items">
@@ -27,7 +26,7 @@ class ProductCard extends Component {
                   title="Add to Cart"
                   arrowPointAtCenter
                 >
-                  <img src="/images/bag.png" />
+                  <img src="/images/bag.png" alt="bag.jpg"/>
                 </Tooltip>
               </div>
               <div className="card-items">
@@ -36,7 +35,7 @@ class ProductCard extends Component {
                   title="Add to Wishlist"
                   arrowPointAtCenter
                 >
-                  <img src="/images/heart.png" />
+                  <img src="/images/heart.png" alt="heart.jpg"/>
                 </Tooltip>
               </div>
               <div className="card-items">
@@ -45,22 +44,22 @@ class ProductCard extends Component {
                   title="Add to Compare"
                   arrowPointAtCenter
                 >
-                  <img src="/images/sliders.png" />
+                  <img src="/images/sliders.png" alt="slider.jpg"/>
                 </Tooltip>
               </div>
             </div>
             <div className="image">
-              <img src="/images/prod-bag.jpg" />
+              <img src="/images/prod-bag.jpg" alt="prod-bag.jpg"/>
             </div>
           </div>
           <div className="card-body">
             <div className="card-category">
               <div className="cate">Mens - Bags - Black</div>
               <div className="stars">
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
               </div>
             </div>
             <div className="prod-name">Auctor Sem Argu</div>
