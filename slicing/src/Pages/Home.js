@@ -16,28 +16,30 @@ class Home extends Component {
         <div className="main-carousel">
           <MainCarousel />
         </div>
-        <SliderHeader
-          headTitle="Featured Products"
-          headDetails="Quicksand is a sans serif type family of three weights plus matching
+        <div className="container">
+          <SliderHeader
+            headTitle="Featured Products"
+            headDetails="Quicksand is a sans serif type family of three weights plus matching
           obliques"
-        />
-        <ProductSlider />
-        <section className="latest-popular">
-          <Row>
-            <Col span={12}>
-              <Popular />
-            </Col>
-            <Col span={12}>
-              <LatestSLider />
-            </Col>
-          </Row>
-        </section>
-        <SliderHeader
-          headTitle="Trending Products"
-          headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
-          removePaddingTop="paddingTopZero"
-        />
-        <ProductSlider />
+          />
+          <ProductSlider />
+          <section className="latest-popular">
+            <Row>
+              <Col span={12}>
+                <Popular />
+              </Col>
+              <Col span={12}>
+                <LatestSLider />
+              </Col>
+            </Row>
+          </section>
+          <SliderHeader
+            headTitle="Trending Products"
+            headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+            removePaddingTop="paddingTopZero"
+          />
+          <ProductSlider />
+        </div>
         <Footer />
       </div>
     );
