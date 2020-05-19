@@ -8,10 +8,10 @@ const { auth, isSuperAdmin, isAdmin, hasAuthorization } = require('../controller
 
 const router = express.Router();
 router.get("/product-brand", productBrand)
+router.post("/upload-product-images/:id",auth,hasAuthorization, uploadProductImages, productImages)
 router.route("/:id")
-    .post(auth, hasAuthorization, uploadProductImages, validateProduct, createProduct)
-    .patch(auth,hasAuthorization, uploadProductImages, productImages)
-router.put("/:id/:p_slug", auth, hasAuthorization, uploadProductImages, validateProduct, updateProduct)
+    .post(auth, hasAuthorization, validateProduct, createProduct)
+router.put("/:id/:p_slug", auth, hasAuthorization, validateProduct, updateProduct)
 router.get('/:p_slug', getProduct)
 
 router.param('p_slug', product)

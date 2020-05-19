@@ -39,7 +39,6 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes
 app.use("/api/admin-auth", require("./routes/admin_auth"));
-app.use("/api/professor-auth", require("./routes/professor_auth"));
 app.use("/api/user-auth", require("./routes/user_auth"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/superadmin", require("./routes/superadmin"));

@@ -19,8 +19,22 @@ const orderSchema = new mongoose.Schema({
         type: Number
     },
     status: {
-        type: String,
-        enum: ["active", "complete", "canceled"]
+        currentStatus: {
+            type: String,
+            enum: ["active","cancel","complete"]
+        },
+        activeDate: {
+            type: Date,
+            default: null
+        },
+        cancelledDate: {
+            type: Date,
+            default: null
+        },
+        completedDate: {
+            type: Date,
+            default: null
+        }
     },
     isPaid:{
         type: Boolean

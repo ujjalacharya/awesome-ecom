@@ -153,12 +153,6 @@ exports.validateProduct = async (req, res, next) => {
     }
     // if error show the first one as they happen
     if (errors) {
-        req.files && req.files.forEach(file => {
-            const { filename } = file;
-            // remove image from public/uploads
-            const Path = `public/uploads/${filename}`;
-            fs.unlinkSync(Path);
-        })
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }

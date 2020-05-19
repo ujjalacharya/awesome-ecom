@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-// const slug = require("mongoose-slug-updater");
-// mongoose.plugin(slug);
 const URLSlugs = require('mongoose-url-slugs');
 const Schema = mongoose.Schema;
 const productSchema = mongoose.Schema({
@@ -28,6 +26,10 @@ const productSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'admin'
     },
+    images: [{
+        type: Schema.Types.ObjectId,
+        ref: 'productimages'
+    }],
     warranty: {
         type: String,
         trim: true,
@@ -66,15 +68,6 @@ const productSchema = mongoose.Schema({
         trim: true,
         maxlength: 2000
     },
-    productLarge: [{
-        type: String
-    }],
-    productMedium:{
-        type: String
-    },
-    productThumbnail:{
-        type: String
-    },
     tags: [{
         type: String
     }],
@@ -108,12 +101,6 @@ const productSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'remark'
     },
-    // slug: {
-    //     type: String,
-    //     slug: "brand",
-    //     unique: true,
-    //     slugPaddingSize: 4
-    // }
 }, { timestamps: true });
 productSchema.plugin(URLSlugs('name', { field: 'slug', update: true }));
 module.exports = mongoose.model("product", productSchema);

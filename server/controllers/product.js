@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const Category = require("../models/Category")
 const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
+const ProductImages = require("../models/ProductImages")
 const shortid = require('shortid');
 const sharp = require("sharp")
 const path = require("path");
@@ -28,7 +29,7 @@ exports.productBrand = async (req, res) => {
     let text = req.query.brand;
 
     let results = [];
-    let brands = await ProductBrand.find().select('-_id brand')
+    let brands = await ProductBrand.find()
     brands = brands[0].brand
     if (!brands.length) {
         res.status(404).json({ error: "Product brands are unavailable at the moment. Please try again letter." })
@@ -43,42 +44,14 @@ exports.productBrand = async (req, res) => {
 }
 
 exports.createProduct = async (req, res) => {
-    
+
     const category = await Category.findById(req.body.category)
-    
+
     if (!category) return res.status(404).json({ error: "Category not found." })
     if (category.isDisabled) return res.status(403).json({ error: "Category has been disabled" })
     if (!req.profile.isVerified) return res.status(403).json({ error: "Admin is not verified" })
     let newProduct = new Product(req.body)
     newProduct.soldBy = req.profile._id
-
-    // make copy of 1 image as a thumbnail of product and move to the uploads/productThumbnail folder
-    const { filename, destination, path: filepath } = req.files[0]
-    await sharp(filepath)
-        .resize(80)
-        .toFile(path.resolve(destination, 'productThumbnail', filename))
-    // add path to the product collection
-    newProduct.productThumbnail = `productThumbnail/${filename}`
-
-    // make copy of 1 image as a mediumsize of product and move to the uploads/productMedium folder
-    await sharp(filepath)
-        .resize(540)
-        .toFile(path.resolve(destination, 'productMedium', filename))
-    // add path to the product collection
-    newProduct.productMedium = `productMedium/${filename}`
-
-    // now copy all images nd resize with upperlimit of 900px and move to uploads/productLarge folder,finally remove all images from public/uploads
-    req.files.forEach(async file => {
-        const { filename, destination, path: filepath } = file;
-        await sharp(filepath)
-            .resize(800)
-            .toFile(path.resolve(destination, 'productLarge', filename))
-        // remove image from public/uploads
-        const Path = `public/uploads/${filename}`;
-        fs.unlinkSync(Path);
-    })
-    // add images path to the product collection
-    newProduct.productLarge = req.files.map(file => `productLarge/${file.filename}`)
 
     // save the product
     newProduct = await newProduct.save()
@@ -86,11 +59,11 @@ exports.createProduct = async (req, res) => {
     return res.json(newProduct)
 }
 
-exports.productImages = async(req,res) => {
+exports.productImages = async (req, res) => {
     if (!req.files.length) {
         return res.status(400).error({ error: "Product images are required" })
     }
-    if (!req.profile.isVerified ) {
+    if (!req.profile.isVerified) {
         req.files.forEach(file => {
             const { filename } = file;
             // remove image from public/uploads
@@ -99,6 +72,31 @@ exports.productImages = async(req,res) => {
         })
         return res.status(403).json({ error: "Admin is not verified" })
     }
+    const compressImage = async (filename, size, filepath, destination, foldername) => {
+        await sharp(filepath)
+        .resize(size)
+        .toFile(path.resolve(destination, `${foldername}`, filename))
+        return `${foldername}/${filename}`
+    }
+    let images = []
+    req.files.forEach(async file => {
+        let image = new ProductImages()
+        const { filename, path: filepath, destination } = file
+        image.thumbnail = await compressImage(filename, 80, filepath, destination, 'productThumbnail')
+        image.medium = await compressImage(filename, 540, filepath, destination, 'productMedium')
+        image.large = await compressImage(filename, 800, filepath, destination, 'productLarge')
+        // remove image from public/uploads
+        const Path = `public/uploads/${filename}`;
+        fs.unlinkSync(Path);
+        console.log(image,'in');
+        image = await image.save()
+        images.push(image)
+    })
+    console.log('hello');
+    console.log(images,'out');
+    res.json(images)
+
+
 }
 
 exports.updateProduct = async (req, res) => {
