@@ -78,9 +78,8 @@ exports.productImages = async (req, res) => {
         .toFile(path.resolve(destination, `${foldername}`, filename))
         return `${foldername}/${filename}`
     }
-    let images = []
-    req.files.forEach(async file => {
-        let image = new ProductImages()
+    let images = req.files.map(async file => {
+        const image = new ProductImages()
         const { filename, path: filepath, destination } = file
         image.thumbnail = await compressImage(filename, 80, filepath, destination, 'productThumbnail')
         image.medium = await compressImage(filename, 540, filepath, destination, 'productMedium')
@@ -88,12 +87,9 @@ exports.productImages = async (req, res) => {
         // remove image from public/uploads
         const Path = `public/uploads/${filename}`;
         fs.unlinkSync(Path);
-        console.log(image,'in');
-        image = await image.save()
-        images.push(image)
+        return await image.save()
     })
-    console.log('hello');
-    console.log(images,'out');
+    images = await Promise.all(images)
     res.json(images)
 
 
