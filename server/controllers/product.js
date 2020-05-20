@@ -76,27 +76,27 @@ exports.deleteImage = async(req,res) => {
     }
     let updateProduct = product.toObject()
     let imageURLS;
-    let results;
     updateProduct.images = product.images.filter(image => {
         if (image._id.toString() === req.query.image_id) imageURLS = image
         return image._id.toString() !== req.query.image_id
     })
-    if(imageURLS) {
-        results = await task
-        .update(product, updateProduct)
-        .options({viaSave: true})
-        .remove(ProductImages, { _id: req.query.image_id})
-        .run({ useMongoose: true })
-        
-        let Path = `public/uploads/${imageURLS.thumbnail}`;
-        await fs.unlink(Path);
-        Path = `public/uploads/${imageURLS.medium}`;
-        await fs.unlink(Path)
-        Path =`public/uploads/${imageURLS.large}`;
-        await fs.unlink(Path)
+    if(!imageURLS) {
+        return res.status(404).json({error:"Image not found"})
     }
+    await task
+    .update(product, updateProduct)
+    .options({viaSave: true})
+    .remove(ProductImages, { _id: req.query.image_id})
+    .run({ useMongoose: true })
 
-    res.json(results[0])
+    let Path = `public/uploads/${imageURLS.thumbnail}`;
+    fs.unlinkSync(Path);
+    Path = `public/uploads/${imageURLS.medium}`;
+    fs.unlinkSync(Path)
+    Path =`public/uploads/${imageURLS.large}`;
+    fs.unlinkSync(Path)
+    res.json(updateProduct.images)
+
 }
 
 exports.updateProduct = async (req, res) => {
