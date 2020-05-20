@@ -13,7 +13,7 @@ const task = Fawn.Task();
 const perPage = 10;
 
 exports.product = async (req, res, next) => {
-    const product = await Product.findOne({ slug: req.params.p_slug })
+    const product = await Product.findOne({ slug: req.params.p_slug }).populate('images','-createdAt -updatedAt -__v')
     if (!product) {
         return res.status(404).json({ error: 'Product not found.' })
     }
@@ -25,34 +25,10 @@ exports.getProduct = (req, res) => {
     res.json(req.product);
 }
 
-exports.productBrand = async (req, res) => {
-    let text = req.query.brand;
-
-    let results = [];
-    let brands = await ProductBrand.find()
-    brands = brands[0].brand
-    if (!brands.length) {
-        res.status(404).json({ error: "Product brands are unavailable at the moment. Please try again letter." })
-    }
-    brands.forEach(brand => {
-        if (brand.toLowerCase().indexOf(text.toLowerCase()) > -1) {
-            results.push(brand)
-        }
-    })
-    if (results.length > 7) results.length = 7
-    return res.json(results)
-}
-
 exports.createProduct = async (req, res) => {
-
-    const category = await Category.findById(req.body.category)
-
-    if (!category) return res.status(404).json({ error: "Category not found." })
-    if (category.isDisabled) return res.status(403).json({ error: "Category has been disabled" })
     if (!req.profile.isVerified) return res.status(403).json({ error: "Admin is not verified" })
     let newProduct = new Product(req.body)
     newProduct.soldBy = req.profile._id
-
     // save the product
     newProduct = await newProduct.save()
 
@@ -91,8 +67,35 @@ exports.productImages = async (req, res) => {
     })
     images = await Promise.all(images)
     res.json(images)
+}
 
+exports.deleteImage = async(req,res) => {
+    let product = req.product
+    if (product.isVerified) {
+        return res.status(403).json({ error: 'Cannot delete image. Product has already been verified.' })
+    }
+    let updateProduct = product.toObject()
+    let imageURLS;
+    let results;
+    updateProduct.images = product.images.filter(image => {
+        if (image._id.toString() === req.query.image_id) imageURLS = image
+        return image._id.toString() !== req.query.image_id
+    })
+    if(imageURLS) {
+        results = await task
+        .update(product, updateProduct)
+        .options({viaSave: true})
+        .remove(ProductImages, { _id: req.query.image_id})
+        .run({ useMongoose: true })
+        let Path = `public/uploads/${imageURLS.thumbnail}`;
+        await fs.unlink(Path);
+        Path = `public/uploads/${imageURLS.medium}`;
+        await fs.unlink(Path)
+        Path =`public/uploads/${imageURLS.large}`;
+        await fs.unlink(Path)
+    }
 
+    res.json(results[0])
 }
 
 exports.updateProduct = async (req, res) => {

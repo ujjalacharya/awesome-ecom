@@ -343,14 +343,11 @@ exports.notDeletedProducts = async (req, res) => {
 exports.productBrand = async(req, res) => {
     const { brandName, brand_id } = req.body
     const systemName = shortid.generate()
-    let updateBrand;
     if (brand_id) {
-        updateBrand = await ProductBrand.findById(brand_id)
+        let updateBrand = await ProductBrand.findById(brand_id)
         if (!updateBrand) {
             return res.status(404).json({ error: "Product brand not found." })
         }
-    }
-    if (updateBrand) {
         // then update
         updateBrand.brandName = brandName
         await updateBrand.save()

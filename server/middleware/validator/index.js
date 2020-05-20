@@ -1,4 +1,6 @@
 const ProductBrand = require("../../models/ProductBrand")
+const ProductImages = require("../../models/ProductImages")
+const Category = require("../../models/Category")
 const path = require("path");
 const fs = require("fs");
 exports.validateSignUp = (req, res, next) => {
@@ -138,21 +140,36 @@ exports.validateProduct = async (req, res, next) => {
     // check for errors
     const errors = req.validationErrors() || [];
 
-    // validate product brand
-    let text = req.body.brand;
-    let brands = await ProductBrand.find().select('-_id brand')
-    brands = brands[0].brand
-    if (!brands.length) {
-        errors.push({msg:"Could not find product brands."})
+    // validate images
+    let images = req.body.images || []
+    images = await ProductImages
+        .find()
+        .where('_id')
+        .in(images)
+        .exec()
+        .catch(err => errors.push({ msg: "Invalid image ids" }));
+    if (images.length !== req.body.images.length) {
+        errors.push({msg:"Invalid image ids"})
     }
-    const brand = brands.find(brand => brand.toLowerCase().trim() === text.toLowerCase().trim())
+    // validate brand
+    let brand = await ProductBrand.findById(req.body.brand)
     if (!brand) {
         errors.push({msg:"Invalid product brand"})
     } else {
-        req.body.brand = brand
+        req.body.brand = brand._id
+    }
+    //validate category
+    let category = await Category.findById(req.body.category)
+    if (!category) {
+        errors.push({ msg: "Invalid product category" })
+    } else if(category.isDisabled){
+        errors.push({ msg: "This category has been disabled" })
+    }else {
+        req.body.category = category._id
     }
     // if error show the first one as they happen
-    if (errors) {
+    if (errors.length) {
+        console.log(errors);
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }
