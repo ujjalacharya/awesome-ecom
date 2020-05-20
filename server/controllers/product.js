@@ -87,6 +87,7 @@ exports.deleteImage = async(req,res) => {
         .options({viaSave: true})
         .remove(ProductImages, { _id: req.query.image_id})
         .run({ useMongoose: true })
+        
         let Path = `public/uploads/${imageURLS.thumbnail}`;
         await fs.unlink(Path);
         Path = `public/uploads/${imageURLS.medium}`;

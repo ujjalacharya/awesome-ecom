@@ -85,7 +85,7 @@ exports.businessinfo = async (req, res) => {
             .toFile(path.resolve(destination, fieldname === 'businessLicence' ? "businessLicence" : "citizenship", filename))//add file from uploads to doc folder
         fs.unlinkSync(filepath);//and remove file from public/uploads
     })
-    let profile = req.profile
+    let profile = req.profile.toObject()
     const { businessInfo } = profile
     if (businessInfo) {
         let docs = await BusinessInfo.findById(businessInfo)
@@ -111,9 +111,11 @@ exports.businessinfo = async (req, res) => {
         docs[fieldname] = `${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;
     })
     docs.admin = profile._id
+    profile.businessInfo = docs._id
     await task
         .save(docs)
-        .update(req.profile, { businessInfo: docs._id })//handle update issue todo..
+        .update(req.profile, profile)
+        .options({viaSave: true})
         .run({ useMongoose: true })
     res.json(docs)
 }
@@ -138,7 +140,7 @@ exports.bankinfo = async (req, res) => {
             .toFile(path.resolve(destination, "bank", filename))//add file from uploads to doc folder
         fs.unlinkSync(filepath);//and remove file from public/uploads
     }
-    let profile = req.profile
+    let profile = req.profile.toObject()
     const { adminBank } = profile
     if (adminBank) {
         let docs = await AdminBank.findById(adminBank)
@@ -162,9 +164,11 @@ exports.bankinfo = async (req, res) => {
         const { filename } = req.file
     docs["chequeCopy"] = `bank/${filename}`;
     docs.admin = profile._id
+    profile.adminBank = docs._id
     await task
         .save(docs)
-        .update(req.profile, { adminBank: docs._id })//handle update issue todo..
+        .update(req.profile, profile)
+        .options({viaSave: true})
         .run({ useMongoose: true })
     res.json(docs)
 }
@@ -178,7 +182,7 @@ exports.getWareHouse = async (req, res) => {
 }
 
 exports.warehouse = async(req,res) => {
-    let profile = req.profile
+    let profile = req.profile.toObject()
     const { adminWareHouse} = profile
     if (adminWareHouse) {
         let warehouseInfo = await AdminWarehouse.findById(adminWareHouse)
@@ -188,9 +192,11 @@ exports.warehouse = async(req,res) => {
     }
     let newWareHouse = new AdminWarehouse(req.body)
     newWareHouse.admin = profile._id
+    profile.adminWareHouse = newWareHouse._id
     await task
         .save(newWareHouse)
-        .update(req.profile, { adminWareHouse: newWareHouse._id })//handle update issue todo..
+        .update(req.profile, profile)
+        .options({viaSave: true})
         .run({ useMongoose: true })
     res.json(newWareHouse)
 }

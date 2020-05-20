@@ -33,9 +33,15 @@ exports.flipAdminBusinessApproval = async (req, res) => {
         return res.status(404).json({ error: "No business information available" })
     }
     if (businessInfo.isVerified) {
+        let updateBusinessInfo = businessInfo.toObject()
+        updateBusinessInfo.isVerified = null
+        let admin = await Admin.findById(businessInfo.admin)
+        let updateAdmin = admin.toObject()
+        updateAdmin.isVerified = null
         const results = await task
-            .update(businessInfo, { isVerified: null })
-            .update(Admin, { _id: businessInfo.admin }, { isVerified: null })
+            .update(businessInfo, updateBusinessInfo)
+            .update(Admin, updateAdmin)
+            .options({viaSave: true})
             .run({ useMongoose: true })
         return res.json(results[0])
     }
@@ -50,14 +56,15 @@ exports.flipAdminBankApproval = async (req, res) => {
         return res.status(404).json({ error: "No bank information available" })
     }
     if (bankInfo.isVerified) {
-        // bankInfo.isVerified = null
-        // await task
-        //      
-        //     .update("Admin", { _id: bankInfo.admin }, { isVerified: null })
-        //     .run({ useMongoose: true })
+        let updateBankInfo = bankInfo.toObject()
+        updateBankInfo.isVerified = null
+        let admin = await Admin.findById(bankInfo.admin)
+        let updateAdmin = admin.toObject()
+        updateAdmin.isVerified = null
         const results = await task
-            .update(bankInfo, { isVerified: null })
-            .update(Admin, { _id: bankInfo.admin }, { isVerified: null })
+            .update(bankInfo,updateBankInfo)
+            .update(Admin, updateAdmin)
+            .options({useSave: true})
             .run({ useMongoose: true })
         return res.json(results[0])
     }
@@ -71,10 +78,17 @@ exports.flipAdminWarehouseApproval = async (req, res) => {
     if (!warehouse) {
         return res.status(404).json({ error: "No warehouse information available" })
     }
+    
     if (warehouse.isVerified) {
+        let updateWareHouse = warehouse.toObject()
+        updateWareHouse.isVerified = null
+        let admin = await Admin.findById(warehouse.admin)
+        let updateAdmin = admin.toObject()
+        updateAdmin.isVerified = null
         const results = await task
-            .update(warehouse, { isVerified: null })
-            .update(Admin, { _id: warehouse.admin }, { isVerified: null })
+            .update(warehouse,updateWareHouse)
+            .update(admin, updateAdmin)
+            .options({viaSave: true})
             .run({ useMongoose: true })
         return res.json(results[0])
     }
@@ -233,14 +247,22 @@ exports.approveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    if (!product.remark) {
+    if (!product.remark ) {
         product.isVerified = Date.now()
         await product.save()
         return res.json(product)
     }
+    const remark = await Remark.findById(product.remark)
+    const updateRemark = remark.toObject()
+    updateRemark.isDeleted = Date.now()
+
+    const updateProduct = product.toObject()
+    updateProduct.isVerified = Date.now()
+    updateProduct.remark = newRemark._id
     const results = await task
-        .update(Remark, { _id: product.remark }, { isDeleted: Date.now() })
-        .update(product, { isVerified: null, remark: newRemark._id })
+        .update(remark, updateRemark)
+        .update(product, updateProduct)
+        .options({viaSave: true})
         .run({ useMongoose: true })
     console.log(results);
     return res.json(results[0])
@@ -252,9 +274,13 @@ exports.disApproveProduct = async (req, res) => {
         return res.status(404).json({ error: "Product not found" })
     }
     const newRemark = new Remark(req.body)
+    const updateProduct = product.toObject()
+    updateProduct.isVerified = null
+    updateProduct.remark = newRemark._id
     const results = await task
         .save(newRemark)
-        .update(product, { isVerified: null, remark: newRemark._id })
+        .update(product, updateProduct)
+        .options({viaSave: true})
         .run({ useMongoose: true })
     console.log(results);
     return res.json(results[0])
