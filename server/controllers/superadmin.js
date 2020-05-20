@@ -99,12 +99,15 @@ exports.flipAdminWarehouseApproval = async (req, res) => {
 
 exports.flipAdminAccountApproval = async (req, res) => {
     let adminAccount = await await Admin.findById(req.params.a_id)
-        .select('-password -salt -resetPasswordLink -emailVerifyLink')
+        .select('-password -salt -resetPasswordLink ')
         .populate('businessInfo', 'isVerified')
         .populate('adminBank', 'isVerified')
         .populate('adminWareHouse', 'isVerified')
     if (!adminAccount) {
         return res.status(404).json({ error: "Account has not been created." })
+    }
+    if (adminAccount.emailVerifyLink) {
+        return res.status(403).json({ error: "Admin email has not been verified." })
     }
     if (adminAccount.isBlocked) {
         return res.status(403).json({ error: "Admin is blocked." })

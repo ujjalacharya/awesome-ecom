@@ -141,14 +141,16 @@ exports.validateProduct = async (req, res, next) => {
     const errors = req.validationErrors() || [];
 
     // validate images
-    let images = req.body.images || []
+    let images = req.body.images|| []
     images = await ProductImages
         .find()
         .where('_id')
         .in(images)
         .exec()
-        .catch(err => errors.push({ msg: "Invalid image ids" }));
-    if (images.length !== req.body.images.length) {
+        .catch(err => errors.push({ msg: "Invalid image ids" }));// catch will execute of invalid ids
+    // if some id is invalid
+    // e.g out of 3 images 1 is not valid the images.length = 2 bcoz 2 are only vaild so shld return error..
+    if (images.length !== (typeof req.body.images === 'string' ? [req.body.images] : req.body.images).length) {
         errors.push({msg:"Invalid image ids"})
     }
     // validate brand
