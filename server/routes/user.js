@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getProfile, updateProfile, profile,
+    getProfile, updateProfile, profile,uploadPhoto
 } = require("../controllers/user");
 const {auth,isSameUser} = require('../controllers/user_auth')
 
