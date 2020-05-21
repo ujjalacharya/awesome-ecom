@@ -20,17 +20,6 @@ exports.getProfile = async (req, res) => {
 // update or complete profile
 exports.updateProfile = async (req, res) => {
     let profile = req.profile
-    if (req.file !== undefined) {
-        const { filename: image } = req.file;
-        //Compress image
-        await sharp(req.file.path)
-            .resize(300)
-            .jpeg({ quality: 100 })
-            .toFile(path.resolve(req.file.destination, "user", image))
-        fs.unlinkSync(req.file.path);
-        if (profile.photo) fs.unlinkSync(`public/uploads/${profile.photo}`)
-        profile.photo = "user/" + image;
-    }
     // password update
     if (req.body.oldPassword && req.body.newPassword) {
         let user = await User.findByCredentials(profile.email, req.body.oldPassword)
@@ -56,4 +45,22 @@ exports.updateProfile = async (req, res) => {
     profile.password = undefined;
 
     res.json(profile);
+}
+
+exports.uploadPhoto = async (req, res) => {
+    let profile = req.profile
+    if (req.file !== undefined) {
+        const { filename: image } = req.file;
+        //Compress image
+        await sharp(req.file.path)
+            .resize(300)
+            .jpeg({ quality: 100 })
+            .toFile(path.resolve(req.file.destination, "user", image))
+        fs.unlinkSync(req.file.path);//remove from public/uploads
+        // if update then remove old photo
+        if (profile.photo) fs.unlinkSync(`public/uploads/${profile.photo}`)
+        profile.photo = "admin/" + image;
+    }
+    await profile.save()
+    res.json({ photo: profile.photo })
 }

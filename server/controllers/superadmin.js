@@ -303,6 +303,7 @@ exports.getProducts = async (req, res) => {
     const products = await Product.find()
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
+        .populate("images","-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()

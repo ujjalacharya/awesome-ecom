@@ -238,10 +238,10 @@ function parseToken(token) {
 }
 
 // has authorization middleware
-exports.hasAuthorization = async (req, res, next) => {
+exports.isSameUser = async (req, res, next) => {
     try {
-        const sameAdmin = req.profile && req.user && req.profile._id.toString() === req.user._id.toString()
-        if (sameAdmin) {
+        const sameUser = req.profile && req.user && req.profile._id.toString() === req.user._id.toString()
+        if (sameUser) {
             return next();
         }
         throw 'User is not authorized to perform this action'
