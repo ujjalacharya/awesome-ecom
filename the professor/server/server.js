@@ -11,7 +11,22 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const { dbConnection, errorHandler} = require('./middleware/helpers');
 
 // Database Connection
-dbConnection();
+function chooseDB(address) {
+    switch (address) {
+        case 'Dhangadhi':
+            return dbConnection(process.env.MONGO_URI, address);//dhn dburl
+        case 'Chitwan':
+            return dbConnection(process.env.MONGO_URI_LOCAL, address);//chitwan dburl , eaile ko lagi local db
+        default:
+            console.log(`Sorry, we are out of ${expr}.`);
+    }
+}
+
+app.use('/api-db',(req,res,next)=>{
+    chooseDB(req.query.address)
+    res.json({msg: `${address}'s DB is connected`})
+    next()
+})
 
 // Middlewares
 app.use(cors());
