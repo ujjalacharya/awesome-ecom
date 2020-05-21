@@ -1,9 +1,9 @@
 const express = require("express");
 
 const {
-    getProfile, updateProfile, profile,uploadPhoto
+    getProfile, updateProfile, profile, uploadPhoto
 } = require("../controllers/user");
-const {auth,isSameUser} = require('../controllers/user_auth')
+const { auth, isSameUser } = require('../controllers/user_auth')
 
 const { uploadUserPhoto } = require("../middleware/helpers");
 

@@ -53,8 +53,8 @@ exports.passwordResetValidator = (req, res, next) => {
     next();
 };
 
-exports.validateBusinessInfo = (req,res, next) => {
-    req.check("ownerName","Owner name is required").notEmpty()
+exports.validateBusinessInfo = (req, res, next) => {
+    req.check("ownerName", "Owner name is required").notEmpty()
     req.check("address", "Address is required").notEmpty()
     req.check("city", "City is required").notEmpty()
     req.check("citizenshipNumber", "Citizenship number is required").notEmpty()
@@ -92,7 +92,7 @@ exports.validateAdminBankInfo = (req, res, next) => {
     }
     next()
 }
-exports.validateWareHouse = (req,res, next) => {
+exports.validateWareHouse = (req, res, next) => {
     req.check("name", "Warehouse name is required").notEmpty()
     req.check("address", "Warehouse address is required").notEmpty()
     req.check("phoneno", "Warehouse phone number is required").notEmpty()
@@ -106,7 +106,7 @@ exports.validateWareHouse = (req,res, next) => {
     }
     next()
 }
-exports.validateAdminProfile = (req,res,next) => {
+exports.validateAdminProfile = (req, res, next) => {
     req.check("shopName", "Shop name is required").notEmpty()
     req.check("address", "address is required").notEmpty()
     req.check("phone", "phone number is required").notEmpty()
@@ -141,22 +141,22 @@ exports.validateProduct = async (req, res, next) => {
     const errors = req.validationErrors() || [];
 
     // validate images
-    let images = req.body.images|| []
+    let images = req.body.images || []
     images = await ProductImages
         .find()
         .where('_id')
         .in(images)
         .exec()
-        .catch(err => errors.push({ msg: "Invalid image ids" }));// catch will execute of invalid ids
-    // if some id is invalid
+        .catch(err => errors.push({ msg: "Invalid image ids" }));// catch will execute if invalid ids
+    // if some id are invalid
     // e.g out of 3 images 1 is not valid the images.length = 2 bcoz 2 are only vaild so shld return error..
     if (images.length !== (typeof req.body.images === 'string' ? [req.body.images] : req.body.images).length) {
-        errors.push({msg:"Invalid image ids"})
+        errors.push({ msg: "Invalid image ids" })
     }
     // validate brand
-    let brand = await ProductBrand.findById(req.body.brand)
+    let brand = await ProductBrand.findOne({ slug: req.body.brand })
     if (!brand) {
-        errors.push({msg:"Invalid product brand"})
+        errors.push({ msg: "Invalid product brand" })
     } else {
         req.body.brand = brand._id
     }
@@ -164,9 +164,9 @@ exports.validateProduct = async (req, res, next) => {
     let category = await Category.findById(req.body.category)
     if (!category) {
         errors.push({ msg: "Invalid product category" })
-    } else if(category.isDisabled){
+    } else if (category.isDisabled) {
         errors.push({ msg: "This category has been disabled" })
-    }else {
+    } else {
         req.body.category = category._id
     }
     // if error show the first one as they happen

@@ -14,8 +14,8 @@ const perPage = 10;
 
 exports.product = async (req, res, next) => {
     const product = await Product.findOne({ slug: req.params.p_slug })
-        .populate('images','-createdAt -updatedAt -__v')
-        .populate('soldBy','shopName address')
+        .populate('images', '-createdAt -updatedAt -__v')
+        .populate('soldBy', 'shopName address')
     if (!product) {
         return res.status(404).json({ error: 'Product not found.' })
     }
@@ -52,8 +52,8 @@ exports.productImages = async (req, res) => {
     }
     const compressImage = async (filename, size, filepath, destination, foldername) => {
         await sharp(filepath)
-        .resize(size)
-        .toFile(path.resolve(destination, `${foldername}`, filename))
+            .resize(size)
+            .toFile(path.resolve(destination, `${foldername}`, filename))
         return `${foldername}/${filename}`
     }
     let images = req.files.map(async file => {
@@ -71,7 +71,7 @@ exports.productImages = async (req, res) => {
     res.json(images)
 }
 
-exports.deleteImage = async(req,res) => {
+exports.deleteImage = async (req, res) => {
     let product = req.product
     if (product.isVerified) {
         return res.status(403).json({ error: 'Cannot delete image. Product has already been verified.' })
@@ -82,20 +82,20 @@ exports.deleteImage = async(req,res) => {
         if (image._id.toString() === req.query.image_id) imageURLS = image
         return image._id.toString() !== req.query.image_id
     })
-    if(!imageURLS) {
-        return res.status(404).json({error:"Image not found"})
+    if (!imageURLS) {
+        return res.status(404).json({ error: "Image not found" })
     }
     await task
-    .update(product, updateProduct)
-    .options({viaSave: true})
-    .remove(ProductImages, { _id: req.query.image_id})
-    .run({ useMongoose: true })
+        .update(product, updateProduct)
+        .options({ viaSave: true })
+        .remove(ProductImages, { _id: req.query.image_id })
+        .run({ useMongoose: true })
 
     let Path = `public/uploads/${imageURLS.thumbnail}`;
     fs.unlinkSync(Path);
     Path = `public/uploads/${imageURLS.medium}`;
     fs.unlinkSync(Path)
-    Path =`public/uploads/${imageURLS.large}`;
+    Path = `public/uploads/${imageURLS.large}`;
     fs.unlinkSync(Path)
     res.json(updateProduct.images)
 
@@ -112,3 +112,75 @@ exports.updateProduct = async (req, res) => {
     res.json(product)
 
 }
+
+exports.getProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id })
+        .populate("category", "displayName")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.verifiedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id, isVerified: { "$ne": null } })
+        .populate("category", "displayName")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.notVerifiedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id, isVerified: null })
+        .populate("category", "displayName")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.deletedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id, isDeleted: { "$ne": null } })
+        .populate("category", "displayName")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+exports.notDeletedProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id, isDeleted: null })
+        .populate("category", "displayName")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+

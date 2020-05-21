@@ -41,7 +41,7 @@ exports.flipAdminBusinessApproval = async (req, res) => {
         const results = await task
             .update(businessInfo, updateBusinessInfo)
             .update(Admin, updateAdmin)
-            .options({viaSave: true})
+            .options({ viaSave: true })
             .run({ useMongoose: true })
         return res.json(results[0])
     }
@@ -62,9 +62,9 @@ exports.flipAdminBankApproval = async (req, res) => {
         let updateAdmin = admin.toObject()
         updateAdmin.isVerified = null
         const results = await task
-            .update(bankInfo,updateBankInfo)
+            .update(bankInfo, updateBankInfo)
             .update(Admin, updateAdmin)
-            .options({useSave: true})
+            .options({ useSave: true })
             .run({ useMongoose: true })
         return res.json(results[0])
     }
@@ -78,7 +78,7 @@ exports.flipAdminWarehouseApproval = async (req, res) => {
     if (!warehouse) {
         return res.status(404).json({ error: "No warehouse information available" })
     }
-    
+
     if (warehouse.isVerified) {
         let updateWareHouse = warehouse.toObject()
         updateWareHouse.isVerified = null
@@ -86,9 +86,9 @@ exports.flipAdminWarehouseApproval = async (req, res) => {
         let updateAdmin = admin.toObject()
         updateAdmin.isVerified = null
         const results = await task
-            .update(warehouse,updateWareHouse)
+            .update(warehouse, updateWareHouse)
             .update(admin, updateAdmin)
-            .options({viaSave: true})
+            .options({ viaSave: true })
             .run({ useMongoose: true })
         return res.json(results[0])
     }
@@ -250,7 +250,7 @@ exports.approveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    if (!product.remark ) {
+    if (!product.remark) {
         product.isVerified = Date.now()
         await product.save()
         return res.json(product)
@@ -265,7 +265,7 @@ exports.approveProduct = async (req, res) => {
     const results = await task
         .update(remark, updateRemark)
         .update(product, updateProduct)
-        .options({viaSave: true})
+        .options({ viaSave: true })
         .run({ useMongoose: true })
     console.log(results);
     return res.json(results[0])
@@ -283,7 +283,7 @@ exports.disApproveProduct = async (req, res) => {
     const results = await task
         .save(newRemark)
         .update(product, updateProduct)
-        .options({viaSave: true})
+        .options({ viaSave: true })
         .run({ useMongoose: true })
     console.log(results);
     return res.json(results[0])
@@ -303,7 +303,7 @@ exports.getProducts = async (req, res) => {
     const products = await Product.find()
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
-        .populate("images","-createdAt -updatedAt -__v")
+        .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -318,6 +318,7 @@ exports.verifiedProducts = async (req, res) => {
     const products = await Product.find({ isVerified: { "$ne": null } })
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
+        .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -332,6 +333,7 @@ exports.notVerifiedProducts = async (req, res) => {
     const products = await Product.find({ isVerified: null })
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
+        .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -346,6 +348,7 @@ exports.deletedProducts = async (req, res) => {
     const products = await Product.find({ isDeleted: { "$ne": null } })
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
+        .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -360,6 +363,7 @@ exports.notDeletedProducts = async (req, res) => {
     const products = await Product.find({ isDeleted: null })
         .populate("category", "displayName")
         .populate("soldBy", "name shopName")
+        .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -370,7 +374,7 @@ exports.notDeletedProducts = async (req, res) => {
     res.json(products);
 }
 
-exports.productBrand = async(req, res) => {
+exports.productBrand = async (req, res) => {
     const { brandName, brand_id } = req.body
     const systemName = shortid.generate()
     if (brand_id) {
@@ -387,12 +391,12 @@ exports.productBrand = async(req, res) => {
     if (newBrand) {
         return res.status(403).json({ error: "Product brand already exist" })
     }
-    newBrand = new ProductBrand({ systemName, brandName})
+    newBrand = new ProductBrand({ systemName, brandName })
     await newBrand.save()
     res.json(newBrand)
 }
 
-exports.getProductBrands = async (req,res) => {
+exports.getProductBrands = async (req, res) => {
     let productbrands = await ProductBrand.find()
     if (!productbrands.length) {
         return res.status(404).json({ error: "No product brands are available" })

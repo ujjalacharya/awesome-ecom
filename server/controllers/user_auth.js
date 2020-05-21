@@ -219,7 +219,7 @@ exports.auth = async (req, res, next) => {
                 }
                 throw 'Invalid User'
             }
-            throw user.error
+            throw u.error
         }
         throw 'Token not found'
     } catch (error) {
