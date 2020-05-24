@@ -37,9 +37,15 @@ body.overflow {
 }
 
 .container {
-  padding: 0 80px;
+  padding: 0 40px;
   margin: auto;
   margin-top: 40px;
+}
+@media screen and (max-width: 912px) {
+  .container {
+    padding: 0 20px;
+    margin-top: 20px;
+  }
 }
 @media screen and (max-width: 480px) {
   .container {
@@ -238,6 +244,7 @@ button.secondary:hover {
 .slider-header {
   text-align: center;
   padding: 30px 0;
+  padding-top: 0px;
 }
 @media screen and (min-width: 375px) and (max-width: 480px) {
   .slider-header {
@@ -249,6 +256,11 @@ button.secondary:hover {
 .latest-popular {
   text-align: center;
   padding: 50px 30px;
+}
+@media screen and (max-width: 912px) {
+  .latest-popular {
+    padding: 50px 0px;
+  }
 }
 @media screen and (max-width: 480px) {
   .latest-popular {
@@ -411,7 +423,18 @@ button.secondary:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 500px;
+  max-width: 430px;
+}
+@media screen and (max-width: 912px) {
+  .main-header .menu-logo .menu {
+    max-width: 300px;
+    margin-left: 10px;
+  }
+}
+@media screen and (max-width: 912px) {
+  .main-header .menu-logo .menu .menu-list {
+    font-size: 12px;
+  }
 }
 .main-header .search {
   display: flex;
@@ -430,8 +453,18 @@ button.secondary:hover {
 .main-header .menu-right .menu-right-items {
   padding-left: 20px;
 }
+@media screen and (max-width: 912px) {
+  .main-header .menu-right .menu-right-items {
+    padding-left: 10px;
+  }
+}
 .main-header .menu-right .menu-right-items .list-icon img {
   height: 16px;
+}
+@media screen and (max-width: 912px) {
+  .main-header .menu-right .menu-right-items .list-text {
+    font-size: 12px;
+  }
 }
 
 .main-carousel .img-text {
@@ -442,6 +475,18 @@ button.secondary:hover {
   top: 25%;
   left: 8%;
   text-align: left;
+}
+@media screen and (max-width: 1024px) {
+  .main-carousel .img-text .carousel-text {
+    left: 3%;
+    top: 10%;
+  }
+}
+@media screen and (max-width: 912px) {
+  .main-carousel .img-text .carousel-text {
+    left: 5%;
+    top: 10%;
+  }
 }
 @media screen and (max-width: 480px) {
   .main-carousel .img-text .carousel-text {
@@ -462,10 +507,20 @@ button.secondary:hover {
   font-weight: bold;
   line-height: 60px;
 }
+@media screen and (max-width: 912px) {
+  .main-carousel .img-text .carousel-text .main-text {
+    font-size: 50px;
+  }
+}
 @media screen and (max-width: 480px) {
   .main-carousel .img-text .carousel-text .main-text {
     font-size: 21px;
     line-height: 5px;
+  }
+}
+@media screen and (max-width: 912px) {
+  .main-carousel .img-text .carousel-text h4 {
+    font-size: 16px;
   }
 }
 .main-carousel .img-text img {
@@ -606,7 +661,7 @@ button.secondary:hover {
   border: 1px solid #f7f7f7;
   min-height: 317px;
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 912px) {
   .popular-slider {
     padding: 0;
   }
@@ -625,6 +680,12 @@ button.secondary:hover {
   position: relative;
   color: #707070;
 }
+@media screen and (max-width: 912px) {
+  .popular-slider .popular-left-text .popular-text {
+    margin-bottom: 25px;
+    text-align: center;
+  }
+}
 @media screen and (max-width: 480px) {
   .popular-slider .popular-left-text .popular-text {
     padding: 25px 20px;
@@ -642,7 +703,7 @@ button.secondary:hover {
   background: #707070;
   border: 0px;
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 912px) {
   .popular-slider .popular-left-text .popular-text .title-bottom-hr {
     left: 44%;
   }
@@ -653,9 +714,17 @@ button.secondary:hover {
 .popular-slider .popular-left-right {
   text-align: right;
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 912px) {
   .popular-slider .popular-left-right {
     text-align: center;
+  }
+}
+.popular-slider .popular-left-right img {
+  height: 230px;
+}
+@media screen and (max-width: 768px) {
+  .popular-slider .popular-left-right img {
+    height: 195px;
   }
 }
 @media screen and (max-width: 480px) {
@@ -700,11 +769,7 @@ button.secondary:hover {
   background: #2b2b2b;
   border: #2b2b2b;
   color: #6d6d6d;
-}
-@media screen and (max-width: 480px) {
-  .footer .footer-newsletter .news-details input {
-    height: 35px !important;
-  }
+  height: 35px !important;
 }
 .footer .footer-newsletter .news-details button {
   border-radius: 0 !important;

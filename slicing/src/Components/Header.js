@@ -6,7 +6,7 @@ class Header extends Component {
     return (
       <div className="main-header">
         <Row>
-          <Col span={14}>
+          <Col lg={14} md={13}>
             <Row className="menu-logo">
               <Col span={2} className="logo">
                 <img src="/images/logo.png" />
@@ -20,10 +20,10 @@ class Header extends Component {
               </Col>
             </Row>
           </Col>
-          <Col span={6} className="search">
+          <Col lg={6} md={6} className="search">
             <Input placeholder="Search for products, brands and more" />
           </Col>
-          <Col span={4} className="menu-right">
+          <Col lg={4} md={5} className="menu-right">
             <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/user.png" />

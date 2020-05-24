@@ -9,9 +9,13 @@ body {
 }
 
 .container {
-  padding: 0 80px;
+  padding: 0 40px;
   margin: auto;
   margin-top: 40px;
+  @media screen and (max-width: 912px) {
+    padding: 0 20px;
+    margin-top: 20px;
+  }
   @media screen and (max-width: 480px) {
     padding: 0 10px;
     margin-top: 20px;

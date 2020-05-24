@@ -6,6 +6,14 @@
       top: 25%;
       left: 8%;
       text-align: left;
+      @media screen and (max-width: 1024px) {
+        left: 3%;
+        top: 10%;
+      }
+      @media screen and (max-width: 912px) {
+        left: 5%;
+        top: 10%;
+      }
       @media screen and (max-width: 480px) {
         top: 0px;
         left: 4%;
@@ -20,9 +28,17 @@
         font-size: 75px;
         font-weight: bold;
         line-height: 60px;
+        @media screen and (max-width: 912px) {
+          font-size: 50px;
+        }
         @media screen and (max-width: 480px) {
           font-size: 21px;
           line-height: 5px;
+        }
+      }
+      h4{
+        @media screen and (max-width: 912px) {
+          font-size: 16px;
         }
       }
     }
