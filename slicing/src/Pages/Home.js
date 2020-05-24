@@ -25,10 +25,10 @@ class Home extends Component {
           <ProductSlider />
           <section className="latest-popular">
             <Row>
-              <Col span={12}>
+              <Col lg={12} xs={24}>
                 <Popular />
               </Col>
-              <Col span={12}>
+              <Col lg={12} xs={24}>
                 <LatestSLider />
               </Col>
             </Row>

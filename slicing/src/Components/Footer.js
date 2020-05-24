@@ -6,7 +6,7 @@ class Footer extends Component {
     return (
       <section className="footer">
         <Row>
-          <Col span={8} className="company-info">
+          <Col lg={8} xs={24} className="company-info">
             <div className="logo">
               <img src="/images/logo.png" />
             </div>
@@ -20,7 +20,7 @@ class Footer extends Component {
             <div className="comp-phone">PHONE: (012) 800 456 789-987</div>
             <div className="comp-email">EMAIL: Contact@plazathemes.com</div>
           </Col>
-          <Col span={4} className="customer-care footer-ul-design">
+          <Col lg={4} xs={24} className="customer-care footer-ul-design">
             <h4>Customer Care</h4>
             <ul>
               <li>Clothing</li>
@@ -30,7 +30,7 @@ class Footer extends Component {
               <li>Fashion</li>
             </ul>
           </Col>
-          <Col span={4} className="information footer-ul-design">
+          <Col lg={4} xs={24} className="information footer-ul-design">
             <h4>Information</h4>
             <ul>
               <li>About Us</li>
@@ -40,7 +40,7 @@ class Footer extends Component {
               <li>Returns & Exchanges</li>
             </ul>
           </Col>
-          <Col span={8} className="footer-newsletter">
+          <Col lg={8} xs={24} className="footer-newsletter">
             <h4>Join Our Newsletter Now</h4>
             <div className="news-details">
               <div className="let-det">

@@ -10,6 +10,9 @@
 .latest-popular {
     text-align: center;
     padding: 50px 30px;
+    @media screen and (max-width: 480px) {
+      padding: 0px;
+    }
 }
 
 .checkout{

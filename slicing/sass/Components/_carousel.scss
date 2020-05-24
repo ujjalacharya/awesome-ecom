@@ -6,13 +6,24 @@
       top: 25%;
       left: 8%;
       text-align: left;
+      @media screen and (max-width: 480px) {
+        top: 0px;
+        left: 4%;
+      }
       h2 {
         margin-bottom: 0px;
+        @media screen and (max-width: 480px) {
+          font-size: 14px;
+        }
       }
       .main-text {
         font-size: 75px;
         font-weight: bold;
         line-height: 60px;
+        @media screen and (max-width: 480px) {
+          font-size: 21px;
+          line-height: 5px;
+        }
       }
     }
     img {
@@ -73,4 +84,8 @@
 
 .slick-next, .slick-prev{
   height: 35px !important;
+  @media screen and (max-width: 480px) {
+    height: 30px !important;
+    width: 15px !important;
+  }
 }

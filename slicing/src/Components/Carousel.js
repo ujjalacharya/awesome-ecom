@@ -17,7 +17,7 @@ class MainCarousel extends Component {
         draggable: true
       };
     return (
-      <Carousel {...settings} autoplay>
+      <Carousel {...settings} >
         <div className="img-text">
           <div className="carousel-text">
             <h2>GET UPTO 60% OFF</h2>

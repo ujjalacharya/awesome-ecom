@@ -1,6 +1,9 @@
 .product-card {
   padding: 0 30px;
   padding-bottom: 10px;
+  @media screen and (max-width: 480px) {
+    padding: 0 15px
+  }
   cursor: pointer;
   &:hover {
     .product-box-shadow {

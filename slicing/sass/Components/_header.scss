@@ -1,6 +1,9 @@
 .main-header {
   padding: 10px 20px;
   box-shadow: $box-shadow;
+  @media screen and (max-width: 480px) {
+    display: none
+  }
   .menu-logo {
     .logo {
       height: 50px;

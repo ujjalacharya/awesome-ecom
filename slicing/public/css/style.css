@@ -41,6 +41,12 @@ body.overflow {
   margin: auto;
   margin-top: 40px;
 }
+@media screen and (max-width: 320px) {
+  .container {
+    padding: 0 10px;
+    margin-top: 20px;
+  }
+}
 
 .action-btn {
   border: 1px solid;
@@ -89,28 +95,65 @@ body.overflow {
 h1 {
   font-size: 35px;
 }
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 29px;
+  }
+}
 
 h2 {
   font-size: 29px;
+}
+@media screen and (max-width: 480px) {
+  h2 {
+    font-size: 24px;
+  }
 }
 
 h3 {
   font-size: 24px;
 }
+@media screen and (max-width: 480px) {
+  h3 {
+    font-size: 20px;
+  }
+}
 
 h4 {
   font-size: 20px;
 }
+@media screen and (max-width: 480px) {
+  h4 {
+    font-size: 16px;
+  }
+}
 
-h5, p {
+h5,
+p {
   font-size: 16px;
+}
+@media screen and (max-width: 480px) {
+  h5,
+p {
+    font-size: 14px;
+  }
 }
 
 h6 {
   font-size: 14px;
 }
+@media screen and (max-width: 480px) {
+  h6 {
+    font-size: 12px;
+  }
+}
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: bold;
   line-height: 40px;
   margin-bottom: 0px;
@@ -200,6 +243,11 @@ button.secondary:hover {
 .latest-popular {
   text-align: center;
   padding: 50px 30px;
+}
+@media screen and (max-width: 480px) {
+  .latest-popular {
+    padding: 0px;
+  }
 }
 
 .checkout {
@@ -340,6 +388,11 @@ button.secondary:hover {
   padding: 10px 20px;
   box-shadow: 0 4px 12px rgba(199, 197, 197, 0.5);
 }
+@media screen and (max-width: 480px) {
+  .main-header {
+    display: none;
+  }
+}
 .main-header .menu-logo .logo {
   height: 50px;
 }
@@ -384,13 +437,30 @@ button.secondary:hover {
   left: 8%;
   text-align: left;
 }
+@media screen and (max-width: 480px) {
+  .main-carousel .img-text .carousel-text {
+    top: 0px;
+    left: 4%;
+  }
+}
 .main-carousel .img-text .carousel-text h2 {
   margin-bottom: 0px;
+}
+@media screen and (max-width: 480px) {
+  .main-carousel .img-text .carousel-text h2 {
+    font-size: 14px;
+  }
 }
 .main-carousel .img-text .carousel-text .main-text {
   font-size: 75px;
   font-weight: bold;
   line-height: 60px;
+}
+@media screen and (max-width: 480px) {
+  .main-carousel .img-text .carousel-text .main-text {
+    font-size: 21px;
+    line-height: 5px;
+  }
 }
 .main-carousel .img-text img {
   width: 100%;
@@ -442,11 +512,22 @@ button.secondary:hover {
 .slick-next, .slick-prev {
   height: 35px !important;
 }
+@media screen and (max-width: 480px) {
+  .slick-next, .slick-prev {
+    height: 30px !important;
+    width: 15px !important;
+  }
+}
 
 .product-card {
   padding: 0 30px;
   padding-bottom: 10px;
   cursor: pointer;
+}
+@media screen and (max-width: 480px) {
+  .product-card {
+    padding: 0 15px;
+  }
 }
 .product-card:hover .product-box-shadow {
   box-shadow: 0 4px 12px rgba(199, 197, 197, 0.5);
@@ -519,6 +600,11 @@ button.secondary:hover {
   border: 1px solid #f7f7f7;
   min-height: 317px;
 }
+@media screen and (max-width: 320px) {
+  .popular-slider {
+    padding: 0;
+  }
+}
 .popular-slider .popular-left-text {
   display: flex;
   align-items: center;
@@ -527,6 +613,12 @@ button.secondary:hover {
   text-align: left;
   position: relative;
   color: #707070;
+}
+@media screen and (max-width: 480px) {
+  .popular-slider .popular-left-text .popular-text {
+    padding: 25px 20px;
+    text-align: center;
+  }
 }
 .popular-slider .popular-left-text .popular-text h1 {
   color: #707070;
@@ -539,8 +631,26 @@ button.secondary:hover {
   background: #707070;
   border: 0px;
 }
+@media screen and (max-width: 480px) {
+  .popular-slider .popular-left-text .popular-text .title-bottom-hr {
+    left: 44%;
+  }
+}
 .popular-slider .popular-left-text .popular-text button {
   margin-top: 25px;
+}
+.popular-slider .popular-left-right {
+  text-align: right;
+}
+@media screen and (max-width: 320px) {
+  .popular-slider .popular-left-right {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 320px) {
+  .popular-slider .popular-left-right img {
+    height: 185px;
+  }
 }
 
 .footer {
@@ -579,6 +689,11 @@ button.secondary:hover {
   background: #2b2b2b;
   border: #2b2b2b;
   color: #6d6d6d;
+}
+@media screen and (max-width: 320px) {
+  .footer .footer-newsletter .news-details input {
+    height: 35px !important;
+  }
 }
 .footer .footer-newsletter .news-details button {
   border-radius: 0 !important;
