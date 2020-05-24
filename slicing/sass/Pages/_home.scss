@@ -5,6 +5,10 @@
 .slider-header{
     text-align: center;
     padding: 30px 0;
+    @media screen and (min-width: 375px) and (max-width: 480px) {
+      padding: 0 10px;
+      padding-bottom: 30px;
+    }
 }
 
 .latest-popular {

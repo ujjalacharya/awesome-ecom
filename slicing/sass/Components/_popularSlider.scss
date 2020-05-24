@@ -2,12 +2,15 @@
   padding: 30px;
   border: 1px solid $border-color;
   min-height: 317px;
-  @media screen and (max-width: 320px) {
+  @media screen and (max-width: 480px) {
     padding: 0;
   }
   .popular-left-text {
     display: flex;
     align-items: center;
+    @media screen and (max-width: 480px) {
+      display: block;
+    }
     .popular-text {
       text-align: left;
       position: relative;
@@ -37,11 +40,11 @@
   }
   .popular-left-right{
     text-align: right;
-    @media screen and (max-width: 320px) {
+    @media screen and (max-width: 480px) {
       text-align: center;
     }
     img{
-      @media screen and (max-width: 320px) {
+      @media screen and (max-width: 480px) {
         height: 185px;
       }
     }

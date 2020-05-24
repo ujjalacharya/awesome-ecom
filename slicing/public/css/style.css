@@ -41,7 +41,7 @@ body.overflow {
   margin: auto;
   margin-top: 40px;
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
   .container {
     padding: 0 10px;
     margin-top: 20px;
@@ -238,6 +238,12 @@ button.secondary:hover {
 .slider-header {
   text-align: center;
   padding: 30px 0;
+}
+@media screen and (min-width: 375px) and (max-width: 480px) {
+  .slider-header {
+    padding: 0 10px;
+    padding-bottom: 30px;
+  }
 }
 
 .latest-popular {
@@ -600,7 +606,7 @@ button.secondary:hover {
   border: 1px solid #f7f7f7;
   min-height: 317px;
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
   .popular-slider {
     padding: 0;
   }
@@ -608,6 +614,11 @@ button.secondary:hover {
 .popular-slider .popular-left-text {
   display: flex;
   align-items: center;
+}
+@media screen and (max-width: 480px) {
+  .popular-slider .popular-left-text {
+    display: block;
+  }
 }
 .popular-slider .popular-left-text .popular-text {
   text-align: left;
@@ -642,12 +653,12 @@ button.secondary:hover {
 .popular-slider .popular-left-right {
   text-align: right;
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
   .popular-slider .popular-left-right {
     text-align: center;
   }
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
   .popular-slider .popular-left-right img {
     height: 185px;
   }
@@ -690,7 +701,7 @@ button.secondary:hover {
   border: #2b2b2b;
   color: #6d6d6d;
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
   .footer .footer-newsletter .news-details input {
     height: 35px !important;
   }
