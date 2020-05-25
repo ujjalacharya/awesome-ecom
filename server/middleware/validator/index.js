@@ -146,7 +146,6 @@ exports.validateProduct = async (req, res, next) => {
         .find()
         .where('_id')
         .in(images)
-        .exec()
         .catch(err => errors.push({ msg: "Invalid image ids" }));// catch will execute if invalid ids
     // if some id are invalid
     // e.g out of 3 images 1 is not valid the images.length = 2 bcoz 2 are only vaild so shld return error..
@@ -161,13 +160,13 @@ exports.validateProduct = async (req, res, next) => {
         req.body.brand = brand._id
     }
     //validate category
-    let category = await Category.findById(req.body.category)
+    let category = await Category.findOne({ slug: req.body.category })
     if (!category) {
         errors.push({ msg: "Invalid product category" })
     } else if (category.isDisabled) {
         errors.push({ msg: "This category has been disabled" })
     } else {
-        req.body.category = category._id
+        req.body.category = category._id//as we need id for reference
     }
     // if error show the first one as they happen
     if (errors.length) {

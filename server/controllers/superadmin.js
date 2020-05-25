@@ -199,11 +199,11 @@ exports.getUnverifiedAdmins = async (req, res) => {
 }
 
 exports.category = async (req, res) => {
-    const { displayName, parent_id, category_id } = req.body
+    const { displayName, parent_id, category_slug } = req.body
     const systemName = shortid.generate()
     let updateCategory;
-    if (category_id) {
-        updateCategory = await Category.findById(category_id)
+    if (category_slug) {
+        updateCategory = await Category.findOne({ slug: category_slug })
         if (!updateCategory) {
             return res.status(404).json({ error: "Category not found." })
         }
@@ -232,7 +232,7 @@ exports.getCategories = async (req, res) => {
 }
 
 exports.flipCategoryAvailablity = async (req, res) => {
-    let category = await Category.findById(req.query.category_id)
+    let category = await Category.findOne({slug:req.query.category_slug})
     if (!category) {
         return res.status(404).json({ error: "Category not found" })
     }
