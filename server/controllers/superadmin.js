@@ -289,15 +289,6 @@ exports.disApproveProduct = async (req, res) => {
     return res.json(results[0])
 }
 
-exports.deleteProduct = async (req, res) => {
-    const product = await Product.findOne({ slug: req.params.p_slug })
-    if (!product) {
-        return res.status(404).json({ error: "Product not found" })
-    }
-    product.isDeleted = Date.now()
-    await product.save()
-    res.json(product)
-}
 exports.getProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find()

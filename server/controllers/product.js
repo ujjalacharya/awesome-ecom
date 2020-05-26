@@ -37,6 +37,16 @@ exports.createProduct = async (req, res) => {
     return res.json(newProduct)
 }
 
+exports.deleteProduct = async (req, res) => {
+    const product = await Product.findOne({ slug: req.params.p_slug })
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" })
+    }
+    product.isDeleted = Date.now()
+    await product.save()
+    res.json(product)
+}
+
 exports.productImages = async (req, res) => {
     if (!req.files.length) {
         return res.status(400).error({ error: "Product images are required" })
