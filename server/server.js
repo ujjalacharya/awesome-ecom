@@ -44,6 +44,7 @@ app.use("/api/admin", require("./routes/admin"));
 app.use("/api/superadmin", require("./routes/superadmin"));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/product", require("./routes/product"));
+app.use("/api/order", require("./routes/order"));
 
 // Error handling middleware
 app.use(function (err, req, res, next) {

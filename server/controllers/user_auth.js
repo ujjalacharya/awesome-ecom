@@ -208,7 +208,6 @@ exports.resetPassword = async (req, res) => {
 exports.auth = async (req, res, next) => {
     const token = req.header('x-auth-token');
     try {
-
         if (token) {
             const u = await parseToken(token)
             if (u._id) {

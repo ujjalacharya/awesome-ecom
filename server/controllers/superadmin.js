@@ -135,7 +135,7 @@ exports.flipAdminAccountApproval = async (req, res) => {
 }
 
 exports.blockUnblockAdmin = async (req, res) => {
-    let admin = await await Admin.findById(req.params.id)
+    let admin =  await Admin.findById(req.params.id)
     if (!admin) {
         return res.status(404).json({ error: "Admin not found" })
     }
@@ -336,6 +336,19 @@ exports.verifiedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
+    //make 3 products of every admin verified
+    // const admins = await Admin.find({role:'admin'})
+    // let products = admins.map(async a => {
+    //     const products = await Product.find({soldBy:a._id})
+    //     for (let i = 0; i < 3; i++) {
+    //         const element = products[i];
+    //         element.isVerified = Date.now()
+    //         await products[i].save()
+    //     }
+    //     return products
+    // })
+    // products = await Promise.all(products)
+
     res.json(products);
 }
 exports.notVerifiedProducts = async (req, res) => {
