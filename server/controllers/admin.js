@@ -36,8 +36,18 @@ exports.updateProfile = async (req, res) => {
         }
         profile.password = req.body.newPassword
     }
+    // geolocation update of superadmin only
+    if ((req.admin.role === "superadmin") &&req.body.lat && req.body.long) {
+        let geolocation = {
+            type: "Point",
+            coordinates: [req.body.long, req.body.lat]
+        };
+        profile.geolocation = geolocation;
+
+    }
     profile.holidayMode.start = req.body.holidayStart && req.body.holidayStart
     profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
+
     profile = _.extend(profile, req.body)
     profile = await profile.save();
     profile.salt = undefined;

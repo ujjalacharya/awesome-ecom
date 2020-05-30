@@ -1,6 +1,15 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const Schema = mongoose.Schema
+const pointSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ['Point']
+    },
+    coordinates: {
+        type: [Number]
+    }
+});
 const adminSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -17,6 +26,9 @@ const adminSchema = new mongoose.Schema({
         type: String,
         trim: true,
         maxlength: 32
+    },
+    geolocation: {
+        type: pointSchema,//of superadmin used to calculate geodistance between user nd the order dispatch system
     },
     district: {
         type: String,
@@ -90,7 +102,7 @@ const adminSchema = new mongoose.Schema({
         default: null
     }
 }, { timestamps: true });
-
+userSchema.index({ location: "2dsphere" });
 
 const sha512 = function (password, salt) {
     let hash = crypto.createHmac('sha512', salt);
