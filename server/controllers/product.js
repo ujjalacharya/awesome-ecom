@@ -16,6 +16,8 @@ exports.product = async (req, res, next) => {
     const product = await Product.findOne({ slug: req.params.p_slug })
         .populate('images', '-createdAt -updatedAt -__v')
         .populate('soldBy', 'shopName address')
+        .populate("brand")
+        .populate("category")
     if (!product) {
         return res.status(404).json({ error: 'Product not found.' })
     }
@@ -126,7 +128,8 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -140,7 +143,8 @@ exports.getProducts = async (req, res) => {
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isVerified: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -154,7 +158,8 @@ exports.verifiedProducts = async (req, res) => {
 exports.notVerifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isVerified: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -168,7 +173,8 @@ exports.notVerifiedProducts = async (req, res) => {
 exports.deletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -182,7 +188,8 @@ exports.deletedProducts = async (req, res) => {
 exports.notDeletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)

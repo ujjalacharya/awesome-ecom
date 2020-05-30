@@ -229,6 +229,23 @@ exports.getCategories = async (req, res) => {
         return res.status(404).json({ error: "No categories are available" })
     }
     res.json(categories)
+
+
+    // let products = await Product.find()
+    // products = products.map(async p => {
+    //     let c = await Category.findById(p.category)
+    //     if (!c.brands.includes(p.brand)) {
+    //         c.brands.push(p.brand)
+    //         return await c.save()
+    //     }
+    // })
+    // products = await Category.find()
+    // products = products.map(async c=> {
+    //     c.brands = []
+    //     await c.save()
+    // })
+    // products = await Promise.all(products)
+    // res.json(products)
 }
 
 exports.flipCategoryAvailablity = async (req, res) => {
@@ -286,13 +303,14 @@ exports.disApproveProduct = async (req, res) => {
         .options({ viaSave: true })
         .run({ useMongoose: true })
     console.log(results);
-    return res.json(results[0])
+    return res.json(results)
 }
 
 exports.getProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find()
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -307,7 +325,8 @@ exports.getProducts = async (req, res) => {
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isVerified: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -322,7 +341,8 @@ exports.verifiedProducts = async (req, res) => {
 exports.notVerifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isVerified: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -337,7 +357,8 @@ exports.notVerifiedProducts = async (req, res) => {
 exports.deletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isDeleted: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -352,7 +373,8 @@ exports.deletedProducts = async (req, res) => {
 exports.notDeletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isDeleted: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -393,4 +415,5 @@ exports.getProductBrands = async (req, res) => {
         return res.status(404).json({ error: "No product brands are available" })
     }
     res.json(productbrands)
+
 }

@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema({
         type: String,
         trim: true,
         required: true,
-        maxlength: 32
+        maxlength: 128
     },
     brand: {
         type: Schema.Types.ObjectId,
@@ -50,7 +50,7 @@ const productSchema = mongoose.Schema({
     model: {
         type: String,
         trim: true,
-        maxlength: 32
+        maxlength: 128
     },
     color: {
         type: String,

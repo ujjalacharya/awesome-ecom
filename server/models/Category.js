@@ -16,8 +16,12 @@ const categorySchema = new mongoose.Schema({
     },
     parent: {
         type: Schema.Types.ObjectId,
-        ref: 'category'
+        ref: 'productbrand'
     },
+    brands: [{
+        type: Schema.Types.ObjectId,
+        ref: 'category'
+    }],
     slug:{
         type: String
     },
