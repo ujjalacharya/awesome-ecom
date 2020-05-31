@@ -79,9 +79,6 @@ const productSchema = mongoose.Schema({
         type: Number,//it may b float as well..
         default:0
     },
-    shipingCharge:{
-        type: Number
-    },
     videoURL:[{
         type:String
     }],

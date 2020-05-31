@@ -329,7 +329,7 @@ exports.disApproveProduct = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
     const page = req.query.page || 1
-    const products = await Product.find()
+    let products = await Product.find()
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
