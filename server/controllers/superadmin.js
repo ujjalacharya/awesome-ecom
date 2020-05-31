@@ -15,6 +15,27 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
 
+exports.geoLocation = async(req,res) => {
+    let superadmin = req.admin// req.admin is superadmin
+    if ( req.body.lat && req.body.long) {
+        let geolocation = {
+            type: "Point",
+            coordinates: [req.body.long, req.body.lat]
+        };
+        superadmin.geolocation = geolocation;
+        superadmin = await superadmin.save()
+        return res.json(superadmin)
+    }
+}
+
+exports.getGeoLocation = async(req,res) => {
+    let superadmin = await Admin.findOne({role:'superadmin'})
+    if (!superadmin) {
+        return res.status(404).json({error: 'Cannot find geolocation'})
+    }
+    res.json(superadmin.geolocation)
+}
+
 exports.getAllAdmins = async (req, res) => {
     const page = req.query.page || 1;
     const admins = await Admin.find({})

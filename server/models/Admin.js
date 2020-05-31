@@ -35,12 +35,12 @@ const adminSchema = new mongoose.Schema({
         trim: true,
         maxlength: 32
     },
-    muncipality:{
+    muncipality: {
         type: String,
         trim: true,
         maxlength: 32
     },
-    wardno:{
+    wardno: {
         type: Number
     },
     businessInfo: {
@@ -72,7 +72,7 @@ const adminSchema = new mongoose.Schema({
         type: String
     },
     holidayMode: {
-        start:{
+        start: {
             type: Date
         },
         end: {
@@ -102,7 +102,7 @@ const adminSchema = new mongoose.Schema({
         default: null
     }
 }, { timestamps: true });
-userSchema.index({ location: "2dsphere" });
+adminSchema.index({ geolocation: "2dsphere" });
 
 const sha512 = function (password, salt) {
     let hash = crypto.createHmac('sha512', salt);

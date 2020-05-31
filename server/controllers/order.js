@@ -12,6 +12,11 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
 
+exports.calculateShippingCharge = async(req,res) => {
+    //first add geoloacion from superadmon
+}
+
+
 exports.createOrder = async (req, res) => {
     const product = await Product.findOne({ 
         slug: req.body.p_slug, 

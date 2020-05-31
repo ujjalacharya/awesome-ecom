@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
         default: null
     }
 }, { timestamps: true });
-userSchema.index({ location: "2dsphere" });
+userSchema.index({ geolocation: "2dsphere" });
 
 const sha512 = function (password, salt) {
     let hash = crypto.createHmac('sha512', salt);
