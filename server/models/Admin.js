@@ -30,6 +30,9 @@ const adminSchema = new mongoose.Schema({
     geolocation: {
         type: pointSchema,//of superadmin used to calculate geodistance between user nd the order dispatch system
     },
+    shippingRate: {
+        type: Number// added only by superadmin
+    },
     district: {
         type: String,
         trim: true,

@@ -1,9 +1,11 @@
 const User = require("../models/User");
+const Admin = require("../models/Admin")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
 const ProductImages = require("../models/ProductImages")
 const Order = require("../models/Order")
+const {calculateDistance} = require("../middleware/helpers")
 const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
@@ -13,7 +15,24 @@ const task = Fawn.Task();
 const perPage = 10;
 
 exports.calculateShippingCharge = async(req,res) => {
-    //first add geoloacion from superadmon
+    const superadmin = await Admin.findOne({ role: 'superadmin' })
+    if (!superadmin) {
+        return res.status(404).json({ error: 'Cannot find shipping rate' })
+    }
+    const shippingRate = superadmin.shippingRate
+    const systemGeoCoordinates = superadmin.geolocation.coordinates
+    const userGeoCoordinates = req.user.geolocation.coordinates
+    const distance = calculateDistance(
+        systemGeoCoordinates[0],
+        systemGeoCoordinates[1],
+        userGeoCoordinates[0],
+        userGeoCoordinates[1])
+    const shippingCharge = distance * shippingRate
+    if (shippingCharge < 10) {
+        return res.json(0)
+    }
+    res.json(Math.round(shippingCharge))
+    
 }
 
 

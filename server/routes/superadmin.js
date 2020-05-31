@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand,getProductBrands, geoLocation,getGeoLocation
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 
@@ -9,8 +9,11 @@ const router = express.Router();
 
 //superadmin's..
 router.route('/geo-location')
-    .put(auth, isSuperAdmin,geoLocation)
-    .get(getGeoLocation)
+    .put(auth, isSuperAdmin,geoLocation)//create and update
+    .get(auth,isSuperAdmin,getGeoLocation)
+router.route('/shipping-rate')
+    .put(auth,isSuperAdmin,shippingRate)//create and update
+    .get(auth,isSuperAdmin,getShippingRate)
 
 
 // admin's..
