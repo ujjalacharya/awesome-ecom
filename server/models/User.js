@@ -22,6 +22,21 @@ const userSchema = new mongoose.Schema({
     address: {
         type: String,
         trim: true,
+        maxlength: 128
+    },
+    tole: {
+        type: String,
+        trim: true,
+        maxlength: 128
+    },
+    muncipality: {
+        type: String,
+        trim: true,
+        maxlength: 128
+    },
+    wardno: {
+        type: String,
+        trim: true,
         maxlength: 32
     },
     email: {

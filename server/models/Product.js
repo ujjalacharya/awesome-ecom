@@ -18,10 +18,10 @@ const productSchema = mongoose.Schema({
         required: true,
         maxlength: 32
     },
-    category: {
+    category: [{
         type: Schema.Types.ObjectId,
         ref: 'category'
-    },
+    }],
     soldBy: {
         type: Schema.Types.ObjectId,
         ref: 'admin'
@@ -42,26 +42,26 @@ const productSchema = mongoose.Schema({
         trim: true,
         maxlength: 32
     },
-    size: {
+    size: [{
         type: String,
         trim: true,
         maxlength: 32
-    },
+    }],
     model: {
         type: String,
         trim: true,
         maxlength: 128
     },
-    color: {
+    color: [{
         type: String,
         trim: true,
         maxlength: 128
-    },
-    weight: {
+    }],
+    weight: [{
         type: String,
         trim: true,
-        maxlength: 32
-    },
+        maxlength: 128
+    }],
     description: {
         type: String,
         required: true,

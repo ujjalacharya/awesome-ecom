@@ -266,22 +266,42 @@ exports.getCategories = async (req, res) => {
     }
     res.json(categories)
 
+    // product -> this.category ID
+    // product -> this.brand ID
 
-    // let products = await Product.find()
-    // products = products.map(async p => {
-    //     let c = await Category.findById(p.category)
-    //     if (!c.brands.includes(p.brand)) {
-    //         c.brands.push(p.brand)
-    //         return await c.save()
-    //     }
-    // })
+    // this.category.brand Arr -> product -> this.category => brand
+
+//     let products = await Product.find({})
+
+//     let finalCat = [];
+
+//     products.forEach((pr, i) => {
+//             finalCat.push({
+//                 category: pr.category,
+//                 brand: pr.brand,
+//             })
+//     })
+//     finalCat = Array.from(new Set(finalCat.map(JSON.stringify))).map(JSON.parse)
+
+//    finalCat = finalCat.map( async data => {
+//        const cat = await Category.findById(data.category)
+//        cat.brands.push(data.brand)
+//        return await cat.save()
+//    })
+//    finalCat = await Promise.all(finalCat)
+//     res.json(finalCat)
+
+
+
+
     // products = await Category.find()
     // products = products.map(async c=> {
     //     c.brands = []
-    //     await c.save()
+    //     return await c.save()
     // })
-    // products = await Promise.all(products)
-    // res.json(products)
+    // let c = await Promise.all(products)
+    //  c = (await ProductBrand.find())
+    // res.json(c)
 }
 
 exports.flipCategoryAvailablity = async (req, res) => {
