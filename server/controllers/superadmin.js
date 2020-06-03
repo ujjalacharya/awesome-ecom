@@ -323,38 +323,28 @@ exports.approveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    let categories = await Category.find(product.category)//may b array of category as well
-    if (!categories) {
+    let categories = await Category.find({_id:product.category})//may b array of category as well
+    if (!categories.length) {
         return res.status(404).json({error: "Categories not found of this product."})
     }
 
 
-    const addBrandToCategory = (brand,categories) => {
-        categories = categories.map(cat => {
-            if (!cat.brands.includes(brand)) {
-                cat.push(brand)
-                return cat
-            }
-            return cat
-        })
-        return categories
-    }
+    const addBrandToCategory = (brand, categories) => categories.forEach(cat => {
+        if (!cat.brands.includes(brand)) cat.brands.push(brand)
+        const updateCat = cat.toObject()
+        task.update(cat, updateCat).options({ viaSave: true })
+    })
 
 
     if (!product.remark) {
         const updateProduct = product.toObject()
         updateProduct.isVerified = Date.now()
-        const categories = addBrandToCategory(updateProduct.brand,categories)
-        categories.forEach(cat => {
-            const updateCat = cat.toObject()
-            task.update(cat,updateCat)
-        })
+        addBrandToCategory(updateProduct.brand,categories)
         const results = await task
             .update(product, updateProduct)
             .options({ viaSave: true })
             .run({ useMongoose: true })
-        await product.save()
-        return res.json(product)
+        return res.json(results)
     }
 
 
@@ -364,11 +354,7 @@ exports.approveProduct = async (req, res) => {
 
     const updateProduct = product.toObject()
     updateProduct.isVerified = Date.now()
-    categories = addBrandToCategory(updateProduct.brand, categories)
-    categories.forEach(cat => {
-        const updateCat = cat.toObject()
-        task.update(cat, updateCat)
-    })
+    addBrandToCategory(updateProduct.brand, categories)
     const results = await task
         .update(remark, updateRemark)
         .update(product, updateProduct)

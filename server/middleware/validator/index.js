@@ -152,6 +152,7 @@ exports.validateProduct = async (req, res, next) => {
     if (images.length !== (typeof req.body.images === 'string' ? [req.body.images] : req.body.images).length) {
         errors.push({ msg: "Invalid image ids" })
     }
+
     // validate brand
     let brand = await ProductBrand.findOne({ slug: req.body.brand })
     if (!brand) {
@@ -159,14 +160,15 @@ exports.validateProduct = async (req, res, next) => {
     } else {
         req.body.brand = brand._id
     }
+
     //validate category
-    let category = await Category.findOne({ slug: req.body.category })
-    if (!category) {
+    let categories = await Category.find({ slug: req.body.category })
+    if (!categories.length) {
         errors.push({ msg: "Invalid product category" })
-    } else if (category.isDisabled) {
-        errors.push({ msg: "This category has been disabled" })
+    } else if (categories.some(cat=>cat.isDisabled)) {
+        errors.push({ msg: "Categories have been disabled" })
     } else {
-        req.body.category = category._id//as we need id for reference
+        req.body.category = categories.map(cat=>cat._id)//as we need id for reference
     }
     // if error show the first one as they happen
     if (errors.length) {
