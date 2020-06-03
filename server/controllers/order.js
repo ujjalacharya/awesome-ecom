@@ -31,6 +31,7 @@ exports.calculateShippingCharge = async(req,res) => {
     if (shippingCharge < 10) {
         return res.json(0)
     }
+    console.log(distance,'km');
     res.json(Math.round(shippingCharge))
     
 }

@@ -67,10 +67,6 @@ const userSchema = new mongoose.Schema({
         default: ""
     },
     salt: String,
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
     isDeleted: {
         type: Date,
         default: null

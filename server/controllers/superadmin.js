@@ -323,18 +323,52 @@ exports.approveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
+    let categories = await Category.find(product.category)//may b array of category as well
+    if (!categories) {
+        return res.status(404).json({error: "Categories not found of this product."})
+    }
+
+
+    const addBrandToCategory = (brand,categories) => {
+        categories = categories.map(cat => {
+            if (!cat.brands.includes(brand)) {
+                cat.push(brand)
+                return cat
+            }
+            return cat
+        })
+        return categories
+    }
+
+
     if (!product.remark) {
-        product.isVerified = Date.now()
+        const updateProduct = product.toObject()
+        updateProduct.isVerified = Date.now()
+        const categories = addBrandToCategory(updateProduct.brand,categories)
+        categories.forEach(cat => {
+            const updateCat = cat.toObject()
+            task.update(cat,updateCat)
+        })
+        const results = await task
+            .update(product, updateProduct)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
         await product.save()
         return res.json(product)
     }
+
+
     const remark = await Remark.findById(product.remark)
     const updateRemark = remark.toObject()
     updateRemark.isDeleted = Date.now()
 
     const updateProduct = product.toObject()
     updateProduct.isVerified = Date.now()
-    updateProduct.remark = newRemark._id
+    categories = addBrandToCategory(updateProduct.brand, categories)
+    categories.forEach(cat => {
+        const updateCat = cat.toObject()
+        task.update(cat, updateCat)
+    })
     const results = await task
         .update(remark, updateRemark)
         .update(product, updateProduct)
@@ -376,6 +410,14 @@ exports.getProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
+
+    // let products = await Product.find()
+    // products = products.map(async product => {
+    //     console.log(product.color);
+        // product.color = product.color[0].split(',').map(color=>color.trim())
+        // return await product.save()
+    // })
+    // products = await Promise.all(products)
     res.json(products);
 }
 exports.verifiedProducts = async (req, res) => {
