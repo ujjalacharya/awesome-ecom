@@ -1,6 +1,6 @@
 const express = require("express");
 
-const {auth} = require("../controllers/user_auth")
+const {auth:userauth} = require("../controllers/user_auth")
 const {auth, hasAuthorization} = require("../controllers/admin_auth")
 const {profile} = require("../controllers/admin")
 const { order, createOrder, calculateShippingCharge, toggleOrderApproval} = require("../controllers/order")
@@ -8,8 +8,8 @@ const { order, createOrder, calculateShippingCharge, toggleOrderApproval} = requ
 const router = express.Router();
 
 //user's..
-router.get('/shipping-charge',auth,calculateShippingCharge)
-router.post('/create-order',auth,createOrder)
+router.get('/shipping-charge',userauth,calculateShippingCharge)
+router.post('/create-order',userauth,createOrder)
 router.get('/')
 
 // admin's..-

@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const Admin = require("../models/Admin")
-const Order = require("../models/Order")
 const Payment = require("../models/Payment")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
