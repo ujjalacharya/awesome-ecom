@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Admin = require("../models/Admin")
+const Order = require("../models/Order")
 const Payment = require("../models/Payment")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
@@ -15,6 +16,23 @@ const _ = require('lodash')
 const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
+
+exports.order = async(req,res,next) => {
+    const order = await Order.findById(req.params.order_id)
+        .populate('user','-password -salt -resetPasswordLink -emailVerifyLink')
+        .populate('payment','-user -order')
+        .populate('product','_id slug name price discountRate')
+        .populate('soldBy','name shopName')
+    if (!order) {
+        return res.status(404).json({error:"Order not found"})
+    }
+    req.order = order
+    next();
+}
+
+exports.getOrder = async(req,res) => {
+    res.json(req.order)
+}
 
 exports.calculateShippingCharge = async(req,res) => {
     const superadmin = await Admin.findOne({ role: 'superadmin' })
@@ -50,6 +68,9 @@ exports.createOrder = async (req, res) => {
     })
     if (!product) {
         return res.status(404).json({ error: "Product not found." })
+    }
+    if (product.quantity === 0 ) {
+        return res.status(403).json({error:"Product is out of the stock."})
     }
     if (product.quantity < req.body.quantity) {
         return res.status(403).json({error:`There are only ${product.quantity} products available.`})
@@ -88,4 +109,19 @@ exports.createOrder = async (req, res) => {
         .options({viaSave:true})
         .run({ useMongoose: true })
     res.json(results)
+}
+
+exports.toggleOrderApproval = async(req,res) => {
+    const order = req.order
+    if (order.status.currentStatus !== 'active' || order.status.currentStatus !== 'approve') {
+        return res.status(403).json({error:"This order cannot be approve or activate."})
+    }
+    if (order.status.currentStatus === 'active') {
+        order.status.currentStatus = 'approve'
+    }
+    if (order.status.currentStatus === 'approve') {
+        order.status.currentStatus = 'active'
+    }
+    await order.save()
+    res.json(order)
 }
