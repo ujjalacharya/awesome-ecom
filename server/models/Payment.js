@@ -13,7 +13,7 @@ const paymentSchema = new mongoose.Schema({
     },
     method: {
         type: String,
-        enum: ['Cash on Delivery','manual','khalti']//manual ==> bank or manual esewa..
+        enum: ['Cash on Delivery','manual']//manual ==> bank or manual esewa..
     },
     shippingCharge: {
         type: Number,

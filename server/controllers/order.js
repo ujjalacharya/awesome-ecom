@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Admin = require("../models/Admin")
+const Payment = require("../models/Payment")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
@@ -7,6 +8,7 @@ const ProductImages = require("../models/ProductImages")
 const Order = require("../models/Order")
 const {calculateDistance} = require("../middleware/helpers")
 const sharp = require("sharp")
+const shortid = require('shortid');
 const path = require("path");
 const fs = require("fs");
 const _ = require('lodash')
@@ -50,17 +52,40 @@ exports.createOrder = async (req, res) => {
         return res.status(404).json({ error: "Product not found." })
     }
     if (product.quantity < req.body.quantity) {
-        return res.status(403).json({error:`There are only ${product.quantity} items.`})
+        return res.status(403).json({error:`There are only ${product.quantity} products available.`})
     }
-    const order = new Order()
-    order.user = req.user._id
-    order.product = product._id
-    order.quantity = req.body.quantity
+    // new order
+    const newOrder = new Order()
+    newOrder.user = req.user._id
+    newOrder.product = product._id
+    newOrder.soldBy = product.soldBy
+    newOrder.quantity = req.body.quantity
     const status = {
         currentStatus: 'active',
         activeDate: Date.now()
     }
-    order.status = status
-    res.json(order)
+    newOrder.status = status
 
+    // new payment
+    const newPayent = new Payment({
+        user: req.user._id,
+        order: newOrder._id,
+        method: req.body.method,
+        shippingCharge: req.body.shippingCharge,
+        transactionCode: shortid.generate(),
+        amount: (product.price - (product.price * (product.discountRate / 100))) * newOrder.quantity,
+        from: req.user.phone
+    })
+    newOrder.payment = newPayent._id
+
+    //update product 
+    const updateProduct = product.toObject()
+    updateProduct.quantity = updateProduct.quantity - newOrder.quantity
+    const results = await task
+        .save(newOrder)
+        .save(newPayent)
+        .update(product,updateProduct)
+        .options({viaSave:true})
+        .run({ useMongoose: true })
+    res.json(results)
 }

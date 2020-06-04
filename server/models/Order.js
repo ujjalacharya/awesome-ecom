@@ -18,6 +18,10 @@ const orderSchema = new mongoose.Schema({
     quantity: {
         type: Number
     },
+    soldBy:{
+        type: Schema.Types.ObjectId,
+        ref:"Admin"
+    },
     status: {
         currentStatus: {
             type: String,
