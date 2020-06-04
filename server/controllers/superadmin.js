@@ -344,7 +344,7 @@ exports.approveProduct = async (req, res) => {
             .update(product, updateProduct)
             .options({ viaSave: true })
             .run({ useMongoose: true })
-        return res.json(results)
+        return res.json(results[results.length-1])//the product
     }
 
 
@@ -361,7 +361,7 @@ exports.approveProduct = async (req, res) => {
         .options({ viaSave: true })
         .run({ useMongoose: true })
     console.log(results);
-    return res.json(results[0])
+    return res.json(results)//the product with remark
 
 }
 exports.disApproveProduct = async (req, res) => {
