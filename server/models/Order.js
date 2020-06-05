@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
     },
     soldBy:{
         type: Schema.Types.ObjectId,
-        ref:"Admin"
+        ref:"admin"
     },
     status: {
         currentStatus: {

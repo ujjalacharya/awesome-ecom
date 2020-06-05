@@ -63,7 +63,7 @@ exports.createOrder = async (req, res) => {
     const product = await Product.findOne({ 
         slug: req.body.p_slug, 
         isVerified: { "$ne": null }, 
-        isDeleted: { "$ne": null } 
+        isDeleted: null
     })
     if (!product) {
         return res.status(404).json({ error: "Product not found." })
@@ -74,6 +74,7 @@ exports.createOrder = async (req, res) => {
     if (product.quantity < req.body.quantity) {
         return res.status(403).json({error:`There are only ${product.quantity} products available.`})
     }
+
     // new order
     const newOrder = new Order()
     newOrder.user = req.user._id
@@ -93,7 +94,7 @@ exports.createOrder = async (req, res) => {
         method: req.body.method,
         shippingCharge: req.body.shippingCharge,
         transactionCode: shortid.generate(),
-        amount: (product.price - (product.price * (product.discountRate / 100))) * newOrder.quantity,
+        amount: Math.round((product.price - (product.price * (product.discountRate / 100))) * newOrder.quantity),
         from: req.user.phone
     })
     newOrder.payment = newPayent._id
@@ -107,20 +108,29 @@ exports.createOrder = async (req, res) => {
         .update(product,updateProduct)
         .options({viaSave:true})
         .run({ useMongoose: true })
-    res.json(results)
+    res.json({order:results[0],payment:results[1]})
 }
 
 exports.toggleOrderApproval = async(req,res) => {
-    const order = req.order
-    if (order.status.currentStatus !== 'active' || order.status.currentStatus !== 'approve') {
+    let order = req.order
+    if (order.soldBy._id.toString() !== req.profile._id.toString()) {
+        return res.status(401).json({error:"Unauthorized Admin"})
+    }
+    if (order.status.currentStatus !== 'active' && order.status.currentStatus !== 'approve') {
         return res.status(403).json({error:"This order cannot be approve or activate."})
     }
     if (order.status.currentStatus === 'active') {
+        console.log('gertd');
         order.status.currentStatus = 'approve'
+        order.status.approvedDate = Date.now()
+        await order.save()
+        return res.json(order)
     }
     if (order.status.currentStatus === 'approve') {
+        console.log('jhfytf');
         order.status.currentStatus = 'active'
+        order.status.approvedDate = null
+        await order.save()
+        return res.json(order)
     }
-    await order.save()
-    res.json(order)
 }
