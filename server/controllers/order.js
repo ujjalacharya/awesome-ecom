@@ -141,6 +141,9 @@ exports.orderCancelByAdmin = async (req, res) => {
     if (order.status.currentStatus === 'complete' || order.status.currentStatus === 'return') {
         return res.status(403).json({ error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.` })
     }
+    if (order.status.currentStatus === 'cancel') {
+        return res.status(403).json({ error: "Order has already been cancelled." })
+    }
     order.status.currentStatus = 'cancel'
     order.status.cancelledDate = Date.now()
     await order.save()
@@ -149,11 +152,14 @@ exports.orderCancelByAdmin = async (req, res) => {
 
 exports.orderCancelByUser = async (req, res) => {
     let order = req.order
-    if (order.user._id.toString() !== req.profile._id.toString()) {
+    if (order.user._id.toString() !== req.user._id.toString()) {
         return res.status(401).json({ error: "Unauthorized User" })
     }
     if (order.status.currentStatus === 'complete' || order.status.currentStatus === 'return') {
         return res.status(403).json({ error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.` })
+    }
+    if (order.status.currentStatus === 'cancel') {
+        return res.status(403).json({error:"Order has already been cancelled."})
     }
     order.status.currentStatus = 'cancel'
     order.status.cancelledDate = Date.now()
