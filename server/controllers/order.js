@@ -120,17 +120,43 @@ exports.toggleOrderApproval = async(req,res) => {
         return res.status(403).json({error:"This order cannot be approve or activate."})
     }
     if (order.status.currentStatus === 'active') {
-        console.log('gertd');
         order.status.currentStatus = 'approve'
         order.status.approvedDate = Date.now()
         await order.save()
         return res.json(order)
     }
     if (order.status.currentStatus === 'approve') {
-        console.log('jhfytf');
         order.status.currentStatus = 'active'
         order.status.approvedDate = null
         await order.save()
         return res.json(order)
     }
+}
+
+exports.orderCancelByAdmin = async (req, res) => {
+    let order = req.order
+    if (order.soldBy._id.toString() !== req.profile._id.toString()) {
+        return res.status(401).json({ error: "Unauthorized Admin" })
+    }
+    if (order.status.currentStatus === 'complete' || order.status.currentStatus === 'return') {
+        return res.status(403).json({ error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.` })
+    }
+    order.status.currentStatus = 'cancel'
+    order.status.cancelledDate = Date.now()
+    await order.save()
+    return res.json(order)
+}
+
+exports.orderCancelByUser = async (req, res) => {
+    let order = req.order
+    if (order.user._id.toString() !== req.profile._id.toString()) {
+        return res.status(401).json({ error: "Unauthorized User" })
+    }
+    if (order.status.currentStatus === 'complete' || order.status.currentStatus === 'return') {
+        return res.status(403).json({ error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.` })
+    }
+    order.status.currentStatus = 'cancel'
+    order.status.cancelledDate = Date.now()
+    await order.save()
+    return res.json(order)
 }
