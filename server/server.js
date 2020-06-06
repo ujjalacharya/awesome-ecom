@@ -45,6 +45,14 @@ app.use("/api/superadmin", require("./routes/superadmin"));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/product", require("./routes/product"));
 app.use("/api/order", require("./routes/order"));
+app.use("/api/dispatcher-auth", require("./routes/dispatcher_auth"));
+
+// logout for all types of user in the system
+app.delete('/api/logout', async (req, res) => {
+    const { refreshToken } = req.body
+    await RefreshToken.deleteOne({ refreshToken })
+    res.status(200).json({ msg: "Logged Out" })
+})
 
 // Error handling middleware
 app.use(function (err, req, res, next) {

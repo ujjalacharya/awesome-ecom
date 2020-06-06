@@ -118,12 +118,6 @@ exports.refreshToken = async (req, res) => {
     );
     return res.json({ accessToken });
 }
-exports.logout = async (req,res) => {
-    const {refreshToken} = req.body
-    await RefreshToken.deleteOne({refreshToken})
-    res.status(200).json({msg:"Logged Out"})
-}
-
 exports.forgotPassword = async (req, res) => {
     if (!req.body) return res.status(400).json({ error: "No request body" });
     if (!req.body.email) return res.status(400).json({ error: "No Email in request body" });
