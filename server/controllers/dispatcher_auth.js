@@ -5,20 +5,20 @@ const _ = require('lodash')
 const RefreshToken = require("../models/RefereshToken")
 
 exports.signin = async (req, res) => {
-    // const { email, password } = req.body;
-    const email = 'dispatcher1@gmail.com'
-    const password = 'helloworld1'
-    const name = 'dispatcher'
-    const address = 'Dhangadhi-2'
-    const phone = 9868743292
-    let dispatcher = new Dispatcher({email,password,name,address,phone})
-    dispatcher = await dispatcher.save()
-    // let dispatcher = await Dispatcher.findByCredentials(email, password)
-    // if (!dispatcher) {
-    //     return res.status(404).json({
-    //         error: "Email or password is invalid."
-    //     });
-    // }
+    const { email, password } = req.body;
+    // const email = 'dispatcher1@gmail.com'
+    // const password = 'helloworld1'
+    // const name = 'dispatcher'
+    // const address = 'Dhangadhi-2'
+    // const phone = 9868743292
+    // let dispatcher = new Dispatcher({email,password,name,address,phone})
+    // dispatcher = await dispatcher.save()
+    let dispatcher = await Dispatcher.findByCredentials(email, password)
+    if (!dispatcher) {
+        return res.status(404).json({
+            error: "Email or password is invalid."
+        });
+    }
     const payload = {
         _id: dispatcher._id,
         name: dispatcher.name,

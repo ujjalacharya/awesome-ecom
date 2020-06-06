@@ -67,7 +67,7 @@ const userSchema = new mongoose.Schema({
         default: ""
     },
     salt: String,
-    isDeleted: {
+    isBlocked: {
         type: Date,
         default: null
     }

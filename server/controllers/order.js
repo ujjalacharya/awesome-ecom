@@ -111,6 +111,38 @@ exports.createOrder = async (req, res) => {
     res.json({order:results[0],payment:results[1]})
 }
 
+exports.userOrders = async(req,res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({user:req.user._id})
+        .populate('payment', '-user -order')
+        .populate('product', '_id slug name price discountRate')
+        .populate('soldBy', 'name shopName')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({error: "No orders found"})
+    }
+    res.json(orders)
+}
+
+exports.adminOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id })
+        .populate('user', '-password -salt -resetPasswordLink -emailVerifyLink')
+        .populate('payment', '-user -order')
+        .populate('product', '_id slug name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No orders found" })
+    }
+    res.json(orders)
+}
+
 exports.toggleOrderApproval = async(req,res) => {
     let order = req.order
     if (order.soldBy._id.toString() !== req.profile._id.toString()) {
@@ -165,4 +197,22 @@ exports.orderCancelByUser = async (req, res) => {
     order.status.cancelledDate = Date.now()
     await order.save()
     return res.json(order)
+}
+
+exports.toggleDispatchOrder = async (req,res) => {
+    let order = req.order
+    if (order.status.currentStatus !== 'approve' && order.status.currentStatus !== 'dispatch') {
+        return res.status(403).json({error:"This order cannot be dispatched or roll back to approve state."})
+    }
+    if (order.status.currentStatus === 'approve') {
+        order.status.currentStatus = 'dispatch'
+        order.status.dispatchedDate = Date.now()
+        await order.save()
+        return res.json(order)
+    }
+    if (order.status.currentStatus === 'dispatch') {
+        order.status.currentStatus = 'approve'
+        await order.save()
+        return res.json(order)
+    }
 }

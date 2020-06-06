@@ -49,6 +49,7 @@ app.use("/api/dispatcher-auth", require("./routes/dispatcher_auth"));
 
 // logout for all types of user in the system
 app.delete('/api/logout', async (req, res) => {
+    const RefreshToken = require('./models/RefereshToken')
     const { refreshToken } = req.body
     await RefreshToken.deleteOne({ refreshToken })
     res.status(200).json({ msg: "Logged Out" })

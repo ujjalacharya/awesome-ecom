@@ -59,7 +59,11 @@ exports.signin = async (req, res) => {
             error: "Please verify your email address."
         });
     }
-
+    if (user.isBlocked) {
+        return res.status(401).json({
+            error: "Your account has been blocked."
+        });
+    }
     const payload = {
         _id: user._id,
         name: user.name,
@@ -101,7 +105,11 @@ exports.socialLogin = async (req, res) => {
         return res.json({ accessToken });
     } else {
         // update existing user with new social info and login
-
+        if (user.isBlocked) {
+            return res.status(401).json({
+                error: "Your account has been blocked."
+            });
+        }
         user = _.extend(user, req.body);
         user = await user.save();
         req.user = user;
