@@ -216,3 +216,20 @@ exports.toggleDispatchOrder = async (req,res) => {
         return res.json(order)
     }
 }
+
+exports.approvedOrders = async(req,res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({'status.currentStatus':'approve'})
+        .populate('user', '-password -salt -resetPasswordLink -emailVerifyLink')
+        .populate('payment', '-user -order')
+        .populate('product', '_id slug name price discountRate')
+        .populate('soldBy', 'name shopName')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({error: "No orders are ready to ship."})
+    }
+    res.json(orders)
+}
