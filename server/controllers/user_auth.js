@@ -215,8 +215,11 @@ exports.auth = async (req, res, next) => {
             if (u._id) {
                 const user = await User.findById(u._id).select('-password -salt')
                 if (user) {
-                    req.user = user
-                    return next();
+                    if (!user.isBlocked) {
+                        req.user = user
+                        return next();
+                    }
+                    throw 'Your account has been blocked'
                 }
                 throw 'Invalid User'
             }

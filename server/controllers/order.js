@@ -20,8 +20,9 @@ exports.order = async(req,res,next) => {
     const order = await Order.findById(req.params.order_id)
         .populate('user','-password -salt -resetPasswordLink -emailVerifyLink')
         .populate('payment','-user -order')
-        .populate('product','_id slug name price discountRate')
-        .populate('soldBy','name shopName address')
+        .populate('product','_id slug name price discountRate category brand return isVerified isDeleted warranty')
+        .populate('soldBy','name shopName address isVerified isBlocked holidayMode photo email adminWareHouse')
+        .populate('adminWareHouse')
     if (!order) {
         return res.status(404).json({error:"Order not found"})
     }
@@ -60,8 +61,8 @@ exports.createOrder = async (req, res) => {
         slug: req.body.p_slug, 
         isVerified: { "$ne": null }, 
         isDeleted: null
-    })
-    if (!product) {
+    }).populate('soldBy','isBlocked isVerified')
+    if (!product && product.soldBy.isBlocked && !product.soldBy.isVerified) {
         return res.status(404).json({ error: "Product not found." })
     }
     if (product.quantity === 0 ) {

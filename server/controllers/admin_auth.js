@@ -183,8 +183,11 @@ exports.auth = async (req, res, next) => {
             if (user._id) {
                 const admin = await Admin.findById(user._id).select('-password -salt')
                 if (admin) {
-                    req.admin = admin
-                    return next();
+                    if (!admin.isBlocked) {
+                        req.admin = admin
+                        return next();
+                    }
+                    throw 'Your account has been blocked'
                 }
                 throw 'Invalid Admin'
             }

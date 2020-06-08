@@ -119,8 +119,11 @@ exports.auth = async (req, res, next) => {
             if (user._id) {
                 const dispatcher = await Dispatcher.findById(user._id).select('-password -salt')
                 if (dispatcher) {
-                    req.dispatcher = dispatcher
-                    return next();
+                    if (!dispatcher.isBlocked) {
+                        req.dispatcher = dispatcher
+                        return next();
+                    }
+                    throw 'Your account has been blocked'
                 }
                 throw 'Invalid Dispatcher'
             }
