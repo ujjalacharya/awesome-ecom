@@ -272,6 +272,12 @@ button.secondary:hover {
   margin-top: 60px;
 }
 
+@media screen and (max-width: 480px) {
+  .detail .container {
+    padding: 0 25px;
+  }
+}
+
 .cart-page {
   padding-bottom: 80px;
   margin-top: 60px;
@@ -1131,9 +1137,19 @@ button.secondary:hover {
 .slider .image-show {
   height: 500px;
 }
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 480px) {
   .slider .image-show {
-    height: 180px;
+    height: 385px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .slider .image-show {
+    height: 320px;
+  }
+}
+@media screen and (max-width: 320px) {
+  .slider .image-show {
+    height: 275px;
   }
 }
 .slider .image-show .enlargedImage {
@@ -1268,6 +1284,11 @@ button.secondary:hover {
   display: flex;
   align-items: center;
 }
+@media screen and (max-width: 375px) {
+  .product-specs .qty-cart-btn .qty-cart {
+    display: block;
+  }
+}
 .product-specs .qty-cart-btn .qty-cart .qty {
   display: flex;
   align-items: center;
@@ -1308,6 +1329,12 @@ button.secondary:hover {
 }
 .product-specs .qty-cart-btn .qty-cart button {
   margin-left: 15px;
+}
+@media screen and (max-width: 375px) {
+  .product-specs .qty-cart-btn .qty-cart button {
+    margin-left: 0;
+    margin-top: 15px;
+  }
 }
 .product-specs .qty-cart-btn .wish-comp-btn {
   display: flex;

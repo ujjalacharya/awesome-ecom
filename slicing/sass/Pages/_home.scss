@@ -26,3 +26,11 @@
 .checkout{
     margin-top: 60px;
 }
+
+.detail{
+  .container{
+  @media screen and (max-width: 480px) {
+    padding: 0 25px;
+  }
+  }
+}

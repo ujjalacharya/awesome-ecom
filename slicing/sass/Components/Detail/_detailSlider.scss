@@ -1,8 +1,17 @@
 .slider {
   .image-show {
     height: 500px;
-    @media screen and (max-width: 767px) {
-      height: 180px;
+    // @media screen and (max-width: 767px) {
+    //   height: 500px;
+    // }
+    @media screen and (max-width: 480px) {
+      height: 385px;
+    }
+    @media screen and (max-width: 375px) {
+      height: 320px;
+    }
+    @media screen and (max-width: 320px) {
+      height: 275px;
     }
     .enlargedImage {
       z-index: 9;

@@ -24,6 +24,15 @@ class DetailSlider extends Component {
       slidesToScroll: 1,
       prevArrow: <PrevArrow />,
       nextArrow: <NextArrow />,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 3,
+          },
+        },
+      ],
     };
     // const props = {
     //   height: 500,
