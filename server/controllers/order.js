@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Admin = require("../models/Admin")
 const Payment = require("../models/Payment")
+const Remark = require("../models/Remark")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
@@ -95,6 +96,7 @@ exports.createOrder = async (req, res) => {
     newOrder.product = product._id
     newOrder.soldBy = product.soldBy
     newOrder.quantity = req.body.quantity
+    newOrder.productAttributes = req.body.productAttributes
     const status = {
         currentStatus: 'active',
         activeDate: Date.now()
@@ -188,11 +190,20 @@ exports.orderCancelByAdmin = async (req, res) => {
     if (order.status.currentStatus === 'cancel') {
         return res.status(403).json({ error: "Order has already been cancelled." })
     }
-    order.status.currentStatus = 'cancel'
-    order.status.cancelledDate = Date.now()
-    await order.save()
-    order.soldBy = undefined
-    return res.json(order)
+    const newRemark = new Remark({comment:req.body.remark})
+    let updateOrder = order.toObject()
+    updateOrder.status.currentStatus = 'cancel'
+    updateOrder.status.cancelledDetail.cancelledDate = Date.now()
+    updateOrder.status.cancelledDetail.cancelledBy = req.profile._id,
+    updateOrder.status.cancelledDetail.remark = newRemark._id
+
+    let results = await task
+        .save(newRemark)
+        .update(order,updateOrder)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
+    results[1].soldBy = undefined
+    return res.json(results)
 }
 
 exports.orderCancelByUser = async (req, res) => {
@@ -206,12 +217,21 @@ exports.orderCancelByUser = async (req, res) => {
     if (order.status.currentStatus === 'cancel') {
         return res.status(403).json({error:"Order has already been cancelled."})
     }
-    order.status.currentStatus = 'cancel'
-    order.status.cancelledDate = Date.now()
-    await order.save()
-    order.soldBy = undefined
-    order.user = undefined
-    return res.json(order)
+    const newRemark = new Remark({ comment: req.body.remark })
+    let updateOrder = order.toObject()
+    updateOrder.status.currentStatus = 'cancel'
+    updateOrder.status.cancelledDetail.cancelledDate = Date.now()
+    updateOrder.status.cancelledDetail.cancelledBy = req.user._id,
+    updateOrder.status.cancelledDetail.remark = newRemark._id
+
+    let results = await task
+        .save(newRemark)
+        .update(order, updateOrder)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
+    results[1].soldBy = undefined
+    results[1].user = undefined
+    return res.json(results)
 }
 
 exports.toggleDispatchOrder = async (req,res) => {
@@ -254,32 +274,35 @@ exports.toggleCompleteOrder = async (req, res) => {
     if (order.status.currentStatus === 'dispatch') {
         order.status.currentStatus = 'complete'
         order.status.completedDate = Date.now()
+        order.isPaid = true
         await order.save()
         return res.json(order)
     }
     if (order.status.currentStatus === 'complete') {
         order.status.currentStatus = 'dispatch'
         order.status.completedDate = null
+        order.isPaid = false
         await order.save()
         return res.json(order)
     }
 }
 
-exports.toggleReturnOrder = async (req, res) => {
+exports.returnOrder = async (req, res) => {
     let order = req.order
-    if (order.status.currentStatus !== 'complete' && order.status.currentStatus !== 'return') {
-        return res.status(403).json({ error: `This order cannot be returned or rollback to complete state. Order current status is ${order.status.currentStatus}` })
+    if (order.status.currentStatus !== 'complete') {
+        return res.status(403).json({ error: `This order cannot be returned. Order current status is ${order.status.currentStatus}` })
     }
-    if (order.status.currentStatus === 'complete') {
-        order.status.currentStatus = 'return'
-        order.status.returnedDate = Date.now()
-        await order.save()
-        return res.json(order)
-    }
-    if (order.status.currentStatus === 'return') {
-        order.status.currentStatus = 'complete'
-        order.status.returnedDate = null
-        await order.save()
-        return res.json(order)
-    }
+    const newRemark = new Remark({ comment: req.body.remark })
+    let updateOrder = order.toObject()
+    updateOrder.status.currentStatus = 'return'
+    updateOrder.status.returnedDetail.returnedDate = Date.now()
+    updateOrder.status.returnedDetail.remark = newRemark._id
+    let updatePayment = order.payment.toObject()
+    updatePayment.returnedAmount = req.body.returnedAmount
+    let results = await task
+        .save(newRemark)
+        .update(order, updateOrder)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
+    return res.json(results)
 }
