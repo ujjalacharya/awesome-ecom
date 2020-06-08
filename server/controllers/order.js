@@ -21,16 +21,12 @@ exports.order = async(req,res,next) => {
         .populate('user','-password -salt -resetPasswordLink -emailVerifyLink')
         .populate('payment','-user -order')
         .populate('product','_id slug name price discountRate')
-        .populate('soldBy','name shopName')
+        .populate('soldBy','name shopName address')
     if (!order) {
         return res.status(404).json({error:"Order not found"})
     }
     req.order = order
     next();
-}
-
-exports.getOrder = async(req,res) => {
-    res.json(req.order)
 }
 
 exports.calculateShippingCharge = async(req,res) => {
@@ -149,7 +145,7 @@ exports.toggleOrderApproval = async(req,res) => {
         return res.status(401).json({error:"Unauthorized Admin"})
     }
     if (order.status.currentStatus !== 'active' && order.status.currentStatus !== 'approve') {
-        return res.status(403).json({error:"This order cannot be approve or activate."})
+        return res.status(403).json({error:`This order cannot be approve or activate. Order current status is ${order.status.currentStatus}`})
     }
     if (order.status.currentStatus === 'active') {
         order.status.currentStatus = 'approve'
@@ -202,7 +198,7 @@ exports.orderCancelByUser = async (req, res) => {
 exports.toggleDispatchOrder = async (req,res) => {
     let order = req.order
     if (order.status.currentStatus !== 'approve' && order.status.currentStatus !== 'dispatch') {
-        return res.status(403).json({error:"This order cannot be dispatched or roll back to approve state."})
+        return res.status(403).json({error:`This order cannot be dispatched or rollback to approve state. Order current status is ${order.status.currentStatus}`})
     }
     if (order.status.currentStatus === 'approve') {
         order.status.currentStatus = 'dispatch'
@@ -212,6 +208,7 @@ exports.toggleDispatchOrder = async (req,res) => {
     }
     if (order.status.currentStatus === 'dispatch') {
         order.status.currentStatus = 'approve'
+        order.status.dispatchedDate = null
         await order.save()
         return res.json(order)
     }
@@ -223,7 +220,7 @@ exports.approvedOrders = async(req,res) => {
         .populate('user', '-password -salt -resetPasswordLink -emailVerifyLink')
         .populate('payment', '-user -order')
         .populate('product', '_id slug name price discountRate')
-        .populate('soldBy', 'name shopName')
+        .populate('soldBy', 'name shopName phone address photo')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()

@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate, blockUnblockUser
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 
@@ -14,6 +14,9 @@ router.route('/geo-location')
 router.route('/shipping-rate')
     .put(auth,isSuperAdmin,shippingRate)//create and update
     .get(auth,isSuperAdmin,getShippingRate)
+
+//user's..
+router.patch('/block-unblock-user/:user_id', auth, isSuperAdmin,blockUnblockUser)
 
 
 // admin's..

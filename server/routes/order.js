@@ -21,7 +21,7 @@ router.get('/orders/:id', adminAuth, hasAuthorization, adminOrders)
 
 // dispatcher's..
 router.patch('/toggle-dispatch-order/:order_id',dispatcherAuth,toggleDispatchOrder)
-router.get('/approve-orders',dispatcherAuth,approvedOrders)
+router.get('/approved-orders',dispatcherAuth,approvedOrders)
 
 router.param('id',profile)
 router.param('order_id',order)

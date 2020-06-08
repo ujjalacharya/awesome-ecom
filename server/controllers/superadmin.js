@@ -1,4 +1,5 @@
 const Admin = require("../models/Admin");
+const User = require("../models/User")
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
@@ -171,7 +172,7 @@ exports.flipAdminAccountApproval = async (req, res) => {
 }
 
 exports.blockUnblockAdmin = async (req, res) => {
-    let admin =  await Admin.findById(req.params.id)
+    let admin = await Admin.findById(req.params.id).select('-password -salt -resetPasswordLink -emailVerifyLink')
     if (!admin) {
         return res.status(404).json({ error: "Admin not found" })
     }
@@ -185,6 +186,22 @@ exports.blockUnblockAdmin = async (req, res) => {
     await admin.save()
     res.json(admin)
 }
+
+exports.blockUnblockUser = async (req, res) => {
+    let user = await User.findById(req.params.user_id).select('-password -salt -resetPasswordLink -emailVerifyLink')
+    if (!user) {
+        return res.status(404).json({ error: "User not found" })
+    }
+    if (user.isBlocked) {
+        user.isBlocked = null
+        await user.save()
+        return res.json(user)
+    }
+    user.isBlocked = Date.now()
+    await user.save()
+    res.json(user)
+}
+
 exports.getBlockedAdmins = async (req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isBlocked: { "$ne": null } })
