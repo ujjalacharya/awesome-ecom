@@ -29,6 +29,24 @@ exports.order = async(req,res,next) => {
     next();
 }
 
+exports.userOrder = (req,res) => {
+    let order = req.order
+    order.user = undefined
+    order.soldBy = undefined
+    res.json(order)
+}
+
+exports.adminOrder = (req, res) => {
+    let order = req.order
+    order.soldBy = undefined
+    res.json(order)
+}
+
+exports.dispatcherOrder = (req, res) => {
+    let order = req.order
+    res.json(order)
+}
+
 exports.calculateShippingCharge = async(req,res) => {
     const superadmin = await Admin.findOne({ role: 'superadmin' })
     if (!superadmin) {
