@@ -111,9 +111,7 @@ exports.createOrder = async (req, res) => {
 exports.userOrders = async(req,res) => {
     const page = req.query.page || 1
     let orders = await Order.find({user:req.user._id})
-        .populate('payment', '-user -order')
-        .populate('product', '_id slug name price discountRate')
-        .populate('soldBy', 'name shopName')
+        .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -127,9 +125,7 @@ exports.userOrders = async(req,res) => {
 exports.adminOrders = async (req, res) => {
     const page = req.query.page || 1
     let orders = await Order.find({ soldBy: req.profile._id })
-        .populate('user', '-password -salt -resetPasswordLink -emailVerifyLink')
-        .populate('payment', '-user -order')
-        .populate('product', '_id slug name price discountRate')
+        .populate('user', 'name address muncipality tole')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -152,12 +148,14 @@ exports.toggleOrderApproval = async(req,res) => {
         order.status.currentStatus = 'approve'
         order.status.approvedDate = Date.now()
         await order.save()
+        order.soldBy = undefined
         return res.json(order)
     }
     if (order.status.currentStatus === 'approve') {
         order.status.currentStatus = 'active'
         order.status.approvedDate = null
         await order.save()
+        order.soldBy = undefined
         return res.json(order)
     }
 }
@@ -176,6 +174,7 @@ exports.orderCancelByAdmin = async (req, res) => {
     order.status.currentStatus = 'cancel'
     order.status.cancelledDate = Date.now()
     await order.save()
+    order.soldBy = undefined
     return res.json(order)
 }
 
@@ -193,6 +192,8 @@ exports.orderCancelByUser = async (req, res) => {
     order.status.currentStatus = 'cancel'
     order.status.cancelledDate = Date.now()
     await order.save()
+    order.soldBy = undefined
+    order.user = undefined
     return res.json(order)
 }
 
@@ -218,10 +219,6 @@ exports.toggleDispatchOrder = async (req,res) => {
 exports.approvedOrders = async(req,res) => {
     const page = req.query.page || 1
     let orders = await Order.find({'status.currentStatus':'approve'})
-        .populate('user', '-password -salt -resetPasswordLink -emailVerifyLink')
-        .populate('payment', '-user -order')
-        .populate('product', '_id slug name price discountRate')
-        .populate('soldBy', 'name shopName phone address photo')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
