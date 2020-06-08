@@ -1,10 +1,38 @@
 import React, { Component } from "react";
 import { Tooltip } from "antd";
 
+//includes
+import QuickViewModal from "./QuickViewModal";
+
 class ProductCard extends Component {
+  state = {
+    showQuickView: false,
+  };
+
+  showModal = () => {
+    console.log('hey')
+    this.setState({
+      showQuickView: true,
+    });
+  };
+
+  handleCancel = e => {
+    this.setState({
+      showQuickView: false,
+    });
+  };
+
   render() {
     return (
       <div className="product-card">
+        {this.state.showQuickView && (
+          <QuickViewModal
+            title="Quick View Product"
+            visible={this.state.showQuickView}
+            // onOk={this.handleOk}
+            onCancel={this.handleCancel}
+          />
+        )}
         {/* <ReactTooltip place="top" type="dark" effect="float" /> */}
         <div className="product-box-shadow">
           <div className="hover-items-image">
@@ -17,7 +45,11 @@ class ProductCard extends Component {
                   title="Quick View"
                   arrowPointAtCenter
                 >
-                  <img src="/images/medical.png" alt="medical.png"/>
+                  <img
+                    src="/images/medical.png"
+                    alt="medical.png"
+                    onClick={this.showModal}
+                  />
                 </Tooltip>
               </div>
               <div className="card-items">
@@ -26,7 +58,7 @@ class ProductCard extends Component {
                   title="Add to Cart"
                   arrowPointAtCenter
                 >
-                  <img src="/images/bag.png" alt="bag.jpg"/>
+                  <img src="/images/bag.png" alt="bag.jpg" />
                 </Tooltip>
               </div>
               <div className="card-items">
@@ -35,7 +67,7 @@ class ProductCard extends Component {
                   title="Add to Wishlist"
                   arrowPointAtCenter
                 >
-                  <img src="/images/heart.png" alt="heart.jpg"/>
+                  <img src="/images/heart.png" alt="heart.jpg" />
                 </Tooltip>
               </div>
               <div className="card-items">
@@ -44,12 +76,12 @@ class ProductCard extends Component {
                   title="Add to Compare"
                   arrowPointAtCenter
                 >
-                  <img src="/images/sliders.png" alt="slider.jpg"/>
+                  <img src="/images/sliders.png" alt="slider.jpg" />
                 </Tooltip>
               </div>
             </div>
             <div className="image">
-              <img src="/images/prod-bag.jpg" alt="prod-bag.jpg"/>
+              <img src="/images/prod-bag.jpg" alt="prod-bag.jpg" />
             </div>
           </div>
           <div className="card-body">
