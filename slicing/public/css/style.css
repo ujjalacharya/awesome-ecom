@@ -429,11 +429,11 @@ button.secondary:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 430px;
+  max-width: 500px;
 }
 @media screen and (max-width: 912px) {
   .main-header .menu-logo .menu {
-    max-width: 300px;
+    max-width: 360px;
     margin-left: 10px;
   }
 }

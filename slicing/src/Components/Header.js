@@ -12,6 +12,7 @@ class Header extends Component {
                 <img src="/images/logo.png" />
               </Col>
               <Col span={22} className="menu">
+                <div className="menu-list">ALL DEPARTMENTS</div>
                 <div className="menu-list">MEN</div>
                 <div className="menu-list">WOMEN</div>
                 <div className="menu-list">KIDS</div>
