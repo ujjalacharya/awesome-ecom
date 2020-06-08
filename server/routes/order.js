@@ -4,7 +4,7 @@ const {auth:userAuth} = require("../controllers/user_auth")
 const {auth:adminAuth, hasAuthorization} = require("../controllers/admin_auth")
 const {auth:dispatcherAuth} = require("../controllers/dispatcher_auth")
 const {profile} = require("../controllers/admin")
-const { order, createOrder, calculateShippingCharge, toggleOrderApproval, orderCancelByAdmin, orderCancelByUser, toggleDispatchOrder, userOrders, adminOrders, approvedOrders} = require("../controllers/order")
+const { order, createOrder, calculateShippingCharge, toggleOrderApproval, orderCancelByAdmin, orderCancelByUser, toggleDispatchOrder, userOrders, adminOrders, approvedOrders, toggleCompleteOrder, toggleReturnOrder} = require("../controllers/order")
 
 const router = express.Router();
 
@@ -20,8 +20,10 @@ router.patch('/cancel-order/:id/:order_id',adminAuth,hasAuthorization,orderCance
 router.get('/orders/:id', adminAuth, hasAuthorization, adminOrders)
 
 // dispatcher's..
-router.patch('/toggle-dispatch-order/:order_id',dispatcherAuth,toggleDispatchOrder)
+router.patch('/toggle-dispatch-order/:order_id',dispatcherAuth,toggleDispatchOrder)//approve/dispatch
 router.get('/approved-orders',dispatcherAuth,approvedOrders)
+router.patch('/toggle-complete-order-request/:order_id',dispatcherAuth,toggleCompleteOrder)//dispatch/complete
+router.patch('/toggle-return-order/:order_id', dispatcherAuth, toggleReturnOrder)//complete/return
 
 router.param('id',profile)
 router.param('order_id',order)

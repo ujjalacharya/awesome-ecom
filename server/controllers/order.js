@@ -22,7 +22,6 @@ exports.order = async(req,res,next) => {
         .populate('payment','-user -order')
         .populate('product','_id slug name price discountRate category brand return isVerified isDeleted warranty')
         .populate('soldBy','name shopName address isVerified isBlocked holidayMode photo email adminWareHouse')
-        .populate('adminWareHouse')
     if (!order) {
         return res.status(404).json({error:"Order not found"})
     }
@@ -227,4 +226,42 @@ exports.approvedOrders = async(req,res) => {
         return res.status(404).json({error: "No orders are ready to ship."})
     }
     res.json(orders)
+}
+
+exports.toggleCompleteOrder = async (req, res) => {
+    let order = req.order
+    if (order.status.currentStatus !== 'complete' && order.status.currentStatus !== 'dispatch') {
+        return res.status(403).json({ error: `This order cannot be completed or rollback to dispatch state. Order current status is ${order.status.currentStatus}` })
+    }
+    if (order.status.currentStatus === 'dispatch') {
+        order.status.currentStatus = 'complete'
+        order.status.completedDate = Date.now()
+        await order.save()
+        return res.json(order)
+    }
+    if (order.status.currentStatus === 'complete') {
+        order.status.currentStatus = 'dispatch'
+        order.status.completedDate = null
+        await order.save()
+        return res.json(order)
+    }
+}
+
+exports.toggleReturnOrder = async (req, res) => {
+    let order = req.order
+    if (order.status.currentStatus !== 'complete' && order.status.currentStatus !== 'return') {
+        return res.status(403).json({ error: `This order cannot be returned or rollback to complete state. Order current status is ${order.status.currentStatus}` })
+    }
+    if (order.status.currentStatus === 'complete') {
+        order.status.currentStatus = 'return'
+        order.status.returnedDate = Date.now()
+        await order.save()
+        return res.json(order)
+    }
+    if (order.status.currentStatus === 'return') {
+        order.status.currentStatus = 'complete'
+        order.status.returnedDate = null
+        await order.save()
+        return res.json(order)
+    }
 }
