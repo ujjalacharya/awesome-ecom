@@ -150,17 +150,178 @@ exports.userOrders = async(req,res) => {
     }
     res.json(orders)
 }
+exports.userActiveOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ user: req.user._id ,'status.currentStatus':'active'})
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No active orders found" })
+    }
+    res.json(orders)
+}
+
+exports.userCompleteOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'complete' })
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No complete orders found" })
+    }
+    res.json(orders)
+}
+
+exports.userCancelOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'cancel' })
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No cancel orders found" })
+    }
+    res.json(orders)
+}
+
+exports.userReturnOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'return' })
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No return orders found" })
+    }
+    res.json(orders)
+}
 
 exports.adminOrders = async (req, res) => {
     const page = req.query.page || 1
     let orders = await Order.find({ soldBy: req.profile._id })
         .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
         .sort({ created: -1 })
     if (!orders.length) {
         return res.status(404).json({ error: "No orders found" })
+    }
+    res.json(orders)
+}
+
+exports.adminActiveOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus':'active' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No active orders found" })
+    }
+    res.json(orders)
+}
+
+exports.adminApproveOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'approve' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No approve orders found" })
+    }
+    res.json(orders)
+}
+
+exports.adminDispatchOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'dispatch' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No dispatch orders found" })
+    }
+    res.json(orders)
+}
+
+exports.adminCancelOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'cancel' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No cancel orders found" })
+    }
+    res.json(orders)
+}
+
+exports.adminCompleteOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'complete' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No complete orders found" })
+    }
+    res.json(orders)
+}
+
+exports.adminToBeReturnOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'tobereturn' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No to be return orders found" })
+    }
+    res.json(orders)
+}
+
+exports.adminReturnOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'return' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No return orders found" })
     }
     res.json(orders)
 }
