@@ -140,6 +140,21 @@ exports.getProducts = async (req, res) => {
     }
     res.json(products);
 }
+exports.outOfTheStockProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id, quantity:0 })
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are out of stock.' })
+    }
+    res.json(products);
+}
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isVerified: { "$ne": null } })

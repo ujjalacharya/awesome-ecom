@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { createProduct, product, getProduct, updateProduct, productImages, deleteImage, getProducts, verifiedProducts, notDeletedProducts, deletedProducts, notVerifiedProducts, deleteProduct } = require("../controllers/product")
+const { createProduct, product, getProduct, updateProduct, productImages, deleteImage, getProducts, verifiedProducts, notDeletedProducts, deletedProducts, notVerifiedProducts, deleteProduct, outOfTheStockProducts} = require("../controllers/product")
 const { profile } = require("../controllers/admin")
 const { uploadProductImages } = require("../middleware/helpers");
 const { validateProduct } = require("../middleware/validator")
@@ -12,6 +12,7 @@ router.get("/verified-products/:id", auth, hasAuthorization, verifiedProducts)
 router.get("/unverified-products/:id", auth, hasAuthorization, notVerifiedProducts)
 router.get("/deleted-products/:id", auth, hasAuthorization, deletedProducts)
 router.get("/not-deleted-products/:id", auth, hasAuthorization, notDeletedProducts)
+router.get("/outofthe-stock-products/:id", auth, hasAuthorization, outOfTheStockProducts)
 
 router.post("/images/:id", auth, hasAuthorization, uploadProductImages, productImages)
 router.delete("/image/:id/:p_slug", auth, hasAuthorization, deleteImage)//?image_id=
