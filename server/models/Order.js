@@ -26,7 +26,7 @@ const orderSchema = new mongoose.Schema({
     status: {
         currentStatus: {
             type: String,
-            enum: ["active","approve","dispatch","cancel","complete","return"]
+            enum: ["active","approve","dispatch","cancel","complete","tobereturn","return"]
         },
         activeDate: {
             type: Date,
@@ -55,6 +55,10 @@ const orderSchema = new mongoose.Schema({
             },
         },
         completedDate: {
+            type: Date,
+            default: null
+        },
+        tobereturnedDate: {
             type: Date,
             default: null
         },

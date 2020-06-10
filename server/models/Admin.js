@@ -76,10 +76,10 @@ const adminSchema = new mongoose.Schema({
     },
     holidayMode: {
         start: {
-            type: Date
+            type: Number
         },
         end: {
-            type: Date
+            type: Number
         }
     },
     salt: String,

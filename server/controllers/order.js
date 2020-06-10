@@ -23,6 +23,7 @@ exports.order = async(req,res,next) => {
         .populate('payment','-user -order')
         .populate('product','_id slug name price discountRate category brand return isVerified isDeleted warranty')
         .populate('soldBy','name shopName address isVerified isBlocked holidayMode photo email adminWareHouse')
+        .populate('status.cancelledDetail.remark')
     if (!order) {
         return res.status(404).json({error:"Order not found"})
     }
@@ -79,8 +80,17 @@ exports.createOrder = async (req, res) => {
         slug: req.body.p_slug, 
         isVerified: { "$ne": null }, 
         isDeleted: null
-    }).populate('soldBy','isBlocked isVerified')
-    if (!product && product.soldBy.isBlocked && !product.soldBy.isVerified) {
+    }).populate('soldBy','isBlocked isVerified holidayMode')
+    const isAdminOnHoliday = (first, last) => {
+        let week = [0, 1, 2, 3, 4, 5, 6]
+        let firstIndex = week.indexOf(first);
+        week = week.concat(week.splice(0, firstIndex))//Shift array so that first day is index 0
+        let lastIndex = week.indexOf(last)//Find last day
+        //Cut from first day to last day nd check with today day
+        return week.slice(0, lastIndex + 1).some(d => d === new Date().getDay());
+
+    }
+    if (!product || product.soldBy.isBlocked || !product.soldBy.isVerified || isAdminOnHoliday(product.soldBy.holidayMode.start, product.soldBy.holidayMode.end)) {
         return res.status(404).json({ error: "Product not found." })
     }
     if (product.quantity === 0 ) {
@@ -305,4 +315,39 @@ exports.returnOrder = async (req, res) => {
         .options({ viaSave: true })
         .run({ useMongoose: true })
     return res.json(results)
+}
+
+exports.toggletobeReturnOrder = async (req, res) => {
+    let order = req.order
+    if (order.status.currentStatus !== 'complete' && order.status.currentStatus !== 'tobereturn' ) {
+        return res.status(403).json({ error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}` })
+    }
+    if (updateOrder.status.currentStatus === 'complete') {
+        let updateOrder = order.toObject()
+        updateOrder.status.currentStatus = 'tobereturn'
+        updateOrder.status.tobereturnedDate = Date.now()
+        let updatePayment = order.payment.toObject()
+        updatePayment.returnedAmount = req.body.returnedAmount
+        let results = await task
+            .update(order.payment,updatePayment)
+            .options({ viaSave: true })
+            .update(order, updateOrder)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json(results)
+    }
+    if (updateOrder.status.currentStatus === 'tobereturn') {
+        let updateOrder = order.toObject()
+        updateOrder.status.currentStatus = 'complete'
+        updateOrder.status.tobereturnedDate = null
+        let updatePayment = order.payment.toObject()
+        updatePayment.returnedAmount = undefined
+        let results = await task
+            .update(order.payment, updatePayment)
+            .options({ viaSave: true })
+            .update(order, updateOrder)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json(results)
+    }
 }
