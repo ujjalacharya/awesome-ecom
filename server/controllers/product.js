@@ -140,6 +140,37 @@ exports.getProducts = async (req, res) => {
     }
     res.json(products);
 }
+
+exports.latestProducts = async (req, res) => {
+    const products = await Product.find()
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .limit(20)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+
+exports.getProductsByCategory = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id })
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+
 exports.outOfTheStockProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, quantity:0 })
