@@ -411,6 +411,7 @@ button.secondary:hover {
 .main-header {
   padding: 10px 20px;
   box-shadow: 0 4px 12px rgba(199, 197, 197, 0.5);
+  position: relative;
 }
 @media screen and (max-width: 480px) {
   .main-header {
@@ -441,6 +442,84 @@ button.secondary:hover {
   .main-header .menu-logo .menu .menu-list {
     font-size: 12px;
   }
+}
+.main-header .menu-logo .menu .menu-list.alldepart:hover ul.category {
+  visibility: visible;
+}
+.main-header .menu-logo .menu .menu-list ul.category {
+  visibility: hidden;
+  position: absolute;
+  z-index: 9;
+  background: #fff;
+  min-height: 400px;
+  padding: 15px;
+  padding-top: 35px;
+  min-width: 220px;
+  padding-left: 0px;
+}
+.main-header .menu-logo .menu .menu-list ul.category li {
+  list-style: none;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  padding-left: 15px;
+  cursor: pointer;
+  color: #000;
+}
+.main-header .menu-logo .menu .menu-list ul.category li .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.main-header .menu-logo .menu .menu-list ul.category li .title .title-icon {
+  visibility: hidden;
+}
+.main-header .menu-logo .menu .menu-list ul.category li .title .title-icon i {
+  font-size: 18px;
+  padding-right: 10px;
+}
+.main-header .menu-logo .menu .menu-list ul.category li:last-child {
+  border-bottom: 0px;
+}
+.main-header .menu-logo .menu .menu-list ul.category li:hover {
+  background-color: #48b5dc;
+  color: #fff;
+}
+.main-header .menu-logo .menu .menu-list ul.category li:hover ul.sub-category,
+.main-header .menu-logo .menu .menu-list ul.category li:hover .title-icon {
+  visibility: visible;
+}
+.main-header .menu-logo .menu .menu-list ul.category li ul.sub-category {
+  visibility: hidden;
+  position: absolute;
+  padding-left: 185px;
+  /* z-index: 9; */
+  background: #fff;
+  min-height: 150px;
+  padding: 15px;
+  padding-left: 0px;
+  top: 20px;
+  min-width: 220px;
+  left: 205px;
+  min-height: 380px;
+  border-left: 1px solid #eee;
+}
+.main-header .menu-logo .menu .menu-list ul.category li ul.sub-category li .title .sub-title-icon {
+  visibility: hidden;
+}
+.main-header .menu-logo .menu .menu-list ul.category li ul.sub-category li .title .sub-title-icon i {
+  font-size: 18px;
+  padding-right: 10px;
+}
+.main-header .menu-logo .menu .menu-list ul.category li ul.sub-category li:hover .title .sub-title-icon {
+  visibility: visible;
+}
+.main-header .menu-logo .menu .menu-list ul.category li ul.sub-category li:hover .next-sub {
+  visibility: visible;
+}
+.main-header .menu-logo .menu .menu-list ul.category li ul.sub-category.next-sub {
+  visibility: hidden;
+  top: 0px;
+  z-index: 99;
 }
 .main-header .search {
   display: flex;

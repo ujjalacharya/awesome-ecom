@@ -1,6 +1,7 @@
 .main-header {
   padding: 10px 20px;
   box-shadow: $box-shadow;
+  position: relative;
   @media screen and (max-width: 480px) {
     display: none;
   }
@@ -23,8 +24,98 @@
         margin-left: 10px;
       }
       .menu-list {
+        // position: relative;
         @media screen and (max-width: 912px) {
           font-size: 12px;
+        }
+        &.alldepart:hover {
+          ul.category {
+            visibility: visible;
+          }
+        }
+        ul.category {
+          visibility: hidden;
+          position: absolute;
+          z-index: 9;
+          background: #fff;
+          min-height: 400px;
+          padding: 15px;
+          padding-top: 35px;
+          min-width: 220px;
+          padding-left: 0px;
+          li {
+            list-style: none;
+            padding-bottom: 5px;
+            // border-bottom: 1px solid #eee;
+            padding-top: 5px;
+            padding-left: 15px;
+            cursor: pointer;
+            color: #000;
+            .title {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              .title-icon {
+                visibility: hidden;
+                i {
+                  font-size: 18px;
+                  padding-right: 10px;
+                }
+              }
+            }
+            &:last-child {
+              border-bottom: 0px;
+            }
+            &:hover {
+              background-color: $secondary-color;
+              color: #fff;
+              ul.sub-category,
+              .title-icon {
+                visibility: visible;
+              }
+            }
+            ul.sub-category {
+              visibility: hidden;
+              position: absolute;
+              padding-left: 185px;
+              /* z-index: 9; */
+              background: #fff;
+              min-height: 150px;
+              padding: 15px;
+              padding-left: 0px;
+              top: 20px;
+              min-width: 220px;
+              left: 205px;
+              min-height: 380px;
+              border-left: 1px solid #eee;
+              li {
+                .title {
+                  .sub-title-icon {
+                    visibility: hidden;
+                    i {
+                      font-size: 18px;
+                      padding-right: 10px;
+                    }
+                  }
+                }
+                &:hover {
+                  .title {
+                    .sub-title-icon {
+                      visibility: visible;
+                    }
+                  }
+                  .next-sub {
+                    visibility: visible;
+                  }
+                }
+              }
+              &.next-sub {
+                visibility: hidden;
+                top: 0px;
+                z-index: 99;
+              }
+            }
+          }
         }
       }
     }
