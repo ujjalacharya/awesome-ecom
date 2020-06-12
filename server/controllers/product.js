@@ -16,6 +16,8 @@ exports.product = async (req, res, next) => {
     const product = await Product.findOne({ slug: req.params.p_slug })
         .populate('images', '-createdAt -updatedAt -__v')
         .populate('soldBy', 'shopName address')
+        .populate("brand")
+        .populate("category")
     if (!product) {
         return res.status(404).json({ error: 'Product not found.' })
     }
@@ -35,6 +37,16 @@ exports.createProduct = async (req, res) => {
     newProduct = await newProduct.save()
 
     return res.json(newProduct)
+}
+
+exports.deleteProduct = async (req, res) => {
+    const product = await Product.findOne({ slug: req.params.p_slug })
+    if (!product) {
+        return res.status(404).json({ error: "Product not found" })
+    }
+    product.isDeleted = Date.now()
+    await product.save()
+    res.json(product)
 }
 
 exports.productImages = async (req, res) => {
@@ -116,7 +128,8 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -127,10 +140,57 @@ exports.getProducts = async (req, res) => {
     }
     res.json(products);
 }
+
+exports.latestProducts = async (req, res) => {
+    const products = await Product.find()
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .limit(20)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+
+exports.getProductsByCategory = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id })
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are available.' })
+    }
+    res.json(products);
+}
+
+exports.outOfTheStockProducts = async (req, res) => {
+    const page = req.query.page || 1
+    const products = await Product.find({ soldBy: req.profile._id, quantity:0 })
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
+        .populate("images", "-createdAt -updatedAt -__v")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!products.length) {
+        return res.status(404).json({ error: 'No products are out of stock.' })
+    }
+    res.json(products);
+}
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isVerified: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -144,7 +204,8 @@ exports.verifiedProducts = async (req, res) => {
 exports.notVerifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isVerified: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -158,7 +219,8 @@ exports.notVerifiedProducts = async (req, res) => {
 exports.deletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -172,7 +234,8 @@ exports.deletedProducts = async (req, res) => {
 exports.notDeletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)

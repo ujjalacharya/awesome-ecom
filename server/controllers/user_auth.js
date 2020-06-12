@@ -59,7 +59,11 @@ exports.signin = async (req, res) => {
             error: "Please verify your email address."
         });
     }
-
+    if (user.isBlocked) {
+        return res.status(401).json({
+            error: "Your account has been blocked."
+        });
+    }
     const payload = {
         _id: user._id,
         name: user.name,
@@ -101,7 +105,11 @@ exports.socialLogin = async (req, res) => {
         return res.json({ accessToken });
     } else {
         // update existing user with new social info and login
-
+        if (user.isBlocked) {
+            return res.status(401).json({
+                error: "Your account has been blocked."
+            });
+        }
         user = _.extend(user, req.body);
         user = await user.save();
         req.user = user;
@@ -141,12 +149,6 @@ exports.refreshToken = async (req,res) => {
         { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
     );
     return res.json({ accessToken });
-}
-
-exports.logout = async (req, res) => {
-    const { refreshToken } = req.body
-    await RefreshToken.deleteOne({ refreshToken })
-    res.status(200).json({ msg: "Logged Out" })
 }
 
 exports.forgotPassword = async (req, res) => {
@@ -208,14 +210,16 @@ exports.resetPassword = async (req, res) => {
 exports.auth = async (req, res, next) => {
     const token = req.header('x-auth-token');
     try {
-
         if (token) {
             const u = await parseToken(token)
             if (u._id) {
                 const user = await User.findById(u._id).select('-password -salt')
                 if (user) {
-                    req.user = user
-                    return next();
+                    if (!user.isBlocked) {
+                        req.user = user
+                        return next();
+                    }
+                    throw 'Your account has been blocked'
                 }
                 throw 'Invalid User'
             }

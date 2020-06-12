@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema({
         type: String,
         trim: true,
         required: true,
-        maxlength: 32
+        maxlength: 128
     },
     brand: {
         type: Schema.Types.ObjectId,
@@ -18,10 +18,10 @@ const productSchema = mongoose.Schema({
         required: true,
         maxlength: 32
     },
-    category: {
+    category: [{
         type: Schema.Types.ObjectId,
         ref: 'category'
-    },
+    }],
     soldBy: {
         type: Schema.Types.ObjectId,
         ref: 'admin'
@@ -42,26 +42,26 @@ const productSchema = mongoose.Schema({
         trim: true,
         maxlength: 32
     },
-    size: {
+    size: [{
         type: String,
         trim: true,
         maxlength: 32
-    },
+    }],
     model: {
         type: String,
         trim: true,
-        maxlength: 32
+        maxlength: 128
     },
-    color: {
+    color: [{
         type: String,
         trim: true,
-        maxlength: 32
-    },
-    weight: {
+        maxlength: 128
+    }],
+    weight: [{
         type: String,
         trim: true,
-        maxlength: 32
-    },
+        maxlength: 128
+    }],
     description: {
         type: String,
         required: true,
@@ -78,9 +78,6 @@ const productSchema = mongoose.Schema({
     discountRate: {
         type: Number,//it may b float as well..
         default:0
-    },
-    shipingCharge:{
-        type: Number
     },
     videoURL:[{
         type:String

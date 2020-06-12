@@ -22,6 +22,21 @@ const userSchema = new mongoose.Schema({
     address: {
         type: String,
         trim: true,
+        maxlength: 128
+    },
+    tole: {
+        type: String,
+        trim: true,
+        maxlength: 128
+    },
+    muncipality: {
+        type: String,
+        trim: true,
+        maxlength: 128
+    },
+    wardno: {
+        type: String,
+        trim: true,
         maxlength: 32
     },
     email: {
@@ -52,16 +67,12 @@ const userSchema = new mongoose.Schema({
         default: ""
     },
     salt: String,
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
-    isDeleted: {
+    isBlocked: {
         type: Date,
         default: null
     }
 }, { timestamps: true });
-userSchema.index({ location: "2dsphere" });
+userSchema.index({ geolocation: "2dsphere" });
 
 const sha512 = function (password, salt) {
     let hash = crypto.createHmac('sha512', salt);

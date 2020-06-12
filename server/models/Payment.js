@@ -6,18 +6,24 @@ const paymentSchema = new mongoose.Schema({
         ref: "user",
         required: true
     },
-    product: {
+    order: {
         type: Schema.Types.ObjectId,
-        ref: "product",
+        ref: "order",
         required: true
     },
     method: {
         type: String,
-        enum: ['Cash on Delivery','manual','khalti']
+        enum: ['Cash on Delivery','manual']//manual ==> bank or manual esewa..
+    },
+    shippingCharge: {
+        type: Number,
     },
     amount: {
         type: Number,
-        required: true
+    },
+    returnedAmount: {
+        type: Number,
+        default: null
     },
     transactionCode: {
         type: String,
@@ -35,4 +41,4 @@ const paymentSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-module.exports = mongoose.model("appointment", paymentSchema);
+module.exports = mongoose.model("payment", paymentSchema);

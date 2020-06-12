@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema
+
 const orderSchema = new mongoose.Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -18,30 +19,70 @@ const orderSchema = new mongoose.Schema({
     quantity: {
         type: Number
     },
+    soldBy:{
+        type: Schema.Types.ObjectId,
+        ref:"admin"
+    },
     status: {
         currentStatus: {
             type: String,
-            enum: ["active","cancel","complete"]
+            enum: ["active","approve","dispatch","cancel","complete","tobereturn","return"]
         },
         activeDate: {
             type: Date,
             default: null
         },
-        cancelledDate: {
+        approvedDate: {
             type: Date,
             default: null
+        },
+        dispatchedDate: {
+            type: Date,
+            default: null
+        },
+        cancelledDetail: {
+            cancelledDate:{
+                type: Date,
+                default: null
+            },
+            cancelledBy:{
+                type: Schema.Types.ObjectId,
+                refPath: "cancelledByModel"
+            },
+            remark: {
+                type: Schema.Types.ObjectId,
+                ref: 'remark'
+            },
         },
         completedDate: {
             type: Date,
             default: null
-        }
+        },
+        tobereturnedDate: {
+            type: Date,
+            default: null
+        },
+        returnedDetail: {
+            returnedDate: {
+                type: Date,
+                default: null
+            },
+            remark: {
+                type: Schema.Types.ObjectId,
+                ref: 'remark'
+            },
+        },
     },
     isPaid:{
-        type: Boolean
+        type: Boolean,
+        default: false
     },
-    isDeleted: {
-        type: Date,
-        default: null
+    cancelledByModel: {
+        type: String,
+        enum: ['user', 'admin']
+    },
+    productAttributes:{
+        type: String
     }
 }, { timestamps: true });
 

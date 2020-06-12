@@ -36,8 +36,10 @@ exports.updateProfile = async (req, res) => {
         }
         profile.password = req.body.newPassword
     }
+    
     profile.holidayMode.start = req.body.holidayStart && req.body.holidayStart
     profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
+
     profile = _.extend(profile, req.body)
     profile = await profile.save();
     profile.salt = undefined;
@@ -46,7 +48,7 @@ exports.updateProfile = async (req, res) => {
     res.json(profile);
 }
 
-exports.uploadPhoto = async (req,res) => {
+exports.uploadPhoto = async (req, res) => {
     let profile = req.profile
     if (req.file !== undefined) {
         const { filename: image } = req.file;
@@ -61,11 +63,11 @@ exports.uploadPhoto = async (req,res) => {
         profile.photo = "admin/" + image;
     }
     await profile.save()
-    res.json({photo:profile.photo})
+    res.json({ photo: profile.photo })
 }
 
-exports.getBusinessInfo = async(req,res) => {
-    let businessinfo = await BusinessInfo.findOne({admin:req.profile._id})
+exports.getBusinessInfo = async (req, res) => {
+    let businessinfo = await BusinessInfo.findOne({ admin: req.profile._id })
     if (!businessinfo) {
         return res.status(404).json({ error: "No business information." })
     }
@@ -115,14 +117,11 @@ exports.businessinfo = async (req, res) => {
     await task
         .save(docs)
         .update(req.profile, profile)
-        .options({viaSave: true})
+        .options({ viaSave: true })
         .run({ useMongoose: true })
     res.json(docs)
 }
 
-exports.uploadBusinessFile = async(req,res) => {
-    
-}
 
 exports.getBankInfo = async (req, res) => {
     let bankinfo = await AdminBank.findOne({ admin: req.profile._id })
@@ -148,7 +147,7 @@ exports.bankinfo = async (req, res) => {
         docs = _.extend(docs, req.body)
         // update cheque file
         if (req.file) {
-            const { filename} = req.file
+            const { filename } = req.file
             const filePath = `public/uploads/${docs["chequeCopy"]}`
             fs.unlinkSync(filePath)//remove old file from respective folders
             docs["chequeCopy"] = `bank/${filename}`;//updating docs
@@ -161,14 +160,14 @@ exports.bankinfo = async (req, res) => {
 
     let docs = new AdminBank()
     docs = _.extend(docs, req.body)
-        const { filename } = req.file
+    const { filename } = req.file
     docs["chequeCopy"] = `bank/${filename}`;
     docs.admin = profile._id
     profile.adminBank = docs._id
     await task
         .save(docs)
         .update(req.profile, profile)
-        .options({viaSave: true})
+        .options({ viaSave: true })
         .run({ useMongoose: true })
     res.json(docs)
 }
@@ -176,17 +175,17 @@ exports.bankinfo = async (req, res) => {
 exports.getWareHouse = async (req, res) => {
     let warehouseinfo = await AdminWarehouse.findOne({ admin: req.profile._id })
     if (!warehouseinfo) {
-        return res.status(404).json({error:"No warehouse information available."})
+        return res.status(404).json({ error: "No warehouse information available." })
     }
     res.json(warehouseinfo)
 }
 
-exports.warehouse = async(req,res) => {
+exports.warehouse = async (req, res) => {
     let profile = req.profile.toObject()
-    const { adminWareHouse} = profile
+    const { adminWareHouse } = profile
     if (adminWareHouse) {
         let warehouseInfo = await AdminWarehouse.findById(adminWareHouse)
-        warehouseInfo = _.extend(warehouseInfo,req.body)
+        warehouseInfo = _.extend(warehouseInfo, req.body)
         await warehouseInfo.save()
         return res.json(warehouseInfo)
     }
@@ -196,7 +195,7 @@ exports.warehouse = async(req,res) => {
     await task
         .save(newWareHouse)
         .update(req.profile, profile)
-        .options({viaSave: true})
+        .options({ viaSave: true })
         .run({ useMongoose: true })
     res.json(newWareHouse)
 }

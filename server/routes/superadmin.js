@@ -1,11 +1,23 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, deleteProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand,getProductBrands
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate, blockUnblockUser
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 
 const router = express.Router();
+
+//superadmin's..
+router.route('/geo-location')
+    .put(auth, isSuperAdmin,geoLocation)//create and update
+    .get(auth,isSuperAdmin,getGeoLocation)
+router.route('/shipping-rate')
+    .put(auth,isSuperAdmin,shippingRate)//create and update
+    .get(auth,isSuperAdmin,getShippingRate)
+
+//user's..
+router.patch('/block-unblock-user/:user_id', auth, isSuperAdmin,blockUnblockUser)
+
 
 // admin's..
 router.get('/admins', auth, isSuperAdmin, getAllAdmins)
@@ -31,7 +43,6 @@ router.get('/product-brands',getProductBrands)
 // product's..
 router.patch('/approve-product/:p_slug', auth, isSuperAdmin, approveProduct)
 router.put('/disapprove-product/:p_slug', auth, isSuperAdmin, disApproveProduct)
-router.patch('/delete-product/:p_slug', auth, isSuperAdmin, deleteProduct)
 router.get("/products", auth, isSuperAdmin, getProducts)
 router.get("/verified-products", auth, isSuperAdmin, verifiedProducts)
 router.get("/unverified-products", auth, isSuperAdmin, notVerifiedProducts)

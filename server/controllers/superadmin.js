@@ -1,4 +1,5 @@
 const Admin = require("../models/Admin");
+const User = require("../models/User")
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
@@ -14,6 +15,42 @@ const _ = require('lodash');
 const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
+
+exports.geoLocation = async(req,res) => {
+    let superadmin = req.admin// req.admin is superadmin
+    if ( req.body.lat && req.body.long) {
+        let geolocation = {
+            type: "Point",
+            coordinates: [req.body.long, req.body.lat]
+        };
+        superadmin.geolocation = geolocation;
+        superadmin = await superadmin.save()
+        return res.json(superadmin)
+    }
+}
+
+exports.getGeoLocation = async(req,res) => {
+    let superadmin = await Admin.findOne({role:'superadmin'})
+    if (!superadmin) {
+        return res.status(404).json({error: 'Cannot find geolocation'})
+    }
+    res.json(superadmin.geolocation)
+}
+
+exports.shippingRate = async(req,res) => {
+    let superadmin = req.admin //i.e. superadmin
+    superadmin.shippingRate = req.body.shippingRate
+    await superadmin.save()
+    res.json(superadmin.shippingRate)
+}
+
+exports.getShippingRate = async(req,res) => {
+    let superadmin = await Admin.findOne({ role: 'superadmin' })
+    if (!superadmin) {
+        return res.status(404).json({ error: 'Cannot find shipping rate' })
+    }
+    res.json(superadmin.shippingRate)
+}
 
 exports.getAllAdmins = async (req, res) => {
     const page = req.query.page || 1;
@@ -135,7 +172,7 @@ exports.flipAdminAccountApproval = async (req, res) => {
 }
 
 exports.blockUnblockAdmin = async (req, res) => {
-    let admin = await await Admin.findById(req.params.id)
+    let admin = await Admin.findById(req.params.id).select('-password -salt -resetPasswordLink -emailVerifyLink')
     if (!admin) {
         return res.status(404).json({ error: "Admin not found" })
     }
@@ -149,6 +186,22 @@ exports.blockUnblockAdmin = async (req, res) => {
     await admin.save()
     res.json(admin)
 }
+
+exports.blockUnblockUser = async (req, res) => {
+    let user = await User.findById(req.params.user_id).select('-password -salt -resetPasswordLink -emailVerifyLink')
+    if (!user) {
+        return res.status(404).json({ error: "User not found" })
+    }
+    if (user.isBlocked) {
+        user.isBlocked = null
+        await user.save()
+        return res.json(user)
+    }
+    user.isBlocked = Date.now()
+    await user.save()
+    res.json(user)
+}
+
 exports.getBlockedAdmins = async (req, res) => {
     const page = req.query.page || 1
     let admins = await Admin.find({ isBlocked: { "$ne": null } })
@@ -199,11 +252,11 @@ exports.getUnverifiedAdmins = async (req, res) => {
 }
 
 exports.category = async (req, res) => {
-    const { displayName, parent_id, category_id } = req.body
+    const { displayName, parent_id, category_slug } = req.body
     const systemName = shortid.generate()
     let updateCategory;
-    if (category_id) {
-        updateCategory = await Category.findById(category_id)
+    if (category_slug) {
+        updateCategory = await Category.findOne({ slug: category_slug })
         if (!updateCategory) {
             return res.status(404).json({ error: "Category not found." })
         }
@@ -229,10 +282,47 @@ exports.getCategories = async (req, res) => {
         return res.status(404).json({ error: "No categories are available" })
     }
     res.json(categories)
+
+    // product -> this.category ID
+    // product -> this.brand ID
+
+    // this.category.brand Arr -> product -> this.category => brand
+
+//     let products = await Product.find({})
+
+//     let finalCat = [];
+
+//     products.forEach((pr, i) => {
+//             finalCat.push({
+//                 category: pr.category,
+//                 brand: pr.brand,
+//             })
+//     })
+//     finalCat = Array.from(new Set(finalCat.map(JSON.stringify))).map(JSON.parse)
+
+//    finalCat = finalCat.map( async data => {
+//        const cat = await Category.findById(data.category)
+//        cat.brands.push(data.brand)
+//        return await cat.save()
+//    })
+//    finalCat = await Promise.all(finalCat)
+//     res.json(finalCat)
+
+
+
+
+    // products = await Category.find()
+    // products = products.map(async c=> {
+    //     c.brands = []
+    //     return await c.save()
+    // })
+    // let c = await Promise.all(products)
+    //  c = (await ProductBrand.find())
+    // res.json(c)
 }
 
 exports.flipCategoryAvailablity = async (req, res) => {
-    let category = await Category.findById(req.query.category_id)
+    let category = await Category.findOne({slug:req.query.category_slug})
     if (!category) {
         return res.status(404).json({ error: "Category not found" })
     }
@@ -250,25 +340,45 @@ exports.approveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    if (!product.remark) {
-        product.isVerified = Date.now()
-        await product.save()
-        return res.json(product)
+    let categories = await Category.find({_id:product.category})//may b array of category as well
+    if (!categories.length) {
+        return res.status(404).json({error: "Categories not found of this product."})
     }
+
+
+    const addBrandToCategory = (brand, categories) => categories.forEach(cat => {
+        if (!cat.brands.includes(brand)) cat.brands.push(brand)
+        const updateCat = cat.toObject()
+        task.update(cat, updateCat).options({ viaSave: true })
+    })
+
+
+    if (!product.remark) {
+        const updateProduct = product.toObject()
+        updateProduct.isVerified = Date.now()
+        addBrandToCategory(updateProduct.brand,categories)
+        const results = await task
+            .update(product, updateProduct)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json(results[results.length-1])//the product
+    }
+
+
     const remark = await Remark.findById(product.remark)
     const updateRemark = remark.toObject()
     updateRemark.isDeleted = Date.now()
 
     const updateProduct = product.toObject()
     updateProduct.isVerified = Date.now()
-    updateProduct.remark = newRemark._id
+    addBrandToCategory(updateProduct.brand, categories)
     const results = await task
         .update(remark, updateRemark)
         .update(product, updateProduct)
         .options({ viaSave: true })
         .run({ useMongoose: true })
     console.log(results);
-    return res.json(results[0])
+    return res.json(results)//the product with remark
 
 }
 exports.disApproveProduct = async (req, res) => {
@@ -286,22 +396,14 @@ exports.disApproveProduct = async (req, res) => {
         .options({ viaSave: true })
         .run({ useMongoose: true })
     console.log(results);
-    return res.json(results[0])
+    return res.json(results)
 }
 
-exports.deleteProduct = async (req, res) => {
-    const product = await Product.findOne({ slug: req.params.p_slug })
-    if (!product) {
-        return res.status(404).json({ error: "Product not found" })
-    }
-    product.isDeleted = Date.now()
-    await product.save()
-    res.json(product)
-}
 exports.getProducts = async (req, res) => {
     const page = req.query.page || 1
-    const products = await Product.find()
-        .populate("category", "displayName")
+    let products = await Product.find()
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -311,12 +413,21 @@ exports.getProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
+
+    // let products = await Product.find()
+    // products = products.map(async product => {
+    //     console.log(product.color);
+        // product.color = product.color[0].split(',').map(color=>color.trim())
+        // return await product.save()
+    // })
+    // products = await Promise.all(products)
     res.json(products);
 }
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isVerified: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -326,12 +437,26 @@ exports.verifiedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
+    //make 3 products of every admin verified
+    // const admins = await Admin.find({role:'admin'})
+    // let products = admins.map(async a => {
+    //     const products = await Product.find({soldBy:a._id})
+    //     for (let i = 0; i < 3; i++) {
+    //         const element = products[i];
+    //         element.isVerified = Date.now()
+    //         await products[i].save()
+    //     }
+    //     return products
+    // })
+    // products = await Promise.all(products)
+
     res.json(products);
 }
 exports.notVerifiedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isVerified: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -346,7 +471,8 @@ exports.notVerifiedProducts = async (req, res) => {
 exports.deletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isDeleted: { "$ne": null } })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -361,7 +487,8 @@ exports.deletedProducts = async (req, res) => {
 exports.notDeletedProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ isDeleted: null })
-        .populate("category", "displayName")
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
         .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
@@ -402,4 +529,5 @@ exports.getProductBrands = async (req, res) => {
         return res.status(404).json({ error: "No product brands are available" })
     }
     res.json(productbrands)
+
 }
