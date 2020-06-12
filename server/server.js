@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
+const Fawn = require('fawn')
 require('express-async-errors')
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -68,8 +69,13 @@ app.use(function (err, req, res, next) {
 })  
 
 
-const port = process.env.PORT;
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+let roller = Fawn.Roller();
+roller.roll()
+.then(function () {
+    // start server
+    const port = process.env.PORT;
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
 });
