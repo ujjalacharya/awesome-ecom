@@ -4,6 +4,7 @@ const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
 const ProductBrand = require("../models/ProductBrand")
+const Banner = require("../models/Banner")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
 const Remark = require("../models/Remark")
@@ -50,6 +51,41 @@ exports.getShippingRate = async(req,res) => {
         return res.status(404).json({ error: 'Cannot find shipping rate' })
     }
     res.json(superadmin.shippingRate)
+}
+
+exports.banner = async(req,res) => {
+    if (!req.files.length) {
+        return res.status(400).error({ error: "Banner images are required" })
+    }
+    let newBanner = new Banner()
+    if (req.body.productSlug) {
+        let product = await Product.findOne({ slug: req.body.productSlug,isVerified: { "$ne": null },
+            isDeleted: null})
+        if (!product) {
+            req.files.forEach(file => {
+                const { filename } = file;
+                // remove image from public/uploads
+                const Path = `public/uploads/${filename}`;
+                fs.unlinkSync(Path);
+            })
+            return res.status(403).json({ error: "Product not found." })
+        }
+        newBanner.product = product._id
+    }
+    let bannerPhotos = req.files.map(async file => {
+        const { filename, path: filepath, destination } = file
+        await sharp(filepath)
+        .resize(4000)
+        .toFile(path.resolve(destination, 'banner', filename))
+        // remove image from public/uploads
+        const Path = `public/uploads/${filename}`;
+        fs.unlinkSync(Path);
+        return `banner/${filename}`
+    })
+    bannerPhotos = await Promise.all(bannerPhotos)
+    newBanner.bannerPhotos = bannerPhotos
+    await newBanner.save()
+    res.json(newBanner)
 }
 
 exports.getAllAdmins = async (req, res) => {

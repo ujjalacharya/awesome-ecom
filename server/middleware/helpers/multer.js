@@ -29,3 +29,4 @@ exports.uploadAdminPhoto = multer({ storage, fileFilter, limits }).single("photo
 exports.uploadUserPhoto = multer({ storage, fileFilter, limits }).single("photo");
 
 exports.uploadProductImages = multer({ storage, fileFilter, limits }).array("productImages",5)
+exports.uploadBannerPhotos = multer({ storage, fileFilter, fileSize: 8480 * 4230  }).array("bannerPhotos", 3)
