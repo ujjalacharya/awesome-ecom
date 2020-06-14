@@ -54,38 +54,49 @@ exports.getShippingRate = async(req,res) => {
 }
 
 exports.banner = async(req,res) => {
-    if (!req.files.length) {
-        return res.status(400).error({ error: "Banner images are required" })
+    if (!req.file) {
+        return res.status(400).error({ error: "Banner image is required" })
     }
     let newBanner = new Banner()
     if (req.body.productSlug) {
         let product = await Product.findOne({ slug: req.body.productSlug,isVerified: { "$ne": null },
             isDeleted: null})
         if (!product) {
-            req.files.forEach(file => {
-                const { filename } = file;
-                // remove image from public/uploads
-                const Path = `public/uploads/${filename}`;
-                fs.unlinkSync(Path);
-            })
+            const { filename } = req.file;
+            // remove image from public/uploads
+            const Path = `public/uploads/${filename}`;
+            fs.unlinkSync(Path);
             return res.status(403).json({ error: "Product not found." })
         }
         newBanner.product = product._id
     }
-    let bannerPhotos = req.files.map(async file => {
-        const { filename, path: filepath, destination } = file
-        await sharp(filepath)
-        .resize(4000)
-        .toFile(path.resolve(destination, 'banner', filename))
-        // remove image from public/uploads
-        const Path = `public/uploads/${filename}`;
-        fs.unlinkSync(Path);
-        return `banner/${filename}`
-    })
-    bannerPhotos = await Promise.all(bannerPhotos)
-    newBanner.bannerPhotos = bannerPhotos
-    await newBanner.save()
+    const { filename, path: filepath, destination } = req.file
+    await sharp(filepath)
+    .resize(4000)
+    .toFile(path.resolve(destination, 'banner', filename))
+    // remove image from public/uploads
+    const Path = `public/uploads/${filename}`;
+    fs.unlinkSync(Path);
+    newBanner.bannerPhoto = `banner/${filename}`
+    // await newBanner.save()
     res.json(newBanner)
+}
+exports.deleteBanner = async(req,res) => {
+    let banner = await Banner.findById(req.body.bannerID)
+    if (!banner) {
+        return res.status(404).json({ error: 'Banner not found.' })
+    }
+    banner.isDeleted = Date.now()
+    await banner.save()
+    res.json(banner)
+}
+
+exports.getBanners = async(req,res) => {
+    let banners = await Banner.find({ isDeleted: { "$ne": null }})
+    if (!banner.length) {
+        return res.json({error: 'Banners not available.'})
+    }
+    res.json(banners)
 }
 
 exports.getAllAdmins = async (req, res) => {

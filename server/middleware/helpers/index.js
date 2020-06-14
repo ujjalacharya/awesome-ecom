@@ -5,7 +5,7 @@ module.exports = {
     uploadAdminDoc: require("./multer").uploadAdminDoc,
     uploadCheque: require("./multer").uploadCheque,
     uploadProductImages: require("./multer").uploadProductImages,
-    uploadBannerPhotos: require("./multer").uploadBannerPhotos,
+    uploadBannerPhoto: require("./multer").uploadBannerPhoto,
     sendEmail: require("./mailer").sendEmail,
     dbConnection: require("./dbConnection"),
     calculateDistance: require("./geoDistance")

@@ -1,10 +1,10 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate, blockUnblockUser,banner
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate, blockUnblockUser, banner, deleteBanner, getBanners
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
-const {uploadBannerPhotos} = require("../middleware/helpers")
+const {uploadBannerPhoto} = require("../middleware/helpers")
 
 const router = express.Router();
 
@@ -16,7 +16,9 @@ router.route('/shipping-rate')
     .put(auth,isSuperAdmin,shippingRate)//create and update
     .get(auth,isSuperAdmin,getShippingRate)
 router.route('/banner')
-    .put(auth,isSuperAdmin,uploadBannerPhotos,banner)//create and update
+    .post(auth,isSuperAdmin,uploadBannerPhoto,banner)//create
+    .put(auth,isSuperAdmin,deleteBanner)//delete
+    .get(auth,isSuperAdmin,getBanners)//not deletedBanners
 
 //user's..
 router.patch('/block-unblock-user/:user_id', auth, isSuperAdmin,blockUnblockUser)
