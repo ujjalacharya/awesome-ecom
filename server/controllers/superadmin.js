@@ -55,9 +55,10 @@ exports.getShippingRate = async(req,res) => {
 
 exports.banner = async(req,res) => {
     if (!req.file) {
-        return res.status(400).error({ error: "Banner image is required" })
+        return res.status(400).json({ error: "Banner image is required" })
     }
     let newBanner = new Banner()
+    console.log(req.file);
     if (req.body.productSlug) {
         let product = await Product.findOne({ slug: req.body.productSlug,isVerified: { "$ne": null },
             isDeleted: null})

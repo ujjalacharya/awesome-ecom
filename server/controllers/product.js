@@ -113,6 +113,18 @@ exports.deleteImage = async (req, res) => {
 
 }
 
+exports.deleteImageById = async (req, res) => {
+    let image = await ProductImages.findByIdAndRemove(req.query.image_id)
+    let Path = `public/uploads/${image.thumbnail}`;
+    fs.unlinkSync(Path);
+    Path = `public/uploads/${image.medium}`;
+    fs.unlinkSync(Path)
+    Path = `public/uploads/${image.large}`;
+    fs.unlinkSync(Path)
+    res.json(image)
+
+}
+
 exports.updateProduct = async (req, res) => {
     let product = req.product
     if (product.isVerified) {
