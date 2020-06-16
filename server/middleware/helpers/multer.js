@@ -9,6 +9,7 @@ const storage =  multer.diskStorage({
       cb(null, file.fieldname + '-' + req.profile._id + '-' + Date.now() + path.extname(file.originalname))
     }
   })
+  
 const storageBySuperAdmin = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './public/uploads')
@@ -26,7 +27,6 @@ const fileFilter = (req, file, callback) => {
   callback(null, true)
 }
 const limits = { fileSize: 2480 * 3230 }
-const limits1 = { fileSize: 8480 * 4230 }
 
 exports.uploadAdminDoc = multer({ storage, fileFilter, limits }).fields([
   { name: "citizenshipFront", maxCount: 1 },
@@ -38,4 +38,4 @@ exports.uploadAdminPhoto = multer({ storage, fileFilter, limits }).single("photo
 exports.uploadUserPhoto = multer({ storage, fileFilter, limits }).single("photo");
 
 exports.uploadProductImages = multer({ storage, fileFilter, limits }).array("productImages",5)
-exports.uploadBannerPhoto = multer({ storageBySuperAdmin, fileFilter, limits1  }).single("bannerPhoto")
+exports.uploadBannerPhoto = multer({ storage:storageBySuperAdmin ,fileFilter, limits: { fileSize: 8480 * 4230 } }).single("bannerPhoto")

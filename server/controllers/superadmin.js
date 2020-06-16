@@ -58,7 +58,6 @@ exports.banner = async(req,res) => {
         return res.status(400).json({ error: "Banner image is required" })
     }
     let newBanner = new Banner()
-    console.log(req.file);
     if (req.body.productSlug) {
         let product = await Product.findOne({ slug: req.body.productSlug,isVerified: { "$ne": null },
             isDeleted: null})
@@ -73,17 +72,17 @@ exports.banner = async(req,res) => {
     }
     const { filename, path: filepath, destination } = req.file
     await sharp(filepath)
-    .resize(4000)
+    .resize(8480)
     .toFile(path.resolve(destination, 'banner', filename))
     // remove image from public/uploads
     const Path = `public/uploads/${filename}`;
     fs.unlinkSync(Path);
     newBanner.bannerPhoto = `banner/${filename}`
-    // await newBanner.save()
+    await newBanner.save()
     res.json(newBanner)
 }
 exports.deleteBanner = async(req,res) => {
-    let banner = await Banner.findById(req.body.bannerID)
+    let banner = await Banner.findById(req.body.banner_id)
     if (!banner) {
         return res.status(404).json({ error: 'Banner not found.' })
     }
@@ -94,8 +93,16 @@ exports.deleteBanner = async(req,res) => {
 
 exports.getBanners = async(req,res) => {
     let banners = await Banner.find({ isDeleted: { "$ne": null }})
-    if (!banner.length) {
+    if (!banners.length) {
         return res.json({error: 'Banners not available.'})
+    }
+    res.json(banners)
+}
+
+exports.getDeletedBanners = async (req, res) => {
+    let banners = await Banner.find({ isDeleted: null  })
+    if (!banners.length) {
+        return res.json({ error: 'Banners not available.' })
     }
     res.json(banners)
 }

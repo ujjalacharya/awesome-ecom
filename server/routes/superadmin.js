@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate, blockUnblockUser, banner, deleteBanner, getBanners
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate, blockUnblockUser, banner, deleteBanner, getBanners, getDeletedBanners
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
@@ -17,8 +17,9 @@ router.route('/shipping-rate')
     .get(auth,isSuperAdmin,getShippingRate)
 router.route('/banner')
     .post(auth,isSuperAdmin,uploadBannerPhoto,banner)//create
-    .put(auth,isSuperAdmin,deleteBanner)//delete
+    .patch(auth,isSuperAdmin,deleteBanner)//delete
     .get(auth,isSuperAdmin,getBanners)//not deletedBanners
+router.get('/deleted-banners', auth, isSuperAdmin, getDeletedBanners)
 
 //user's..
 router.patch('/block-unblock-user/:user_id', auth, isSuperAdmin,blockUnblockUser)
