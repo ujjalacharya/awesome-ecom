@@ -387,6 +387,8 @@ exports.approveProduct = async (req, res) => {
     }
 
     const addBrandToCategory = async(brand, categories) => {
+        console.log('before');
+        console.log(categories);
        let cats =  categories.forEach(async cat => {
         if (!cat.brands.includes(brand)){
             cat.brands.push(brand)
@@ -395,6 +397,8 @@ exports.approveProduct = async (req, res) => {
         return cat
     })
     await Promise.all(cats)
+    console.log('after');
+    console.log(cats);
     }
     if (!product.remark) {
         product.isVerified = Date.now()
