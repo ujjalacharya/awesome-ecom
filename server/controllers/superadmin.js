@@ -13,8 +13,8 @@ const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
 const _ = require('lodash');
-const Fawn = require("fawn");
-const task = Fawn.Task();
+// const Fawn = require("fawn");
+// const task = Fawn.Task();
 const perPage = 10;
 
 exports.geoLocation = async(req,res) => {
@@ -120,22 +120,17 @@ exports.getAllAdmins = async (req, res) => {
 }
 
 exports.flipAdminBusinessApproval = async (req, res) => {
-    let businessInfo = await BusinessInfo.findById(req.params.b_id)
+    //fawn was used
+    let businessInfo = await BusinessInfo.findById(req.params.b_id).populate('admin','isVerified')
     if (!businessInfo) {
         return res.status(404).json({ error: "No business information available" })
     }
     if (businessInfo.isVerified) {
-        let updateBusinessInfo = businessInfo.toObject()
-        updateBusinessInfo.isVerified = null
-        let admin = await Admin.findById(businessInfo.admin)
-        let updateAdmin = admin.toObject()
-        updateAdmin.isVerified = null
-        const results = await task
-            .update(businessInfo, updateBusinessInfo)
-            .update(Admin, updateAdmin)
-            .options({ viaSave: true })
-            .run({ useMongoose: true })
-        return res.json(results[0])
+        businessInfo.isVerified = null
+        businessInfo.admin.isVerified = null
+        await businessInfo.admin.save()
+        await businessInfo.save()
+        return res.json(businessInfo)
     }
     businessInfo.isVerified = Date.now()
     await businessInfo.save()
@@ -143,22 +138,17 @@ exports.flipAdminBusinessApproval = async (req, res) => {
 }
 
 exports.flipAdminBankApproval = async (req, res) => {
-    let bankInfo = await AdminBank.findById(req.params.bank_id)
+    //fawn was used
+    let bankInfo = await (await AdminBank.findById(req.params.bank_id)).populate('admin', 'isVerified')
     if (!bankInfo) {
         return res.status(404).json({ error: "No bank information available" })
     }
     if (bankInfo.isVerified) {
-        let updateBankInfo = bankInfo.toObject()
-        updateBankInfo.isVerified = null
-        let admin = await Admin.findById(bankInfo.admin)
-        let updateAdmin = admin.toObject()
-        updateAdmin.isVerified = null
-        const results = await task
-            .update(bankInfo, updateBankInfo)
-            .update(Admin, updateAdmin)
-            .options({ useSave: true })
-            .run({ useMongoose: true })
-        return res.json(results[0])
+        bankInfo.isVerified = null
+        bankInfo.admin.isVerified = null
+        await bankInfo.admin.save()
+        await bankInfo.save()
+        return res.json(bankInfo)
     }
     bankInfo.isVerified = Date.now()
     await bankInfo.save()
@@ -166,23 +156,18 @@ exports.flipAdminBankApproval = async (req, res) => {
 }
 
 exports.flipAdminWarehouseApproval = async (req, res) => {
-    let warehouse = await AdminWarehouse.findById(req.params.w_id)
+    //fawn was used
+    let warehouse = await AdminWarehouse.findById(req.params.w_id).populate('admin', 'isVerified')
     if (!warehouse) {
         return res.status(404).json({ error: "No warehouse information available" })
     }
 
     if (warehouse.isVerified) {
-        let updateWareHouse = warehouse.toObject()
-        updateWareHouse.isVerified = null
-        let admin = await Admin.findById(warehouse.admin)
-        let updateAdmin = admin.toObject()
-        updateAdmin.isVerified = null
-        const results = await task
-            .update(warehouse, updateWareHouse)
-            .update(admin, updateAdmin)
-            .options({ viaSave: true })
-            .run({ useMongoose: true })
-        return res.json(results[0])
+        warehouse.isVerified = null
+        warehouse.admin.isVerified = null
+        await warehouse.admin.save()
+        await warehouse.save()
+        return res.json(warehouse)
     }
     warehouse.isVerified = Date.now()
     await warehouse.save()
@@ -391,7 +376,8 @@ exports.flipCategoryAvailablity = async (req, res) => {
     res.json(category)
 }
 exports.approveProduct = async (req, res) => {
-    const product = await Product.findOne({ slug: req.params.p_slug })
+    //fawn was used
+    const product = await Product.findOne({ slug: req.params.p_slug }).populate('remark')
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
@@ -400,57 +386,42 @@ exports.approveProduct = async (req, res) => {
         return res.status(404).json({error: "Categories not found of this product."})
     }
 
-
-    const addBrandToCategory = (brand, categories) => categories.forEach(cat => {
-        if (!cat.brands.includes(brand)) cat.brands.push(brand)
-        const updateCat = cat.toObject()
-        task.update(cat, updateCat).options({ viaSave: true })
+    const addBrandToCategory = async(brand, categories) => {
+       let cats =  categories.forEach(async cat => {
+        if (!cat.brands.includes(brand)){
+            cat.brands.push(brand)
+            await cat.save() 
+        } 
+        return cat
     })
-
-
+    await Promise.all(cats)
+    }
     if (!product.remark) {
-        const updateProduct = product.toObject()
-        updateProduct.isVerified = Date.now()
-        addBrandToCategory(updateProduct.brand,categories)
-        const results = await task
-            .update(product, updateProduct)
-            .options({ viaSave: true })
-            .run({ useMongoose: true })
-        return res.json(results[results.length-1])//the product
+        product.isVerified = Date.now()
+        await addBrandToCategory(product.brand,categories)
+        await product.save()
+        return res.json(product)
     }
 
-
-    const remark = await Remark.findById(product.remark)
-    const updateRemark = remark.toObject()
-    updateRemark.isDeleted = Date.now()
-
-    const updateProduct = product.toObject()
-    updateProduct.isVerified = Date.now()
-    addBrandToCategory(updateProduct.brand, categories)
-    const results = await task
-        .update(remark, updateRemark)
-        .update(product, updateProduct)
-        .options({ viaSave: true })
-        .run({ useMongoose: true })
-    console.log(results);
-    return res.json(results)//the product with remark
+    product.remark.isDeleted = Date.now()
+    product.isVerified = Date.now()
+    await addBrandToCategory(updateProduct.brand, categories)
+    await product.remark.save()
+    await product.save()
+    return res.json(product)//the product with remark
 
 }
 exports.disApproveProduct = async (req, res) => {
+    //fawn was used
     const product = await Product.findOne({ slug: req.params.p_slug })
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
     const newRemark = new Remark(req.body)
-    const updateProduct = product.toObject()
-    updateProduct.isVerified = null
-    updateProduct.remark = newRemark._id
-    const results = await task
-        .save(newRemark)
-        .update(product, updateProduct)
-        .options({ viaSave: true })
-        .run({ useMongoose: true })
-    console.log(results);
+    product.isVerified = null
+    product.remark = newRemark._id
+    await newRemark.save()
+    await product.save()
     return res.json(results)
 }
 
