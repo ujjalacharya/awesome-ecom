@@ -8,8 +8,8 @@ const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
 const _ = require('lodash');
-const Fawn = require("fawn");
-const task = Fawn.Task();
+// const Fawn = require("fawn");
+// const task = Fawn.Task();
 const perPage = 10;
 
 exports.product = async (req, res, next) => {
@@ -84,6 +84,7 @@ exports.productImages = async (req, res) => {
 }
 
 exports.deleteImage = async (req, res) => {
+    //fawn was used
     let product = req.product
     if (product.isVerified) {
         return res.status(403).json({ error: 'Cannot delete image. Product has already been verified.' })

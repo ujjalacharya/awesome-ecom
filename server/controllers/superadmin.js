@@ -387,9 +387,7 @@ exports.approveProduct = async (req, res) => {
     }
 
     const addBrandToCategory = async(brand, categories) => {
-        console.log('before');
-        console.log(categories);
-       let cats =  categories.forEach(async cat => {
+       let cats =  categories.map(async cat => {
         if (!cat.brands.includes(brand)){
             cat.brands.push(brand)
             await cat.save() 
@@ -397,8 +395,6 @@ exports.approveProduct = async (req, res) => {
         return cat
     })
     await Promise.all(cats)
-    console.log('after');
-    console.log(cats);
     }
     if (!product.remark) {
         product.isVerified = Date.now()
@@ -426,7 +422,7 @@ exports.disApproveProduct = async (req, res) => {
     product.remark = newRemark._id
     await newRemark.save()
     await product.save()
-    return res.json(results)
+    return res.json({product,remark:newRemark})
 }
 
 exports.getProducts = async (req, res) => {
