@@ -6,8 +6,8 @@ const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
 const _ = require('lodash');
-const Fawn = require("fawn");
-const task = Fawn.Task();
+// const Fawn = require("fawn");
+// const task = Fawn.Task();
 
 exports.profile = async (req, res, next) => {
     const admin = await Admin.findById(req.params.id).select("-password -salt")
