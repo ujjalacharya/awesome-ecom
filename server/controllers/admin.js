@@ -104,8 +104,14 @@ exports.businessinfo = async (req, res) => {
     }
     //if !businessInfo then create new one
     //first check if files are empty or not
-    if (files.length < 3) return res.status(400).json({ error: `${3 - files.length} documents are missing` })
-
+    if (files.length < 3) {
+        files.forEach(file => {
+            const { filename, fieldname } = file
+            const filePath = `public/uploads/${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;
+            fs.unlinkSync(filePath)
+        })
+        return res.status(400).json({ error: `${3 - files.length} documents are missing` })
+    }
     let docs = new BusinessInfo()
     docs = _.extend(docs, req.body)
     files.forEach(async file => {
