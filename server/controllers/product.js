@@ -166,7 +166,13 @@ exports.latestProducts = async (req, res) => {
 
 exports.getProductsByCategory = async (req, res) => {
     const page = req.query.page || 1
-    const products = await Product.find({ soldBy: req.profile._id })
+    let categories = await Category.find({$or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }]})
+    if (!categories.length) {
+        return res.status(404).json({error:"Categories not found"})
+    }
+    categories = categories.map(c => c._id.toString())
+    console.log(categories);
+    const products = await Product.find({category: { $in: categories }})
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
