@@ -17,5 +17,5 @@ module.exports = () => {
             );
             setTimeout(self, 5000);
         });
-        return Fawn.init(mongoose)
+        return Fawn.init(mongoose, "task_by_Utsav")
 };

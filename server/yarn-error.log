@@ -1,0 +1,58 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js
+
+PATH: 
+  C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Docker\Docker\Resources\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;"C:\Users\utsav\AppData\Roaming\npm;C:\Program Files\nodejs";C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Microsoft VS Code\bin;C:\Program Files (x86)\Bitvise SSH Client;C:\RailsInstaller\Git\cmd;C:\RailsInstaller\Ruby2.2.0\bin;C:\Users\Utsav\AppData\Local\Microsoft\WindowsApps;C:\Users\Utsav\AppData\Roaming\npm;C:\Users\Utsav\AppData\Local\Yarn\bin;C:\ruby-2.7.1\bin;%DASHLANE_DLL_DIR%
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  12.14.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:60:26)
+
+npm manifest: 
+  {
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "corn": "0.0.1",
+      "cors": "^2.8.5",
+      "dotenv": "^8.2.0",
+      "express": "^4.17.1",
+      "express-async-errors": "^3.1.1",
+      "express-validator": "^5.3.0",
+      "fawn": "^2.1.5",
+      "jsonwebtoken": "^8.5.1",
+      "lodash": "^4.17.15",
+      "mongoose": "^5.6.10",
+      "mongoose-url-slugs": "^1.0.2",
+      "multer": "^1.4.2",
+      "nodemailer": "^6.4.6",
+      "sharp": "^0.25.2",
+      "shortid": "^2.2.15",
+      "swagger-jsdoc": "^4.0.0",
+      "swagger-ui-express": "^4.1.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
