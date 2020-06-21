@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Fawn = require("fawn");
 
 module.exports = () => {
     const self = module.exports;
@@ -17,5 +16,4 @@ module.exports = () => {
             );
             setTimeout(self, 5000);
         });
-        return Fawn.init(mongoose, "task_by_Utsav")
 };

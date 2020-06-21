@@ -9,6 +9,15 @@ const storage =  multer.diskStorage({
       cb(null, file.fieldname + '-' + req.profile._id + '-' + Date.now() + path.extname(file.originalname))
     }
   })
+  
+const storageBySuperAdmin = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + req.admin.role +req.admin._id + '-' + Date.now() + path.extname(file.originalname))
+  }
+})
 
 const fileFilter = (req, file, callback) => {
   const ext = path.extname(file.originalname);
@@ -29,3 +38,4 @@ exports.uploadAdminPhoto = multer({ storage, fileFilter, limits }).single("photo
 exports.uploadUserPhoto = multer({ storage, fileFilter, limits }).single("photo");
 
 exports.uploadProductImages = multer({ storage, fileFilter, limits }).array("productImages",5)
+exports.uploadBannerPhoto = multer({ storage:storageBySuperAdmin ,fileFilter, limits: { fileSize: 8480 * 4230 } }).single("bannerPhoto")

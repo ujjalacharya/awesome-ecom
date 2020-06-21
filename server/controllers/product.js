@@ -8,8 +8,8 @@ const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
 const _ = require('lodash');
-const Fawn = require("fawn");
-const task = Fawn.Task();
+// const Fawn = require("fawn");
+// const task = Fawn.Task();
 const perPage = 10;
 
 exports.product = async (req, res, next) => {
@@ -84,24 +84,21 @@ exports.productImages = async (req, res) => {
 }
 
 exports.deleteImage = async (req, res) => {
+    //fawn was used
     let product = req.product
     if (product.isVerified) {
         return res.status(403).json({ error: 'Cannot delete image. Product has already been verified.' })
     }
-    let updateProduct = product.toObject()
     let imageURLS;
-    updateProduct.images = product.images.filter(image => {
+    product.images = product.images.filter(image => {
         if (image._id.toString() === req.query.image_id) imageURLS = image
         return image._id.toString() !== req.query.image_id
     })
     if (!imageURLS) {
         return res.status(404).json({ error: "Image not found" })
     }
-    await task
-        .update(product, updateProduct)
-        .options({ viaSave: true })
-        .remove(ProductImages, { _id: req.query.image_id })
-        .run({ useMongoose: true })
+    await product.save()
+    await ProductImages.findByIdAndRemove(req.query.image_id)
 
     let Path = `public/uploads/${imageURLS.thumbnail}`;
     fs.unlinkSync(Path);
@@ -110,6 +107,18 @@ exports.deleteImage = async (req, res) => {
     Path = `public/uploads/${imageURLS.large}`;
     fs.unlinkSync(Path)
     res.json(updateProduct.images)
+
+}
+
+exports.deleteImageById = async (req, res) => {
+    let image = await ProductImages.findByIdAndRemove(req.query.image_id)
+    let Path = `public/uploads/${image.thumbnail}`;
+    fs.unlinkSync(Path);
+    Path = `public/uploads/${image.medium}`;
+    fs.unlinkSync(Path)
+    Path = `public/uploads/${image.large}`;
+    fs.unlinkSync(Path)
+    res.json(image)
 
 }
 
@@ -157,7 +166,13 @@ exports.latestProducts = async (req, res) => {
 
 exports.getProductsByCategory = async (req, res) => {
     const page = req.query.page || 1
-    const products = await Product.find({ soldBy: req.profile._id })
+    let categories = await Category.find({$or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }]})
+    if (!categories.length) {
+        return res.status(404).json({error:"Categories not found"})
+    }
+    categories = categories.map(c => c._id.toString())
+    console.log(categories);
+    const products = await Product.find({category: { $in: categories }})
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
