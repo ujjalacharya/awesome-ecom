@@ -655,12 +655,6 @@ class Header extends Component {
                                                   <span>
                                                     {newSubCate.displayName}
                                                   </span>
-                                                  {/* {newSubCate.childCate.length > 0 && (
-                                                    <i
-                                                      class="fa fa-angle-right"
-                                                      aria-hidden="true"
-                                                    ></i>
-                                                  )} */}
                                                 </div>
                                               </li>
                                             );
@@ -678,11 +672,11 @@ class Header extends Component {
                     })}
                   </ul>
                 </div>
-                <div className="menu-list">MEN</div>
+                {/* <div className="menu-list">MEN</div>
                 <div className="menu-list">WOMEN</div>
                 <div className="menu-list">KIDS</div>
                 <div className="menu-list">HOME & LIVING</div>
-                <div className="menu-list">ESSENTIALS</div>
+                <div className="menu-list">ESSENTIALS</div> */}
               </Col>
             </Row>
           </Col>

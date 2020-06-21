@@ -449,11 +449,13 @@ button.secondary:hover {
 .main-header .menu-logo .menu .menu-list ul.category {
   visibility: hidden;
   position: absolute;
+  left: -10px;
   z-index: 9;
   background: #fff;
   min-height: 400px;
   padding: 15px;
-  padding-top: 35px;
+  padding-right: 0px;
+  padding-top: 25px;
   min-width: 220px;
   padding-left: 0px;
 }
@@ -475,7 +477,7 @@ button.secondary:hover {
 }
 .main-header .menu-logo .menu .menu-list ul.category li .title .title-icon i {
   font-size: 18px;
-  padding-right: 10px;
+  padding-right: 20px;
 }
 .main-header .menu-logo .menu .menu-list ul.category li:last-child {
   border-bottom: 0px;
@@ -496,7 +498,9 @@ button.secondary:hover {
   background: #fff;
   min-height: 150px;
   padding: 15px;
+  padding-top: 5px;
   padding-left: 0px;
+  padding-right: 0px;
   top: 20px;
   min-width: 220px;
   left: 205px;
@@ -508,7 +512,7 @@ button.secondary:hover {
 }
 .main-header .menu-logo .menu .menu-list ul.category li ul.sub-category li .title .sub-title-icon i {
   font-size: 18px;
-  padding-right: 10px;
+  padding-right: 20px;
 }
 .main-header .menu-logo .menu .menu-list ul.category li ul.sub-category li:hover .title .sub-title-icon {
   visibility: visible;
