@@ -311,6 +311,21 @@ exports.adminToBeReturnOrders = async (req, res) => {
     res.json(orders)
 }
 
+exports.dispatcherToBeReturnOrders = async (req, res) => {
+    const page = req.query.page || 1
+    let orders = await Order.find({'status.currentStatus': 'tobereturn' })
+        .populate('user', 'name address muncipality tole')
+        .populate('product', 'name price discountRate')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+        .sort({ created: -1 })
+    if (!orders.length) {
+        return res.status(404).json({ error: "No to be return orders found" })
+    }
+    res.json(orders)
+}
+
 exports.adminReturnOrders = async (req, res) => {
     const page = req.query.page || 1
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'return' })
