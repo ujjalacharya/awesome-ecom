@@ -6,8 +6,8 @@ const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
 const _ = require('lodash');
-// const Fawn = require("fawn");
-// const task = Fawn.Task();
+const Fawn = require("fawn");
+const task = Fawn.Task();
 
 exports.profile = async (req, res, next) => {
     const admin = await Admin.findById(req.params.id).select("-password -salt")
@@ -75,7 +75,6 @@ exports.getBusinessInfo = async (req, res) => {
 }
 
 exports.businessinfo = async (req, res) => {
-    //fawn was used
     //make req.files to array of objs
     let files = []
     if (req.files) for (const file in req.files) {
@@ -88,7 +87,7 @@ exports.businessinfo = async (req, res) => {
             .toFile(path.resolve(destination, fieldname === 'businessLicence' ? "businessLicence" : "citizenship", filename))//add file from uploads to doc folder
         fs.unlinkSync(filepath);//and remove file from public/uploads
     })
-    let profile = req.profile
+    let profile = req.profile.toObject()
     const { businessInfo } = profile
     if (businessInfo) {
         let docs = await BusinessInfo.findById(businessInfo)
@@ -107,13 +106,12 @@ exports.businessinfo = async (req, res) => {
     //first check if files are empty or not
     if (files.length < 3) {
         files.forEach(file => {
-            const { filename, fieldname} = file
+            const { filename, fieldname } = file
             const filePath = `public/uploads/${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;
             fs.unlinkSync(filePath)
         })
         return res.status(400).json({ error: `${3 - files.length} documents are missing` })
     }
-
     let docs = new BusinessInfo()
     docs = _.extend(docs, req.body)
     files.forEach(async file => {
@@ -122,8 +120,11 @@ exports.businessinfo = async (req, res) => {
     })
     docs.admin = profile._id
     profile.businessInfo = docs._id
-    await docs.save()
-    await profile.save()
+    await task
+        .save(docs)
+        .update(req.profile, profile)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
     res.json(docs)
 }
 
@@ -137,7 +138,6 @@ exports.getBankInfo = async (req, res) => {
 }
 
 exports.bankinfo = async (req, res) => {
-    //fawn was used
     if (req.file) {
         const { filename, destination, path: filepath } = req.file;
         await sharp(filepath)
@@ -145,7 +145,7 @@ exports.bankinfo = async (req, res) => {
             .toFile(path.resolve(destination, "bank", filename))//add file from uploads to doc folder
         fs.unlinkSync(filepath);//and remove file from public/uploads
     }
-    let profile = req.profile
+    let profile = req.profile.toObject()
     const { adminBank } = profile
     if (adminBank) {
         let docs = await AdminBank.findById(adminBank)
@@ -170,8 +170,11 @@ exports.bankinfo = async (req, res) => {
     docs["chequeCopy"] = `bank/${filename}`;
     docs.admin = profile._id
     profile.adminBank = docs._id
-    await docs.save()
-    await profile.save()
+    await task
+        .save(docs)
+        .update(req.profile, profile)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
     res.json(docs)
 }
 
@@ -184,8 +187,7 @@ exports.getWareHouse = async (req, res) => {
 }
 
 exports.warehouse = async (req, res) => {
-    //fawn was used
-    let profile = req.profile
+    let profile = req.profile.toObject()
     const { adminWareHouse } = profile
     if (adminWareHouse) {
         let warehouseInfo = await AdminWarehouse.findById(adminWareHouse)
@@ -196,7 +198,10 @@ exports.warehouse = async (req, res) => {
     let newWareHouse = new AdminWarehouse(req.body)
     newWareHouse.admin = profile._id
     profile.adminWareHouse = newWareHouse._id
-    await newWareHouse.save()
-    await profile.save()
+    await task
+        .save(newWareHouse)
+        .update(req.profile, profile)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
     res.json(newWareHouse)
 }

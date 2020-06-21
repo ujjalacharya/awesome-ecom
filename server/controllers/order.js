@@ -13,8 +13,8 @@ const shortid = require('shortid');
 const path = require("path");
 const fs = require("fs");
 const _ = require('lodash')
-// const Fawn = require("fawn");
-// const task = Fawn.Task();
+const Fawn = require("fawn");
+const task = Fawn.Task();
 const perPage = 10;
 
 exports.order = async(req,res,next) => {
@@ -74,8 +74,8 @@ exports.calculateShippingCharge = async(req,res) => {
     
 }
 
+
 exports.createOrder = async (req, res) => {
-    //fawn was used
     const product = await Product.findOne({ 
         slug: req.body.p_slug, 
         isVerified: { "$ne": null }, 
@@ -126,12 +126,15 @@ exports.createOrder = async (req, res) => {
     newOrder.payment = newPayent._id
 
     //update product 
-    
-    product.quantity = product.quantity - newOrder.quantity
-    await newOrder.save()
-    await newPayent.save()
-    await product.save()
-    res.json({order:newOrder,payment:newPayent})
+    const updateProduct = product.toObject()
+    updateProduct.quantity = updateProduct.quantity - newOrder.quantity
+    const results = await task
+        .save(newOrder)
+        .save(newPayent)
+        .update(product,updateProduct)
+        .options({viaSave:true})
+        .run({ useMongoose: true })
+    res.json({order:results[0],payment:results[1]})
 }
 
 exports.userOrders = async(req,res) => {
@@ -348,7 +351,6 @@ exports.toggleOrderApproval = async(req,res) => {
 }
 
 exports.orderCancelByAdmin = async (req, res) => {
-    //fawn was used
     let order = req.order
     if (order.soldBy._id.toString() !== req.profile._id.toString()) {
         return res.status(401).json({ error: "Unauthorized Admin" })
@@ -360,22 +362,27 @@ exports.orderCancelByAdmin = async (req, res) => {
         return res.status(403).json({ error: "Order has already been cancelled." })
     }
     const newRemark = new Remark({comment:req.body.remark})
-    order.status.currentStatus = 'cancel'
-    order.status.cancelledDetail.cancelledDate = Date.now()
-    order.status.cancelledDetail.cancelledBy = req.profile._id,
-    order.status.cancelledDetail.remark = newRemark._id
+    let updateOrder = order.toObject()
+    updateOrder.status.currentStatus = 'cancel'
+    updateOrder.status.cancelledDetail.cancelledDate = Date.now()
+    updateOrder.status.cancelledDetail.cancelledBy = req.profile._id,
+    updateOrder.status.cancelledDetail.remark = newRemark._id
     let product = await Product.findById(order.product._id)
-    product.quantity = order.quantity + product.quantity
+    let updateProduct = product.toObject()
+    updateProduct.quantity = order.quantity + product.quantity
 
-    await newRemark.save()
-    await order.save()
-    await product.save()
-    order.soldBy = undefined
-    return res.json({remark:newRemark,order,product})
+    let results = await task
+        .save(newRemark)
+        .update(order,updateOrder)
+        .options({ viaSave: true })
+        .update(product, updateProduct)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
+    results[1].soldBy = undefined
+    return res.json(results)
 }
 
 exports.orderCancelByUser = async (req, res) => {
-    // fawn was used
     let order = req.order
     if (order.user._id.toString() !== req.user._id.toString()) {
         return res.status(401).json({ error: "Unauthorized User" })
@@ -387,20 +394,26 @@ exports.orderCancelByUser = async (req, res) => {
         return res.status(403).json({error:"Order has already been cancelled."})
     }
     const newRemark = new Remark({ comment: req.body.remark })
-    order.status.currentStatus = 'cancel'
-    order.status.cancelledDetail.cancelledDate = Date.now()
-    order.status.cancelledDetail.cancelledBy = req.user._id,
-    order.status.cancelledDetail.remark = newRemark._id
+    let updateOrder = order.toObject()
+    updateOrder.status.currentStatus = 'cancel'
+    updateOrder.status.cancelledDetail.cancelledDate = Date.now()
+    updateOrder.status.cancelledDetail.cancelledBy = req.user._id,
+    updateOrder.status.cancelledDetail.remark = newRemark._id
 
     let product = await Product.findById(order.product._id)
-    product.quantity = order.quantity + product.quantity
+    let updateProduct = product.toObject()
+    updateProduct.quantity = order.quantity + product.quantity
 
-    await newRemark.save()
-    await order.save()
-    await product.save()
-    order.soldBy = undefined
-    order.user = undefined
-    return res.json({remark: newRemark, order, product})
+    let results = await task
+        .save(newRemark)
+        .update(order, updateOrder)
+        .options({ viaSave: true })
+        .update(product, updateProduct)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
+    results[1].soldBy = undefined
+    results[1].user = undefined
+    return res.json(results)
 }
 
 exports.toggleDispatchOrder = async (req,res) => {
@@ -457,51 +470,64 @@ exports.toggleCompleteOrder = async (req, res) => {
 }
 
 exports.returnOrder = async (req, res) => {
-    //fawn was used
     let order = req.order
     if (order.status.currentStatus !== 'tobereturn') {
         return res.status(403).json({ error: `This order cannot be returned. Order current status is ${order.status.currentStatus}` })
     }
     const newRemark = new Remark({ comment: req.body.remark })
 
-    order.status.currentStatus = 'return'
-    order.status.returnedDetail.returnedDate = Date.now()
-    order.status.returnedDetail.remark = newRemark._id
+    let updateOrder = order.toObject()
+    updateOrder.status.currentStatus = 'return'
+    updateOrder.status.returnedDetail.returnedDate = Date.now()
+    updateOrder.status.returnedDetail.remark = newRemark._id
 
     let product = await Product.findById(order.product._id)
-    product.quantity = order.quantity + product.quantity
+    let updateProduct = product.toObject()
+    updateProduct.quantity = order.quantity + product.quantity
 
-    await newRemark.save()
-    await order.save()
-    await product.save()
-    order.soldBy = undefined
-    order.user = undefined
-    return res.json({ remark: newRemark, order, product })
+    let results = await task
+        .save(newRemark)
+        .update(order, updateOrder)
+        .options({ viaSave: true })
+        .update(product, updateProduct)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
+    return res.json(results)
 }
 
 exports.toggletobeReturnOrder = async (req, res) => {
-    //fawn was used
     let order = req.order
     if (order.status.currentStatus !== 'complete' && order.status.currentStatus !== 'tobereturn' ) {
         return res.status(403).json({ error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}` })
     }
+    let updateOrder = order.toObject()
     let payment = await Payment.findById(order.payment._id)
+    let updatePayment = payment.toObject()
     if (order.status.currentStatus === 'complete') {
-        order.status.currentStatus = 'tobereturn'
-        order.status.tobereturnedDate = Date.now()
+        updateOrder.status.currentStatus = 'tobereturn'
+        updateOrder.status.tobereturnedDate = Date.now()
 
-        payment.returnedAmount = req.body.returnedAmount
-        await order.save()
-        await payment.save()
-        return res.json({order,payment})
+        updatePayment.returnedAmount = req.body.returnedAmount
+
+        let results = await task
+            .update(order, updateOrder) 
+            .options({ viaSave: true }) 
+            .update(payment,updatePayment)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json(results)
     }
     if (order.status.currentStatus === 'tobereturn') {
-        order.status.currentStatus = 'complete'
-        order.status.tobereturnedDate = null
+        updateOrder.status.currentStatus = 'complete'
+        updateOrder.status.tobereturnedDate = null
 
-        payment.returnedAmount = undefined
-        await order.save()
-        await payment.save()
-        return res.json({ order, payment })
+        updatePayment.returnedAmount = undefined
+        let results = await task
+            .update(payment, updatePayment)
+            .options({ viaSave: true })
+            .update(order, updateOrder)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json(results)
     }
 }
