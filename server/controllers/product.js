@@ -189,6 +189,58 @@ exports.getProductsByCategory = async (req, res) => {
     res.json(products);
 }
 
+exports.generateFilter = async(req,res) => {
+    const filterGenerate = products => {
+        let filters = {
+            sizes: [],
+            brands: [],
+            warranties: [],
+            colors: [],
+            weights: [],
+            prices: []
+        }
+        products.forEach(p => {
+            if (!filters.sizes.some(size => p.size.includes(size))) filters.sizes.push(...p.size)
+            if (!filters.brands.some(brand => p.brand.brandName === brand.brandName)) filters.brands.push(p.brand)
+            if (!filters.warranties.some(w => p.w === w)) filters.warranties.push(p.warranty)
+            if (!filters.colors.some(color => p.color.includes(color))) filters.colors.push(...p.color)
+            if (!filters.weights.some(weight => p.weight.includes(weight))) filters.weights.push(...p.weight)
+            if (!filters.prices.some(price => p.price === price)) filters.prices.push(p.price)
+
+        })
+        return filters
+    }
+    if (req.query.keyword) {
+        // by search keyword
+        let products = await Product.find({
+            $or: [{ name: { $regex: req.query.keyword, $options: 'i' } },
+             { tags: { $regex: req.query.keyword, $options: 'i' } }]
+        }).populate("brand", "brandName slug")
+        .select('-_id brand warranty size color weight price')
+        if (!products.length) {
+            return res.status(404).json({error:"Cannot generate filter"})
+        }
+        let generatedFilters = filterGenerate(products)
+        return res.json(generatedFilters)
+    } else {
+        //else by category
+        let categories = await Category.find({
+             $or: [{ slug: req.query.cat_slug },
+             { parent: req.query.cat_id }] })
+        if (!categories.length) {
+            return res.status(404).json({ error: "Category not found. Cannot generate filter." })
+        }
+        categories = categories.map(c => c._id.toString())
+        const products = await Product.find({ category: { $in: categories } })
+            // .select('brand warranty size color weight price')
+        if (!products.length) {
+            return res.status(404).json({ error: "Cannot generate filter" })
+        }
+        let generatedFilters = filterGenerate(products)
+        return res.json(generatedFilters)
+    }
+}
+
 exports.outOfTheStockProducts = async (req, res) => {
     const page = req.query.page || 1
     const products = await Product.find({ soldBy: req.profile._id, quantity:0 })
