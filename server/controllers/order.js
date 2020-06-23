@@ -74,7 +74,6 @@ exports.calculateShippingCharge = async(req,res) => {
     
 }
 
-
 exports.createOrder = async (req, res) => {
     const product = await Product.findOne({ 
         slug: req.body.p_slug, 

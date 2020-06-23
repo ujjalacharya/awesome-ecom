@@ -168,14 +168,54 @@ exports.latestProducts = async (req, res) => {
     res.json(products);
 }
 
+exports.searchProducts = async(req,res) => {
+    let { keyword='', brand_id, price, size, rating, color, warranty, weight, cat_id } = req.body
+    let categories
+    if(cat_id) {
+        categories = await Category.find({ $or: [{ _id: cat_id }, { parent: cat_id }], isDisabled: null })
+        if (!categories.length) {
+            return res.status(404).json({ error: "Categories not found." })
+        }
+    }
+    let searchingFactor 
+    if(keyword && !cat_id) {
+        //that is if only with keyword
+        searchingFactor = {
+            $or: [{ name: { $regex: keyword, $options: 'i' } },
+            { tags: { $regex: keyword, $options: 'i' } }
+            ],
+            isVerified: { "$ne": null }, isDeleted: null
+        }
+    } else {
+        //cat_id alongwith another some factors
+        searchingFactor = {
+            $or: [{ name: { $regex: keyword, $options: 'i' } },
+            { tags: { $regex: keyword, $options: 'i' } },
+            { brand: brand_id },
+            { price: price },
+            { size: { $in: size } },
+            { color: { $in: color } },
+            { weight: { $in: weight } },
+            { warranty }
+            ],
+            isVerified: { "$ne": null }, isDeleted: null, category: { $in: categories }
+        }
+    }
+    const products = await Product.find(searchingFactor)
+    if (!products.length) {
+        return res.status(404).json({error:'Products not found.'})
+    }
+    //need to work on rating...
+    res.json(products)
+}
+
 exports.getProductsByCategory = async (req, res) => {
     const page = req.query.page || 1
-    let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }], isVerified: { "$ne": null }, isDeleted: null })
+    let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],isDisabled: null })
     if (!categories.length) {
         return res.status(404).json({ error: "Categories not found" })
     }
     categories = categories.map(c => c._id.toString())
-    console.log(categories);
     const products = await Product.find({ category: { $in: categories } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -233,7 +273,8 @@ exports.generateFilter = async(req,res) => {
         //else by category
         let categories = await Category.find({
              $or: [{ slug: req.query.cat_slug },
-             { parent: req.query.cat_id }] })
+                { parent: req.query.cat_id }], isDisabled: null
+        } )
         if (!categories.length) {
             return res.status(404).json({ error: "Category not found. Cannot generate filter." })
         }
