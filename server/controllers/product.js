@@ -26,6 +26,7 @@ exports.product = async (req, res, next) => {
 }
 
 exports.getProduct = (req, res) => {
+    if(product.isVerified === null && product.isDeleted !==null ) return res.status(404).json({error:'Product is not verified or has been deleted.'})
     res.json(req.product);
 }
 
@@ -154,7 +155,7 @@ exports.getProducts = async (req, res) => {
 }
 
 exports.latestProducts = async (req, res) => {
-    const products = await Product.find()
+    const products = await Product.find({ isVerified: { "$ne": null }, isDeleted: null})
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
@@ -167,14 +168,54 @@ exports.latestProducts = async (req, res) => {
     res.json(products);
 }
 
+exports.searchProducts = async(req,res) => {
+    let { keyword='', brand_id, price, size, rating, color, warranty, weight, cat_id } = req.body
+    let categories
+    if(cat_id) {
+        categories = await Category.find({ $or: [{ _id: cat_id }, { parent: cat_id }], isDisabled: null })
+        if (!categories.length) {
+            return res.status(404).json({ error: "Categories not found." })
+        }
+    }
+    let searchingFactor 
+    if(keyword && !cat_id) {
+        //that is if only with keyword
+        searchingFactor = {
+            $or: [{ name: { $regex: keyword, $options: 'i' } },
+            { tags: { $regex: keyword, $options: 'i' } }
+            ],
+            isVerified: { "$ne": null }, isDeleted: null
+        }
+    } else {
+        //cat_id alongwith another some factors
+        searchingFactor = {
+            $or: [{ name: { $regex: keyword, $options: 'i' } },
+            { tags: { $regex: keyword, $options: 'i' } },
+            { brand: brand_id },
+            { price: price },
+            { size: { $in: size } },
+            { color: { $in: color } },
+            { weight: { $in: weight } },
+            { warranty }
+            ],
+            isVerified: { "$ne": null }, isDeleted: null, category: { $in: categories }
+        }
+    }
+    const products = await Product.find(searchingFactor)
+    if (!products.length) {
+        return res.status(404).json({error:'Products not found.'})
+    }
+    //need to work on rating...
+    res.json(products)
+}
+
 exports.getProductsByCategory = async (req, res) => {
     const page = req.query.page || 1
-    let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }] })
+    let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],isDisabled: null })
     if (!categories.length) {
         return res.status(404).json({ error: "Categories not found" })
     }
     categories = categories.map(c => c._id.toString())
-    console.log(categories);
     const products = await Product.find({ category: { $in: categories } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -187,6 +228,65 @@ exports.getProductsByCategory = async (req, res) => {
         return res.status(404).json({ error: 'No products are available.' })
     }
     res.json(products);
+}
+
+exports.generateFilter = async(req,res) => {
+    const filterGenerate = products => {
+        let filters = {
+            sizes: [],
+            brands: [],
+            warranties: [],
+            colors: [],
+            weights: [],
+            prices: []
+        }
+        products.forEach(p => {
+            if (!filters.brands.some(brand => p.brand.brandName === brand.brandName)) filters.brands.push(p.brand)
+            if (!filters.warranties.some(w => p.warranty === w)) filters.warranties.push(p.warranty)
+            if (!filters.prices.some(price => p.price === price)) filters.prices.push(p.price)
+            p.size.forEach(size=>{
+                if (!filters.sizes.includes(size)) filters.sizes.push(size)
+            })
+            p.color.forEach(color => {
+                if (!filters.colors.includes(color)) filters.colors.push(color)
+            })
+            p.weight.forEach(weight => {
+                if (!filters.weights.includes(weight)) filters.weights.push(weight)
+            })
+        })
+        return filters
+    }
+    if (req.query.keyword) {
+        // by search keyword
+        let products = await Product.find({
+            $or: [{ name: { $regex: req.query.keyword, $options: 'i' } },
+                { tags: { $regex: req.query.keyword, $options: 'i' } }],
+            isVerified: { "$ne": null }, isDeleted: null
+        }).populate("brand", "brandName slug")
+        .select('-_id brand warranty size color weight price')
+        if (!products.length) {
+            return res.status(404).json({error:"Cannot generate filter"})
+        }
+        let generatedFilters = filterGenerate(products)
+        return res.json(generatedFilters)
+    } else {
+        //else by category
+        let categories = await Category.find({
+             $or: [{ slug: req.query.cat_slug },
+                { parent: req.query.cat_id }], isDisabled: null
+        } )
+        if (!categories.length) {
+            return res.status(404).json({ error: "Category not found. Cannot generate filter." })
+        }
+        categories = categories.map(c => c._id.toString())
+        const products = await Product.find({ category: { $in: categories }, isVerified: { "$ne": null }, isDeleted: null })
+            // .select('brand warranty size color weight price')
+        if (!products.length) {
+            return res.status(404).json({ error: "Cannot generate filter" })
+        }
+        let generatedFilters = filterGenerate(products)
+        return res.json(generatedFilters)
+    }
 }
 
 exports.outOfTheStockProducts = async (req, res) => {
