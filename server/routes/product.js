@@ -28,7 +28,7 @@ router.get('/latest',latestProducts)
 router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
 //with rating chai client side mai rakhne
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
-router.get('/search',searchProducts)//need to work on rating
+router.get('/search',searchProducts)//need to work on rating nd $option in regex
 router.get('/:p_slug', getProduct)
 
 router.param('p_slug', product)
