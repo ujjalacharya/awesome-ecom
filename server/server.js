@@ -46,7 +46,8 @@ app.use("/api/superadmin", require("./routes/superadmin"));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/product", require("./routes/product"));
 app.use("/api/order", require("./routes/order"));
-app.use("/api/review-cart-wishlist", require("./routes/reviewCartWishlist"));
+app.use("/api/review-qna", require("./routes/review_qna"));
+app.use("/api/cart-wishlist", require("./routes/cart_wishlist"));
 app.use("/api/dispatcher-auth", require("./routes/dispatcher_auth"));
 
 // logout for all types of user in the system

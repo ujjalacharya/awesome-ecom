@@ -3,6 +3,7 @@ const Admin = require("../models/Admin")
 const Payment = require("../models/Payment")
 const Remark = require("../models/Remark")
 const Review = require("../models/Review")
+const Cart = require("../models/Cart")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
@@ -20,13 +21,13 @@ const perPage = 10;
 
 exports.postReview = async (req,res) => {
     const product = req.product
-    //ckeck if user has bought this product or not
     if (!req.body.star || !req.body.comment ) {
         return res.status(400).json({error:'Comment or star rating is required.'})
     }
     if (req.body.star > 5 || req.body.star < 1) {
         return res.status(403).json({ error: "Rating should be in range of 0 and 5" });
     }
+    //ckeck if user has bought this product or not
     const orders = await Order.findOne({
         user:req.user._id,
         // $or: [{ 'stauts.currentStatus': 'complete' }, { 'stauts.currentStatus': 'return' }],
@@ -85,3 +86,7 @@ exports.averageRating = async (req, res) => {
     }
     res.json(stars)
 }
+
+
+
+
