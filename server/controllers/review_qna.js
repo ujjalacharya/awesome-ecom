@@ -56,9 +56,12 @@ exports.getReviews = async (req, res) => {
     if (!product.isVerified && product.isDeleted) {
         return res.status(404).json({ error: 'Product not found' })
     }
-    const reviews = await Review.find({ product: product._id }).populate('user', 'name lastname')
+    const reviews = await Review.find({ product: product._id })
+        .populate('user', 'name lastname')
+        .populate('product', 'name slug')
         .skip(perPage * page - perPage)
         .limit(perPage)
+        .lean()
     if (!reviews.length) {
         return res.status(404).json({ error: "No reviews found" });
     }
@@ -70,6 +73,7 @@ exports.myReviews = async(req,res) => {
     const myReviews = await Review.find({ user: req.user._id }).populate('product', 'name slug')
         .skip(perPage * page - perPage)
         .limit(perPage)
+        .lean()
     if (!myReviews.length) {
         return res.status(404).json({ error: "No reviews found" });
     }

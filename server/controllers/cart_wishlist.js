@@ -33,3 +33,25 @@ exports.addCart = async (req, res) => {
     await newCart.save();
     res.json(newCart);
 }
+
+exports.getCarts = async (req, res) => {
+    const page = req.query.page || 1;
+    let carts = await Cart.find({ user: req.user._id })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    if (!carts.length) {
+        return res.status(404).json({ error: 'Carts not found' })
+    }
+    res.json(carts)
+
+}
+
+exports.deleteCart = async (req,res) => {
+    let cart = await Cart.findOne({_id:req.body.cart_id,user:req.user._id})
+    if (!cart) {
+        return res.status(404).json({error:'Cart not found.'})
+    }
+    cart.isDeleted = Date.now()
+    res.json(cart)
+}
