@@ -65,6 +65,17 @@ exports.getReviews = async (req, res) => {
     res.json(reviews);
 };
 
+exports.myReviews = async(req,res) => {
+    const page = req.query.page || 1;
+    const myReviews = await Review.find({ user: req.user._id }).populate('product', 'name slug')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+    if (!myReviews.length) {
+        return res.status(404).json({ error: "No reviews found" });
+    }
+    res.json(myReviews);
+}
+
 exports.averageRating = async (req, res) => {
     const product = req.product
     if (!product.isVerified && product.isDeleted) {
