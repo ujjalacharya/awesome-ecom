@@ -10,8 +10,8 @@ const router = express.Router();
 //cart's..    
 router
     .route("/cart/:p_slug")
-    .post(userAuth, addCart)
-    .get(userAuth, getCarts)
+    // .post(userAuth, addCart)
+    // .get(userAuth, getCarts)
 
 
 router.param('p_slug', product)

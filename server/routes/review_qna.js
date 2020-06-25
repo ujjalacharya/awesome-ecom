@@ -16,10 +16,10 @@ router
     .get(getReviews)
 
 //QNA's..
+router.put('/qna/:id/:p_slug',adminAuth,hasAuthorization,postAnswer)
 router
     .route("/qna/:p_slug")
     .post(userAuth, postQuestion)
-    .put(adminAuth,hasAuthorization,postAnswer)//?qna_id=
     .get(getQNAs)
 
 router.param('p_slug', product)

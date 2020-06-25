@@ -15,7 +15,7 @@ const qnaSchema = new mongoose.Schema({
             ref: "user",
         },
         questionedDate:{
-            type: String
+            type: Date
         },
         answer: {
             type: String
@@ -25,7 +25,7 @@ const qnaSchema = new mongoose.Schema({
             ref: "admin",
         },
         answeredDate: {
-            type: String
+            type: Date
         }
     }],
     isDeleted: {

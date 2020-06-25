@@ -238,7 +238,8 @@ exports.generateFilter = async(req,res) => {
             warranties: [],
             colors: [],
             weights: [],
-            prices: []
+            prices: [],
+            ratings:[5,4,3,2,1]
         }
         products.forEach(p => {
             if (!filters.brands.some(brand => p.brand.brandName === brand.brandName)) filters.brands.push(p.brand)
