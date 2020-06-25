@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {product} = require("../controllers/product")
-const { postReview, getReviews, averageRating, postAnswer,postQuestion,getQNAs} = require("../controllers/review_qna")
+const { postReview, getReviews, averageRating, postAnswer, postQuestion, getQNAs, deleteQNAByAdmin, deleteQNAByUser} = require("../controllers/review_qna")
 const { profile } = require("../controllers/admin")
 const { auth: userAuth } = require("../controllers/user_auth")
 const { auth: adminAuth, hasAuthorization } = require('../controllers/admin_auth')
@@ -17,6 +17,8 @@ router
 
 //QNA's..
 router.put('/qna/:id/:p_slug',adminAuth,hasAuthorization,postAnswer)
+router.patch('/delete-qna/:id/:p_slug', adminAuth, hasAuthorization, deleteQNAByAdmin)
+router.patch('/delete-qna/:p_slug', userAuth, deleteQNAByUser)
 router
     .route("/qna/:p_slug")
     .post(userAuth, postQuestion)

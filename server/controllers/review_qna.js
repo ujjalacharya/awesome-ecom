@@ -153,6 +153,51 @@ exports.postAnswer = async(req,res) => {
 
 }
 
+exports.deleteQNAByAdmin = async(req,res) => {
+    const product = req.product
+    if (!product.isVerified && product.isDeleted) {
+        return res.status(404).json({ error: 'Product not found' })
+    }
+    if (product.soldBy._id.toString() !== req.profile._id.toString()) {
+        return res.status(401).json({ error: 'Unauthorized admin.' })
+    }
+    let QnA = await QNA.findOne({ product: product._id })
+    if (!QnA) {
+        return res.status(404).json({ error: 'QNA not found' })
+    }
+    if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
+        return res.status(404).json({ error: 'Invalid qna id.' })
+    }
+    QnA.qna = QnA.qna.map(q => {
+        if(q._id.toString() === req.body.qna_id)q.isDeleted = Date.now()
+        return q
+    })
+    await QnA.save()
+    res.json(QnA)
+}
+
+exports.deleteQNAByUser = async (req, res) => {
+    const product = req.product
+    if (!product.isVerified && product.isDeleted) {
+        return res.status(404).json({ error: 'Product not found' })
+    }
+    let QnA = await QNA.findOne({ product: product._id })
+    if (!QnA) {
+        return res.status(404).json({ error: 'QNA not found' })
+    }
+    if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
+        return res.status(404).json({ error: 'Invalid qna id.' })
+    }
+    QnA.qna = QnA.qna.map(q => {
+        if ((q._id.toString() === req.body.qna_id)
+         && 
+         (q.questionby.toString()===req.user._id.toString())) q.isDeleted = Date.now()
+        return q
+    })
+    await QnA.save()
+    res.json(QnA)
+}
+
 exports.getQNAs = async (req, res) => {
     const product = req.product
     if (!product.isVerified && product.isDeleted) {
@@ -162,6 +207,7 @@ exports.getQNAs = async (req, res) => {
     if (!QnA) {
         return res.status(404).json({ error: 'QNA not found' })
     }
+    //need to remove isDeleted QNAs...
     res.json(QnA)
 
 }
