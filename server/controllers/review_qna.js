@@ -17,7 +17,7 @@ const fs = require("fs");
 const _ = require('lodash')
 const Fawn = require("fawn");
 const task = Fawn.Task();
-const perPage = 10;
+// const perPage = 10;
 
 exports.postReview = async (req, res) => {
     const product = req.product
@@ -51,7 +51,8 @@ exports.postReview = async (req, res) => {
 }
 
 exports.getReviews = async (req, res) => {
-    const page = req.query.page || 1;
+    const page = req.query.page || 1
+    const perPage = perPage || 10;
     const product = req.product
     if (!product.isVerified && product.isDeleted) {
         return res.status(404).json({ error: 'Product not found' })
@@ -69,7 +70,8 @@ exports.getReviews = async (req, res) => {
 };
 
 exports.myReviews = async(req,res) => {
-    const page = req.query.page || 1;
+    const page = req.query.page || 1
+    const perPage = perPage || 10;
     const myReviews = await Review.find({ user: req.user._id }).populate('product', 'name slug')
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -133,7 +135,9 @@ exports.postQuestion = async (req, res) => {
         questionedDate: Date.now()
     })
     await QnA.save()
-    res.json(QnA)
+    let totalCount = QnA.qna.length
+    QnA.qna = _.takeRight(QnA.qna, perPage)
+    res.json({ QnA, totalCount })
 }
 
 exports.postAnswer = async(req,res) => {
@@ -164,7 +168,9 @@ exports.postAnswer = async(req,res) => {
         }
     }
     await QnA.save()
-    res.json(QnA)
+    let totalCount = QnA.qna.length
+    QnA.qna = _.takeRight(QnA.qna,perPage)
+    res.json({QnA,totalCount})
 
 }
 
@@ -188,7 +194,9 @@ exports.deleteQNAByAdmin = async(req,res) => {
         return q
     })
     await QnA.save()
-    res.json(QnA)
+    let totalCount = QnA.qna.length
+    QnA.qna = _.takeRight(QnA.qna, perPage)
+    res.json({ QnA, totalCount })
 }
 
 exports.deleteQNAByUser = async (req, res) => {
@@ -210,7 +218,9 @@ exports.deleteQNAByUser = async (req, res) => {
         return q
     })
     await QnA.save()
-    res.json(QnA)
+    let totalCount = QnA.qna.length
+    QnA.qna = _.takeRight(QnA.qna, perPage)
+    res.json({ QnA, totalCount })
 }
 
 exports.getQNAs = async (req, res) => {
@@ -223,7 +233,9 @@ exports.getQNAs = async (req, res) => {
         return res.status(404).json({ error: 'QNA not found' })
     }
     //need to remove isDeleted QNAs...
-    res.json(QnA)
+    let totalCount = QnA.qna.length
+    QnA.qna = _.takeRight(QnA.qna, perPage)
+    res.json({ QnA, totalCount })
 
 }
 

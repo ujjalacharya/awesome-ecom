@@ -138,6 +138,7 @@ exports.createOrder = async (req, res) => {
 
 exports.userOrders = async(req,res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({user:req.user._id})
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -151,6 +152,7 @@ exports.userOrders = async(req,res) => {
 }
 exports.userActiveOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id ,'status.currentStatus':'active'})
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -165,6 +167,7 @@ exports.userActiveOrders = async (req, res) => {
 
 exports.userCompleteOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'complete' })
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -179,6 +182,7 @@ exports.userCompleteOrders = async (req, res) => {
 
 exports.userCancelOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'cancel' })
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -193,6 +197,7 @@ exports.userCancelOrders = async (req, res) => {
 
 exports.userReturnOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'return' })
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -207,6 +212,7 @@ exports.userReturnOrders = async (req, res) => {
 
 exports.adminOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -222,6 +228,7 @@ exports.adminOrders = async (req, res) => {
 
 exports.adminActiveOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus':'active' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -237,6 +244,7 @@ exports.adminActiveOrders = async (req, res) => {
 
 exports.adminApproveOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'approve' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -252,6 +260,7 @@ exports.adminApproveOrders = async (req, res) => {
 
 exports.adminDispatchOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'dispatch' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -267,6 +276,7 @@ exports.adminDispatchOrders = async (req, res) => {
 
 exports.adminCancelOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'cancel' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -282,6 +292,7 @@ exports.adminCancelOrders = async (req, res) => {
 
 exports.adminCompleteOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'complete' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -297,6 +308,7 @@ exports.adminCompleteOrders = async (req, res) => {
 
 exports.adminToBeReturnOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'tobereturn' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -312,6 +324,7 @@ exports.adminToBeReturnOrders = async (req, res) => {
 
 exports.dispatcherToBeReturnOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({'status.currentStatus': 'tobereturn' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -327,6 +340,7 @@ exports.dispatcherToBeReturnOrders = async (req, res) => {
 
 exports.adminReturnOrders = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'return' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -451,6 +465,7 @@ exports.toggleDispatchOrder = async (req,res) => {
 
 exports.approvedOrders = async(req,res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let orders = await Order.find({'status.currentStatus':'approve'})
         .skip(perPage * page - perPage)
         .limit(perPage)

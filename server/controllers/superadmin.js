@@ -15,11 +15,11 @@ const fs = require("fs");
 const _ = require('lodash');
 const Fawn = require("fawn");
 const task = Fawn.Task();
-const perPage = 10;
+// const perPage = 10;
 
-exports.geoLocation = async(req,res) => {
+exports.geoLocation = async (req, res) => {
     let superadmin = req.admin// req.admin is superadmin
-    if ( req.body.lat && req.body.long) {
+    if (req.body.lat && req.body.long) {
         let geolocation = {
             type: "Point",
             coordinates: [req.body.long, req.body.lat]
@@ -30,22 +30,22 @@ exports.geoLocation = async(req,res) => {
     }
 }
 
-exports.getGeoLocation = async(req,res) => {
-    let superadmin = await Admin.findOne({role:'superadmin'})
+exports.getGeoLocation = async (req, res) => {
+    let superadmin = await Admin.findOne({ role: 'superadmin' })
     if (!superadmin) {
-        return res.status(404).json({error: 'Cannot find geolocation'})
+        return res.status(404).json({ error: 'Cannot find geolocation' })
     }
     res.json(superadmin.geolocation)
 }
 
-exports.shippingRate = async(req,res) => {
+exports.shippingRate = async (req, res) => {
     let superadmin = req.admin //i.e. superadmin
     superadmin.shippingRate = req.body.shippingRate
     await superadmin.save()
     res.json(superadmin.shippingRate)
 }
 
-exports.getShippingRate = async(req,res) => {
+exports.getShippingRate = async (req, res) => {
     let superadmin = await Admin.findOne({ role: 'superadmin' })
     if (!superadmin) {
         return res.status(404).json({ error: 'Cannot find shipping rate' })
@@ -53,14 +53,16 @@ exports.getShippingRate = async(req,res) => {
     res.json(superadmin.shippingRate)
 }
 
-exports.banner = async(req,res) => {
+exports.banner = async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: "Banner image is required" })
     }
     let newBanner = new Banner()
     if (req.body.productSlug) {
-        let product = await Product.findOne({ slug: req.body.productSlug,isVerified: { "$ne": null },
-            isDeleted: null})
+        let product = await Product.findOne({
+            slug: req.body.productSlug, isVerified: { "$ne": null },
+            isDeleted: null
+        })
         if (!product) {
             const { filename } = req.file;
             // remove image from public/uploads
@@ -72,8 +74,8 @@ exports.banner = async(req,res) => {
     }
     const { filename, path: filepath, destination } = req.file
     await sharp(filepath)
-    .resize(8480)
-    .toFile(path.resolve(destination, 'banner', filename))
+        .resize(8480)
+        .toFile(path.resolve(destination, 'banner', filename))
     // remove image from public/uploads
     const Path = `public/uploads/${filename}`;
     fs.unlinkSync(Path);
@@ -81,7 +83,7 @@ exports.banner = async(req,res) => {
     await newBanner.save()
     res.json(newBanner)
 }
-exports.deleteBanner = async(req,res) => {
+exports.deleteBanner = async (req, res) => {
     let banner = await Banner.findById(req.body.banner_id)
     if (!banner) {
         return res.status(404).json({ error: 'Banner not found.' })
@@ -91,16 +93,21 @@ exports.deleteBanner = async(req,res) => {
     res.json(banner)
 }
 
-exports.getBanners = async(req,res) => {
-    let banners = await Banner.find({ isDeleted: { "$ne": null }})
+exports.getBanners = async (req, res) => {
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10;
+    let banners = await Banner.find({ isDeleted: { "$ne": null } })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
     if (!banners.length) {
-        return res.json({error: 'Banners not available.'})
+        return res.json({ error: 'Banners not available.' })
     }
     res.json(banners)
 }
 
 exports.getDeletedBanners = async (req, res) => {
-    let banners = await Banner.find({ isDeleted: null  })
+    let banners = await Banner.find({ isDeleted: null })
     if (!banners.length) {
         return res.json({ error: 'Banners not available.' })
     }
@@ -108,15 +115,18 @@ exports.getDeletedBanners = async (req, res) => {
 }
 
 exports.getAllAdmins = async (req, res) => {
-    const page = req.query.page || 1;
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10;
     const admins = await Admin.find({})
-        .select("-password -salt").skip(perPage * page - perPage)
+        .select("-password -salt")
+        .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
     if (!admins.length) {
         return res.status(404).json({ error: 'No Admins are Available' })
     }
-    res.json(admins)
+    const totalCount = await Admin.countDocuments()
+    res.json({ admins, totalCount })
 }
 
 exports.flipAdminBusinessApproval = async (req, res) => {
@@ -258,7 +268,8 @@ exports.blockUnblockUser = async (req, res) => {
 }
 
 exports.getBlockedAdmins = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isBlocked: { "$ne": null } })
         .select('-password -salt')
         .skip(perPage * page - perPage)
@@ -270,7 +281,8 @@ exports.getBlockedAdmins = async (req, res) => {
     res.json(admins)
 }
 exports.getNotBlockedAdmins = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isBlocked: null })
         .select('-password -salt')
         .skip(perPage * page - perPage)
@@ -282,7 +294,8 @@ exports.getNotBlockedAdmins = async (req, res) => {
     res.json(admins)
 }
 exports.getVerifiedAdmins = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isVerified: { "$ne": null } })
         .select('-password -salt')
         .skip(perPage * page - perPage)
@@ -294,7 +307,8 @@ exports.getVerifiedAdmins = async (req, res) => {
     res.json(admins)
 }
 exports.getUnverifiedAdmins = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isVerified: null })
         .select('-password -salt')
         .skip(perPage * page - perPage)
@@ -343,25 +357,25 @@ exports.getCategories = async (req, res) => {
 
     // this.category.brand Arr -> product -> this.category => brand
 
-//     let products = await Product.find({})
+    //     let products = await Product.find({})
 
-//     let finalCat = [];
+    //     let finalCat = [];
 
-//     products.forEach((pr, i) => {
-//             finalCat.push({
-//                 category: pr.category,
-//                 brand: pr.brand,
-//             })
-//     })
-//     finalCat = Array.from(new Set(finalCat.map(JSON.stringify))).map(JSON.parse)
+    //     products.forEach((pr, i) => {
+    //             finalCat.push({
+    //                 category: pr.category,
+    //                 brand: pr.brand,
+    //             })
+    //     })
+    //     finalCat = Array.from(new Set(finalCat.map(JSON.stringify))).map(JSON.parse)
 
-//    finalCat = finalCat.map( async data => {
-//        const cat = await Category.findById(data.category)
-//        cat.brands.push(data.brand)
-//        return await cat.save()
-//    })
-//    finalCat = await Promise.all(finalCat)
-//     res.json(finalCat)
+    //    finalCat = finalCat.map( async data => {
+    //        const cat = await Category.findById(data.category)
+    //        cat.brands.push(data.brand)
+    //        return await cat.save()
+    //    })
+    //    finalCat = await Promise.all(finalCat)
+    //     res.json(finalCat)
 
 
 
@@ -377,7 +391,7 @@ exports.getCategories = async (req, res) => {
 }
 
 exports.flipCategoryAvailablity = async (req, res) => {
-    let category = await Category.findOne({slug:req.query.category_slug})
+    let category = await Category.findOne({ slug: req.query.category_slug })
     if (!category) {
         return res.status(404).json({ error: "Category not found" })
     }
@@ -395,9 +409,9 @@ exports.approveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    let categories = await Category.find({_id:product.category})//may b array of category as well
+    let categories = await Category.find({ _id: product.category })//may b array of category as well
     if (!categories.length) {
-        return res.status(404).json({error: "Categories not found of this product."})
+        return res.status(404).json({ error: "Categories not found of this product." })
     }
 
 
@@ -411,12 +425,12 @@ exports.approveProduct = async (req, res) => {
     if (!product.remark) {
         const updateProduct = product.toObject()
         updateProduct.isVerified = Date.now()
-        addBrandToCategory(updateProduct.brand,categories)
+        addBrandToCategory(updateProduct.brand, categories)
         const results = await task
             .update(product, updateProduct)
             .options({ viaSave: true })
             .run({ useMongoose: true })
-        return res.json(results[results.length-1])//the product
+        return res.json(results[results.length - 1])//the product
     }
 
 
@@ -455,7 +469,8 @@ exports.disApproveProduct = async (req, res) => {
 }
 
 exports.getProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let products = await Product.find()
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -472,14 +487,15 @@ exports.getProducts = async (req, res) => {
     // let products = await Product.find()
     // products = products.map(async product => {
     //     console.log(product.color);
-        // product.color = product.color[0].split(',').map(color=>color.trim())
-        // return await product.save()
+    // product.color = product.color[0].split(',').map(color=>color.trim())
+    // return await product.save()
     // })
     // products = await Promise.all(products)
     res.json(products);
 }
 exports.verifiedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ isVerified: { "$ne": null } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -508,7 +524,8 @@ exports.verifiedProducts = async (req, res) => {
     res.json(products);
 }
 exports.notVerifiedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ isVerified: null })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -524,7 +541,8 @@ exports.notVerifiedProducts = async (req, res) => {
     res.json(products);
 }
 exports.deletedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ isDeleted: { "$ne": null } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -540,7 +558,8 @@ exports.deletedProducts = async (req, res) => {
     res.json(products);
 }
 exports.notDeletedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ isDeleted: null })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")

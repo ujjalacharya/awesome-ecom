@@ -140,6 +140,7 @@ exports.updateProduct = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -169,6 +170,8 @@ exports.latestProducts = async (req, res) => {
 }
 
 exports.searchProducts = async(req,res) => {
+    const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let { keyword='', brand_id, price, size, rating, color, warranty, weight, cat_id } = req.body
     let categories
     if(cat_id) {
@@ -201,7 +204,11 @@ exports.searchProducts = async(req,res) => {
             isVerified: { "$ne": null }, isDeleted: null, category: { $in: categories }
         }
     }
-    const products = await Product.find(searchingFactor)
+    const products = await Product
+        .find(searchingFactor)
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
     if (!products.length) {
         return res.status(404).json({error:'Products not found.'})
     }
@@ -211,6 +218,7 @@ exports.searchProducts = async(req,res) => {
 
 exports.getProductsByCategory = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],isDisabled: null })
     if (!categories.length) {
         return res.status(404).json({ error: "Categories not found" })
@@ -292,6 +300,7 @@ exports.generateFilter = async(req,res) => {
 
 exports.outOfTheStockProducts = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, quantity:0 })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -307,6 +316,7 @@ exports.outOfTheStockProducts = async (req, res) => {
 }
 exports.verifiedProducts = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isVerified: { "$ne": null } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -322,6 +332,7 @@ exports.verifiedProducts = async (req, res) => {
 }
 exports.notVerifiedProducts = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isVerified: null })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -337,6 +348,7 @@ exports.notVerifiedProducts = async (req, res) => {
 }
 exports.deletedProducts = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: { "$ne": null } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -352,6 +364,7 @@ exports.deletedProducts = async (req, res) => {
 }
 exports.notDeletedProducts = async (req, res) => {
     const page = req.query.page || 1
+    const perPage = req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: null })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")

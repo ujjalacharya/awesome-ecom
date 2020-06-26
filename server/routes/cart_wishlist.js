@@ -8,18 +8,14 @@ const { auth: adminAuth, hasAuthorization } = require('../controllers/admin_auth
 
 const router = express.Router();
 //cart's..    
-router
-    .route("/cart/:p_slug")
-    .post(userAuth, addCart)
-    .patch(userAuth,deleteCart)
+router.post('/cart/:p_slug',userAuth, addCart)
+router.patch('/delete-cart/:cart_id',userAuth,deleteCart)
 router.get('/carts',userAuth, getCarts)
 
-//wishlist's..    
-router
-    .route("/wishlist/:p_slug")
-    .post(userAuth, addWishlist)
-    .patch(userAuth, deleteWishlist)
-router.get('/carts', userAuth, getWishlists)
+//wishlist's.. 
+router.post('/wishlist/:p_slug',userAuth, addWishlist)
+router.patch('/delete-wishlist/:wishlist_id',userAuth, deleteWishlist)
+router.get('/wishlists', userAuth, getWishlists)
 
 router.param('p_slug', product)
 router.param('id', profile)
