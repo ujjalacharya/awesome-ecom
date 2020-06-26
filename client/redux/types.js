@@ -2,5 +2,8 @@
 export const AUTHENTICATE = 'authenticate';
 export const DEAUTHENTICATE = 'deauthenticate';
 
+// menu categories
+export const MENU_CATEGORIES = "MENU_CATEGORIES"
+
 // product types 
 export const LATEST_PRODUCTS = "LATEST_PRODUCTS"

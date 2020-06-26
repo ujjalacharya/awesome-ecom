@@ -7,47 +7,63 @@ import { Row, Col } from "antd";
 import Popular from "./Components/Popular";
 import LatestSLider from "./Components/LatestSlider";
 import Footer from "./Components/Footer";
+import { connect } from "react-redux";
+import initialize from "../utils/initialize";
+import actions from "../redux/actions";
+import fetch from "isomorphic-unfetch";
+import Link from "next/link";
 
-class Home extends Component {
-  render() {
-    return (
-      <div className="wrapper">
-        <Header />
-        <div className="main-carousel">
-          <MainCarousel />
-        </div>
-        <div className="container">
-          <SliderHeader
-            headTitle="Featured Products"
-            headDetails="Quicksand is a sans serif type family of three weights plus matching
-          obliques"
-          />
-          <ProductSlider />
-          <section className="latest-popular">
-            <Row>
-              <Col lg={12} xs={24} md={12}>
-                <Popular />
-              </Col>
-              <Col lg={12} xs={24} md={12}>
-                <LatestSLider />
-              </Col>
-            </Row>
-          </section>
-          <SliderHeader
-            headTitle="Trending Products"
-            headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
-            removePaddingTop="paddingTopZero"
-          />
-          <ProductSlider />
-        </div>
-        <Footer />
+const Index = ( props ) => {
+  
+  return (
+    <div className="wrapper">
+      <Header data = {props.products.menuCategories} />
+      <div className="main-carousel">
+        <MainCarousel />
       </div>
-    );
-  }
-}
+      <div className="container">
+        <SliderHeader
+          headTitle="Featured Products"
+          headDetails="Quicksand is a sans serif type family of three weights plus matching
+          obliques"
+        />
+        <ProductSlider />
+        <section className="latest-popular">
+          <Row>
+            <Col lg={12} xs={24} md={12}>
+              <Popular />
+            </Col>
+            <Col lg={12} xs={24} md={12}>
+              <LatestSLider />
+            </Col>
+          </Row>
+        </section>
+        <SliderHeader
+          headTitle="Trending Products"
+          headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+          removePaddingTop="paddingTopZero"
+        />
+        <ProductSlider />
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
-export default Home;
+Index.getInitialProps = async (ctx) => {
+  initialize(ctx);
 
+  const data = await ctx.store.dispatch(actions.productCategories());
+  console.log(data)
+  // const data = await fetch("https://jsonplaceholder.typicode.com/posts");
+  // const data = await data.json();
+
+  return {
+    data,
+  };
+};
+
+export default connect((state) => state)(Index);
 
 // import { connect } from "react-redux";
 // import initialize from "../utils/initialize";

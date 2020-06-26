@@ -584,21 +584,26 @@ const category = [
 ];
 class Header extends Component {
   render() {
+
+    let { data } = this.props
     let parentCategory = [];
-    category.map((cate) => {
-      if (cate.parent === undefined) {
-        parentCategory.push(cate);
-      }
-    });
-
-    let allCates = getChildCategories(category, parentCategory);
-
+    
     let parentCate = [];
-    allCates.map((newChild) => {
-      let newallCates = getChildCategories(category, newChild.childCate);
-      let parentCateEle = { ...newChild, childCate: newallCates };
-      parentCate.push(parentCateEle);
-    });
+    if(this.props.data){
+      data.map((cate) => {
+        if (cate.parent === undefined) {
+          parentCategory.push(cate);
+        }
+      });
+  
+      let allCates = getChildCategories(data, parentCategory);
+  
+      allCates.map((newChild) => {
+        let newallCates = getChildCategories(data, newChild.childCate);
+        let parentCateEle = { ...newChild, childCate: newallCates };
+        parentCate.push(parentCateEle);
+      });
+    }
 
     // let parentCate = getChildCategories(category)
 
