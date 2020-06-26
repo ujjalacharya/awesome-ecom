@@ -16,15 +16,15 @@ class ProductCard extends Component {
     });
   };
 
-  handleCancel = e => {
+  handleCancel = (e) => {
     this.setState({
       showQuickView: false,
     });
   };
 
   render() {
-    console.log(this.props.data)
-    const { data } = this.props
+    const { data } = this.props;
+    
     return (
       <div className="product-card">
         {this.state.showQuickView && (
@@ -83,18 +83,31 @@ class ProductCard extends Component {
               </div>
             </div>
             <div className="image">
-              <img src={"http://localhost:3001/public/uploads/"+data.images[0].thumbnail} alt="prod-bag.jpg" />
+              <img
+                src={
+                  "http://localhost:3001/uploads/" +
+                  data.images[0].medium
+                }
+                // onError={(ev) => {
+                //   ev.target.src =
+                //     "/images/prod-bag.jpg";
+                // }}
+                alt={data.name}
+              />
             </div>
           </div>
           <div className="card-body">
             <div className="card-category">
-              <div className="cate">{
-                data.category.map((cate,i) => {
-                  return(
-                  <span>{cate.displayName}{data.category.length !== (i+1) && " - " }</span>
-                  )
-                })
-              }</div>
+              <div className="cate">
+                {data.category.map((cate, i) => {
+                  return (
+                    <span>
+                      {cate.displayName}
+                      {data.category.length !== i + 1 && " - "}
+                    </span>
+                  );
+                })}
+              </div>
               <div className="stars">
                 <i className="fa fa-star-o" aria-hidden="true"></i>
                 <i className="fa fa-star-o" aria-hidden="true"></i>

@@ -14,10 +14,10 @@ import fetch from "isomorphic-unfetch";
 import Link from "next/link";
 
 const Index = ( props ) => {
-  console.log(props)
+  // console.log(props)
   return (
     <div className="wrapper">
-      <Header data = {props.products.menuCategories} />
+      <Header data = {props.menu.menuCategories} />
       <div className="main-carousel">
         <MainCarousel />
       </div>
