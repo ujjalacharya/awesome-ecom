@@ -3,6 +3,7 @@ import { Tooltip } from "antd";
 
 //includes
 import QuickViewModal from "./QuickViewModal";
+import ProductSpecs from "../../Includes/Details/ProductSpecs";
 
 class ProductCard extends Component {
   state = {
@@ -22,6 +23,8 @@ class ProductCard extends Component {
   };
 
   render() {
+    console.log(this.props.data)
+    const { data } = this.props
     return (
       <div className="product-card">
         {this.state.showQuickView && (
@@ -80,12 +83,18 @@ class ProductCard extends Component {
               </div>
             </div>
             <div className="image">
-              <img src="/images/prod-bag.jpg" alt="prod-bag.jpg" />
+              <img src={"http://localhost:3001/public/uploads/"+data.images[0].thumbnail} alt="prod-bag.jpg" />
             </div>
           </div>
           <div className="card-body">
             <div className="card-category">
-              <div className="cate">Mens - Bags - Black</div>
+              <div className="cate">{
+                data.category.map((cate,i) => {
+                  return(
+                  <span>{cate.displayName}{data.category.length !== (i+1) && " - " }</span>
+                  )
+                })
+              }</div>
               <div className="stars">
                 <i className="fa fa-star-o" aria-hidden="true"></i>
                 <i className="fa fa-star-o" aria-hidden="true"></i>
@@ -93,8 +102,8 @@ class ProductCard extends Component {
                 <i className="fa fa-star-o" aria-hidden="true"></i>
               </div>
             </div>
-            <div className="prod-name">Auctor Sem Argu</div>
-            <div className="prod-price">Rs 1500</div>
+            <div className="prod-name">{data.name}</div>
+            <div className="prod-price">Rs {data.price}</div>
           </div>
         </div>
       </div>

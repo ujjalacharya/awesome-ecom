@@ -1,7 +1,7 @@
 import { LATEST_PRODUCTS, MENU_CATEGORIES } from "../types";
 
 const initialState = {
-  latestproducts: null,
+  latestProducts: null,
   menuCategories: null
 };
 
@@ -10,7 +10,7 @@ export default (state = initialState, action) => {
     case MENU_CATEGORIES:
       return { menuCategories: action.payload };
     case LATEST_PRODUCTS:
-      return { latestproducts: action.payload };
+      return { latestProducts: action.payload };
     default:
       return state;
   }

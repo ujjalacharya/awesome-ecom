@@ -14,7 +14,7 @@ import fetch from "isomorphic-unfetch";
 import Link from "next/link";
 
 const Index = ( props ) => {
-  
+  console.log(props)
   return (
     <div className="wrapper">
       <Header data = {props.products.menuCategories} />
@@ -27,14 +27,14 @@ const Index = ( props ) => {
           headDetails="Quicksand is a sans serif type family of three weights plus matching
           obliques"
         />
-        <ProductSlider />
+        <ProductSlider  data = {props.products.latestProducts}/>
         <section className="latest-popular">
           <Row>
             <Col lg={12} xs={24} md={12}>
-              <Popular />
+              <Popular  data = {props.products.latestProducts}/>
             </Col>
             <Col lg={12} xs={24} md={12}>
-              <LatestSLider />
+              <LatestSLider data = {props.products.latestProducts}/>
             </Col>
           </Row>
         </section>
@@ -43,7 +43,7 @@ const Index = ( props ) => {
           headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
           removePaddingTop="paddingTopZero"
         />
-        <ProductSlider />
+        <ProductSlider data = {props.products.latestProducts} />
       </div>
       <Footer />
     </div>
@@ -53,13 +53,16 @@ const Index = ( props ) => {
 Index.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  const data = await ctx.store.dispatch(actions.productCategories());
-  console.log(data)
+  const menuData = await ctx.store.dispatch(actions.productCategories());
+  
+  const latestProducts = await ctx.store.dispatch(actions.getLatestProducts());
+  
   // const data = await fetch("https://jsonplaceholder.typicode.com/posts");
   // const data = await data.json();
 
   return {
-    data,
+    menuData,
+    latestProducts
   };
 };
 

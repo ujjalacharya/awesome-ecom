@@ -35,3 +35,5 @@ export const getChildCategories = (allCategories, parentCategory) => {
   });
   return newParentCate;
 };
+
+// export const getDefaultImg = ()
