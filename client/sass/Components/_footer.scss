@@ -1,0 +1,68 @@
+.footer {
+  margin-top: 40px;
+  background: #222222;
+  color: #c5c5c5;
+  padding: 20px 30px;
+  // position: relative;
+  // bottom: 0px;
+  // width: 100%;
+  .company-info {
+    .logo {
+      margin-bottom: 15px;
+      img {
+        height: 60px;
+      }
+    }
+    .company-details,
+    .comp-address,
+    .comp-phone,
+    .comp-email {
+      margin-bottom: 10px;
+    }
+  }
+  .footer-ul-design {
+    h4 {
+      color: #fff;
+    }
+    ul {
+      li {
+        display: block;
+        list-style: none;
+        line-height: 30px;
+      }
+    }
+  }
+  .footer-newsletter {
+    h4 {
+      color: #fff;
+    }
+    .news-details {
+      .let-det {
+        margin-bottom: 10px;
+      }
+      input {
+        background: #2b2b2b;
+        border: #2b2b2b;
+        color: #6d6d6d;
+        height: 35px !important;
+      }
+      button {
+        border-radius: 0 !important;
+        background: #2b2b2b;
+        border-color: #2b2b2b;
+        color: #c2c2c2;
+      }
+    }
+    ul.footer-social-media {
+      padding: 0px;
+      margin-top: 15px;
+      li {
+        display: inline-block;
+        padding-right: 15px;
+        img{
+            height: 35px;
+        }
+      }
+    }
+  }
+}

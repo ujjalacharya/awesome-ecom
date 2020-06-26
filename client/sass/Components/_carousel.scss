@@ -1,0 +1,107 @@
+.main-carousel {
+  .img-text {
+    position: relative;
+    .carousel-text {
+      position: absolute;
+      top: 25%;
+      left: 8%;
+      text-align: left;
+      @media screen and (max-width: 1024px) {
+        left: 3%;
+        top: 10%;
+      }
+      @media screen and (max-width: 912px) {
+        left: 5%;
+        top: 10%;
+      }
+      @media screen and (max-width: 480px) {
+        top: 0px;
+        left: 4%;
+      }
+      h2 {
+        margin-bottom: 0px;
+        @media screen and (max-width: 480px) {
+          font-size: 14px;
+        }
+      }
+      .main-text {
+        font-size: 75px;
+        font-weight: bold;
+        line-height: 60px;
+        @media screen and (max-width: 912px) {
+          font-size: 50px;
+        }
+        @media screen and (max-width: 480px) {
+          font-size: 21px;
+          line-height: 5px;
+        }
+      }
+      h4{
+        @media screen and (max-width: 912px) {
+          font-size: 16px;
+        }
+      }
+    }
+    img {
+      width: 100%;
+    }
+  }
+}
+
+.slick-dots{
+  width: auto !important;
+}
+
+.ant-carousel {
+  .slick-dots {
+    li {
+      width: 10px !important;
+      &.slick-active {
+        width: 10px !important;
+        button {
+          background: #61ce70 !important;
+          opacity: 1 !important;
+        }
+      }
+      button {
+        width: 10px !important;
+        border-radius: 50% !important;
+        background: #d1d1d1 !important;
+        opacity: 1 !important;
+      }
+    }
+  }
+  .slick-dots-bottom{
+    bottom: 25px !important;
+  }
+}
+
+.ant-carousel .slick-dots li button:focus,
+.ant-carousel .slick-dots li button:hover {
+  opacity: 1 !important;
+}
+
+.ant-carousel .slick-dots li,
+.ant-carousel .slick-dots li button {
+  height: 10px !important;
+}
+
+.ant-carousel .slick-slide {
+  text-align: center;
+  // height: 160px;
+  // line-height: 160px;
+  // background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel .slick-slide h3 {
+  color: #fff;
+}
+
+.slick-next, .slick-prev{
+  height: 35px !important;
+  @media screen and (max-width: 480px) {
+    height: 30px !important;
+    width: 15px !important;
+  }
+}

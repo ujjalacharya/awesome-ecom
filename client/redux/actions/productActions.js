@@ -9,7 +9,7 @@ const getLatestProducts = () => {
 
      const data = await resp.json();
 
-     console.log("data", data)
+    //  console.log("data", data)
         dispatch({type: LATEST_PRODUCTS, payload: data});
 
     // axios.post(`/api/token`, { email, password })
