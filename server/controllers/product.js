@@ -26,7 +26,7 @@ exports.product = async (req, res, next) => {
 }
 
 exports.getProduct = (req, res) => {
-    if(product.isVerified === null && product.isDeleted !==null ) return res.status(404).json({error:'Product is not verified or has been deleted.'})
+    if(req.product.isVerified === null && req.product.isDeleted !==null ) return res.status(404).json({error:'Product is not verified or has been deleted.'})
     res.json(req.product);
 }
 
@@ -238,7 +238,8 @@ exports.generateFilter = async(req,res) => {
             warranties: [],
             colors: [],
             weights: [],
-            prices: []
+            prices: [],
+            ratings:[5,4,3,2,1]
         }
         products.forEach(p => {
             if (!filters.brands.some(brand => p.brand.brandName === brand.brandName)) filters.brands.push(p.brand)
@@ -280,7 +281,7 @@ exports.generateFilter = async(req,res) => {
         }
         categories = categories.map(c => c._id.toString())
         const products = await Product.find({ category: { $in: categories }, isVerified: { "$ne": null }, isDeleted: null })
-            // .select('brand warranty size color weight price')
+            .select('-_id brand warranty size color weight price')
         if (!products.length) {
             return res.status(404).json({ error: "Cannot generate filter" })
         }

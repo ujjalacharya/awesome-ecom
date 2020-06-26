@@ -15,7 +15,7 @@ const qnaSchema = new mongoose.Schema({
             ref: "user",
         },
         questionedDate:{
-            type: String
+            type: Date
         },
         answer: {
             type: String
@@ -25,13 +25,13 @@ const qnaSchema = new mongoose.Schema({
             ref: "admin",
         },
         answeredDate: {
-            type: String
+            type: Date
+        },
+        isDeleted: {
+            type: Date,
+            default: null
         }
-    }],
-    isDeleted: {
-        type: Date,
-        default: null
-    }
+    }]
 });
 
 module.exports = mongoose.model("qna", qnaSchema);
