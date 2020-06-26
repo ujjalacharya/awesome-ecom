@@ -103,15 +103,22 @@ exports.getBanners = async (req, res) => {
     if (!banners.length) {
         return res.json({ error: 'Banners not available.' })
     }
-    res.json(banners)
+    const totalCount = await Banner.countDocuments()
+    res.json({banners,totalCount})
 }
 
 exports.getDeletedBanners = async (req, res) => {
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10;
     let banners = await Banner.find({ isDeleted: null })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
     if (!banners.length) {
         return res.json({ error: 'Banners not available.' })
     }
-    res.json(banners)
+    const totalCount = await Banner.countDocuments()
+    res.json({ banners, totalCount })
 }
 
 exports.getAllAdmins = async (req, res) => {
@@ -278,7 +285,8 @@ exports.getBlockedAdmins = async (req, res) => {
     if (!admins.length) {
         return res.status(404).json({ error: "No admins are blocked" })
     }
-    res.json(admins)
+    const totalCount = await Admin.countDocuments({ isBlocked: { "$ne": null } })
+    res.json({admins,totalCount})
 }
 exports.getNotBlockedAdmins = async (req, res) => {
     const page = +req.query.page || 1
@@ -291,7 +299,8 @@ exports.getNotBlockedAdmins = async (req, res) => {
     if (!admins.length) {
         return res.status(404).json({ error: "Every admins are blocked" })
     }
-    res.json(admins)
+    const totalCount = await Admin.countDocuments({ isBlocked: null })
+    res.json({ admins, totalCount })
 }
 exports.getVerifiedAdmins = async (req, res) => {
     const page = +req.query.page || 1
@@ -304,7 +313,8 @@ exports.getVerifiedAdmins = async (req, res) => {
     if (!admins.length) {
         return res.status(404).json({ error: "No admins are verified" })
     }
-    res.json(admins)
+    const totalCount = await Admin.countDocuments({ isVerified: { "$ne": null } })
+    res.json({ admins, totalCount })
 }
 exports.getUnverifiedAdmins = async (req, res) => {
     const page = +req.query.page || 1
@@ -317,7 +327,8 @@ exports.getUnverifiedAdmins = async (req, res) => {
     if (!admins.length) {
         return res.status(404).json({ error: "All admins are verified" })
     }
-    res.json(admins)
+    const totalCount = await Admin.countDocuments({ isVerified: null })
+    res.json({ admins, totalCount })
 }
 
 exports.category = async (req, res) => {
@@ -446,7 +457,6 @@ exports.approveProduct = async (req, res) => {
         .update(product, updateProduct)
         .options({ viaSave: true })
         .run({ useMongoose: true })
-    console.log(results);
     return res.json(results)//the product with remark
 
 }
@@ -464,7 +474,6 @@ exports.disApproveProduct = async (req, res) => {
         .update(product, updateProduct)
         .options({ viaSave: true })
         .run({ useMongoose: true })
-    console.log(results);
     return res.json(results)
 }
 
@@ -491,7 +500,8 @@ exports.getProducts = async (req, res) => {
     // return await product.save()
     // })
     // products = await Promise.all(products)
-    res.json(products);
+    let totalCount = await Product.countDocuments()
+    res.json({products,totalCount});
 }
 exports.verifiedProducts = async (req, res) => {
     const page = +req.query.page || 1
@@ -521,7 +531,8 @@ exports.verifiedProducts = async (req, res) => {
     // })
     // products = await Promise.all(products)
 
-    res.json(products);
+    let totalCount = await Product.countDocuments({ isVerified: { "$ne": null } })
+    res.json({ products, totalCount });
 }
 exports.notVerifiedProducts = async (req, res) => {
     const page = +req.query.page || 1
@@ -538,7 +549,8 @@ exports.notVerifiedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    let totalCount = await Product.countDocuments({ isVerified: null })
+    res.json({ products, totalCount });
 }
 exports.deletedProducts = async (req, res) => {
     const page = +req.query.page || 1
@@ -555,7 +567,8 @@ exports.deletedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    let totalCount = await Product.countDocuments({ isDeleted: { "$ne": null } })
+    res.json({ products, totalCount });
 }
 exports.notDeletedProducts = async (req, res) => {
     const page = +req.query.page || 1
@@ -572,7 +585,8 @@ exports.notDeletedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    let totalCount = await Product.countDocuments({ isDeleted: null })
+    res.json({ products, totalCount });
 }
 
 exports.productBrand = async (req, res) => {

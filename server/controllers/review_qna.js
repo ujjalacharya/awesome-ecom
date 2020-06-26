@@ -51,8 +51,8 @@ exports.postReview = async (req, res) => {
 }
 
 exports.getReviews = async (req, res) => {
-    const page = req.query.page || 1
-    const perPage = perPage || 10;
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10;
     const product = req.product
     if (!product.isVerified && product.isDeleted) {
         return res.status(404).json({ error: 'Product not found' })
@@ -66,12 +66,13 @@ exports.getReviews = async (req, res) => {
     if (!reviews.length) {
         return res.status(404).json({ error: "No reviews found" });
     }
-    res.json(reviews);
+    const totalCount = await Review.countDocuments({ product: product._id })
+    res.json({reviews,totalCount});
 };
 
 exports.myReviews = async(req,res) => {
-    const page = req.query.page || 1
-    const perPage = perPage || 10;
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10;
     const myReviews = await Review.find({ user: req.user._id }).populate('product', 'name slug')
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -79,7 +80,8 @@ exports.myReviews = async(req,res) => {
     if (!myReviews.length) {
         return res.status(404).json({ error: "No reviews found" });
     }
-    res.json(myReviews);
+    const totalCount = await Review.countDocuments({ user: req.user._id })
+    res.json({ myReviews, totalCount });
 }
 
 exports.averageRating = async (req, res) => {
@@ -135,6 +137,7 @@ exports.postQuestion = async (req, res) => {
         questionedDate: Date.now()
     })
     await QnA.save()
+    QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna, perPage)
     res.json({ QnA, totalCount })
@@ -168,6 +171,7 @@ exports.postAnswer = async(req,res) => {
         }
     }
     await QnA.save()
+    QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna,perPage)
     res.json({QnA,totalCount})
@@ -194,6 +198,7 @@ exports.deleteQNAByAdmin = async(req,res) => {
         return q
     })
     await QnA.save()
+    QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna, perPage)
     res.json({ QnA, totalCount })
@@ -218,6 +223,7 @@ exports.deleteQNAByUser = async (req, res) => {
         return q
     })
     await QnA.save()
+    QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna, perPage)
     res.json({ QnA, totalCount })
@@ -232,7 +238,7 @@ exports.getQNAs = async (req, res) => {
     if (!QnA) {
         return res.status(404).json({ error: 'QNA not found' })
     }
-    //need to remove isDeleted QNAs...
+    QnA.qna = QnA.qna.filter(q=>isDeleted===null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna, perPage)
     res.json({ QnA, totalCount })
