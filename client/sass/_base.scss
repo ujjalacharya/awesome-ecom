@@ -1,0 +1,155 @@
+body {
+  font-family: $font-family !important;
+  font-size: 14px !important;
+  color: $text !important;
+  margin: 0px;
+  &.overflow {
+    overflow: hidden;
+  }
+}
+
+.container {
+  padding: 0 40px;
+  margin: auto;
+  margin-top: 40px;
+  @media screen and (max-width: 912px) {
+    padding: 0 20px;
+    margin-top: 20px;
+  }
+  @media screen and (max-width: 480px) {
+    padding: 0 10px;
+    margin-top: 20px;
+  }
+}
+
+.action-btn {
+  border: 1px solid;
+  padding: 5px;
+  font-size: 12px;
+  &.action-btn-delete {
+    color: red;
+    border-color: red;
+    &:hover {
+      background-color: red;
+      color: #fff;
+    }
+  }
+  &.action-btn-add {
+    color: $secondary-color;
+    border-color: $secondary-color;
+    &:hover {
+      background-color: $secondary-color;
+      color: #fff;
+    }
+  }
+}
+
+.min-height {
+  min-height: calc(100vh - 415px);
+}
+
+.ant-input {
+  height: auto;
+}
+
+.ant-input-affix-wrapper {
+  height: 35px;
+}
+
+.breadcrumb-all {
+  margin: 30px 0;
+  padding: 10px 0;
+  padding-left: 15px;
+}
+
+.ant-form-item-label {
+  text-align: left !important;
+}
+
+h1 {
+  font-size: 35px;
+  @media screen and (max-width: 480px) {
+      font-size: 29px;
+  }
+}
+h2 {
+  font-size: 29px;
+  @media screen and (max-width: 480px) {
+      font-size: 24px;
+  }
+}
+h3 {
+  font-size: 24px;
+  @media screen and (max-width: 480px) {
+      font-size: 20px;
+  }
+}
+h4 {
+  font-size: 20px;
+  @media screen and (max-width: 480px) {
+      font-size: 16px;
+  }
+}
+h5,
+p {
+  font-size: 16px;
+  @media screen and (max-width: 480px) {
+      font-size: 14px;
+  }
+}
+h6 {
+  font-size: 14px;
+  @media screen and (max-width: 480px) {
+      font-size: 12px;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: $bold;
+  line-height: 40px;
+  margin-bottom: 0px;
+}
+
+.clear {
+  clear: both;
+}
+
+a {
+  text-decoration: none;
+  color: $text;
+  &:hover {
+    color: $text;
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+button.btn {
+  height: 35px;
+  padding: 0 20px;
+  border-radius: 0px;
+}
+
+.paddingTopZero {
+  padding-top: 0px;
+}
+
+.noDisplay {
+  display: none !important;
+}
+
+.showDisplay {
+  display: block !important;
+}
+
+.__react_component_tooltip {
+  padding: 5px 8px !important;
+}

@@ -1,0 +1,40 @@
+.sticky-filter{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    z-index: 9;
+    display: flex;
+    background: #fff;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    box-shadow: 2px -2px 8px 0 rgba(128, 128, 128, 0.37);
+    font-size: 14px;
+    @media screen and (min-width:768px) {
+        display: none;
+    }
+    &.inside-filter-sticky{
+        box-shadow: unset;
+    }
+    .filter-type{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid #e0e0e0;
+        padding-left: 35px;
+        padding-right: 35px;
+        cursor: pointer;
+        &.apply-type{
+            color: $secondary-color
+        }
+        &.removeBorder{
+            border-right: 0px;
+        }
+        img{
+            height: 25px;
+        }
+    }
+}
