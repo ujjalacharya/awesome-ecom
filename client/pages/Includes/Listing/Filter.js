@@ -5,7 +5,7 @@ import { Icon, Row, Col } from 'antd'
 class Filter extends Component{
     
     onChange = (checkedValues) => {
-        console.log('checked = ', checkedValues);
+        
     }
 
 

@@ -32,6 +32,8 @@ const getProductDetails = (slug) => {
     const data = await resp.json();
 
     dispatch({ type: PRODUCT_DETAILS, payload: data });
+    
+    return data;
   };
 };
 

@@ -17,8 +17,7 @@ class DetailSlider extends Component {
   };
 
   render() {
-    console.log(process);
-    // console.log(env)
+    
     const settings = {
       dots: false,
       infinite: true,

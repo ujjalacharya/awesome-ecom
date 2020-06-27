@@ -7,10 +7,10 @@ const { Option } = Select;
 
 class MyOrders extends Component {
   onChange = (value) => {
-    console.log(`selected ${value}`);
+    
   }
   onSearch = (val) => {
-    console.log('search:', val);
+    
   }
   render() {
     const columns = [

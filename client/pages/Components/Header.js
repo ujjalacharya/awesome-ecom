@@ -2,23 +2,23 @@ import React, { Component } from "react";
 import { Row, Col, Input } from "antd";
 
 import { getChildCategories } from "../utils/common";
+import Link from "next/link";
 
 class Header extends Component {
   render() {
-
-    let { data } = this.props
+    let { data } = this.props;
     let parentCategory = [];
-    
+
     let parentCate = [];
-    if(this.props.data){
+    if (this.props.data) {
       data.map((cate) => {
         if (cate.parent === undefined) {
           parentCategory.push(cate);
         }
       });
-  
+
       let allCates = getChildCategories(data, parentCategory);
-  
+
       allCates.map((newChild) => {
         let newallCates = getChildCategories(data, newChild.childCate);
         let parentCateEle = { ...newChild, childCate: newallCates };
@@ -34,7 +34,9 @@ class Header extends Component {
           <Col lg={14} md={13}>
             <Row className="menu-logo">
               <Col span={2} className="logo">
-                <img src="/images/logo.png" />
+                <Link href='/'>
+                  <img src="/images/logo.png" />
+                </Link>
               </Col>
               <Col span={22} className="menu">
                 <div className="menu-list alldepart">
@@ -64,7 +66,7 @@ class Header extends Component {
                                       <span className="sub-title-icon">
                                         {subCate.childCate.length > 0 && (
                                           <i
-                                          className="fa fa-angle-right"
+                                            className="fa fa-angle-right"
                                             aria-hidden="true"
                                           ></i>
                                         )}

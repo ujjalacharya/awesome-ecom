@@ -45,13 +45,9 @@ class ProductSlider extends Component {
     return (
       <section className="product-slider">
         <Slider {...settings}>
-          {
-            this.props.data.map((product,i) => {
-              return(
-                <ProductCard key={i} data={product}/>
-              )
-            })
-          }
+          {this.props.data.map((product, i) => {
+            return <ProductCard key={i} data={product} />;
+          })}
         </Slider>
       </section>
     );

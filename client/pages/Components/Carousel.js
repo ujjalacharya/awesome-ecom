@@ -5,7 +5,7 @@ import { Carousel, Button } from "antd";
 
 class MainCarousel extends Component {
   onChange = (a, b, c) => {
-    console.log(a, b, c);
+    
   };
   render() {
     const settings = {
