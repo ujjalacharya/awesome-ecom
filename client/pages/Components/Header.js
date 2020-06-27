@@ -48,7 +48,7 @@ class Header extends Component {
                             <span className="title-icon">
                               {cate.childCate.length > 0 && (
                                 <i
-                                  class="fa fa-angle-right"
+                                  className="fa fa-angle-right"
                                   aria-hidden="true"
                                 ></i>
                               )}
@@ -64,7 +64,7 @@ class Header extends Component {
                                       <span className="sub-title-icon">
                                         {subCate.childCate.length > 0 && (
                                           <i
-                                            class="fa fa-angle-right"
+                                          className="fa fa-angle-right"
                                             aria-hidden="true"
                                           ></i>
                                         )}

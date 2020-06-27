@@ -101,7 +101,7 @@ class ProductCard extends Component {
               <div className="cate">
                 {data.category.map((cate, i) => {
                   return (
-                    <span>
+                    <span key={i}>
                       {cate.displayName}
                       {data.category.length !== i + 1 && " - "}
                     </span>
