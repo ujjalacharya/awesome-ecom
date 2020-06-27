@@ -7,3 +7,4 @@ export const MENU_CATEGORIES = "MENU_CATEGORIES"
 
 // product types 
 export const LATEST_PRODUCTS = "LATEST_PRODUCTS"
+export const PRODUCT_DETAILS = "PRODUCT_DETAILS"

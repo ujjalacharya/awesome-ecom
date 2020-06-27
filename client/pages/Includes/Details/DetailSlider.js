@@ -6,7 +6,8 @@ import ReactImageMagnify from "react-image-magnify";
 
 class DetailSlider extends Component {
   state = {
-    imageUrl: "/images/prod-bag.jpg",
+    imageUrl:
+      "http://localhost:3001/uploads/" + this.props.data.images[0].large,
   };
 
   changeImage = (url) => {
@@ -16,6 +17,8 @@ class DetailSlider extends Component {
   };
 
   render() {
+    console.log(process);
+    // console.log(env)
     const settings = {
       dots: false,
       infinite: true,
@@ -29,7 +32,7 @@ class DetailSlider extends Component {
           breakpoint: 768,
           settings: {
             slidesToShow: 4,
-            slidesToScroll: 3,
+            slidesToScroll: 1,
           },
         },
       ],
@@ -53,8 +56,8 @@ class DetailSlider extends Component {
               },
               largeImage: {
                 src: this.state.imageUrl,
-                width: 1200,
-                height: 1800,
+                width: 800,
+                height: 1000,
               },
             }}
           />
@@ -62,42 +65,19 @@ class DetailSlider extends Component {
           {/* <img src={this.state.imageUrl} alt="main image" /> */}
         </div>
         <Slider {...settings} className="product-detail-slider">
-          <img
-            src="/images/prod-bag.jpg"
-            alt="product image1"
-            onClick={() => this.changeImage("/images/prod-bag.jpg")}
-            className="prod-img"
-          />
-          <img
-            src="/images/jacket.jpg"
-            alt="product image2"
-            onClick={() => this.changeImage("/images/jacket.jpg")}
-            className="prod-img"
-          />
-          <img
-            src="/images/top-viewed-1.jpg"
-            alt="product image3"
-            onClick={() => this.changeImage("/images/top-viewed-1.jpg")}
-            className="prod-img"
-          />
-          <img
-            src="/images/new-arrivals.jpg"
-            alt="product image4"
-            onClick={() => this.changeImage("/images/new-arrivals.jpg")}
-            className="prod-img"
-          />
-          <img
-            src="/images/prod-bag-2.jpg"
-            alt="product image5"
-            onClick={() => this.changeImage("/images/prod-bag-2.jpg")}
-            className="prod-img"
-          />
-          <img
-            src="/images/prod-bag-3.jpg"
-            alt="product image6"
-            onClick={() => this.changeImage("/images/prod-bag-3.jpg")}
-            className="prod-img"
-          />
+          {
+            this.props.data.images.map((imgs,i) => {
+              return(
+                <img
+                  key={i}
+                  src={"http://localhost:3001/uploads/"+imgs.thumbnail}
+                  alt={this.props.data.name}
+                  onClick={() => this.changeImage("http://localhost:3001/uploads/"+imgs.large)}
+                  className="prod-img"
+                />
+              )
+            })
+          }
         </Slider>
       </div>
     );

@@ -1,13 +1,14 @@
-import { LATEST_PRODUCTS, MENU_CATEGORIES } from "../types";
+import { LATEST_PRODUCTS, PRODUCT_DETAILS } from "../types";
 
 const initialState = {
-  latestProducts: null
+  latestProducts: null,
+  productDetails: null
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    // case MENU_CATEGORIES:
-    //   return { menuCategories: action.payload };
+    case PRODUCT_DETAILS:
+      return { productDetails: action.payload };
     case LATEST_PRODUCTS:
       return { latestProducts: action.payload };
     default:

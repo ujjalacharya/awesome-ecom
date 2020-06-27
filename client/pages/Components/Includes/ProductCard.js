@@ -33,6 +33,7 @@ class ProductCard extends Component {
             visible={this.state.showQuickView}
             // onOk={this.handleOk}
             onCancel={this.handleCancel}
+            data = {data}
           />
         )}
         {/* <ReactTooltip place="top" type="dark" effect="float" /> */}
