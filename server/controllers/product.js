@@ -132,14 +132,14 @@ exports.updateProduct = async (req, res) => {
         return res.status(403).json({ error: 'Cannot update. Product has already been verified.' })
     }
     product = _.extend(product, req.body)
-    console.log(product);
     await product.save()
     res.json(product)
 
 }
 
 exports.getProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -151,7 +151,8 @@ exports.getProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    const totalCount = await Product.countDocuments({ soldBy: req.profile._id})
+    res.json({products,totalCount});
 }
 
 exports.latestProducts = async (req, res) => {
@@ -169,6 +170,8 @@ exports.latestProducts = async (req, res) => {
 }
 
 exports.searchProducts = async(req,res) => {
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let { keyword='', brand_id, price, size, rating, color, warranty, weight, cat_id } = req.body
     let categories
     if(cat_id) {
@@ -201,16 +204,22 @@ exports.searchProducts = async(req,res) => {
             isVerified: { "$ne": null }, isDeleted: null, category: { $in: categories }
         }
     }
-    const products = await Product.find(searchingFactor)
+    const products = await Product
+        .find(searchingFactor)
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
     if (!products.length) {
         return res.status(404).json({error:'Products not found.'})
     }
     //need to work on rating...
-    res.json(products)
+    const totalCount = await Product.countDocuments(searchingFactor)
+    res.json({ products, totalCount });
 }
 
 exports.getProductsByCategory = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],isDisabled: null })
     if (!categories.length) {
         return res.status(404).json({ error: "Categories not found" })
@@ -227,7 +236,8 @@ exports.getProductsByCategory = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    const totalCount = await Product.countDocuments({ category: { $in: categories } })
+    res.json({ products, totalCount });
 }
 
 exports.generateFilter = async(req,res) => {
@@ -291,7 +301,8 @@ exports.generateFilter = async(req,res) => {
 }
 
 exports.outOfTheStockProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, quantity:0 })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -303,10 +314,12 @@ exports.outOfTheStockProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are out of stock.' })
     }
-    res.json(products);
+    const totalCount = await Product.countDocuments({ soldBy: req.profile._id, quantity: 0 })
+    res.json({ products, totalCount });
 }
 exports.verifiedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isVerified: { "$ne": null } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -318,10 +331,12 @@ exports.verifiedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    const totalCount = await Product.countDocuments({ soldBy: req.profile._id, isVerified: { "$ne": null } })
+    res.json({ products, totalCount });
 }
 exports.notVerifiedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isVerified: null })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -333,10 +348,12 @@ exports.notVerifiedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    const totalCount = await Product.countDocuments({ soldBy: req.profile._id, isVerified: null })
+    res.json({ products, totalCount });
 }
 exports.deletedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: { "$ne": null } })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -348,10 +365,12 @@ exports.deletedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    const totalCount = await Product.countDocuments({ soldBy: req.profile._id, isDeleted: { "$ne": null } })
+    res.json({ products, totalCount });
 }
 exports.notDeletedProducts = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     const products = await Product.find({ soldBy: req.profile._id, isDeleted: null })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -363,6 +382,7 @@ exports.notDeletedProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    res.json(products);
+    const totalCount = await Product.countDocuments({ soldBy: req.profile._id, isDeleted: null })
+    res.json({ products, totalCount });
 }
 

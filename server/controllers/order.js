@@ -137,7 +137,8 @@ exports.createOrder = async (req, res) => {
 }
 
 exports.userOrders = async(req,res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({user:req.user._id})
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -147,10 +148,12 @@ exports.userOrders = async(req,res) => {
     if (!orders.length) {
         return res.status(404).json({error: "No orders found"})
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ user: req.user._id })
+    res.json({orders,totalCount})
 }
 exports.userActiveOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id ,'status.currentStatus':'active'})
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -160,11 +163,13 @@ exports.userActiveOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No active orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'active' })
+    res.json({ orders, totalCount })
 }
 
 exports.userCompleteOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'complete' })
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -174,11 +179,13 @@ exports.userCompleteOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No complete orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'complete' })
+    res.json({ orders, totalCount })
 }
 
 exports.userCancelOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'cancel' })
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -188,11 +195,13 @@ exports.userCancelOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No cancel orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'cancel' })
+    res.json({ orders, totalCount })
 }
 
 exports.userReturnOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'return' })
         .populate('product', 'name price discountRate')
         .skip(perPage * page - perPage)
@@ -202,11 +211,13 @@ exports.userReturnOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No return orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'return' })
+    res.json({ orders, totalCount })
 }
 
 exports.adminOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -217,11 +228,13 @@ exports.adminOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id })
+    res.json({ orders, totalCount })
 }
 
 exports.adminActiveOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus':'active' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -232,11 +245,13 @@ exports.adminActiveOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No active orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'active' })
+    res.json({ orders, totalCount })
 }
 
 exports.adminApproveOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'approve' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -247,11 +262,13 @@ exports.adminApproveOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No approve orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'approve' })
+    res.json({ orders, totalCount })
 }
 
 exports.adminDispatchOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'dispatch' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -262,11 +279,13 @@ exports.adminDispatchOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No dispatch orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'dispatch' })
+    res.json({ orders, totalCount })
 }
 
 exports.adminCancelOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'cancel' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -277,11 +296,13 @@ exports.adminCancelOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No cancel orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'cancel' })
+    res.json({ orders, totalCount })
 }
 
 exports.adminCompleteOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'complete' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -292,11 +313,13 @@ exports.adminCompleteOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No complete orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'complete' })
+    res.json({ orders, totalCount })
 }
 
 exports.adminToBeReturnOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'tobereturn' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -307,11 +330,13 @@ exports.adminToBeReturnOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No to be return orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'tobereturn' })
+    res.json({ orders, totalCount })
 }
 
 exports.dispatcherToBeReturnOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({'status.currentStatus': 'tobereturn' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -322,11 +347,13 @@ exports.dispatcherToBeReturnOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No to be return orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ 'status.currentStatus': 'tobereturn' })
+    res.json({ orders, totalCount })
 }
 
 exports.adminReturnOrders = async (req, res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'return' })
         .populate('user', 'name address muncipality tole')
         .populate('product', 'name price discountRate')
@@ -337,7 +364,8 @@ exports.adminReturnOrders = async (req, res) => {
     if (!orders.length) {
         return res.status(404).json({ error: "No return orders found" })
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'return' })
+    res.json({ orders, totalCount })
 }
 
 exports.toggleOrderApproval = async(req,res) => {
@@ -450,7 +478,8 @@ exports.toggleDispatchOrder = async (req,res) => {
 }
 
 exports.approvedOrders = async(req,res) => {
-    const page = req.query.page || 1
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
     let orders = await Order.find({'status.currentStatus':'approve'})
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -459,7 +488,8 @@ exports.approvedOrders = async(req,res) => {
     if (!orders.length) {
         return res.status(404).json({error: "No orders are ready to ship."})
     }
-    res.json(orders)
+    const totalCount = await Order.countDocuments({ 'status.currentStatus': 'approve' })
+    res.json({ orders, totalCount })
 }
 
 exports.toggleCompleteOrder = async (req, res) => {
