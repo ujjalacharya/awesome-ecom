@@ -96,28 +96,28 @@ exports.deleteBanner = async (req, res) => {
 exports.getBanners = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let banners = await Banner.find({ isDeleted: { "$ne": null } })
+    let banners = await Banner.find({ isDeleted: null })
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
     if (!banners.length) {
-        return res.json({ error: 'Banners not available.' })
+        return res.status(404).json({ error: 'Banners not available.' })
     }
-    const totalCount = await Banner.countDocuments()
+    const totalCount = await Banner.countDocuments({ isDeleted: null })
     res.json({banners,totalCount})
 }
 
 exports.getDeletedBanners = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let banners = await Banner.find({ isDeleted: null })
+    let banners = await Banner.find({ isDeleted: { "$ne": null } })
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
     if (!banners.length) {
-        return res.json({ error: 'Banners not available.' })
+        return res.status(404).json({ error: 'Banners not available.' })
     }
-    const totalCount = await Banner.countDocuments()
+    const totalCount = await Banner.countDocuments({ isDeleted: { "$ne": null } })
     res.json({ banners, totalCount })
 }
 
