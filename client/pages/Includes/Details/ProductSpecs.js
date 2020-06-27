@@ -4,6 +4,7 @@ import { Input, Button } from "antd";
 class ProductSpecs extends Component {
   state = {
     pdQty: 1,
+    showStatus: "More",
   };
 
   changePdValue = (num) => {
@@ -14,11 +15,37 @@ class ProductSpecs extends Component {
       });
     }
   };
+
+  changeViewStatus = () => {
+    if (this.state.showStatus === "More") {
+      this.setState({
+        showStatus: "Less",
+      });
+    } else {
+      this.setState({
+        showStatus: "More",
+      });
+    }
+  };
+
   render() {
+    let { data } = this.props;
+
+    let description = "";
+    let allDescription = "";
+    if (data.description) {
+      allDescription = data.description.split(" ");
+      if (this.state.showStatus === "More" && allDescription.length > 100) {
+        let newRemarks = [...allDescription];
+        description = newRemarks.splice(0, 95).join(" ") + "...";
+      } else {
+        description = data.description;
+      }
+    }
     return (
       <div className="product-specs">
         <div className="price-specs">
-          <div className="product-title">Item name / Bundle name</div>
+          <div className="product-title">{data.name}</div>
           <div className="ratings-reviews">
             <div className="ratings">
               <i class="fa fa-star-o" aria-hidden="true"></i>
@@ -34,22 +61,29 @@ class ProductSpecs extends Component {
           </div>
           <div className="old-new-price">
             <div className="old-price">
-              <span>$45.00</span>
+              <span>{data.price}</span>
             </div>
             <div className="new-price">
-              <span className="price">$38.00</span>
-              <span className="discount">(Save $7 | 15%)</span>
+              <span className="price">
+                {data.price - (data.price * 2) / 100}
+              </span>
+              <span className="discount">
+                (Save {(data.price * 2) / 100} | {data.discountRate}%)
+              </span>
             </div>
           </div>
         </div>
         <div className="specs">
           <div className="spec-details">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sed
-            justo id massa bibendum faucibus. Nam non enim mollis, mollis felis
-            eu, gravida turpis. Donec cursus sagittis semper. Nunc mattis nulla
-            aliquam enim mollis iaculis. Nullam feugiat eleifend augue nec
-            malesuada. Vivamus at arcu posuere, volutpat purus non, dignissim
-            arcu.
+            {description}
+            {allDescription.length > 100 && (
+              <div class="text-center">
+                <a onClick={this.changeViewStatus} className="view-more-less">
+                  View {this.state.showStatus}{" "}
+                  <i className="fa fa-caret-down"></i>
+                </a>
+              </div>
+            )}
           </div>
         </div>
         <div className="qty-cart-btn">
@@ -94,7 +128,15 @@ class ProductSpecs extends Component {
         </div>
         <div className="prod-cate-specs">
           <div className="tags">
-            <b>Tags:</b> Bags, Black, Mens Bags
+            <b>Tags:</b>{" "}
+            {data.tags.map((tag, i) => {
+              return (
+                <span key={i}>
+                  {tag}
+                  {data.tags.length !== i + 1 && ","}
+                </span>
+              );
+            })}
           </div>
           <div className="share">
             <b>Share this product:</b>

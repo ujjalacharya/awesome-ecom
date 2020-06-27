@@ -16,10 +16,10 @@ class QuickViewModal extends Component {
       >
         <Row>
           <Col lg={10} xs={24} md={24}>
-            <DetailSlider />
+            <DetailSlider data={this.props.data} />
           </Col>
           <Col lg={14} xs={24} md={18}>
-            <ProductSpecs />
+            <ProductSpecs data={this.props.data} />
           </Col>
         </Row>
       </Modal>

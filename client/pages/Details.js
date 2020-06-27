@@ -26,18 +26,20 @@ class Details extends Component {
                 </Breadcrumb>
               </Col>
             </Row>
-            <Row>
-              <Col lg={10} xs={24} md={24}>
-                <DetailSlider />
-              </Col>
-              <Col lg={14} xs={24} md={18}>
-                <ProductSpecs />
-              </Col>
-            </Row>
-            <Row>
-                <Col lg={24}>
-                    <OtherDetails />
+            {this.props.data && (
+              <Row>
+                <Col lg={10} xs={24} md={24}>
+                  <DetailSlider data={this.props.data} />
                 </Col>
+                <Col lg={14} xs={24} md={18}>
+                  <ProductSpecs data={this.props.data} />
+                </Col>
+              </Row>
+            )}
+            <Row>
+              <Col lg={24}>
+                <OtherDetails />
+              </Col>
             </Row>
           </div>
         </section>

@@ -3,6 +3,7 @@ import { Tooltip } from "antd";
 
 //includes
 import QuickViewModal from "./QuickViewModal";
+import Link from "next/link";
 import ProductSpecs from "../../Includes/Details/ProductSpecs";
 
 class ProductCard extends Component {
@@ -24,7 +25,7 @@ class ProductCard extends Component {
 
   render() {
     const { data } = this.props;
-    
+
     return (
       <div className="product-card">
         {this.state.showQuickView && (
@@ -33,6 +34,7 @@ class ProductCard extends Component {
             visible={this.state.showQuickView}
             // onOk={this.handleOk}
             onCancel={this.handleCancel}
+            data={data}
           />
         )}
         {/* <ReactTooltip place="top" type="dark" effect="float" /> */}
@@ -82,42 +84,52 @@ class ProductCard extends Component {
                 </Tooltip>
               </div>
             </div>
-            <div className="image">
-              <img
-                src={
-                  "http://localhost:3001/uploads/" +
-                  data.images[0].medium
-                }
-                // onError={(ev) => {
-                //   ev.target.src =
-                //     "/images/prod-bag.jpg";
-                // }}
-                alt={data.name}
-              />
-            </div>
-          </div>
-          <div className="card-body">
-            <div className="card-category">
-              <div className="cate">
-                {data.category.map((cate, i) => {
-                  return (
-                    <span>
-                      {cate.displayName}
-                      {data.category.length !== i + 1 && " - "}
-                    </span>
-                  );
-                })}
+            <Link
+              href={`/products/[slug]`}
+              key={data.slug}
+              as={`/products/${data.slug}`}
+            >
+              <div className="image">
+                <img
+                  src={"http://localhost:3001/uploads/" + data.images[0].medium}
+                  // onError={(ev) => {
+                  //   ev.target.src =
+                  //     "/images/prod-bag.jpg";
+                  // }}
+                  alt={data.name}
+                />
               </div>
-              <div className="stars">
-                <i className="fa fa-star-o" aria-hidden="true"></i>
-                <i className="fa fa-star-o" aria-hidden="true"></i>
-                <i className="fa fa-star-o" aria-hidden="true"></i>
-                <i className="fa fa-star-o" aria-hidden="true"></i>
-              </div>
-            </div>
-            <div className="prod-name">{data.name}</div>
-            <div className="prod-price">Rs {data.price}</div>
+            </Link>
           </div>
+
+          <Link
+            href={`/products/[slug]`}
+            key={data.slug}
+            as={`/products/${data.slug}`}
+          >
+            <div className="card-body">
+              <div className="card-category">
+                <div className="cate">
+                  {data.category.map((cate, i) => {
+                    return (
+                      <span key={i}>
+                        {cate.displayName}
+                        {data.category.length !== i + 1 && " - "}
+                      </span>
+                    );
+                  })}
+                </div>
+                <div className="stars">
+                  <i className="fa fa-star-o" aria-hidden="true"></i>
+                  <i className="fa fa-star-o" aria-hidden="true"></i>
+                  <i className="fa fa-star-o" aria-hidden="true"></i>
+                  <i className="fa fa-star-o" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div className="prod-name">{data.name}</div>
+              <div className="prod-price">Rs {data.price}</div>
+            </div>
+          </Link>
         </div>
       </div>
     );

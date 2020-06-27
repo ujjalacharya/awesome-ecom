@@ -9,7 +9,7 @@ const { TabPane } = Tabs;
 
 class OtherDetails extends Component {
   callback = (key) => {
-    console.log(key);
+    
   };
 
   render() {

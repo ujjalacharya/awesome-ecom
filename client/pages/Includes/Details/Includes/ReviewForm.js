@@ -11,11 +11,9 @@ const tailLayout = {
 
 class ReviewsForm extends Component {
   onFinish = (values) => {
-    console.log("Success:", values);
   };
 
   onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
   };
   render() {
     return (

@@ -153,3 +153,18 @@ button.btn {
 .__react_component_tooltip {
   padding: 5px 8px !important;
 }
+
+a.view-more-less {
+  color: #757575;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+a.view-more-less  i{
+  margin-left: 5px;
+  font-size: 11px !important;
+  margin-bottom: 0 !important;
+}
+.show-review + .view-more-less .fa-caret-down:before {
+  content: '\f0d8' !important;
+}

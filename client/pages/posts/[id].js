@@ -7,12 +7,12 @@ import actions from "../../redux/actions";
 export class Post extends Component {
   static async getInitialProps(ctx) {
     initialize(ctx);
-
+    
     const {
       query: { id },
     } = ctx;
-
-    const data = await ctx.store.dispatch(actions.getLatestProducts());
+    
+    // const data = await ctx.store.dispatch(actions.getLatestProducts());
 
     return {
       id,
