@@ -21,10 +21,10 @@ export const getChildCategories = (allCategories, parentCategory) => {
   // return finalData;
 
   let newParentCate = []
-  parentCategory.map((parentCate) => {
+  parentCategory.forEach((parentCate) => {
     let parentCategoryElements = {...parentCate};
     let childCate = [];
-    allCategories.map((allCate) => {
+    allCategories.forEach((allCate) => {
       if (allCate.parent === parentCate._id) {
         childCate.push(allCate);
       }

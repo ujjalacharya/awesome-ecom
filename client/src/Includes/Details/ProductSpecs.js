@@ -48,11 +48,11 @@ class ProductSpecs extends Component {
           <div className="product-title">{data.name}</div>
           <div className="ratings-reviews">
             <div className="ratings">
-              <i class="fa fa-star-o" aria-hidden="true"></i>
-              <i class="fa fa-star-o" aria-hidden="true"></i>
-              <i class="fa fa-star-o" aria-hidden="true"></i>
-              <i class="fa fa-star-o" aria-hidden="true"></i>
-              <i class="fa fa-star-o" aria-hidden="true"></i>
+              <i className="fa fa-star-o" aria-hidden="true"></i>
+              <i className="fa fa-star-o" aria-hidden="true"></i>
+              <i className="fa fa-star-o" aria-hidden="true"></i>
+              <i className="fa fa-star-o" aria-hidden="true"></i>
+              <i className="fa fa-star-o" aria-hidden="true"></i>
               <span>5 start ratings</span>
             </div>
             <div className="reviews">
@@ -77,7 +77,7 @@ class ProductSpecs extends Component {
           <div className="spec-details">
             {description}
             {allDescription.length > 100 && (
-              <div class="text-center">
+              <div className="text-center">
                 <a onClick={this.changeViewStatus} className="view-more-less">
                   View {this.state.showStatus}{" "}
                   <i className="fa fa-caret-down"></i>
@@ -141,9 +141,9 @@ class ProductSpecs extends Component {
           <div className="share">
             <b>Share this product:</b>
             <span>
-              <i class="fa fa-facebook" aria-hidden="true"></i>
-              <i class="fa fa-instagram" aria-hidden="true"></i>
-              <i class="fa fa-twitter" aria-hidden="true"></i>
+              <i className="fa fa-facebook" aria-hidden="true"></i>
+              <i className="fa fa-instagram" aria-hidden="true"></i>
+              <i className="fa fa-twitter" aria-hidden="true"></i>
             </span>
           </div>
         </div>

@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import Menu from "./Includes/MyProfile/menu";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import Menu from "../src/Includes/MyProfile/menu";
+import Header from "../src/Components/Header";
+import Footer from "../src/Components/Footer";
 import { Row, Col } from "antd";
-import MenuDetails from "./Includes/MyProfile/MenuDetails";
-import MyOrders from "./Includes/MyProfile/MyOrders";
-import MyWishlist from "./Includes/MyProfile/MyWishlist";
-import MyReviews from "./Includes/MyProfile/MyReviews";
+import MenuDetails from "../src/Includes/MyProfile/MenuDetails";
+import MyOrders from "../src/Includes/MyProfile/MyOrders";
+import MyWishlist from "../src/Includes/MyProfile/MyWishlist";
+import MyReviews from "../src/Includes/MyProfile/MyReviews";
 
 class MyProfile extends Component {
   state = {

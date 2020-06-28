@@ -14,10 +14,10 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css"
           /> */}
-          <link rel="stylesheet" href="http://localhost:3000/css/antd.min.css" />
-          <link rel="stylesheet" href="http://localhost:3000/css/style.css" />
-          <link rel="stylesheet" href="http://localhost:3000/css/slick-theme.min.css" />
-          <link rel="stylesheet" href="http://localhost:3000/css/slick.min.css" />
+          <link rel="stylesheet" href="/css/antd.min.css" />
+          <link rel="stylesheet" href="/css/style.css" />
+          <link rel="stylesheet" href="/css/slick-theme.min.css" />
+          <link rel="stylesheet" href="/css/slick.min.css" />
           <link
             rel="stylesheet"
             href="font-awesome-4.7.0/css/font-awesome.min.css"

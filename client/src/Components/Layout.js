@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Head from "next/head";
 import { connect } from "react-redux";
-import actions from "../redux/actions";
+import actions from "../../redux/actions";
 import NProgress from "nprogress";
 import Router from "next/router";
 import { Component } from "react";
-import Header from "../pages/Components/Header";
+import Header from "./Header";
+import Footer from "./Footer";
 
 Router.onRouteChangeStart = (url) => NProgress.start();
 Router.onRouteChangeComplete = (url) => NProgress.done();
@@ -29,6 +30,8 @@ class Layout extends Component {
 
         <Header data={this.props.menuCate}/>
         <div className="has-text-centered">{children}</div>
+        
+        <Footer />
       </div>
     );
   }

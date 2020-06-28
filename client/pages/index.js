@@ -1,18 +1,14 @@
 import React, { Component } from "react";
-import Header from "./Components/Header";
-import MainCarousel from "./Components/Carousel";
-import ProductSlider from "./Components/ProductSlider";
-import SliderHeader from "./Components/SliderHeader";
+import MainCarousel from "../src/Components/Carousel";
+import ProductSlider from "../src/Components/ProductSlider";
+import SliderHeader from "../src/Components/SliderHeader";
 import { Row, Col } from "antd";
-import Popular from "./Components/Popular";
-import LatestSLider from "./Components/LatestSlider";
-import Footer from "./Components/Footer";
+import Popular from "../src/Components/Popular";
+import LatestSLider from "../src/Components/LatestSlider";
 import { connect } from "react-redux";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
-import fetch from "isomorphic-unfetch";
-import Link from "next/link";
-import Layout from "../components/Layout";
+import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
   
@@ -28,6 +24,7 @@ const Index = (props) => {
             headTitle="Featured Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching
           obliques"
+          listLink = "latestProducts"
           />
           <ProductSlider data={props.products.latestProducts} />
           <section className="latest-popular">
@@ -44,10 +41,10 @@ const Index = (props) => {
             headTitle="Trending Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
             removePaddingTop="paddingTopZero"
+            listLink = "latestProducts"
           />
           <ProductSlider data={props.products.latestProducts} />
         </div>
-        <Footer />
       </div>
     </Layout>
   );

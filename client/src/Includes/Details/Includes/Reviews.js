@@ -11,10 +11,10 @@ class Reviews extends Component {
           <div className="all-reviews">
             <div className="user-review">
               <div className="review-stars">
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
               </div>
               <div className="reviewd-by">
                 <div className="reivewer-name">by Manish S. - 28 May 2019</div>
@@ -28,10 +28,10 @@ class Reviews extends Component {
 
             <div className="user-review">
               <div className="review-stars">
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
               </div>
               <div className="reviewd-by">
                 <div className="reivewer-name">by Daraz Customer. - 04 Dec 2019</div>
@@ -44,10 +44,10 @@ class Reviews extends Component {
 
             <div className="user-review">
               <div className="review-stars">
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
-                <i class="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
+                <i className="fa fa-star-o" aria-hidden="true"></i>
               </div>
               <div className="reviewd-by">
                 <div className="reivewer-name">by Sobit P. - 16 May 2019</div>
