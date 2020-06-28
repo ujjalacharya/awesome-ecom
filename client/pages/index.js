@@ -1,18 +1,18 @@
 import React, { Component } from "react";
-import Header from "./Components/Header";
-import MainCarousel from "./Components/Carousel";
-import ProductSlider from "./Components/ProductSlider";
-import SliderHeader from "./Components/SliderHeader";
+import fetch from "isomorphic-unfetch";
+import Link from "next/link";
+import Header from "../src/Components/Header";
+import MainCarousel from "../src/Components/Carousel";
+import ProductSlider from "../src/Components/ProductSlider";
+import SliderHeader from "../src/Components/SliderHeader";
 import { Row, Col } from "antd";
-import Popular from "./Components/Popular";
-import LatestSLider from "./Components/LatestSlider";
-import Footer from "./Components/Footer";
+import Popular from "../src/Components/Popular";
+import LatestSLider from "../src/Components/LatestSlider";
+import Footer from "../src/Components/Footer";
 import { connect } from "react-redux";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
-import fetch from "isomorphic-unfetch";
-import Link from "next/link";
-import Layout from "../components/Layout";
+import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
   

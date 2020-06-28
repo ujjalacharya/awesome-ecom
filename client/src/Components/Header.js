@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col, Input } from "antd";
 
-import { getChildCategories } from "../utils/common";
+import { getChildCategories } from "../../utils/common";
 import Link from "next/link";
 
 class Header extends Component {
