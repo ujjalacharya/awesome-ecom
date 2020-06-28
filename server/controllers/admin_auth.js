@@ -96,8 +96,8 @@ exports.signin = async (req, res) => {
     let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
     refreshToken = new RefreshToken(refreshToken)
     await refreshToken.save()
-    res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-    return res.json({ accessToken });
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+    return res.json({ accessToken, refreshToken });
 };
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body

@@ -18,7 +18,7 @@ router.route('/shipping-rate')
 router.route('/banner')
     .post(auth,isSuperAdmin,uploadBannerPhoto,banner)//create
     .patch(auth,isSuperAdmin,deleteBanner)//delete
-    .get(auth,isSuperAdmin,getBanners)//not deletedBanners
+    .get(getBanners)//not deletedBanners
 router.get('/deleted-banners', auth, isSuperAdmin, getDeletedBanners)
 
 //user's..

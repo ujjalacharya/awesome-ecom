@@ -26,7 +26,7 @@ exports.product = async (req, res, next) => {
 }
 
 exports.getProduct = (req, res) => {
-    if(req.product.isVerified === null && req.product.isDeleted !==null ) return res.status(404).json({error:'Product is not verified or has been deleted.'})
+    if (req.product.isVerified === null && req.product.isDeleted !== null) return res.status(404).json({ error: 'Product is not verified or has been deleted.' })
     res.json(req.product);
 }
 
@@ -151,12 +151,12 @@ exports.getProducts = async (req, res) => {
     if (!products.length) {
         return res.status(404).json({ error: 'No products are available.' })
     }
-    const totalCount = await Product.countDocuments({ soldBy: req.profile._id})
-    res.json({products,totalCount});
+    const totalCount = await Product.countDocuments({ soldBy: req.profile._id })
+    res.json({ products, totalCount });
 }
 
 exports.latestProducts = async (req, res) => {
-    const products = await Product.find({ isVerified: { "$ne": null }, isDeleted: null})
+    const products = await Product.find({ isVerified: { "$ne": null }, isDeleted: null })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")
@@ -169,19 +169,19 @@ exports.latestProducts = async (req, res) => {
     res.json(products);
 }
 
-exports.searchProducts = async(req,res) => {
+exports.searchProducts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let { keyword='', brand_id, price, size, rating, color, warranty, weight, cat_id } = req.body
+    let { keyword = '', brand_id, max_price, min_price, size, rating, color, warranty, weight, cat_id } = req.body
     let categories
-    if(cat_id) {
+    if (cat_id) {
         categories = await Category.find({ $or: [{ _id: cat_id }, { parent: cat_id }], isDisabled: null })
         if (!categories.length) {
             return res.status(404).json({ error: "Categories not found." })
         }
     }
-    let searchingFactor 
-    if(keyword && !cat_id) {
+    let searchingFactor
+    if (keyword && !cat_id) {
         //that is if only with keyword
         searchingFactor = {
             $or: [{ name: { $regex: keyword, $options: 'i' } },
@@ -195,7 +195,7 @@ exports.searchProducts = async(req,res) => {
             $or: [{ name: { $regex: keyword, $options: 'i' } },
             { tags: { $regex: keyword, $options: 'i' } },
             { brand: brand_id },
-            { price: price },
+            { price: { $lte: max_price, $gte: min_price } },
             { size: { $in: size } },
             { color: { $in: color } },
             { weight: { $in: weight } },
@@ -210,7 +210,7 @@ exports.searchProducts = async(req,res) => {
         .limit(perPage)
         .lean()
     if (!products.length) {
-        return res.status(404).json({error:'Products not found.'})
+        return res.status(404).json({ error: 'Products not found.' })
     }
     //need to work on rating...
     const totalCount = await Product.countDocuments(searchingFactor)
@@ -220,7 +220,7 @@ exports.searchProducts = async(req,res) => {
 exports.getProductsByCategory = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],isDisabled: null })
+    let categories = await Category.find({ $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }], isDisabled: null })
     if (!categories.length) {
         return res.status(404).json({ error: "Categories not found" })
     }
@@ -240,7 +240,7 @@ exports.getProductsByCategory = async (req, res) => {
     res.json({ products, totalCount });
 }
 
-exports.generateFilter = async(req,res) => {
+exports.generateFilter = async (req, res) => {
     const filterGenerate = products => {
         let filters = {
             sizes: [],
@@ -249,13 +249,13 @@ exports.generateFilter = async(req,res) => {
             colors: [],
             weights: [],
             prices: [],
-            ratings:[5,4,3,2,1]
+            ratings: [5, 4, 3, 2, 1]
         }
         products.forEach(p => {
             if (!filters.brands.some(brand => p.brand.brandName === brand.brandName)) filters.brands.push(p.brand)
             if (!filters.warranties.some(w => p.warranty === w)) filters.warranties.push(p.warranty)
             if (!filters.prices.some(price => p.price === price)) filters.prices.push(p.price)
-            p.size.forEach(size=>{
+            p.size.forEach(size => {
                 if (!filters.sizes.includes(size)) filters.sizes.push(size)
             })
             p.color.forEach(color => {
@@ -265,27 +265,56 @@ exports.generateFilter = async(req,res) => {
                 if (!filters.weights.includes(weight)) filters.weights.push(weight)
             })
         })
+        //makeing price range =>[[min,max],[min1,max1]]
+        let min_price = Math.min(...filters.prices)
+        let max_price = Math.max(...filters.prices)
+        //make min max price to multiple of 100
+        function minmax(min, max) {
+            let M
+            let m
+            if (max < 100) M = 100
+            if (max > 100) M = (max) + (100 - max % 100)
+            if (max % 100 === 0) M = max + 100
+            if (min < 100) m = 0
+            if (min > 100) m = min - (min % 100)
+            if (min % 100 === 0) m = min - 100
+            return [m, M]
+        }
+        filters.prices = minmax(min_price, max_price)
+        // let MINMAX = minmax(min_price, max_price)
+        // min_price = MINMAX[0]
+        // max_price = MINMAX[1]
+        // console.log('AFTER');
+        // console.log(min_price, max_price)
+        // let increaseFactor = (max_price - min_price) / 5
+        // console.log(increaseFactor)
+        // filters.prices = _.range(min_price, max_price, increaseFactor);
+        // for (let i = 1; i < filters.prices.length; i++) {
+        //     const element = filters.prices[i];
+
+        // }
+        // filters.prices = _.chunk(filters.prices,2)
         return filters
     }
     if (req.query.keyword) {
         // by search keyword
         let products = await Product.find({
             $or: [{ name: { $regex: req.query.keyword, $options: 'i' } },
-                { tags: { $regex: req.query.keyword, $options: 'i' } }],
+            { tags: { $regex: req.query.keyword, $options: 'i' } }],
             isVerified: { "$ne": null }, isDeleted: null
         }).populate("brand", "brandName slug")
-        .select('-_id brand warranty size color weight price')
+            .select('-_id brand warranty size color weight price')
         if (!products.length) {
-            return res.status(404).json({error:"Cannot generate filter"})
+            return res.status(404).json({ error: "Cannot generate filter" })
         }
         let generatedFilters = filterGenerate(products)
         return res.json(generatedFilters)
     } else {
         //else by category
         let categories = await Category.find({
-             $or: [{ slug: req.query.cat_slug },
-                { parent: req.query.cat_id }], isDisabled: null
-        } )
+            $or: [{ slug: req.query.cat_slug },
+            { parent: req.query.cat_id }], isDisabled: null
+        })
         if (!categories.length) {
             return res.status(404).json({ error: "Category not found. Cannot generate filter." })
         }
@@ -303,7 +332,7 @@ exports.generateFilter = async(req,res) => {
 exports.outOfTheStockProducts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    const products = await Product.find({ soldBy: req.profile._id, quantity:0 })
+    const products = await Product.find({ soldBy: req.profile._id, quantity: 0 })
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
         .populate("images", "-createdAt -updatedAt -__v")

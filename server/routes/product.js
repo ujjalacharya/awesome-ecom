@@ -7,6 +7,13 @@ const { validateProduct } = require("../middleware/validator")
 const { auth, isSuperAdmin, isAdmin, hasAuthorization } = require('../controllers/admin_auth')
 
 const router = express.Router();
+
+//public
+router.get('/latest',latestProducts)
+router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
+//with rating chai client side mai rakhne
+router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
+router.post('/search',searchProducts)//need to work on rating nd $option in regex
 //admin's or superadmin's
 router.get("/products/:id", auth, hasAuthorization, getProducts)
 router.get("/verified-products/:id", auth, hasAuthorization, verifiedProducts)
@@ -22,13 +29,6 @@ router.delete("/image/:id/:p_slug", auth, hasAuthorization, deleteImage)//?image
 router.patch('/delete-product/:id/:p_slug', auth, hasAuthorization, deleteProduct)
 router.post("/:id", auth, hasAuthorization, validateProduct, createProduct)
 router.put("/:id/:p_slug", auth, hasAuthorization, validateProduct, updateProduct)
-
-//public
-router.get('/latest',latestProducts)
-router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
-//with rating chai client side mai rakhne
-router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
-router.get('/search',searchProducts)//need to work on rating nd $option in regex
 router.get('/:p_slug', getProduct)
 
 router.param('p_slug', product)

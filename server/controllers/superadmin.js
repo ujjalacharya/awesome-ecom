@@ -495,11 +495,10 @@ exports.getProducts = async (req, res) => {
 
     // let products = await Product.find()
     // products = products.map(async product => {
-    //     console.log(product.color);
-    // product.color = product.color[0].split(',').map(color=>color.trim())
+    //     product.quantity += 50
     // return await product.save()
     // })
-    // products = await Promise.all(products)
+    products = await Promise.all(products)
     let totalCount = await Product.countDocuments()
     res.json({products,totalCount});
 }
