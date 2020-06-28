@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Row, Col, Breadcrumb } from "antd";
-import Header from "../../src/Components/Header";
-import Footer from "../../src/Components/Footer";
 import DetailSlider from "../../src/Includes/Details/DetailSlider";
 
 import ProductSpecs from "../../src/Includes/Details/ProductSpecs";
