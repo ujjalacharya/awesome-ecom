@@ -42,10 +42,10 @@ class MyWishlist extends Component {
         render: (text, record) => (
           <Space size="middle">
             <a className="action-btn action-btn-delete">
-              <i class="fa fa-trash-o" aria-hidden="true"></i> Delete 
+              <i className="fa fa-trash-o" aria-hidden="true"></i> Delete 
             </a>
             <a className="action-btn action-btn-add">
-              <i class="fa fa-plus" aria-hidden="true"></i> Add to Cart 
+              <i className="fa fa-plus" aria-hidden="true"></i> Add to Cart 
             </a>
           </Space>
         ),

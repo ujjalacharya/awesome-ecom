@@ -13,7 +13,7 @@ class QA extends Component {
           <div className="qns-details">
             <div className="qns">
               <span className="q-icon">
-                Q<span class="arrow-bottom"></span>
+                Q<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">discount xaina??</span>
@@ -22,7 +22,7 @@ class QA extends Component {
             </div>
             <div className="ans">
               <span className="q-icon a-btn">
-                A<span class="arrow-bottom"></span>
+                A<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">Already discounted rate</span>
@@ -32,7 +32,7 @@ class QA extends Component {
 
             <div className="qns">
               <span className="q-icon">
-                Q<span class="arrow-bottom"></span>
+                Q<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">discount xaina??</span>
@@ -41,7 +41,7 @@ class QA extends Component {
             </div>
             <div className="ans">
               <span className="q-icon a-btn">
-                A<span class="arrow-bottom"></span>
+                A<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">Already discounted rate</span>
@@ -51,7 +51,7 @@ class QA extends Component {
 
             <div className="qns">
               <span className="q-icon">
-                Q<span class="arrow-bottom"></span>
+                Q<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">comes with charger?</span>
@@ -60,7 +60,7 @@ class QA extends Component {
             </div>
             <div className="ans">
               <span className="q-icon a-btn">
-                A<span class="arrow-bottom"></span>
+                A<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">
@@ -74,7 +74,7 @@ class QA extends Component {
 
             <div className="qns">
               <span className="q-icon">
-                Q<span class="arrow-bottom"></span>
+                Q<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">can it be returned??</span>
@@ -83,7 +83,7 @@ class QA extends Component {
             </div>
             <div className="ans">
               <span className="q-icon a-btn">
-                A<span class="arrow-bottom"></span>
+                A<span className="arrow-bottom"></span>
               </span>
               <span className="q-title">
                 <span className="q-text">Why sir didn't you liked it</span>
