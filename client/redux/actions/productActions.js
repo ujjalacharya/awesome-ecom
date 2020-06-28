@@ -12,6 +12,8 @@ const productCategories = () => {
     const data = await resp.json();
 
     dispatch({ type: MENU_CATEGORIES, payload: data });
+    
+    return data;
   };
 };
 
@@ -22,6 +24,8 @@ const getLatestProducts = () => {
     const data = await resp.json();
 
     dispatch({ type: LATEST_PRODUCTS, payload: data });
+
+    return data;
   };
 };
 
@@ -37,8 +41,21 @@ const getProductDetails = (slug) => {
   };
 };
 
+const getProductBrands = () => {
+  return async (dispatch) => {
+    const resp = await fetch(`http://localhost:3001/api/superadmin/product-brands`);
+
+    const data = await resp.json();
+
+    dispatch({ type: PRODUCT_DETAILS, payload: data });
+    
+    return data;
+  };
+};
+
 export default {
   getLatestProducts,
   productCategories,
-  getProductDetails
+  getProductDetails,
+  getProductBrands
 };

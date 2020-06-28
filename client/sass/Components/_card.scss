@@ -2,7 +2,7 @@
   padding: 0 30px;
   padding-bottom: 10px;
   @media screen and (max-width: 480px) {
-    padding: 0 15px
+    padding: 0 15px;
   }
   cursor: pointer;
   &:hover {
@@ -16,7 +16,7 @@
       }
     }
   }
-  .product-box-shadow{
+  .product-box-shadow {
     border: 1px solid $border-color;
   }
   .hover-items-image {
@@ -76,6 +76,12 @@
     }
     .prod-price {
       color: $primary-color;
+    }
+    .prod-name {
+      max-width: 200px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }

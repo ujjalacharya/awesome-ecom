@@ -28,6 +28,7 @@ const Index = (props) => {
             headTitle="Featured Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching
           obliques"
+          listLink = "latestProducts"
           />
           <ProductSlider data={props.products.latestProducts} />
           <section className="latest-popular">
@@ -44,6 +45,7 @@ const Index = (props) => {
             headTitle="Trending Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
             removePaddingTop="paddingTopZero"
+            listLink = "latestProducts"
           />
           <ProductSlider data={props.products.latestProducts} />
         </div>
