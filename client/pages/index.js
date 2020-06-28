@@ -12,7 +12,6 @@ import Footer from "../src/Components/Footer";
 import { connect } from "react-redux";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
-import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
   
@@ -49,7 +48,6 @@ const Index = (props) => {
           />
           <ProductSlider data={props.products.latestProducts} />
         </div>
-        <Footer />
       </div>
     </Layout>
   );

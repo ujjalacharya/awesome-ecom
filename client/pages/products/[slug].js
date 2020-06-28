@@ -67,7 +67,6 @@ class Details extends Component {
               </Row>
             </div>
           </section>
-          <Footer />
         </div>
       </Layout>
     );
