@@ -7,9 +7,9 @@ const initialState = {
 export default (state = initialState, action) => {
   switch(action.type) {
   case AUTHENTICATE:
-    return { token: action.payload };
+    return { ...state, token: action.payload };
   case DEAUTHENTICATE:
-    return { token: null };
+    return { ...state, token: null };
   default:
     return state;
   }
