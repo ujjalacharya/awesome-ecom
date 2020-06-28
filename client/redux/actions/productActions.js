@@ -55,12 +55,19 @@ const getProductBrands = () => {
 
 const searchProducts = (query, body) => {
   console.log(query)
-  console.log(body)
+  console.log("body----", body)
   return async (dispatch) => {
-    const resp = await fetch(`http://localhost:3001/api/product/search${query}`, {method:'GET', body});
+    const resp = await fetch(`http://localhost:3001/api/product/search${query}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+        // Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
 
-    // const data = await resp.json();
-    const data = []
+    const data = await resp.json();
+    // const data = []
     dispatch({ type: SEARCH_PRODUCTS, payload: data });
     
     return data;

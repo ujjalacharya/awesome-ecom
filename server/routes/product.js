@@ -20,15 +20,16 @@ router.delete("/image/:id", auth, hasAuthorization, deleteImageById)//?image_id=
 router.delete("/image/:id/:p_slug", auth, hasAuthorization, deleteImage)//?image_id=
 
 router.patch('/delete-product/:id/:p_slug', auth, hasAuthorization, deleteProduct)
-router.post("/:id", auth, hasAuthorization, validateProduct, createProduct)
-router.put("/:id/:p_slug", auth, hasAuthorization, validateProduct, updateProduct)
+
 
 //public
-router.get('/latest',latestProducts)
+router.get('/latest',latestProducts)    
 router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
 //with rating chai client side mai rakhne
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
-router.get('/search',searchProducts)//need to work on rating nd $option in regex
+router.post('/search',searchProducts)//need to work on rating nd $option in regex
+router.post("/:id", auth, hasAuthorization, validateProduct, createProduct)
+router.put("/:id/:p_slug", auth, hasAuthorization, validateProduct, updateProduct)
 router.get('/:p_slug', getProduct)
 
 router.param('p_slug', product)
