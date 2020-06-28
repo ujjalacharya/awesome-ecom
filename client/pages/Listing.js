@@ -2,16 +2,14 @@ import React, { Component } from "react";
 import { Row, Col, Pagination, Drawer } from "antd";
 
 // includes
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-import Filter from "./Includes/Listing/Filter";
-import ProductList from "./Includes/Listing/ProductList";
+import ProductList from "../src/Includes/Listing/ProductList";
+import Filter from "../src/Includes/Listing/Filter";
 
 class Listing extends Component {
   state = {
     visibleFilter: false,
     visibleSort: false,
-    sortName: ""
+    sortName: "",
   };
 
   showDrawerFiter = () => {
@@ -45,15 +43,17 @@ class Listing extends Component {
   render() {
     return (
       <div className="wrapper">
-        <Header />
         <section className="listing">
           <div className="container">
             <Row>
               <Col lg={4} xs={24} md={6}>
-                <Filter removeThisFilter="noDisplayMobAndTab" />
+                <Filter
+                  removeThisFilter="noDisplayMobAndTab"
+                  data={this.props.allBrands}
+                />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
-                <ProductList />
+                <ProductList data={this.props.data} />
                 <div className="pagination">
                   <div className="page-status">Page 1 of 10</div>
                   <Pagination defaultCurrent={1} total={50} />
@@ -106,20 +106,26 @@ class Listing extends Component {
               <ul>
                 <li
                   onClick={() => this.onCloseSort("ascending")}
-                  className={this.state.sortName === "ascending" ? "active" : ""}
+                  className={
+                    this.state.sortName === "ascending" ? "active" : ""
+                  }
                 >
                   {/* <Icon type="arrow-down" /> */}
                   <span>Ascending</span>
                 </li>
                 <li
                   onClick={() => this.onCloseSort("descending")}
-                  className={this.state.sortName === "descending" ? "active" : ""}
+                  className={
+                    this.state.sortName === "descending" ? "active" : ""
+                  }
                 >
                   Descending
                 </li>
                 <li
                   onClick={() => this.onCloseSort("highPrice")}
-                  className={this.state.sortName === "highPrice" ? "active" : ""}
+                  className={
+                    this.state.sortName === "highPrice" ? "active" : ""
+                  }
                 >
                   Price: High To Low
                 </li>
@@ -133,7 +139,6 @@ class Listing extends Component {
             </div>
           </Drawer>
         </section>
-        <Footer />
       </div>
     );
   }

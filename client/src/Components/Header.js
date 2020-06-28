@@ -1,10 +1,31 @@
 import React, { Component } from "react";
 import { Row, Col, Input } from "antd";
+import { connect } from "react-redux";
 
 import { getChildCategories } from "../../utils/common";
 import Link from "next/link";
+import actions from "../../redux/actions";
+import initialize from "../../utils/initialize";
+import Router from "next/router";
 
 class Header extends Component {
+  state = {
+    search: "",
+  };
+
+  static getInitialProps(ctx) {
+    initialize(ctx);
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.props);
+    console.log("hey");
+    // this.props.router.push('/search/'+this.state.search)
+    // this.props.searchProducts(this.state.search);
+    Router.push('/search/[slug]', '/search/'+this.state.search);
+  };
+
   render() {
     let { data } = this.props;
     let parentCategory = [];
@@ -34,7 +55,7 @@ class Header extends Component {
           <Col lg={14} md={13}>
             <Row className="menu-logo">
               <Col span={2} className="logo">
-                <Link href='/'>
+                <Link href="/">
                   <img src="/images/logo.png" />
                 </Link>
               </Col>
@@ -108,7 +129,18 @@ class Header extends Component {
             </Row>
           </Col>
           <Col lg={6} md={6} className="search">
-            <Input placeholder="Search for products, brands and more" />
+            <form onSubmit={this.handleSubmit}>
+            {/* <Link
+              href={`/search?[slug]`}
+              key={this.state.search}
+              as={`/search?${this.state.search}`}
+            > */}
+              <Input
+                placeholder="Search for products, brands and more"
+                onChange={(e) => this.setState({ search: e.target.value })}
+              />
+            {/* </Link> */}
+            </form>
           </Col>
           <Col lg={4} md={5} className="menu-right">
             <div className="menu-right-items">
@@ -136,4 +168,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default connect((state) => state, actions)(Header);
