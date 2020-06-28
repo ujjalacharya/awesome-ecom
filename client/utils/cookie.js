@@ -31,7 +31,7 @@ const getCookieFromBrowser = key => {
 };
 
 const getCookieFromServer = (key, req) => {
-  if (!req.headers.cookie) {
+  if (!req.headers || !req.headers.cookie) {
     return undefined;
   }
   const rawCookie = req.headers.cookie

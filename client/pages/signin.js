@@ -2,14 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import actions from '../redux/actions';
 import initialize from '../utils/initialize';
-import Layout from '../components/Layout';
+import Layout from '../src/Components/Layout';
 
 class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'ujjal@hotmail.com',
-      password: 'ds'
+      email: 'Prakash@gmail.com',
+      password: 'helloworld1'
     };
   }
 

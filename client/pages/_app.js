@@ -7,6 +7,7 @@ import "../public/nprogress.css";
 export default withRedux(initStore, { debug: true })(
   class MyApp extends App {
     static async getInitialProps({ Component, ctx }) {
+      console.log("check if running....")
       return {
         pageProps: {
           ...(Component.getInitialProps
