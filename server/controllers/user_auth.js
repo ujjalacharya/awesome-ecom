@@ -17,7 +17,12 @@ exports.signup = async (req, res) => {
     );
     // req.body.emailVerifyLink = token
     let user = new User(req.body);
-    await user.save();
+    let geolocation = {
+        type: "Point",
+        coordinates: [req.body.long, req.body.lat]
+    };
+    user.geolocation = geolocation;
+    user = await user.save();
     const mailingData = {
         from: "Ecom",
         to: user.email,
@@ -25,12 +30,13 @@ exports.signup = async (req, res) => {
         html: `<p>Hi, ${user.name} . </p></br>
                     <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`
     };
-    await sendEmail(mailingData)
-    res
-        .status(200)
-        .json({
-            msg: `Email has been sent to ${req.body.email} to verify your email address.`
-        });
+    // await sendEmail(mailingData)
+    // res
+    //     .status(200)
+    //     .json({
+    //         msg: `Email has been sent to ${req.body.email} to verify your email address.`
+    //     });
+    res.json(user)
 };
 // verify email link
 exports.emailverify = async (req, res) => {
@@ -77,8 +83,8 @@ exports.signin = async (req, res) => {
     let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
     refreshToken = new RefreshToken(refreshToken)
     await refreshToken.save()
-    res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-    return res.json({ accessToken});
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+    return res.json({ accessToken, refreshToken});
 };
 
 exports.socialLogin = async (req, res) => {
