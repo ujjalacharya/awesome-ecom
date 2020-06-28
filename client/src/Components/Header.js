@@ -6,7 +6,7 @@ import { getChildCategories } from "../../utils/common";
 import Link from "next/link";
 import actions from "../../redux/actions";
 import initialize from "../../utils/initialize";
-import { withRouter } from "next/router";
+import Router from "next/router";
 
 class Header extends Component {
   state = {
@@ -21,8 +21,9 @@ class Header extends Component {
     e.preventDefault();
     console.log(this.props);
     console.log("hey");
-    this.props.router.push('/search/'+this.state.search)
+    // this.props.router.push('/search/'+this.state.search)
     // this.props.searchProducts(this.state.search);
+    Router.push('/search/[slug]', '/search/'+this.state.search);
   };
 
   render() {
@@ -167,4 +168,4 @@ class Header extends Component {
   }
 }
 
-export default connect((state) => state, actions)(withRouter(Header));
+export default connect((state) => state, actions)(Header);
