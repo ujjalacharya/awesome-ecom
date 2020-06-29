@@ -32,7 +32,7 @@ class ProductList extends Component {
         </div>
         <div className="card-list">
           <Row gutter={30}>
-            {data.map((data, i) => {
+            {data.products.map((data, i) => {
               return (
                 <Col lg={6} sm={12} xs={24} key={i}>
                   <ProductCard data={data} />

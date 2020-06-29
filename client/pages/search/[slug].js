@@ -17,11 +17,6 @@ class Search extends Component {
       query: { slug },
     } = ctx;
 
-    let data = []
-    if (ctx.query.slug === "latestProducts") {
-      data = await ctx.store.dispatch(actions.getLatestProducts());
-    }
-
     const menuData = await ctx.store.dispatch(actions.productCategories());
 
     const allBrands = await ctx.store.dispatch(actions.getProductBrands());
@@ -30,16 +25,16 @@ class Search extends Component {
     const searchData = await ctx.store.dispatch(actions.searchProducts('?page=1', {keyword: ctx.query.slug}))
 
     return {
-      data,
+      searchData,
       allBrands
     };
   }
 
   render() {
-    
+    console.log(this.props)
     return (
       <Layout>
-        <Listing allBrands={this.props.allBrands} data={this.props.data} />
+        <Listing allBrands={this.props.allBrands} data={this.props.searchData} />
       </Layout>
     );
   }

@@ -54,8 +54,7 @@ const getProductBrands = () => {
 };
 
 const searchProducts = (query, body) => {
-  console.log(query)
-  console.log("body----", body)
+  
   return async (dispatch) => {
     const resp = await fetch(`http://localhost:3001/api/product/search${query}`, {
       method: "POST",
