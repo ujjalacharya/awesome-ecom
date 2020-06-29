@@ -11,11 +11,10 @@ import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
-  
+
   return (
     <Layout title="Home">
       <div className="wrapper">
-        {/* <Header data={props.menu.menuCategories} /> */}
         <div className="main-carousel">
           <MainCarousel />
         </div>
@@ -57,60 +56,14 @@ Index.getInitialProps = async (ctx) => {
 
   const latestProducts = await ctx.store.dispatch(actions.getLatestProducts());
 
-  // const data = await fetch("https://jsonplaceholder.typicode.com/posts");
-  // const data = await data.json();
+  const orders = await ctx.store.dispatch(actions.getOrders(ctx.req))
+
 
   return {
     menuData,
     latestProducts,
+    orders
   };
 };
 
 export default connect((state) => state)(Index);
-
-// import { connect } from "react-redux";
-// import initialize from "../utils/initialize";
-// import Layout from "../components/Layout";
-// import { Card } from "antd";
-// import fetch from "isomorphic-unfetch";
-// import Link from "next/link";
-
-// const Index = ({ response }) => {
-//   return (
-//     <Layout title="Home">
-//       <h2 className="title is-2">Authentication with Next.js and JWT</h2>
-//       <img src="/static/nextjs.jpg" />
-//       <p>A rock solid boilerplate by Uzz !</p>
-//       <div>
-//         {response.map((datum) => (
-//           <Link href={"/posts/[id]"} key={datum.id} as={`/posts/${datum.id}`}>
-//             <Card
-//               title={datum.title}
-//               style={{
-//                 width: "100%",
-//                 backgroundColor: "lightblue",
-//                 margin: "2rem",
-//               }}
-//             >
-//               <p>{datum.body}</p>
-//             </Card>
-//           </Link>
-//         ))}
-//       </div>
-//       ,
-//     </Layout>
-//   );
-// };
-
-// Index.getInitialProps = async (ctx) => {
-//   initialize(ctx);
-
-//   const data = await fetch("https://jsonplaceholder.typicode.com/posts");
-//   const response = await data.json();
-
-//   return {
-//     response,
-//   };
-// };
-
-// export default connect((state) => state)(Index);

@@ -84,7 +84,7 @@ exports.signin = async (req, res) => {
     refreshToken = new RefreshToken(refreshToken)
     await refreshToken.save()
     // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-    return res.json({ accessToken, refreshToken});
+    return res.json({ accessToken, refreshToken: refreshToken.refreshToken});
 };
 
 exports.socialLogin = async (req, res) => {

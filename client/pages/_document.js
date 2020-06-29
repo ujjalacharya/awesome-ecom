@@ -20,7 +20,7 @@ export default class MyDocument extends Document {
           <link rel="stylesheet" href="/css/slick.min.css" />
           <link
             rel="stylesheet"
-            href="font-awesome-4.7.0/css/font-awesome.min.css"
+            href="/font-awesome-4.7.0/css/font-awesome.min.css"
           />
         </Head>
         <body>

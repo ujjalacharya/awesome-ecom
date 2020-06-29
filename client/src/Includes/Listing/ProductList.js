@@ -28,11 +28,14 @@ class ProductList extends Component {
               <Option value="descending">Descending</Option>
             </Select>
           </div>
-          <div className="page-status">Page 1 of 10</div>
+          <div className="page-status">
+            Page {this.props.currentPage} of{" "}
+            {Math.ceil(this.props.data.totalCount / this.props.perPage)}
+          </div>
         </div>
         <div className="card-list">
           <Row gutter={30}>
-            {data.map((data, i) => {
+            {data.products.map((data, i) => {
               return (
                 <Col lg={6} sm={12} xs={24} key={i}>
                   <ProductCard data={data} />

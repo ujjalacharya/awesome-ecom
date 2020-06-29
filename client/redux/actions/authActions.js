@@ -9,11 +9,11 @@ const authenticate = ({ email, password }, type) => {
     throw new Error('Wrong API call!');
   }
   return (dispatch) => {
-    axios.post(`/api/token`, { email, password })
+    axios.post(`http://localhost:3001/api/user-auth/signin`, { email, password })
       .then((response) => {
-        setCookie('token', response.data.token);
-        Router.push('/');
+        setCookie('token', response.data.accessToken);
         dispatch({type: AUTHENTICATE, payload: response.data.token});
+        window.location.href = '/';
       })
       .catch((err) => {
         throw new Error(err);

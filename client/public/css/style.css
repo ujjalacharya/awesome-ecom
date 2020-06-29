@@ -438,6 +438,7 @@ button.secondary:hover {
 }
 .main-header .menu-logo .logo {
   height: 50px;
+  cursor: pointer;
 }
 .main-header .menu-logo .logo img {
   height: 100%;
@@ -762,6 +763,12 @@ button.secondary:hover {
 }
 .product-card .card-body .prod-price {
   color: #61ce70;
+}
+.product-card .card-body .prod-name {
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .popular-slider {
@@ -1091,9 +1098,21 @@ button.secondary:hover {
   font-weight: bold;
   margin-bottom: 6px;
 }
+.listing-filter .filter-types .type-list.price-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.listing-filter .filter-types .type-list.price-filter span {
+  padding: 0 10px;
+}
 .listing-filter .filter-types .type-list .ant-checkbox-group .ant-checkbox-group-item {
   display: block;
   margin-bottom: 5px;
+}
+.listing-filter .filter-types .type-list .rate-stars i {
+  color: #f2c900;
+  padding-left: 5px;
 }
 
 @media screen and (max-width: 480px) {
@@ -1129,9 +1148,9 @@ button.secondary:hover {
 .product-lists .sorting-page .view-sort .type-icon .list-icon {
   margin-right: 15px;
   font-size: 18px;
-  border: 1px solid #f7f7f7;
+  border: 1px solid #e4e4e4;
   padding: 2px;
-  color: #f7f7f7;
+  color: #e4e4e4;
 }
 .product-lists .sorting-page .view-sort .type-icon .list-icon:first-child {
   color: #61ce70;

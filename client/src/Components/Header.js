@@ -19,11 +19,18 @@ class Header extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.props);
-    console.log("hey");
-    // this.props.router.push('/search/'+this.state.search)
-    // this.props.searchProducts(this.state.search);
-    Router.push('/search/[slug]', '/search/'+this.state.search);
+
+    Router.push(
+      "/search/[type]/[slug]",
+      "/search/inputSearch/" + this.state.search,
+      { keyword: "inputSearch" }
+    );
+  };
+
+  searchProducts = (cateId) => {
+    Router.push("/search/[type]/[slug]", "/search/cateSearch/" + cateId, {
+      keyword: "cateSearch",
+    });
   };
 
   render() {
@@ -48,7 +55,7 @@ class Header extends Component {
     }
 
     // let parentCate = getChildCategories(category)
-
+    console.log(parentCate);
     return (
       <div className="main-header">
         <Row>
@@ -98,7 +105,14 @@ class Header extends Component {
                                         {subCate.childCate.map(
                                           (newSubCate, i) => {
                                             return (
-                                              <li key={i}>
+                                              <li
+                                                key={i}
+                                                onClick={() =>
+                                                  this.searchProducts(
+                                                    newSubCate._id
+                                                  )
+                                                }
+                                              >
                                                 <div className="title">
                                                   <span>
                                                     {newSubCate.displayName}
@@ -130,7 +144,7 @@ class Header extends Component {
           </Col>
           <Col lg={6} md={6} className="search">
             <form onSubmit={this.handleSubmit}>
-            {/* <Link
+              {/* <Link
               href={`/search?[slug]`}
               key={this.state.search}
               as={`/search?${this.state.search}`}
@@ -139,7 +153,7 @@ class Header extends Component {
                 placeholder="Search for products, brands and more"
                 onChange={(e) => this.setState({ search: e.target.value })}
               />
-            {/* </Link> */}
+              {/* </Link> */}
             </form>
           </Col>
           <Col lg={4} md={5} className="menu-right">
@@ -147,7 +161,9 @@ class Header extends Component {
               <div className="list-icon">
                 <img src="/images/user.png" />
               </div>
-              <div className="list-text">Profile</div>
+              <Link href="/dashboard">
+                <div className="list-text">Profile</div>
+              </Link>
             </div>
             <div className="menu-right-items">
               <div className="list-icon">

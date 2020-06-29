@@ -1,7 +1,14 @@
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
-import { LATEST_PRODUCTS, MENU_CATEGORIES, PRODUCT_DETAILS, SEARCH_PRODUCTS } from "../types";
-import { setCookie, removeCookie } from "../../utils/cookie";
+import {
+  LATEST_PRODUCTS,
+  MENU_CATEGORIES,
+  PRODUCT_DETAILS,
+  SEARCH_PRODUCTS,
+  PRODUCT_ERROR,
+} from "../types";
+import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
+import { ProductService } from "../services/productService";
 
 const productCategories = () => {
   return async (dispatch) => {
@@ -12,20 +19,23 @@ const productCategories = () => {
     const data = await resp.json();
 
     dispatch({ type: MENU_CATEGORIES, payload: data });
-    
+
     return data;
   };
 };
 
 const getLatestProducts = () => {
   return async (dispatch) => {
-    const resp = await fetch("http://localhost:3001/api/product/latest");
-
-    const data = await resp.json();
-
-    dispatch({ type: LATEST_PRODUCTS, payload: data });
-
-    return data;
+    const productService = new ProductService();
+    const response = await productService.getLatestProducts();
+    if (response.isSuccess) {
+      dispatch({ type: LATEST_PRODUCTS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
   };
 };
 
@@ -36,40 +46,42 @@ const getProductDetails = (slug) => {
     const data = await resp.json();
 
     dispatch({ type: PRODUCT_DETAILS, payload: data });
-    
+
     return data;
   };
 };
 
 const getProductBrands = () => {
   return async (dispatch) => {
-    const resp = await fetch(`http://localhost:3001/api/superadmin/product-brands`);
+    const resp = await fetch(
+      `http://localhost:3001/api/superadmin/product-brands`
+    );
 
     const data = await resp.json();
 
     dispatch({ type: PRODUCT_DETAILS, payload: data });
-    
+
     return data;
   };
 };
 
-const searchProducts = (query, body) => {
-  console.log(query)
-  console.log("body----", body)
+const getOrders = (ctx) => {
   return async (dispatch) => {
-    const resp = await fetch(`http://localhost:3001/api/product/search${query}`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-        // Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(body)
-    });
-
+    const resp = await fetch(
+      `http://localhost:3001/api/cart-wishlist/carts?page=1`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "x-auth-token": getCookie("token", ctx),
+        },
+      }
+    );
     const data = await resp.json();
-    // const data = []
-    dispatch({ type: SEARCH_PRODUCTS, payload: data });
-    
+
+    dispatch({ type: "check", payload: data });
+
     return data;
   };
 };
@@ -79,5 +91,5 @@ export default {
   productCategories,
   getProductDetails,
   getProductBrands,
-  searchProducts
+  getOrders,
 };
