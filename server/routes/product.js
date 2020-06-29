@@ -11,9 +11,9 @@ const router = express.Router();
 //public
 router.get('/latest',latestProducts)
 router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
-//with rating chai client side mai rakhne
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
-router.post('/search',searchProducts)//need to work on rating nd $option in regex
+router.get('/search',searchProducts)//need to work on rating
+
 //admin's or superadmin's
 router.get("/products/:id", auth, hasAuthorization, getProducts)
 router.get("/verified-products/:id", auth, hasAuthorization, verifiedProducts)

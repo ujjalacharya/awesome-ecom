@@ -1,17 +1,6 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
-
-
-const pointSchema = new mongoose.Schema({
-    type: {
-        type: String,
-        enum: ['Point']
-    },
-    coordinates: {
-        type: [Number]
-    }
-});
-
+const Schema = mongoose.Schema
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -19,42 +8,19 @@ const userSchema = new mongoose.Schema({
         required: true,
         maxlength: 32
     },
-    address: {
-        type: String,
-        trim: true,
-        maxlength: 128
-    },
-    tole: {
-        type: String,
-        trim: true,
-        maxlength: 128
-    },
-    muncipality: {
-        type: String,
-        trim: true,
-        maxlength: 128
-    },
-    wardno: {
-        type: String,
-        trim: true,
-        maxlength: 32
-    },
     email: {
         type: String,
         trim: true,
         unique:true
     },
-    phone: {
-        type: Number,
-        max: 9999999999,
-    },
     password: {
         type: String,
         required: true
     },
-    geolocation: {
-        type: pointSchema,
-    },
+    address: [{
+        type: Schema.Types.ObjectId,
+        ref: "address"
+    }],
     photo: {
         type: String
     },

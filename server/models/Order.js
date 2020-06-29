@@ -26,7 +26,7 @@ const orderSchema = new mongoose.Schema({
     status: {
         currentStatus: {
             type: String,
-            enum: ["active","approve","dispatch","cancel","complete","tobereturn","return"]
+            enum: ["active","approve","dispatch","cancel","complete","tobereturned","return"]
         },
         activeDate: {
             type: Date,
@@ -36,9 +36,15 @@ const orderSchema = new mongoose.Schema({
             type: Date,
             default: null
         },
-        dispatchedDate: {
-            type: Date,
-            default: null
+        dispatchedDetail: {
+            dispatchedDate: {
+                type: Date,
+                default: null
+            },
+            dispatchedBy: {
+                type: Schema.Types.ObjectId,
+                ref: 'dispatcher'
+            },
         },
         cancelledDetail: {
             cancelledDate:{
@@ -67,11 +73,19 @@ const orderSchema = new mongoose.Schema({
                 type: Date,
                 default: null
             },
+            returneddBy: {
+                type: Schema.Types.ObjectId,
+                ref: 'dispatcher'
+            },
             remark: {
                 type: Schema.Types.ObjectId,
                 ref: 'remark'
             },
         },
+    },
+    address: {
+        type: Schema.Types.ObjectId,
+        ref: "address"
     },
     isPaid:{
         type: Boolean,

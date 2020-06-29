@@ -172,7 +172,7 @@ exports.latestProducts = async (req, res) => {
 exports.searchProducts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let { keyword = '', brand_id, max_price, min_price, size, rating, color, warranty, weight, cat_id } = req.body
+    let { keyword = '', brands, max_price, min_price, sizes, ratings, colors, warranties, weights, cat_id } = req.query
     let categories
     if (cat_id) {
         categories = await Category.find({ $or: [{ _id: cat_id }, { parent: cat_id }], isDisabled: null })
@@ -180,30 +180,42 @@ exports.searchProducts = async (req, res) => {
             return res.status(404).json({ error: "Categories not found." })
         }
     }
-    let searchingFactor
+    let searchingFactor = {}
     if (keyword && !cat_id) {
         //that is if only with keyword
-        searchingFactor = {
-            $or: [{ name: { $regex: keyword, $options: 'i' } },
+        // searchingFactor = {
+        //     $or: [{ name: { $regex: keyword, $options: 'i' } },
+        //     { tags: { $regex: keyword, $options: 'i' } }
+        //     ],
+        //     isVerified: { "$ne": null }, isDeleted: null
+        // }
+        searchingFactor.isVerified = { $ne: null }
+        searchingFactor.isDeleted = null
+        searchingFactor.$or = [{ name: { $regex: keyword, $options: 'i' } },
             { tags: { $regex: keyword, $options: 'i' } }
-            ],
-            isVerified: { "$ne": null }, isDeleted: null
-        }
+            ]
+        // searchingFactor.name = { $regex: keyword, $options: 'i' }
+        // searchingFactor.tags = { $regex: keyword, $options: 'i' }
+        if (brands) searchingFactor.brand = brands
+        if (max_price && min_price) searchingFactor.price = { $lte: +max_price, $gte: +min_price }
+        if (sizes) searchingFactor.size = { $in: sizes }
+        if (colors) searchingFactor.color = { $in: colors }
+        if (weights) searchingFactor.weight = { $in: weights }
+        if (warranties) searchingFactor.warranty = warranties
     } else {
         //cat_id alongwith another some factors
-        searchingFactor = {
-            $or: [{ name: { $regex: keyword, $options: 'i' } },
-            { tags: { $regex: keyword, $options: 'i' } },
-            { brand: brand_id },
-            { price: { $lte: max_price, $gte: min_price } },
-            { size: { $in: size } },
-            { color: { $in: color } },
-            { weight: { $in: weight } },
-            { warranty }
-            ],
-            isVerified: { "$ne": null }, isDeleted: null, category: { $in: categories }
-        }
+        searchingFactor.isVerified= {$ne:null}
+        searchingFactor.isDeleted = null
+        searchingFactor.category={$in:categories}
+        if(brands) searchingFactor.brand = brands
+        if (max_price && min_price) searchingFactor.price = { $lte: +max_price, $gte: +min_price }
+        if (sizes) searchingFactor.size = { $in: sizes }
+        if (colors) searchingFactor.color = { $in: colors }
+        if (weights) searchingFactor.weight = { $in: weights }
+        if (warranties) searchingFactor.warranty = warranties
     }
+    console.log(brands);
+    console.log(searchingFactor);
     const products = await Product
         .find(searchingFactor)
         .populate("category", "displayName slug")

@@ -43,9 +43,9 @@ exports.getCarts = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!carts.length) {
-        return res.status(404).json({ error: 'Carts not found' })
-    }
+    // if (!carts.length) {
+    //     return res.status(404).json({ error: 'Carts not found' })
+    // }
     const totalCount = await Cart.countDocuments({ user: req.user._id })
     res.json({carts,totalCount})
 
@@ -83,9 +83,9 @@ exports.getWishlists = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!wishlists.length) {
-        return res.status(404).json({ error: 'Wishlists not found' })
-    }
+    // if (!wishlists.length) {
+    //     return res.status(404).json({ error: 'Wishlists not found' })
+    // }
     const totalCount = await Wishlist.countDocuments({ user: req.user._id })
     res.json({ wishlists, totalCount })
 
