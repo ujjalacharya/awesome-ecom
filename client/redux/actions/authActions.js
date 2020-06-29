@@ -9,9 +9,9 @@ const authenticate = ({ email, password }, type) => {
     throw new Error('Wrong API call!');
   }
   return (dispatch) => {
-    axios.post(`/api/token`, { email, password })
+    axios.post(`http://localhost:3001/api/user-auth/signin`, { email, password })
       .then((response) => {
-        setCookie('token', response.data.token);
+        setCookie('token', response.data.accessToken);
         Router.push('/');
         dispatch({type: AUTHENTICATE, payload: response.data.token});
       })

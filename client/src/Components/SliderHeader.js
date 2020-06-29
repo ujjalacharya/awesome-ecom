@@ -12,7 +12,7 @@ class SliderHeader extends Component {
           key={this.props.listLink}
           as={`/listing/${this.props.listLink}`}
         >
-          View all
+          <a>View all</a>
         </Link>
       </div>
     );

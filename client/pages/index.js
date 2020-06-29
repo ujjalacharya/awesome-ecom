@@ -11,6 +11,8 @@ import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
+
+  console.log("this.props", props)
   
   return (
     <Layout title="Home">
@@ -57,12 +59,13 @@ Index.getInitialProps = async (ctx) => {
 
   const latestProducts = await ctx.store.dispatch(actions.getLatestProducts());
 
-  // const data = await fetch("https://jsonplaceholder.typicode.com/posts");
-  // const data = await data.json();
+  const orders = await ctx.store.dispatch(actions.getOrders(ctx.req))
+
 
   return {
     menuData,
     latestProducts,
+    orders
   };
 };
 
