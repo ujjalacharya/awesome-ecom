@@ -3,7 +3,7 @@ import { SEARCH_PRODUCTS, SEARCH_FILTER } from "../types";
 
 
 const searchProducts = (query, body) => {
-  console.log(body)
+  
   return async (dispatch) => {
     const resp = await fetch(`http://localhost:3001/api/product/search${query}`, {
       method: "POST",
