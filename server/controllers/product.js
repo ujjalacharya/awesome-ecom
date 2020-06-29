@@ -206,6 +206,9 @@ exports.searchProducts = async (req, res) => {
     }
     const products = await Product
         .find(searchingFactor)
+        .populate("category", "displayName slug")
+        .populate("brand", "brandName slug")
+        .populate("images", "-createdAt -updatedAt -__v")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
