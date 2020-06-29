@@ -8,6 +8,7 @@ import initialize from "../../utils/initialize";
 import actions from "../../redux/actions";
 import Filter from "../../src/Includes/Listing/Filter";
 import Listing from "../Listing";
+import { connect } from "react-redux";
 
 class Search extends Component {
   state = {
@@ -22,25 +23,25 @@ class Search extends Component {
 
     const menuData = await ctx.store.dispatch(actions.productCategories());
 
-    const getSearchData = await ctx.store.dispatch(actions.searchFilter(`?keyword=${ctx.query.slug}`));
+    const searchFilter = await ctx.store.dispatch(actions.searchFilter(`?keyword=${ctx.query.slug}`));
 
     // console.log(ctx.query)
     const searchData = await ctx.store.dispatch(actions.searchProducts(`?page=1&perPage=10`, {keyword: ctx.query.slug}))
 
-    return {
-      searchData,
-      getSearchData
-    };
+    // return {
+    //   searchData,
+    //   searchFilter
+    // };
   }
 
   render() {
     console.log(this.props)
     return (
       <Layout>
-        <Listing getSearchData={this.props.getSearchData} data={this.props.searchData} perPage={this.state.perPage} />
+        <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />
       </Layout>
     );
   }
 }
 
-export default Search;
+export default connect((state) => state)(Search);

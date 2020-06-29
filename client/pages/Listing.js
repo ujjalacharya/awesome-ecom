@@ -61,8 +61,7 @@ class Listing extends Component {
     console.log(page)
     console.log(this.props)
     let body = {
-      keyword: this.props.router.query,
-      brand_id: this.state.checkedBrands
+      keyword: this.props.router.query.slug
     }
     this.props.searchProducts(`?page=${page}&perPage=${this.props.perPage}`, body)
   }
@@ -77,7 +76,7 @@ class Listing extends Component {
               <Col lg={4} xs={24} md={6}>
                 <Filter
                   removeThisFilter="noDisplayMobAndTab"
-                  data={this.props.getSearchData}
+                  data={this.props.getSearchFilter}
                   onCheckBrands = {this.onCheckBrands}
                   checkedBrands = {this.state.checkedBrands}
                 />
