@@ -1,7 +1,7 @@
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
 import { LATEST_PRODUCTS, MENU_CATEGORIES, PRODUCT_DETAILS, SEARCH_PRODUCTS } from "../types";
-import { setCookie, removeCookie } from "../../utils/cookie";
+import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 
 const productCategories = () => {
   return async (dispatch) => {
@@ -53,9 +53,29 @@ const getProductBrands = () => {
   };
 };
 
+const getOrders = (ctx) => {
+  return async (dispatch) => {
+
+   const resp =  await fetch(`http://localhost:3001/api/cart-wishlist/carts?page=1`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-auth-token": getCookie("token", ctx),
+      },
+    })
+    const data = await resp.json();
+
+    dispatch({ type: "check", payload: data });
+    
+    return data;
+  };
+};
+
 export default {
   getLatestProducts,
   productCategories,
   getProductDetails,
   getProductBrands,
+  getOrders
 };
