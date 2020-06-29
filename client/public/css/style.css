@@ -438,6 +438,7 @@ button.secondary:hover {
 }
 .main-header .menu-logo .logo {
   height: 50px;
+  cursor: pointer;
 }
 .main-header .menu-logo .logo img {
   height: 100%;

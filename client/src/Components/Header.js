@@ -19,11 +19,18 @@ class Header extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.props);
-    console.log("hey");
-    // this.props.router.push('/search/'+this.state.search)
-    // this.props.searchProducts(this.state.search);
-    Router.push("/search/[slug]", "/search/" + this.state.search);
+
+    Router.push(
+      "/search/[type]/[slug]",
+      "/search/inputSearch/" + this.state.search,
+      { keyword: "inputSearch" }
+    );
+  };
+
+  searchProducts = (cateId) => {
+    Router.push("/search/[type]/[slug]", "/search/cateSearch/" + cateId, {
+      keyword: "cateSearch",
+    });
   };
 
   render() {
@@ -48,7 +55,7 @@ class Header extends Component {
     }
 
     // let parentCate = getChildCategories(category)
-
+    console.log(parentCate);
     return (
       <div className="main-header">
         <Row>
@@ -98,7 +105,14 @@ class Header extends Component {
                                         {subCate.childCate.map(
                                           (newSubCate, i) => {
                                             return (
-                                              <li key={i}>
+                                              <li
+                                                key={i}
+                                                onClick={() =>
+                                                  this.searchProducts(
+                                                    newSubCate._id
+                                                  )
+                                                }
+                                              >
                                                 <div className="title">
                                                   <span>
                                                     {newSubCate.displayName}

@@ -13,7 +13,8 @@ class Listing extends Component {
     visibleFilter: false,
     visibleSort: false,
     sortName: "",
-    checkedBrands: []
+    checkedBrands: [],
+    currentPage: 1
   };
 
   static getInitialProps(ctx) {
@@ -58,13 +59,28 @@ class Listing extends Component {
   };
 
   onChangePage = (page) =>{
-    console.log(page)
-    console.log(this.props)
+    this.setState({
+      currentPage: page
+    })
     let body = {
       keyword: this.props.router.query.slug
     }
     this.props.searchProducts(`?page=${page}&perPage=${this.props.perPage}`, body)
   }
+
+  onCheckBrands = (e) => {
+    console.log(e)
+    this.setState({
+      checkedBrands: e
+    })
+
+    let body = {
+      keyword: this.props.router.query.slug,
+      brand_id: e
+    }
+
+    this.props.searchProducts(`?page=${this.state.currentPage}&perPage=${this.props.perPage}`, body)
+  } 
 
   render() {
     console.log(this.props);
@@ -85,10 +101,11 @@ class Listing extends Component {
                 <ProductList
                   data={this.props.data}
                   perPage={this.props.perPage}
+                  currentPage = {this.state.currentPage}
                 />
                 <div className="pagination">
                   <div className="page-status">
-                    Page 1 of{" "}
+                    Page {this.state.currentPage} of{" "}
                     {Math.ceil(this.props.data.totalCount / this.props.perPage)}
                   </div>
                   <Pagination
