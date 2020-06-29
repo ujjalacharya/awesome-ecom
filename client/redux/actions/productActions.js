@@ -5,6 +5,7 @@ import {
   MENU_CATEGORIES,
   PRODUCT_DETAILS,
   SEARCH_PRODUCTS,
+  PRODUCT_ERROR,
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -31,7 +32,7 @@ const getLatestProducts = () => {
       dispatch({ type: LATEST_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: ERROR,
+        type: PRODUCT_ERROR,
         payload: response.errorMessage,
       });
     }
