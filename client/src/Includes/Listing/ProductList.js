@@ -29,7 +29,7 @@ class ProductList extends Component {
             </Select>
           </div>
           <div className="page-status">
-            Page 1 of{" "}
+            Page {this.props.currentPage} of{" "}
             {Math.ceil(this.props.data.totalCount / this.props.perPage)}
           </div>
         </div>
