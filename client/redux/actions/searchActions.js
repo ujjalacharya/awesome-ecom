@@ -1,5 +1,5 @@
 import fetch from "isomorphic-unfetch";
-import { SEARCH_PRODUCTS } from "../types";
+import { SEARCH_PRODUCTS, SEARCH_FILTER } from "../types";
 
 
 const searchProducts = (query, body) => {
@@ -22,6 +22,20 @@ const searchProducts = (query, body) => {
   };
 };
 
+const searchFilter = (query) => {
+  
+    return async (dispatch) => {
+      const resp = await fetch(`http://localhost:3001/api/product/generate-filter${query}`);
+  
+      const data = await resp.json();
+      // const data = []
+      dispatch({ type: SEARCH_FILTER, payload: data });
+      
+      return data;
+    };
+  };
+
 export default {
-  searchProducts
+  searchProducts,
+  searchFilter
 };

@@ -41,7 +41,7 @@ class Listing extends Component {
     }
   };
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
       <div className="wrapper">
         <section className="listing">
@@ -50,14 +50,23 @@ class Listing extends Component {
               <Col lg={4} xs={24} md={6}>
                 <Filter
                   removeThisFilter="noDisplayMobAndTab"
-                  data={this.props.allBrands}
+                  data={this.props.getSearchData}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
-                <ProductList data={this.props.data} />
+                <ProductList
+                  data={this.props.data}
+                  perPage={this.props.perPage}
+                />
                 <div className="pagination">
-                  <div className="page-status">Page 1 of 10</div>
-                  <Pagination defaultCurrent={1} total={50} />
+                  <div className="page-status">
+                    Page 1 of{" "}
+                    {Math.ceil(this.props.data.totalCount / this.props.perPage)}
+                  </div>
+                  <Pagination
+                    defaultCurrent={1}
+                    total={this.props.data.totalCount}
+                  />
                 </div>
               </Col>
             </Row>

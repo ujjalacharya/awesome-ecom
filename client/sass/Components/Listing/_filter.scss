@@ -1,35 +1,49 @@
-.listing-filter{
-    border-right: 1px solid $border-color;
-    @media screen and (max-width:767px) {
-        border:0px;
+.listing-filter {
+  border-right: 1px solid $border-color;
+  @media screen and (max-width: 767px) {
+    border: 0px;
+  }
+  .filter-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 1px solid $border-color;
+    padding-bottom: 10px;
+  }
+  .filter-types {
+    margin-bottom: 10px;
+    border-bottom: 1px solid $border-color;
+    padding-bottom: 10px;
+    &.last-child-fi-type {
+      @media screen and (max-width: 767px) {
+        border-bottom: 0px;
+      }
     }
-    .filter-title{
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        border-bottom: 1px solid $border-color;
-        padding-bottom: 10px;
+    .type-title {
+      font-weight: bold;
+      margin-bottom: 6px;
     }
-    .filter-types{
-        margin-bottom: 10px;
-        border-bottom: 1px solid $border-color;
-        padding-bottom: 10px;
-        &.last-child-fi-type{
-            @media screen and (max-width:767px) {
-                border-bottom: 0px;
-            }   
+    .type-list {
+      &.price-filter {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        span {
+          padding: 0 10px;
         }
-        .type-title{
-            font-weight: bold;
-            margin-bottom: 6px;
+      }
+      .ant-checkbox-group {
+        .ant-checkbox-group-item {
+          display: block;
+          margin-bottom: 5px;
         }
-        .type-list{
-            .ant-checkbox-group{
-                .ant-checkbox-group-item{
-                    display: block;
-                    margin-bottom: 5px;
-                }
-            }
+      }
+      .rate-stars {
+        i {
+          color: #f2c900;
+          padding-left: 5px;
         }
+      }
     }
+  }
 }

@@ -28,7 +28,10 @@ class ProductList extends Component {
               <Option value="descending">Descending</Option>
             </Select>
           </div>
-          <div className="page-status">Page 1 of 10</div>
+          <div className="page-status">
+            Page 1 of{" "}
+            {Math.ceil(this.props.data.totalCount / this.props.perPage)}
+          </div>
         </div>
         <div className="card-list">
           <Row gutter={30}>

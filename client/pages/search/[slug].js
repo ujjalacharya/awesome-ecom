@@ -10,6 +10,9 @@ import Filter from "../../src/Includes/Listing/Filter";
 import Listing from "../Listing";
 
 class Search extends Component {
+  state = {
+    perPage : 10
+  }
   static async getInitialProps(ctx) {
     initialize(ctx);
 
@@ -19,14 +22,14 @@ class Search extends Component {
 
     const menuData = await ctx.store.dispatch(actions.productCategories());
 
-    const allBrands = await ctx.store.dispatch(actions.getProductBrands());
+    const getSearchData = await ctx.store.dispatch(actions.searchFilter(`?keyword=${ctx.query.slug}`));
 
     // console.log(ctx.query)
-    const searchData = await ctx.store.dispatch(actions.searchProducts('?page=1', {keyword: ctx.query.slug}))
+    const searchData = await ctx.store.dispatch(actions.searchProducts(`?page=1&perPage=${this.state.perPage}`, {keyword: ctx.query.slug}))
 
     return {
       searchData,
-      allBrands
+      getSearchData
     };
   }
 
@@ -34,7 +37,7 @@ class Search extends Component {
     console.log(this.props)
     return (
       <Layout>
-        <Listing allBrands={this.props.allBrands} data={this.props.searchData} />
+        <Listing getSearchData={this.props.getSearchData} data={this.props.searchData} perPage={this.state.perPage} />
       </Layout>
     );
   }

@@ -120,10 +120,10 @@ class ProductCard extends Component {
                   })}
                 </div>
                 <div className="stars">
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
-                  <i className="fa fa-star-o" aria-hidden="true"></i>
+                  <i className="fa fa-star" aria-hidden="true"></i>
+                  <i className="fa fa-star" aria-hidden="true"></i>
+                  <i className="fa fa-star" aria-hidden="true"></i>
+                  <i className="fa fa-star" aria-hidden="true"></i>
                 </div>
               </div>
               <div className="prod-name">{data.name}</div>
