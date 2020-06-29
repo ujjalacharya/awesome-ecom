@@ -161,7 +161,9 @@ class Header extends Component {
               <div className="list-icon">
                 <img src="/images/user.png" />
               </div>
-              <div className="list-text">Profile</div>
+              <Link href="/dashboard">
+                <div className="list-text">Profile</div>
+              </Link>
             </div>
             <div className="menu-right-items">
               <div className="list-icon">
