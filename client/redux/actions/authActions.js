@@ -12,8 +12,8 @@ const authenticate = ({ email, password }, type) => {
     axios.post(`http://localhost:3001/api/user-auth/signin`, { email, password })
       .then((response) => {
         setCookie('token', response.data.accessToken);
-        Router.push('/');
         dispatch({type: AUTHENTICATE, payload: response.data.token});
+        window.location.href = '/';
       })
       .catch((err) => {
         throw new Error(err);
