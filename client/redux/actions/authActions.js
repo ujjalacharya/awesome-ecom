@@ -12,10 +12,26 @@ const authenticate = ({ email, password }, type) => {
     axios.post(`http://localhost:3001/api/user-auth/signin`, { email, password })
       .then((response) => {
         setCookie('token', response.data.accessToken);
+        setCookie('refreshtoken', response.data.refreshToken);
         Router.push('/');
-        dispatch({type: AUTHENTICATE, payload: response.data.token});
+        dispatch({type: AUTHENTICATE, payload: response.data.accessToken});
       })
       .catch((err) => {
+        throw new Error(err);
+      });
+  };
+};
+
+const refreshToken = (body) => {
+  return (dispatch) => {
+    axios.post(`http://localhost:3001/api/user-auth/refresh-token`, body)
+      .then((response) => {
+        setCookie('token', response.data.accessToken);
+        Router.push('/');
+        dispatch({type: AUTHENTICATE, payload: response.data.accessToken});
+      })
+      .catch((err) => {
+        console.log(err)
         throw new Error(err);
       });
   };
@@ -42,4 +58,5 @@ export default {
   authenticate,
   reauthenticate,
   deauthenticate,
+  refreshToken
 };

@@ -8,6 +8,7 @@ const Private = ({ isAuth, children }) => {
       Router.push(`/signin`);
     }
   }, []);
+
   return <React.Fragment>{children}</React.Fragment>;
 };
 

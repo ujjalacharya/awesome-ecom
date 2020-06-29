@@ -78,7 +78,7 @@ exports.signin = async (req, res) => {
     const accessToken = jwt.sign(
         payload,
         process.env.JWT_SIGNIN_KEY,
-        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+        { expiresIn: 15 }
     );
     let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
     refreshToken = new RefreshToken(refreshToken)
@@ -152,7 +152,7 @@ exports.refreshToken = async (req,res) => {
     const accessToken = jwt.sign(
         payload,
         process.env.JWT_SIGNIN_KEY,
-        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+        { expiresIn: 15 }
     );
     return res.json({ accessToken });
 }

@@ -3,10 +3,12 @@ import App from "next/app";
 import withRedux from "next-redux-wrapper";
 import { initStore } from "../redux";
 import "../public/nprogress.css";
+import { handleRefreshToken } from "../utils/common";
 
 export default withRedux(initStore, { debug: true })(
   class MyApp extends App {
     static async getInitialProps({ Component, ctx }) {
+      // handleRefreshToken(ctx.req)
       return {
         pageProps: {
           ...(Component.getInitialProps
