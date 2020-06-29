@@ -25,7 +25,7 @@ class Search extends Component {
     const getSearchData = await ctx.store.dispatch(actions.searchFilter(`?keyword=${ctx.query.slug}`));
 
     // console.log(ctx.query)
-    const searchData = await ctx.store.dispatch(actions.searchProducts(`?page=1&perPage=${this.state.perPage}`, {keyword: ctx.query.slug}))
+    const searchData = await ctx.store.dispatch(actions.searchProducts(`?page=1&perPage=10`, {keyword: ctx.query.slug}))
 
     return {
       searchData,

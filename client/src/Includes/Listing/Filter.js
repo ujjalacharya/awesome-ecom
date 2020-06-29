@@ -3,7 +3,9 @@ import { Checkbox, Input } from "antd";
 import { Icon, Row, Col } from "antd";
 
 class Filter extends Component {
-  onChange = (checkedValues) => {};
+  state = {
+    checkedBrands: []
+  }
 
   render() {
     const { data } = this.props;
@@ -35,7 +37,7 @@ class Filter extends Component {
         <div className="filter-types">
           <div className="type-title">BRAND</div>
           <div className="type-list">
-            <Checkbox.Group options={brandOptions} onChange={this.onChange} />
+            <Checkbox.Group options={brandOptions} onChange={(e) => this.props.onCheckBrands(e)} values={this.props.checkedBrands} />
           </div>
         </div>
         <div className="filter-types">

@@ -1,16 +1,24 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import { Row, Col, Pagination, Drawer } from "antd";
 
 // includes
 import ProductList from "../src/Includes/Listing/ProductList";
 import Filter from "../src/Includes/Listing/Filter";
+import actions from "../redux/actions";
+import { withRouter } from "next/router";
 
 class Listing extends Component {
   state = {
     visibleFilter: false,
     visibleSort: false,
     sortName: "",
+    checkedBrands: []
   };
+
+  static getInitialProps(ctx) {
+    initialize(ctx);
+  }
 
   showDrawerFiter = () => {
     this.setState({
@@ -30,6 +38,14 @@ class Listing extends Component {
     });
   };
 
+  
+  onCheckBrands = (checkedValues) => {
+    console.log(checkedValues)
+    this.setState({
+      checkedBrands: checkedValues
+    })
+  };
+
   onCloseSort = (sortTitle) => {
     this.setState({
       visibleSort: false,
@@ -40,6 +56,17 @@ class Listing extends Component {
       });
     }
   };
+
+  onChangePage = (page) =>{
+    console.log(page)
+    console.log(this.props)
+    let body = {
+      keyword: this.props.router.query,
+      brand_id: this.state.checkedBrands
+    }
+    this.props.searchProducts(`?page=${page}&perPage=${this.props.perPage}`, body)
+  }
+
   render() {
     console.log(this.props);
     return (
@@ -51,6 +78,8 @@ class Listing extends Component {
                 <Filter
                   removeThisFilter="noDisplayMobAndTab"
                   data={this.props.getSearchData}
+                  onCheckBrands = {this.onCheckBrands}
+                  checkedBrands = {this.state.checkedBrands}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -66,6 +95,7 @@ class Listing extends Component {
                   <Pagination
                     defaultCurrent={1}
                     total={this.props.data.totalCount}
+                    onChange={this.onChangePage}
                   />
                 </div>
               </Col>
@@ -154,4 +184,7 @@ class Listing extends Component {
   }
 }
 
-export default Listing;
+export default connect(
+  state => state,
+  actions
+)(withRouter(Listing));
