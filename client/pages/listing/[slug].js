@@ -21,8 +21,6 @@ class Listing extends Component {
       data = await ctx.store.dispatch(actions.getLatestProducts());
     }
 
-    const menuData = await ctx.store.dispatch(actions.productCategories());
-
     const allBrands = await ctx.store.dispatch(actions.getProductBrands());
 
     return {

@@ -14,6 +14,10 @@ class Header extends Component {
     search: "",
   };
 
+  componentDidMount() {
+    this.props.productCategories();
+  }
+
   static getInitialProps(ctx) {
     initialize(ctx);
   }
@@ -67,7 +71,12 @@ class Header extends Component {
                   <ul className="category">
                     {parentCate.map((cate, i) => {
                       return (
-                        <li key={i}>
+                        <li
+                          key={i}
+                          onClick={() =>
+                            this.searchProducts(cate.slug, cate._id)
+                          }
+                        >
                           <div className="title">
                             <span>{cate.displayName}</span>
                             <span className="title-icon">
@@ -83,7 +92,15 @@ class Header extends Component {
                             <ul className="sub-category">
                               {cate.childCate.map((subCate, i) => {
                                 return (
-                                  <li key={i}>
+                                  <li
+                                    key={i}
+                                    onClick={() =>
+                                      this.searchProducts(
+                                        subCate.slug,
+                                        subCate._id
+                                      )
+                                    }
+                                  >
                                     <div className="title">
                                       <span>{subCate.displayName}</span>
                                       <span className="sub-title-icon">

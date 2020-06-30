@@ -489,6 +489,9 @@ button.no-color:hover {
     margin-left: 10px;
   }
 }
+.main-header .menu-logo .menu .menu-list {
+  cursor: pointer;
+}
 @media screen and (max-width: 912px) {
   .main-header .menu-logo .menu .menu-list {
     font-size: 12px;
