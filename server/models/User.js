@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    address: [{
+    location: [{
         type: Schema.Types.ObjectId,
         ref: "address"
     }],

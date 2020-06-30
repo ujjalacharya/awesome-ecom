@@ -3,6 +3,7 @@ const RefreshToken = require("../models/RefereshToken")
 const { sendEmail } = require("../middleware/helpers");
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
+const Address = require('../models/Address')
 
 exports.signup = async (req, res) => {
     let userExists = await User.findOne({ email: req.body.email });
@@ -15,14 +16,10 @@ exports.signup = async (req, res) => {
         process.env.JWT_EMAIL_VERIFICATION_KEY,
         { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
     );
-    // req.body.emailVerifyLink = token
     let user = new User(req.body);
-    let geolocation = {
-        type: "Point",
-        coordinates: [req.body.long, req.body.lat]
-    };
-    user.geolocation = geolocation;
     user = await user.save();
+    // req.body.emailVerifyLink = token
+    
     const mailingData = {
         from: "Ecom",
         to: user.email,
@@ -31,12 +28,11 @@ exports.signup = async (req, res) => {
                     <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`
     };
     // await sendEmail(mailingData)
-    // res
-    //     .status(200)
-    //     .json({
-    //         msg: `Email has been sent to ${req.body.email} to verify your email address.`
-    //     });
-    res.json(user)
+    res
+        .status(200)
+        .json({
+            msg: `Email has been sent to ${req.body.email} to verify your email address.`
+        });
 };
 // verify email link
 exports.emailverify = async (req, res) => {
