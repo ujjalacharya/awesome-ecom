@@ -21,16 +21,13 @@ class Header extends Component {
     e.preventDefault();
 
     Router.push(
-      "/search/[type]/[slug]",
-      "/search/inputSearch/" + this.state.search,
-      { keyword: "inputSearch" }
+      "/search/[slug]",
+      "/search/" + this.state.search
     );
   };
 
-  searchProducts = (cateId) => {
-    Router.push("/search/[type]/[slug]", "/search/cateSearch/" + cateId, {
-      keyword: "cateSearch",
-    });
+  searchProducts = (slug, cateId) => {
+    Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
   };
 
   render() {
@@ -109,7 +106,7 @@ class Header extends Component {
                                                 key={i}
                                                 onClick={() =>
                                                   this.searchProducts(
-                                                    newSubCate._id
+                                                    newSubCate.slug, newSubCate._id
                                                   )
                                                 }
                                               >

@@ -22,27 +22,17 @@ class Search extends Component {
       query: { slug },
     } = ctx;
 
-    console.log(ctx);
-
-    let searchFilterKey = "";
-    let searchProdBody = {};
-    if (ctx.query.type === "inputSearch") {
-      searchFilterKey = "keyword";
-      searchProdBody = { keyword: ctx.query.slug };
-    } else if (ctx.query.type === "cateSearch") {
-      searchFilterKey = "cat_id";
-      searchProdBody = { cat_id: ctx.query.slug };
-    }
+    console.log(ctx)
 
     const menuData = await ctx.store.dispatch(actions.productCategories());
 
     const searchFilter = await ctx.store.dispatch(
-      actions.searchFilter(`?${searchFilterKey}=${ctx.query.slug}`)
+      actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
     );
 
     // console.log(ctx.query)
     const searchData = await ctx.store.dispatch(
-      actions.searchProducts(`?page=1&perPage=10`, searchProdBody)
+      actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
     );
 
     // return {
@@ -55,7 +45,7 @@ class Search extends Component {
     console.log(this.props);
     return (
       <Layout>
-        <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />
+        <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.products.productByCategory} perPage={this.state.perPage} />
       </Layout>
     );
   }
