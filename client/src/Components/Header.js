@@ -32,9 +32,8 @@ class Header extends Component {
   };
 
   render() {
-    console.log(cookie.get("token"))
-
-    let loginToken = cookie.get("token")
+    console.log(this.props)
+    let loginToken = this.props.authentication.token
 
     let { data } = this.props;
     let parentCategory = [];

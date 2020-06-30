@@ -2,7 +2,7 @@ import React from "react";
 import Router from "next/router";
 import initialize from "../initialize";
 
-const login = "/signin";
+const login = "/login";
 
 const checkUserAuthentication = (ctx) => {
   let auth = ctx.store.getState().authentication.token;
