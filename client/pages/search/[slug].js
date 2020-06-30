@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { Row, Col, Pagination, Drawer } from "antd";
 
 // includes
-import ProductList from "../../../src/Includes/Listing/ProductList";
-import Layout from "../../../src/Components/Layout";
-import initialize from "../../../utils/initialize";
-import actions from "../../../redux/actions";
-import Filter from "../../../src/Includes/Listing/Filter";
-import Listing from "../../Listing";
+import ProductList from "../../src/Includes/Listing/ProductList";
+import Layout from "../../src/Components/Layout";
+import initialize from "../../utils/initialize";
+import actions from "../../redux/actions";
+import Filter from "../../src/Includes/Listing/Filter";
+import Listing from "../Listing";
 import { connect } from "react-redux";
 import { withRouter } from "next/router";
 
@@ -22,27 +22,17 @@ class Search extends Component {
       query: { slug },
     } = ctx;
 
-    console.log(ctx);
-
-    let searchFilterKey = "";
-    let searchProdBody = {};
-    if (ctx.query.type === "inputSearch") {
-      searchFilterKey = "keyword";
-      searchProdBody = { keyword: ctx.query.slug };
-    } else if (ctx.query.type === "cateSearch") {
-      searchFilterKey = "cat_id";
-      searchProdBody = { cat_id: ctx.query.slug };
-    }
+    console.log(ctx)
 
     const menuData = await ctx.store.dispatch(actions.productCategories());
 
     const searchFilter = await ctx.store.dispatch(
-      actions.searchFilter(`?${searchFilterKey}=${ctx.query.slug}`)
+      actions.searchFilter(`?keyword=${ctx.query.slug}`)
     );
 
     // console.log(ctx.query)
     const searchData = await ctx.store.dispatch(
-      actions.searchProducts(`?page=1&perPage=10`, searchProdBody)
+      actions.searchProducts(`?page=1&perPage=10`+'&keyword='+ctx.query.slug)
     );
 
     // return {

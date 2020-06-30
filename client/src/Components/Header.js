@@ -7,6 +7,7 @@ import Link from "next/link";
 import actions from "../../redux/actions";
 import initialize from "../../utils/initialize";
 import Router from "next/router";
+import cookie from 'js-cookie';
 
 class Header extends Component {
   state = {
@@ -21,19 +22,20 @@ class Header extends Component {
     e.preventDefault();
 
     Router.push(
-      "/search/[type]/[slug]",
-      "/search/inputSearch/" + this.state.search,
-      { keyword: "inputSearch" }
+      "/search/[slug]",
+      "/search/" + this.state.search
     );
   };
 
-  searchProducts = (cateId) => {
-    Router.push("/search/[type]/[slug]", "/search/cateSearch/" + cateId, {
-      keyword: "cateSearch",
-    });
+  searchProducts = (slug, cateId) => {
+    Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
   };
 
   render() {
+    console.log(cookie.get("token"))
+
+    let loginToken = cookie.get("token")
+
     let { data } = this.props;
     let parentCategory = [];
 
@@ -109,7 +111,7 @@ class Header extends Component {
                                                 key={i}
                                                 onClick={() =>
                                                   this.searchProducts(
-                                                    newSubCate._id
+                                                    newSubCate.slug, newSubCate._id
                                                   )
                                                 }
                                               >
@@ -162,7 +164,7 @@ class Header extends Component {
                 <img src="/images/user.png" />
               </div>
               <Link href="/dashboard">
-                <div className="list-text">Profile</div>
+          <div className="list-text">{loginToken ? 'Profile' : 'Login'}</div>
               </Link>
             </div>
             <div className="menu-right-items">

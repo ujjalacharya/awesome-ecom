@@ -4,7 +4,7 @@ import {
   LATEST_PRODUCTS,
   MENU_CATEGORIES,
   PRODUCT_DETAILS,
-  SEARCH_PRODUCTS,
+  PRODUCT_BY_CATEGORY,
   PRODUCT_ERROR,
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
@@ -65,6 +65,20 @@ const getProductBrands = () => {
   };
 };
 
+const getProductsByCategory = (query) => {
+  return async (dispatch) => {
+    const resp = await fetch(
+      `http://localhost:3001/api/product/by-category${query}`
+    );
+
+    const data = await resp.json();
+
+    dispatch({ type: PRODUCT_BY_CATEGORY, payload: data });
+
+    return data;
+  };
+};
+
 const getOrders = (ctx) => {
   return async (dispatch) => {
     const resp = await fetch(
@@ -92,4 +106,5 @@ export default {
   getProductDetails,
   getProductBrands,
   getOrders,
+  getProductsByCategory
 };

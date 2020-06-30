@@ -74,12 +74,9 @@ class Listing extends Component {
       checkedBrands: e
     })
 
-    let body = {
-      keyword: this.props.router.query.slug,
-      brand_id: e
-    }
+    let appendUrl = `&keyword=${this.props.router.query.slug}&brands=${e}`
 
-    this.props.searchProducts(`?page=${this.state.currentPage}&perPage=${this.props.perPage}`, body)
+    this.props.searchProducts(`?page=${this.state.currentPage}&perPage=${this.props.perPage}${appendUrl}`)
   } 
 
   render() {
