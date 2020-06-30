@@ -30,4 +30,12 @@ button{
             border-color: $secondary-color;
         }
     }
+    &.no-color{
+        background-color: #fff;
+        color: #000;
+        &:hover{
+            color: $secondary-color;
+            border-color: $secondary-color;
+        }
+    }
 }

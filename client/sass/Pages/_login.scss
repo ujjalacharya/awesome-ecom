@@ -1,0 +1,23 @@
+.login-wrapper{
+    min-height: calc(100vh - 415px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .login-title{
+        text-align: center;
+        p{
+            font-size: 14px;
+        }
+    }
+    .login-form{
+        margin-top: 40px;
+        .login-create, .rem-for{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .login-form-forgot{
+            font-size: 12px;
+        }
+    }
+}

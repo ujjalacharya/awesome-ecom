@@ -254,6 +254,14 @@ button.secondary:hover {
   color: #48b5dc;
   border-color: #48b5dc;
 }
+button.no-color {
+  background-color: #fff;
+  color: #000;
+}
+button.no-color:hover {
+  color: #48b5dc;
+  border-color: #48b5dc;
+}
 
 .product-slider {
   padding: 0 40px;
@@ -424,6 +432,30 @@ button.secondary:hover {
 }
 .my-profile .my-wishlist .orders-table {
   margin-top: 20px;
+}
+
+.login-wrapper {
+  min-height: calc(100vh - 415px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-wrapper .login-title {
+  text-align: center;
+}
+.login-wrapper .login-title p {
+  font-size: 14px;
+}
+.login-wrapper .login-form {
+  margin-top: 40px;
+}
+.login-wrapper .login-form .login-create, .login-wrapper .login-form .rem-for {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.login-wrapper .login-form .login-form-forgot {
+  font-size: 12px;
 }
 
 .main-header {
