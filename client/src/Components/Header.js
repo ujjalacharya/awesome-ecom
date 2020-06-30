@@ -57,7 +57,6 @@ class Header extends Component {
     }
 
     // let parentCate = getChildCategories(category)
-    console.log(parentCate);
     return (
       <div className="main-header">
         <Row>
