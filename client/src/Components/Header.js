@@ -7,6 +7,7 @@ import Link from "next/link";
 import actions from "../../redux/actions";
 import initialize from "../../utils/initialize";
 import Router from "next/router";
+import cookie from 'js-cookie';
 
 class Header extends Component {
   state = {
@@ -31,6 +32,10 @@ class Header extends Component {
   };
 
   render() {
+    console.log(cookie.get("token"))
+
+    let loginToken = cookie.get("token")
+
     let { data } = this.props;
     let parentCategory = [];
 
@@ -159,7 +164,7 @@ class Header extends Component {
                 <img src="/images/user.png" />
               </div>
               <Link href="/dashboard">
-                <div className="list-text">Profile</div>
+          <div className="list-text">{loginToken ? 'Profile' : 'Login'}</div>
               </Link>
             </div>
             <div className="menu-right-items">

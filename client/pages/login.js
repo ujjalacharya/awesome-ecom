@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import Layout from "../src/Components/Layout";
+import { connect } from 'react-redux';
+import actions from '../redux/actions';
+import initialize from '../utils/initialize';
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
@@ -15,6 +18,12 @@ class Login extends Component {
   render() {
     const onFinish = (values) => {
       console.log("Success:", values);
+      console.log(this.props)
+      let body = {
+        email: values.email,
+        password: values.password
+      }
+      this.props.authenticate(body, 'signin')
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -40,17 +49,17 @@ class Login extends Component {
                   onFinish={onFinish}
                 >
                   <Form.Item
-                    name="username"
+                    name="email"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your Username!",
+                        message: "Please input your Email!",
                       },
                     ]}
                   >
                     <Input
                       prefix={<UserOutlined className="site-form-item-icon" />}
-                      placeholder="Username"
+                      placeholder="Email"
                       autoComplete={false}
                     />
                   </Form.Item>
@@ -104,4 +113,7 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(
+  state => state,
+  actions
+)(Login);
