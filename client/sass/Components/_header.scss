@@ -26,6 +26,7 @@
       }
       .menu-list {
         // position: relative;
+        cursor: pointer;
         @media screen and (max-width: 912px) {
           font-size: 12px;
         }
@@ -143,6 +144,7 @@
     text-align: center;
     .menu-right-items {
       padding-left: 20px;
+      cursor: pointer;
       @media screen and (max-width: 912px) {
         padding-left: 10px;
       }

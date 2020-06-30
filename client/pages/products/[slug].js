@@ -20,10 +20,6 @@ class Details extends Component {
       actions.getProductDetails(ctx.query.slug)
     );
 
-    const menuData = await ctx.store.dispatch(
-        actions.productCategories()
-      );
-
     return {
       data,
     };

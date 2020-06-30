@@ -22,8 +22,6 @@ class Search extends Component {
       query: { slug },
     } = ctx;
 
-    const menuData = await ctx.store.dispatch(actions.productCategories());
-
     const searchFilter = await ctx.store.dispatch(
       actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
     );

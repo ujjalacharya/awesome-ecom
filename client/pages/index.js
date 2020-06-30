@@ -52,15 +52,12 @@ const Index = (props) => {
 Index.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  const menuData = await ctx.store.dispatch(actions.productCategories());
-
   const latestProducts = await ctx.store.dispatch(actions.getLatestProducts());
 
   const orders = await ctx.store.dispatch(actions.getOrders(ctx.req))
 
 
   return {
-    menuData,
     latestProducts,
     orders
   };
