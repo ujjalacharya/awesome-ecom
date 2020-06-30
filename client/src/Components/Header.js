@@ -192,6 +192,17 @@ class Header extends Component {
               </div>
               <div className="list-text">Bag</div>
             </div>
+            {loginToken && (
+              <div
+                className="menu-right-items"
+                onClick={() => this.props.deauthenticate()}
+              >
+                <div className="list-icon">
+                  <img src="/images/user.png" />
+                </div>
+                <div className="list-text">Logout</div>
+              </div>
+            )}
           </Col>
         </Row>
       </div>
