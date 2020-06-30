@@ -592,6 +592,7 @@ button.no-color:hover {
 }
 .main-header .menu-right .menu-right-items {
   padding-left: 20px;
+  cursor: pointer;
 }
 @media screen and (max-width: 912px) {
   .main-header .menu-right .menu-right-items {
