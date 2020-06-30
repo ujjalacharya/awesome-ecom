@@ -13,7 +13,7 @@ const authenticate = (body, type) => {
       .then((response) => {
         setCookie('token', response.data.accessToken);
         dispatch({type: AUTHENTICATE, payload: response.data.token});
-        // window.location.href = '/';
+        window.location.href = '/';
       })
       .catch((err) => {
         throw new Error(err);

@@ -2,7 +2,7 @@ import React from "react";
 import Router from "next/router";
 import initialize from "../initialize";
 
-const login = "/login";
+const index = "/";
 
 const checkUserAuthentication = (ctx) => {
   let auth = ctx.store.getState().authentication.token;
@@ -17,15 +17,15 @@ export default (WrappedComponent) => {
 
     const userAuth = await checkUserAuthentication(ctx);
 
-    if (!userAuth?.auth) {
+    if (userAuth?.auth) {
       // Handle server-side and client-side rendering.
       if (ctx.res) {
         ctx.res.writeHead(302, {
-          Location: login,
+          Location: index,
         });
         ctx.res.end();
       } else {
-        Router.replace(login);
+        Router.replace(index);
       }
     } else if (WrappedComponent.getInitialProps) {
       const wrappedProps = await WrappedComponent.getInitialProps(userAuth);
