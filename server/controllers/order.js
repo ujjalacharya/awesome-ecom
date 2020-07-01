@@ -146,42 +146,23 @@ exports.createOrder = async (req, res) => {
 
 
     //testing & injecting
-    // let users = await User.find()
-    //     .populate('location')
-    //     .limit(11)
-    //     req.pCount = 0
-let dispatchers = [{
-        name:"dispatcher1",
-        email:'dispatcher1@gmail.com',
-        address: "Dhangadhi-2",
-        phone:9848542598,
-        password:'helloworld1'
-    }, {
-        name: "dispatcher2",
-        email: 'dispatcher2@gmail.com',
-        address: "Dhangadhi-2",
-        phone: 9848542598,
-        password: 'helloworld1'
-    }, {
-        name: "dispatcher3",
-        email: 'dispatcher3@gmail.com',
-        address: "Dhangadhi-2",
-        phone: 9848542598,
-        password: 'helloworld1'
-    }]
-    dispatchers = dispatchers.map(async d => {
-        d = new Dispatcher({
-            name: "dispatcher1",
-            email: 'dispatcher1@gmail.com',
-            address: "Dhangadhi-2",
-            phone: 9848542598,
-            password: 'helloworld1'
+    let users = await User.find()
+        .populate('location')
+        .limit(11)
+        // req.pCount = 0
+    users = users.map(async u => {
+        let orders = await Order.find({user:u._id, 'status.currentStatus':'active'}).limit(18)
+        orders = orders.map(async o=> {
+            o.status.currentStatus = 'approve',
+            o.status.approvedDate = Date.now()
+            return await o.save()
         })
-        d = await d.save()
-        return d
+        orders = await Promise.all(orders)
+        return orders
     })
-    dispatchers = await Promise.all(dispatchers)
-    res.json(dispatchers)
+    users = await Promise.all(users)
+    res.json(users)
+
 }
 
 exports.userOrders = async(req,res) => {
