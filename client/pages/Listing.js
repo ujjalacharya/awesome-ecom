@@ -41,7 +41,6 @@ class Listing extends Component {
 
   
   onCheckBrands = (checkedValues) => {
-    console.log(checkedValues)
     this.setState({
       checkedBrands: checkedValues
     })

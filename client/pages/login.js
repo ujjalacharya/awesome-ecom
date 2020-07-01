@@ -18,8 +18,6 @@ const tailLayout = {
 class Login extends Component {
   render() {
     const onFinish = (values) => {
-      console.log("Success:", values);
-      console.log(this.props);
       let body = {
         email: values.email,
         password: values.password,

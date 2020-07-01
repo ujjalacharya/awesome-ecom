@@ -20,13 +20,13 @@ exports.signup = async (req, res) => {
     user = await user.save();
     // req.body.emailVerifyLink = token
     
-    const mailingData = {
-        from: "Ecom",
-        to: user.email,
-        subject: "email verification",
-        html: `<p>Hi, ${user.name} . </p></br>
-                    <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`
-    };
+    // const mailingData = {
+    //     from: "Ecom",
+    //     to: user.email,
+    //     subject: "email verification",
+    //     html: `<p>Hi, ${user.name} . </p></br>
+    //                 <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`
+    // };
     // await sendEmail(mailingData)
     res
         .status(200)
@@ -213,7 +213,7 @@ exports.auth = async (req, res, next) => {
     const token = req.header('x-auth-token');
     try {
         if (token) {
-            const u = await parseToken(token)
+            const u =  parseToken(token)
             if (u._id) {
                 const user = await User.findById(u._id).select('-password -salt')
                 if (user) {

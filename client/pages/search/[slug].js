@@ -38,7 +38,6 @@ class Search extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <Layout>
         <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />

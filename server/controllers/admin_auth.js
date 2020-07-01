@@ -179,7 +179,7 @@ exports.auth = async (req, res, next) => {
     try {
 
         if (token) {
-            const user = await parseToken(token)
+            const user =  parseToken(token)
             if (user._id) {
                 const admin = await Admin.findById(user._id).select('-password -salt')
                 if (admin) {

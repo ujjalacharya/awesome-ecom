@@ -170,7 +170,7 @@ class Header extends Component {
             </form>
           </Col>
           <Col lg={4} md={5} className="menu-right">
-            <Link href="/myprofile">
+            <Link href="/dashboard">
               <div className="menu-right-items">
                 <div className="list-icon">
                   <img src="/images/user.png" />
@@ -192,6 +192,17 @@ class Header extends Component {
               </div>
               <div className="list-text">Bag</div>
             </div>
+            {loginToken && (
+              <div
+                className="menu-right-items"
+                onClick={() => this.props.deauthenticate()}
+              >
+                <div className="list-icon">
+                  <img src="/images/user.png" />
+                </div>
+                <div className="list-text">Logout</div>
+              </div>
+            )}
           </Col>
         </Row>
       </div>
