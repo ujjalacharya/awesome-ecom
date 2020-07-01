@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Admin = require("../models/Admin")
 const Payment = require("../models/Payment")
+const Dispatcher = require("../models/Dispatcher")
 const Remark = require("../models/Remark")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
@@ -145,58 +146,42 @@ exports.createOrder = async (req, res) => {
 
 
     //testing & injecting
-    const products = await Product.find({
-        isVerified: { "$ne": null },
-        isDeleted: null
+    // let users = await User.find()
+    //     .populate('location')
+    //     .limit(11)
+    //     req.pCount = 0
+let dispatchers = [{
+        name:"dispatcher1",
+        email:'dispatcher1@gmail.com',
+        address: "Dhangadhi-2",
+        phone:9848542598,
+        password:'helloworld1'
+    }, {
+        name: "dispatcher2",
+        email: 'dispatcher2@gmail.com',
+        address: "Dhangadhi-2",
+        phone: 9848542598,
+        password: 'helloworld1'
+    }, {
+        name: "dispatcher3",
+        email: 'dispatcher3@gmail.com',
+        address: "Dhangadhi-2",
+        phone: 9848542598,
+        password: 'helloworld1'
+    }]
+    dispatchers = dispatchers.map(async d => {
+        d = new Dispatcher({
+            name: "dispatcher1",
+            email: 'dispatcher1@gmail.com',
+            address: "Dhangadhi-2",
+            phone: 9848542598,
+            password: 'helloworld1'
+        })
+        d = await d.save()
+        return d
     })
-    const productsCount = await Product.countDocuments({
-        isVerified: { "$ne": null },
-        isDeleted: null
-    })
-    let users = await User.find()
-        .populate('location')
-        .limit(11)
-        req.pCount = 0
-    users = users.map(async u => {
-        //20 orders
-        let results
-        for (let i = 0; i < 21; i++) {
-            if(req.pCount>=productsCount) req.pCount = 0
-            // new order
-            const newOrder = new Order()
-            newOrder.user = u._id
-            newOrder.product = products[req.pCount]._id
-            newOrder.soldBy = products[req.pCount].soldBy
-            newOrder.quantity = _.random(1,3)
-            newOrder.address = u.location.find(add=>add.isActive !== null)._id
-            newOrder.productAttributes = req.body.productAttributes
-            const status = {
-                currentStatus: 'active',
-                activeDate: Date.now()
-            }
-            newOrder.status = status
-
-            // new payment
-            const newPayent = new Payment({
-                user: u._id,
-                order: newOrder._id,
-                method: 'Cash on Delivery',
-                shippingCharge: 20,
-                transactionCode: shortid.generate(),
-                amount: Math.round((products[req.pCount].price - (products[req.pCount].price * (products[req.pCount].discountRate / 100))) * newOrder.quantity),
-                from: newOrder.address.phoneno
-            })  
-            newOrder.payment = newPayent._id
-             results = await task
-                .save(newOrder)
-                .save(newPayent)
-                .run({ useMongoose: true })
-            req.pCount++
-        }
-        return results
-    })
-    users = await Promise.all(users)
-    res.json(users)
+    dispatchers = await Promise.all(dispatchers)
+    res.json(dispatchers)
 }
 
 exports.userOrders = async(req,res) => {
