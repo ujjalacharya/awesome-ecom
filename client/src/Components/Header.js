@@ -28,7 +28,8 @@ class Header extends Component {
     Router.push("/search/[slug]", "/search/" + this.state.search);
   };
 
-  searchProducts = (slug, cateId) => {
+  searchProducts = (e, slug, cateId) => {
+    e.stopPropagation()
     Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
   };
 
@@ -73,9 +74,6 @@ class Header extends Component {
                       return (
                         <li
                           key={i}
-                          onClick={() =>
-                            this.searchProducts(cate.slug, cate._id)
-                          }
                         >
                           <div className="title">
                             <span>{cate.displayName}</span>
@@ -94,8 +92,9 @@ class Header extends Component {
                                 return (
                                   <li
                                     key={i}
-                                    onClick={() =>
+                                    onClick={(e) =>
                                       this.searchProducts(
+                                        e,
                                         subCate.slug,
                                         subCate._id
                                       )
@@ -119,8 +118,9 @@ class Header extends Component {
                                             return (
                                               <li
                                                 key={i}
-                                                onClick={() =>
+                                                onClick={(e) =>
                                                   this.searchProducts(
+                                                    e,
                                                     newSubCate.slug,
                                                     newSubCate._id
                                                   )
