@@ -152,13 +152,18 @@ exports.createOrder = async (req, res) => {
         .limit(11)
         // req.pCount = 0
     users = users.map(async u => {
-        let orders = await Order.find({user:u._id, 'status.currentStatus':'approve'}).limit(15)
+        let orders = await Order.find({ user: u._id, 'status.currentStatus':'tobereturned'}).limit(3)
         orders = orders.map(async o=> {
-            o.status.currentStatus = 'dispatch',
-            o.status.dispatchedDetail = {
-                dispatchedDate: Date.now(),
-                dispatchedBy: dispatchers[_.random(0,3)]._id
+            let newRemark = new Remark({
+                comment:'mahango lagyo'
+            })
+            o.status.currentStatus = 'return',
+            o.status.returnedDetail = {
+                returnedDate: Date.now(),
+                returneddBy:dispatchers[_.random(0,3)]._id,
+                remark: newRemark._id
             }
+            await newRemark.save()
             return await o.save()
         })
         orders = await Promise.all(orders)
