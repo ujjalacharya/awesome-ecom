@@ -146,15 +146,19 @@ exports.createOrder = async (req, res) => {
 
 
     //testing & injecting
+    let dispatchers = await Dispatcher.find()
     let users = await User.find()
         .populate('location')
         .limit(11)
         // req.pCount = 0
     users = users.map(async u => {
-        let orders = await Order.find({user:u._id, 'status.currentStatus':'active'}).limit(18)
+        let orders = await Order.find({user:u._id, 'status.currentStatus':'approve'}).limit(15)
         orders = orders.map(async o=> {
-            o.status.currentStatus = 'approve',
-            o.status.approvedDate = Date.now()
+            o.status.currentStatus = 'dispatch',
+            o.status.dispatchedDetail = {
+                dispatchedDate: Date.now(),
+                dispatchedBy: dispatchers[_.random(0,3)]._id
+            }
             return await o.save()
         })
         orders = await Promise.all(orders)
