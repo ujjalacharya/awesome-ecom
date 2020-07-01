@@ -23,7 +23,14 @@ exports.order = async(req,res,next) => {
         .populate('payment','-user -order')
         .populate('product','_id slug name slug category brand return isVerified isDeleted warranty quantity')
         .populate('soldBy','name shopName address isVerified isBlocked holidayMode photo email adminWareHouse')
-        .populate('status.cancelledDetail.remark')//not working..
+        // .populate('status.cancelledDetail.remark')//not working..
+        .populate({
+            path: 'status.cancelledDetail',
+            populate: {
+                path: 'remark',
+                model: 'remarks'
+            }
+        })
     if (!order) {
         return res.status(404).json({error:"Order not found"})
     }
@@ -75,65 +82,121 @@ exports.calculateShippingCharge = async(req,res) => {
 }
 
 exports.createOrder = async (req, res) => {
-    const product = await Product.findOne({ 
-        slug: req.body.p_slug, 
-        isVerified: { "$ne": null }, 
-        isDeleted: null
-    }).populate('soldBy','isBlocked isVerified holidayMode')
-    const isAdminOnHoliday = (first, last) => {
-        let week = [0, 1, 2, 3, 4, 5, 6]
-        let firstIndex = week.indexOf(first);
-        week = week.concat(week.splice(0, firstIndex))//Shift array so that first day is index 0
-        let lastIndex = week.indexOf(last)//Find last day
-        //Cut from first day to last day nd check with today day
-        return week.slice(0, lastIndex + 1).some(d => d === new Date().getDay());
+    // const product = await Product.findOne({ 
+    //     slug: req.body.p_slug, 
+    //     isVerified: { "$ne": null }, 
+    //     isDeleted: null
+    // }).populate('soldBy','isBlocked isVerified holidayMode')
+    // const isAdminOnHoliday = (first, last) => {
+    //     let week = [0, 1, 2, 3, 4, 5, 6]
+    //     let firstIndex = week.indexOf(first);
+    //     week = week.concat(week.splice(0, firstIndex))//Shift array so that first day is index 0
+    //     let lastIndex = week.indexOf(last)//Find last day
+    //     //Cut from first day to last day nd check with today day
+    //     return week.slice(0, lastIndex + 1).some(d => d === new Date().getDay());
 
-    }
-    if (!product || product.soldBy.isBlocked || !product.soldBy.isVerified || isAdminOnHoliday(product.soldBy.holidayMode.start, product.soldBy.holidayMode.end)) {
-        return res.status(404).json({ error: "Product not found." })
-    }
-    if (product.quantity === 0 ) {
-        return res.status(403).json({error:"Product is out of the stock."})
-    }
-    if (product.quantity < req.body.quantity) {
-        return res.status(403).json({error:`There are only ${product.quantity} products available.`})
-    }
+    // }
+    // if (!product || product.soldBy.isBlocked || !product.soldBy.isVerified || isAdminOnHoliday(product.soldBy.holidayMode.start, product.soldBy.holidayMode.end)) {
+    //     return res.status(404).json({ error: "Product not found." })
+    // }
+    // if (product.quantity === 0 ) {
+    //     return res.status(403).json({error:"Product is out of the stock."})
+    // }
+    // if (product.quantity < req.body.quantity) {
+    //     return res.status(403).json({error:`There are only ${product.quantity} products available.`})
+    // }
 
-    // new order
-    const newOrder = new Order()
-    newOrder.user = req.user._id
-    newOrder.product = product._id
-    newOrder.soldBy = product.soldBy
-    newOrder.quantity = req.body.quantity
-    newOrder.productAttributes = req.body.productAttributes
-    const status = {
-        currentStatus: 'active',
-        activeDate: Date.now()
-    }
-    newOrder.status = status
+    // // new order
+    // const newOrder = new Order()
+    // newOrder.user = req.user._id
+    // newOrder.product = product._id
+    // newOrder.soldBy = product.soldBy
+    // newOrder.quantity = req.body.quantity
+    // newOrder.productAttributes = req.body.productAttributes
+    // const status = {
+    //     currentStatus: 'active',
+    //     activeDate: Date.now()
+    // }
+    // newOrder.status = status
 
-    // new payment
-    const newPayent = new Payment({
-        user: req.user._id,
-        order: newOrder._id,
-        method: req.body.method,
-        shippingCharge: req.body.shippingCharge,
-        transactionCode: shortid.generate(),
-        amount: Math.round((product.price - (product.price * (product.discountRate / 100))) * newOrder.quantity),
-        from: req.user.phone
-    })
-    newOrder.payment = newPayent._id
+    // // new payment
+    // const newPayent = new Payment({
+    //     user: req.user._id,
+    //     order: newOrder._id,
+    //     method: req.body.method,
+    //     shippingCharge: req.body.shippingCharge,
+    //     transactionCode: shortid.generate(),
+    //     amount: Math.round((product.price - (product.price * (product.discountRate / 100))) * newOrder.quantity),
+    //     from: req.user.phone
+    // })
+    // newOrder.payment = newPayent._id
 
     //update product 
-    const updateProduct = product.toObject()
-    updateProduct.quantity = updateProduct.quantity - newOrder.quantity
-    const results = await task
-        .save(newOrder)
-        .save(newPayent)
-        .update(product,updateProduct)
-        .options({viaSave:true})
-        .run({ useMongoose: true })
-    res.json({order:results[0],payment:results[1]})
+    // const updateProduct = product.toObject()
+    // updateProduct.quantity = updateProduct.quantity - newOrder.quantity
+    // const results = await task
+    //     .save(newOrder)
+    //     .save(newPayent)
+    //     .update(product,updateProduct)
+    //     .options({viaSave:true})
+    //     .run({ useMongoose: true })
+    // res.json({order:results[0],payment:results[1]})
+
+
+
+    //testing & injecting
+    const products = await Product.find({
+        isVerified: { "$ne": null },
+        isDeleted: null
+    })
+    const productsCount = await Product.countDocuments({
+        isVerified: { "$ne": null },
+        isDeleted: null
+    })
+    let users = await User.find()
+        .populate('location')
+        .limit(11)
+        req.pCount = 0
+    users = users.map(async u => {
+        //20 orders
+        let results
+        for (let i = 0; i < 21; i++) {
+            if(req.pCount>=productsCount) req.pCount = 0
+            // new order
+            const newOrder = new Order()
+            newOrder.user = u._id
+            newOrder.product = products[req.pCount]._id
+            newOrder.soldBy = products[req.pCount].soldBy
+            newOrder.quantity = _.random(1,3)
+            newOrder.address = u.location.find(add=>add.isActive !== null)._id
+            newOrder.productAttributes = req.body.productAttributes
+            const status = {
+                currentStatus: 'active',
+                activeDate: Date.now()
+            }
+            newOrder.status = status
+
+            // new payment
+            const newPayent = new Payment({
+                user: u._id,
+                order: newOrder._id,
+                method: 'Cash on Delivery',
+                shippingCharge: 20,
+                transactionCode: shortid.generate(),
+                amount: Math.round((products[req.pCount].price - (products[req.pCount].price * (products[req.pCount].discountRate / 100))) * newOrder.quantity),
+                from: newOrder.address.phoneno
+            })  
+            newOrder.payment = newPayent._id
+             results = await task
+                .save(newOrder)
+                .save(newPayent)
+                .run({ useMongoose: true })
+            req.pCount++
+        }
+        return results
+    })
+    users = await Promise.all(users)
+    res.json(users)
 }
 
 exports.userOrders = async(req,res) => {
