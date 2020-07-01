@@ -1,19 +1,21 @@
 const express = require("express");
 
 const {
-    getProfile, updateProfile, profile, uploadPhoto
+    getProfile, updateProfile, profile, uploadPhoto, addAddress
 } = require("../controllers/user");
 const { auth, isSameUser } = require('../controllers/user_auth')
 
 const { uploadUserPhoto } = require("../middleware/helpers");
 
 const router = express.Router();
+//address
+router.post('/add-address',auth,addAddress)
 
-router
-    .route("/:id")
-    .get(getProfile)
-    .put(auth, isSameUser, updateProfile)//update or complete
-    .patch(auth, isSameUser, uploadUserPhoto, uploadPhoto)
+//profile
+router.put('/',auth, updateProfile)//update or complete
+router.patch('/',auth, uploadUserPhoto, uploadPhoto)
+router.get("/:id", getProfile)
+
 
 router.param('id', profile)
 

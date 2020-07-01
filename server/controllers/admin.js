@@ -50,18 +50,19 @@ exports.updateProfile = async (req, res) => {
 
 exports.uploadPhoto = async (req, res) => {
     let profile = req.profile
-    if (req.file !== undefined) {
-        const { filename: image } = req.file;
-        //Compress image
-        await sharp(req.file.path)
-            .resize(300)
-            .jpeg({ quality: 100 })
-            .toFile(path.resolve(req.file.destination, "admin", image))
-        fs.unlinkSync(req.file.path);//remove from public/uploads
-        // if update then remove old photo
-        if (profile.photo) fs.unlinkSync(`public/uploads/${profile.photo}`)
-        profile.photo = "admin/" + image;
+    if (req.file == undefined) {
+        return res.status(400).json({ error: 'Image is required.' })
     }
+    const { filename: image } = req.file;
+    //Compress image
+    await sharp(req.file.path)
+        .resize(300)
+        .jpeg({ quality: 100 })
+        .toFile(path.resolve(req.file.destination, "admin", image))
+    fs.unlinkSync(req.file.path);//remove from public/uploads
+    // if update then remove old photo
+    if (profile.photo) fs.unlinkSync(`public/uploads/${profile.photo}`)
+    profile.photo = "admin/" + image;
     await profile.save()
     res.json({ photo: profile.photo })
 }
