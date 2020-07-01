@@ -38,10 +38,13 @@ export const getChildCategories = (allCategories, parentCategory) => {
 };
 
 export const isTokenExpired = (token) => {
-  const { exp } = jwt.decode(token);
+  if (token) {
+    const { exp } = jwt.decode(token);
 
-  if (exp < (new Date().getTime() + 1) / 1000) {
-    return true;
+    if (exp < (new Date().getTime() + 1) / 1000) {
+      return true;
+    }
+    return false;
   }
   return false;
 };
