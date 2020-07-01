@@ -7,12 +7,16 @@ import Link from "next/link";
 import actions from "../../redux/actions";
 import initialize from "../../utils/initialize";
 import Router from "next/router";
-import cookie from 'js-cookie';
+import cookie from "js-cookie";
 
 class Header extends Component {
   state = {
     search: "",
   };
+
+  componentDidMount() {
+    this.props.productCategories();
+  }
 
   static getInitialProps(ctx) {
     initialize(ctx);
@@ -21,10 +25,7 @@ class Header extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    Router.push(
-      "/search/[slug]",
-      "/search/" + this.state.search
-    );
+    Router.push("/search/[slug]", "/search/" + this.state.search);
   };
 
   searchProducts = (slug, cateId) => {
@@ -32,9 +33,7 @@ class Header extends Component {
   };
 
   render() {
-    console.log(cookie.get("token"))
-
-    let loginToken = cookie.get("token")
+    let loginToken = this.props.authentication.token;
 
     let { data } = this.props;
     let parentCategory = [];
@@ -56,8 +55,6 @@ class Header extends Component {
       });
     }
 
-    // let parentCate = getChildCategories(category)
-    console.log(parentCate);
     return (
       <div className="main-header">
         <Row>
@@ -74,7 +71,12 @@ class Header extends Component {
                   <ul className="category">
                     {parentCate.map((cate, i) => {
                       return (
-                        <li key={i}>
+                        <li
+                          key={i}
+                          onClick={() =>
+                            this.searchProducts(cate.slug, cate._id)
+                          }
+                        >
                           <div className="title">
                             <span>{cate.displayName}</span>
                             <span className="title-icon">
@@ -90,7 +92,15 @@ class Header extends Component {
                             <ul className="sub-category">
                               {cate.childCate.map((subCate, i) => {
                                 return (
-                                  <li key={i}>
+                                  <li
+                                    key={i}
+                                    onClick={() =>
+                                      this.searchProducts(
+                                        subCate.slug,
+                                        subCate._id
+                                      )
+                                    }
+                                  >
                                     <div className="title">
                                       <span>{subCate.displayName}</span>
                                       <span className="sub-title-icon">
@@ -111,7 +121,8 @@ class Header extends Component {
                                                 key={i}
                                                 onClick={() =>
                                                   this.searchProducts(
-                                                    newSubCate.slug, newSubCate._id
+                                                    newSubCate.slug,
+                                                    newSubCate._id
                                                   )
                                                 }
                                               >
@@ -159,14 +170,16 @@ class Header extends Component {
             </form>
           </Col>
           <Col lg={4} md={5} className="menu-right">
-            <div className="menu-right-items">
-              <div className="list-icon">
-                <img src="/images/user.png" />
+            <Link href="/dashboard">
+              <div className="menu-right-items">
+                <div className="list-icon">
+                  <img src="/images/user.png" />
+                </div>
+                <div className="list-text">
+                  {loginToken ? "Profile" : "Login"}
+                </div>
               </div>
-              <Link href="/dashboard">
-          <div className="list-text">{loginToken ? 'Profile' : 'Login'}</div>
-              </Link>
-            </div>
+            </Link>
             <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/wishlist.png" />
@@ -179,6 +192,17 @@ class Header extends Component {
               </div>
               <div className="list-text">Bag</div>
             </div>
+            {loginToken && (
+              <div
+                className="menu-right-items"
+                onClick={() => this.props.deauthenticate()}
+              >
+                <div className="list-icon">
+                  <img src="/images/user.png" />
+                </div>
+                <div className="list-text">Logout</div>
+              </div>
+            )}
           </Col>
         </Row>
       </div>

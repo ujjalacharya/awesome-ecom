@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next -p 3002",
     "build": "next build",
     "start": "next start",
     "sass": "sass --watch sass/index.scss:public/css/style.css"
@@ -14,6 +14,7 @@
     "cookie-parser": "^1.4.5",
     "isomorphic-unfetch": "^3.0.0",
     "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "next": "9.4.0",
     "next-redux-wrapper": "^6.0.0-rc.7",

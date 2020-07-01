@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 export const getChildCategories = (allCategories, parentCategory) => {
   // let newParentCate = [];
   // let finalData = []
@@ -20,20 +22,26 @@ export const getChildCategories = (allCategories, parentCategory) => {
   // });
   // return finalData;
 
-  let newParentCate = []
+  let newParentCate = [];
   parentCategory.forEach((parentCate) => {
-    let parentCategoryElements = {...parentCate};
+    let parentCategoryElements = { ...parentCate };
     let childCate = [];
     allCategories.forEach((allCate) => {
       if (allCate.parent === parentCate._id) {
         childCate.push(allCate);
       }
     });
-    parentCategoryElements.childCate = childCate
-    newParentCate.push(parentCategoryElements)
-
+    parentCategoryElements.childCate = childCate;
+    newParentCate.push(parentCategoryElements);
   });
   return newParentCate;
 };
 
-// export const getDefaultImg = ()
+export const isTokenExpired = (token) => {
+  const { exp } = jwt.decode(token);
+
+  if (exp < (new Date().getTime() + 1) / 1000) {
+    return true;
+  }
+  return false;
+};

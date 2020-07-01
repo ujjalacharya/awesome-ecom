@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import Layout from "../src/Components/Layout";
-import { connect } from 'react-redux';
-import actions from '../redux/actions';
-import initialize from '../utils/initialize';
+import { connect } from "react-redux";
+import actions from "../redux/actions";
+import initialize from "../utils/initialize";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import withUnAuth from "../utils/auth/withUnAuth";
 
 const layout = {
   labelCol: { span: 8 },
@@ -17,13 +18,11 @@ const tailLayout = {
 class Login extends Component {
   render() {
     const onFinish = (values) => {
-      console.log("Success:", values);
-      console.log(this.props)
       let body = {
         email: values.email,
-        password: values.password
-      }
-      this.props.authenticate(body, 'signin')
+        password: values.password,
+      };
+      this.props.authenticate(body, "signin");
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -56,6 +55,7 @@ class Login extends Component {
                         message: "Please input your Email!",
                       },
                     ]}
+                    initialValue="Pravin@gmail.com"
                   >
                     <Input
                       prefix={<UserOutlined className="site-form-item-icon" />}
@@ -71,6 +71,7 @@ class Login extends Component {
                         message: "Please input your Password!",
                       },
                     ]}
+                    initialValue="helloworld1"
                   >
                     <Input
                       prefix={<LockOutlined className="site-form-item-icon" />}
@@ -113,7 +114,4 @@ class Login extends Component {
   }
 }
 
-export default connect(
-  state => state,
-  actions
-)(Login);
+export default withUnAuth(connect((state) => state, actions)(Login));

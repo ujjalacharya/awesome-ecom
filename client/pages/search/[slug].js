@@ -22,10 +22,6 @@ class Search extends Component {
       query: { slug },
     } = ctx;
 
-    console.log(ctx)
-
-    const menuData = await ctx.store.dispatch(actions.productCategories());
-
     const searchFilter = await ctx.store.dispatch(
       actions.searchFilter(`?keyword=${ctx.query.slug}`)
     );
@@ -42,7 +38,6 @@ class Search extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <Layout>
         <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />
