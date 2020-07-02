@@ -7,6 +7,8 @@ import OtherDetails from "../../src/Includes/Details/OtherDetails";
 import initialize from "../../utils/initialize";
 import actions from "../../redux/actions";
 import Layout from "../../src/Components/Layout";
+import { withRouter } from "next/router";
+import { connect } from "react-redux";
 
 class Details extends Component {
   static async getInitialProps(ctx) {
@@ -20,14 +22,13 @@ class Details extends Component {
       actions.getProductDetails(ctx.query.slug)
     );
 
-    return {
-      data,
-    };
+    // return {
+    //   data,
+    // };
   }
   render() {
-    
     return (
-      <Layout title={this.props.data.name}>
+      <Layout title={this.props.products && this.props.products.productDetails && this.props.products.productDetails.name}>
         <div className="wrapper">
           <section className="detail">
             <div className="container">
@@ -44,13 +45,13 @@ class Details extends Component {
                   </Breadcrumb>
                 </Col>
               </Row>
-              {this.props.data && (
+              {this.props.products.productDetails && (
                 <Row>
                   <Col lg={10} xs={24} md={24}>
-                    <DetailSlider data={this.props.data} />
+                    <DetailSlider data={this.props.products.productDetails} />
                   </Col>
                   <Col lg={14} xs={24} md={18}>
-                    <ProductSpecs data={this.props.data} />
+                    <ProductSpecs data={this.props.products.productDetails} />
                   </Col>
                 </Row>
               )}
@@ -67,4 +68,4 @@ class Details extends Component {
   }
 }
 
-export default Details;
+export default connect((state) => state)(withRouter(Details));

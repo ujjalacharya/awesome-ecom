@@ -37,7 +37,7 @@ export class ProductService {
     }
   }
 
-  async getProductDetails() {
+  async getProductDetails(slug) {
     try {
       const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/${slug}`);
 
@@ -55,7 +55,7 @@ export class ProductService {
     }
   }
 
-  async getProductsByCategory() {
+  async getProductsByCategory(query) {
     try {
       const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/by-category${query}`);
 

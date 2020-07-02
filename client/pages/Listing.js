@@ -101,11 +101,11 @@ class Listing extends Component {
                 <div className="pagination">
                   <div className="page-status">
                     Page {this.state.currentPage} of{" "}
-                    {Math.ceil(this.props.data.totalCount / this.props.perPage)}
+                    {Math.ceil(this.props.data && (this.props.data.totalCount / this.props.perPage))}
                   </div>
                   <Pagination
                     defaultCurrent={1}
-                    total={this.props.data.totalCount}
+                    total={this.props.data && this.props.data.totalCount}
                     onChange={this.onChangePage}
                   />
                 </div>

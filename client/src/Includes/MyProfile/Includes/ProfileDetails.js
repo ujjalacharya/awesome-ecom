@@ -3,12 +3,38 @@ import { Row, Col } from "antd";
 import { Table } from "antd";
 import _ from "lodash";
 import { convertDateToCurrentTz } from "../../../../utils/common";
+import next from "next";
 
+const userData = {
+  email: "",
+  phone: "",
+};
+
+const activeLoc = {
+  address: "",
+};
 class ProfileDetails extends Component {
-  render() {
-    let { userData, activeLoc } = this.props;
-    console.log(this.props);
+  state = {
+    userData: userData,
+    activeLoc: activeLoc,
+  };
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (
+      this.props.userData !== nextProps.userData &&
+      this.props.activeLoc !== nextProps.activeLoc
+    ) {
+      // this.setState({
+      //   userData: nextProps.userData,
+      //   activeLoc: nextProps.activeLoc,
+      // })
+    }
+  }
+
+  render() {
+    let { userData, activeLoc } = this.state;
+    console.log(this.state);
     const columns = [
       {
         title: "Name",
@@ -23,9 +49,9 @@ class ProfileDetails extends Component {
       },
     ];
 
-    let data = []
+    let data = [];
 
-    if(!_.isEmpty(activeLoc.address)){
+    if (!_.isEmpty(activeLoc.address)) {
       data = [
         {
           key: "1",
@@ -54,19 +80,27 @@ class ProfileDetails extends Component {
       <div className="profile-details">
         <div className="main-profile">
           {!_.isEmpty(userData) && (
-            <Row>
+            <Row className={this.state.userData.email === "" && "skeleton"}>
               <Col span={6} className="left-prof">
                 <img src="/images/profile-pic.jpg" />
               </Col>
               <Col span={18} className="right-prof">
-                <h3>{userData.name}</h3>
+                <h3>
+                  <span>{userData.name}</span>
+                </h3>
                 <div className="em-det">
-                  <div>Email: {userData.email}</div>
-                  {!_.isEmpty(activeLoc) && (
-                    <div>Mobile: {activeLoc.phoneno}</div>
-                  )}
                   <div>
-                    Joined on: {convertDateToCurrentTz(userData.createdAt)}
+                    Email: <span className="small-line loading">{userData.email}</span>
+                  </div>
+                  {!_.isEmpty(activeLoc) && (
+                    <div>Mobile: <span className="medium-line loading">{activeLoc.phoneno}</span></div>
+                  )}
+                  <div className="em-det">
+                    Joined on:{" "}
+                    <span className="large-line">
+                      {userData.createdAt &&
+                        convertDateToCurrentTz(userData.createdAt)}
+                    </span>
                   </div>
                 </div>
               </Col>

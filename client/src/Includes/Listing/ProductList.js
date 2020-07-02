@@ -10,6 +10,7 @@ const { Option } = Select;
 
 class ProductList extends Component {
   render() {
+    console.log(this.props)
     const { data } = this.props;
     return (
       <div className="product-lists">
@@ -30,18 +31,18 @@ class ProductList extends Component {
           </div>
           <div className="page-status">
             Page {this.props.currentPage} of{" "}
-            {Math.ceil(this.props.data.totalCount / this.props.perPage)}
+            {Math.ceil(data && (data.totalCount / this.props.perPage))}
           </div>
         </div>
         <div className="card-list">
           <Row gutter={30}>
-            {data && data.products ? data.products.map((data, i) => {
+            {data && data.products ? (data.products.map((data, i) => {
               return (
                 <Col lg={6} sm={12} xs={24} key={i}>
                   <ProductCard data={data} />
                 </Col>
               );
-            }): 'No Products Available'}
+            })): 'No Products Available'}
           </Row>
         </div>
       </div>
