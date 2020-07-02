@@ -25,10 +25,10 @@ class ProfileDetails extends Component {
       this.props.userData !== nextProps.userData &&
       this.props.activeLoc !== nextProps.activeLoc
     ) {
-      // this.setState({
-      //   userData: nextProps.userData,
-      //   activeLoc: nextProps.activeLoc,
-      // })
+      this.setState({
+        userData: nextProps.userData,
+        activeLoc: nextProps.activeLoc,
+      })
     }
   }
 

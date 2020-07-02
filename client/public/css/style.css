@@ -222,19 +222,19 @@ a.view-more-less i {
   content: "" !important;
 }
 
-.skeleton .large-line.loading {
+.skeleton .large-line {
   height: 8px;
   background-color: #eee;
   width: 200px;
   display: inline-block;
 }
-.skeleton .medium-line.loading {
+.skeleton .medium-line {
   height: 8px;
   background-color: #eee;
   width: 150px;
   display: inline-block;
 }
-.skeleton .small-line.loading {
+.skeleton .small-line {
   height: 8px;
   background-color: #eee;
   width: 100px;
@@ -243,7 +243,6 @@ a.view-more-less i {
 
 .loading {
   position: relative;
-  background-color: #e2e2e2;
 }
 .loading::after {
   display: block;
@@ -253,7 +252,7 @@ a.view-more-less i {
   height: 100%;
   transform: translateX(-100%);
   background: -webkit-gradient(linear, left top, right top, from(transparent), color-stop(rgba(255, 255, 255, 0.2)), to(transparent));
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(86, 86, 86, 0.2), transparent);
   /* Adding animation */
   animation: loading 0.8s infinite;
 }
