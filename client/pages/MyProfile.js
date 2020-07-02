@@ -9,11 +9,17 @@ import MyWishlist from "../src/Includes/MyProfile/MyWishlist";
 import MyReviews from "../src/Includes/MyProfile/MyReviews";
 import Layout from "../src/Components/Layout";
 import withPrivate from "../utils/auth/withPrivate";
+import { connect } from "react-redux";
+import actions from "../redux/actions";
 
 class MyProfile extends Component {
   state = {
     currentMenu: "manage-account",
   };
+
+  componentDidMount(){
+    console.log(this.props)
+  }
 
   changeMenuTab = (menu) => {
     this.setState({
@@ -52,4 +58,7 @@ class MyProfile extends Component {
   }
 }
 
-export default withPrivate(MyProfile);
+export default connect(
+  state => state,
+  actions
+)(withPrivate(MyProfile));

@@ -24,28 +24,7 @@ class Header extends Component {
     let loginToken = this.props.authentication.token;
     let userInfo = getUserInfo(loginToken);
 
-    let { data } = this.props;
-    let parentCategory = [];
-
-    let parentCate = [];
-    if (this.props.data) {
-      data.map((cate) => {
-        if (cate.parent === undefined) {
-          parentCategory.push(cate);
-        }
-      });
-
-      let allCates = getChildCategories(data, parentCategory);
-
-      allCates.map((newChild) => {
-        let newallCates = getChildCategories(data, newChild.childCate);
-        let parentCateEle = { ...newChild, childCate: newallCates };
-        parentCate.push(parentCateEle);
-      });
-    }
-
     this.setState({
-      parentCate,
       loginToken,
       userInfo,
     });
@@ -53,7 +32,6 @@ class Header extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.token !== nextProps.authentication.token) {
-
       let userInfo = [];
       if (nextProps.authentication.token) {
         userInfo = getUserInfo(loginToken);
@@ -62,6 +40,32 @@ class Header extends Component {
         loginToken: nextProps.authentication.token,
         userInfo,
       });
+    }
+    if (
+      this.props.menu.menuCategories !== nextProps.menu.menuCategories &&
+      nextProps.menu.menuCategories
+    ) {
+      let parentCategory = [];
+
+      let parentCate = [];
+      let { menuCategories } = nextProps.menu
+      menuCategories.map((cate) => {
+        if (cate.parent === undefined) {
+          parentCategory.push(cate);
+        }
+      });
+
+      let allCates = getChildCategories(menuCategories, parentCategory);
+
+      allCates.map((newChild) => {
+        let newallCates = getChildCategories(menuCategories, newChild.childCate);
+        let parentCateEle = { ...newChild, childCate: newallCates };
+        parentCate.push(parentCateEle);
+      });
+
+      this.setState({
+        parentCate
+      })
     }
   }
 
@@ -81,9 +85,7 @@ class Header extends Component {
   };
 
   render() {
-    console.log(this.props)
     let { parentCate, loginToken, userInfo } = this.state;
-    
     return (
       <div className="main-header">
         <Row>

@@ -26,7 +26,6 @@ class Search extends Component {
       actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
     );
 
-    // console.log(ctx.query)
     const searchData = await ctx.store.dispatch(
       actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
     );
@@ -38,7 +37,6 @@ class Search extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <Layout>
         <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.products.productByCategory} perPage={this.state.perPage} />

@@ -3,7 +3,7 @@ import fetch from "isomorphic-unfetch";
 export class ProductService {
   async getLatestProducts() {
     try {
-      const resp = await fetch("http://localhost:3001/api/product/latest");
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/latest`);
 
       const data = await resp.json();
 
@@ -21,7 +21,7 @@ export class ProductService {
 
   async productCategories() {
     try {
-      const resp = await fetch("http://localhost:3001/api/superadmin/product-categories");
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/superadmin/product-categories`);
 
       const data = await resp.json();
 
@@ -39,7 +39,7 @@ export class ProductService {
 
   async getProductDetails() {
     try {
-      const resp = await fetch(`http://localhost:3001/api/product/${slug}`);
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/${slug}`);
 
       const data = await resp.json();
 
@@ -57,7 +57,7 @@ export class ProductService {
 
   async getProductsByCategory() {
     try {
-      const resp = await fetch(`http://localhost:3001/api/product/by-category${query}`);
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/by-category${query}`);
 
       const data = await resp.json();
 

@@ -91,7 +91,7 @@ class ProductCard extends Component {
             >
               <div className="image">
                 <img
-                  src={"http://localhost:3001/uploads/" + data.images[0].medium}
+                  src={`${process.env.SERVER_BASE_URL}/uploads/${data.images[0].medium}`}
                   // onError={(ev) => {
                   //   ev.target.src =
                   //     "/images/prod-bag.jpg";

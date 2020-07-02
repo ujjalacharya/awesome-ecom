@@ -73,7 +73,7 @@ const getProductsByCategory = (query) => {
 const getOrders = (ctx) => {
   return async (dispatch) => {
     const resp = await fetch(
-      `http://localhost:3001/api/cart-wishlist/carts?page=1`,
+      `${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?page=1`,
       {
         method: "GET",
         headers: {
