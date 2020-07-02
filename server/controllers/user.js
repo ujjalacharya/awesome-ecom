@@ -92,7 +92,7 @@ exports.addAddress = async(req,res) => {
         newAddress.geolocation = geolocation;
     }
     newAddress.user = profile._id
-    let user = await User.findById(profile._id)
+    let user = await (await User.findById(profile._id)).select('location')
     updateuser = user.toObject()
     updateuser.location.push(newAddress._id)
     const results = await task
@@ -102,4 +102,61 @@ exports.addAddress = async(req,res) => {
         .run({ useMongoose: true })
 
     res.json(results)
+}
+
+exports.editAddress = async(req,res) => {
+    if (!req.user.location.includes(req.params.address_id)) {
+        return res.status(403).json({error:"Cannot update address."})
+    }
+    let address = await Address.findById(req.params.address_id)
+    if (!address) {
+        return res.status(404).json({error:"Address not found."})
+    }
+    //user cannot edit label
+    if(req.body.label) req.body.label=undefined
+    if(req.body.isActive) req.body.isActive = undefined
+    address = _.extend(address,req.body)
+    address = await address.save()
+    res.json(address)
+}
+
+exports.toggleAddressActiveness = async(req,res) => {
+    let addresses = await Address.find({user:req.user._id})
+    if (!addresses.length) {
+        return res.json(addresses)
+    }
+    //if there is single address make update isActive to Date.now()
+    if (addresses.length === 1) {
+        addresses[0].isActive = Date.now()
+        await addresses[0].save()
+        return res.json(addresses)
+    }
+    // else there are 2 addresses so toggle isActive
+    let add1 = addresses[0].toObject()
+    let add2 = addresses[1].toObject()
+    if (add1.isActive === null) {
+        add1.isActive = Date.now()
+        add2.isActive = null
+        const results = await task
+            .update(addresses[0], add1)
+            .options({ viaSave: true })
+            .update(addresses[1], add2)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+
+        return res.json(results)
+    }
+    if (add2.isActive === null) {
+        add2.isActive = Date.now()
+        add1.isActive = null
+        const results = await task
+            .update(addresses[0], add1)
+            .options({ viaSave: true })
+            .update(addresses[1], add2)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+
+        return res.json(results)
+    }
+    
 }
