@@ -241,28 +241,6 @@ a.view-more-less i {
   display: inline-block;
 }
 
-.loading {
-  position: relative;
-}
-.loading::after {
-  display: block;
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform: translateX(-100%);
-  background: -webkit-gradient(linear, left top, right top, from(transparent), color-stop(rgba(255, 255, 255, 0.2)), to(transparent));
-  background: linear-gradient(90deg, transparent, rgba(86, 86, 86, 0.2), transparent);
-  /* Adding animation */
-  animation: loading 0.8s infinite;
-}
-
-/* Loading Animation */
-@keyframes loading {
-  100% {
-    transform: translateX(100%);
-  }
-}
 input {
   background: #F8F8F8;
   font-size: 12px;
