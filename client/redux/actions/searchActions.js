@@ -2,10 +2,10 @@ import fetch from "isomorphic-unfetch";
 import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR } from "../types";
 import { SearchService } from "../services/searchService";
 
-const searchProducts = (query) => {
+const searchProducts = (query, body) => {
   return async (dispatch) => {
     const searchService = new SearchService();
-    const response = await searchService.searchProducts(query);
+    const response = await searchService.searchProducts(query, body);
     if (response.isSuccess) {
       dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {

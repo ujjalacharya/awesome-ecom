@@ -26,8 +26,12 @@ class Search extends Component {
       actions.searchFilter(`?keyword=${ctx.query.slug}`)
     );
 
+    let body = {
+      keyword: ctx.query.slug
+    }
+
     const searchData = await ctx.store.dispatch(
-      actions.searchProducts(`?page=1&perPage=10`+'&keyword='+ctx.query.slug)
+      actions.searchProducts(`?page=1&perPage=10`, body)
     );
 
     // return {
