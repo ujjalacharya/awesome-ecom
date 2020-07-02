@@ -81,6 +81,7 @@ class Header extends Component {
   };
 
   render() {
+    console.log(this.props)
     let { parentCate, loginToken, userInfo } = this.state;
     
     return (

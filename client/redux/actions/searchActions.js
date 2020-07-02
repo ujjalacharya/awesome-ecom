@@ -5,28 +5,34 @@ import { SEARCH_PRODUCTS, SEARCH_FILTER } from "../types";
 const searchProducts = (query) => {
   
   return async (dispatch) => {
-    const resp = await fetch(`http://localhost:3001/api/product/search${query}`);
-
-    const data = await resp.json();
-    // const data = []
-    dispatch({ type: SEARCH_PRODUCTS, payload: data });
-    
-    return data;
+    const productService = new ProductService();
+    const response = await productService.searchProducts();
+    if (response.isSuccess) {
+      dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
   };
 };
 
 const searchFilter = (query) => {
   
     return async (dispatch) => {
-      const resp = await fetch(`http://localhost:3001/api/product/generate-filter${query}`);
-  
-      const data = await resp.json();
-      // const data = []
-      dispatch({ type: SEARCH_FILTER, payload: data });
-      
-      return data;
-    };
+      const productService = new ProductService();
+    const response = await productService.searchFilter();
+    if (response.isSuccess) {
+      dispatch({ type: SEARCH_FILTER, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
   };
+}
 
 export default {
   searchProducts,

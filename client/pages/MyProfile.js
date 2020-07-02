@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import Menu from "../src/Includes/MyProfile/menu";
-import Header from "../src/Components/Header";
-import Footer from "../src/Components/Footer";
 import { Row, Col } from "antd";
+
+//includes
 import MenuDetails from "../src/Includes/MyProfile/MenuDetails";
 import MyOrders from "../src/Includes/MyProfile/MyOrders";
 import MyWishlist from "../src/Includes/MyProfile/MyWishlist";
 import MyReviews from "../src/Includes/MyProfile/MyReviews";
 import Layout from "../src/Components/Layout";
+import withPrivate from "../utils/auth/withPrivate";
 
 class MyProfile extends Component {
   state = {
@@ -51,4 +52,4 @@ class MyProfile extends Component {
   }
 }
 
-export default MyProfile;
+export default withPrivate(MyProfile);
