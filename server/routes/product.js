@@ -12,7 +12,7 @@ const router = express.Router();
 router.get('/latest',latestProducts)
 router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
-router.get('/search',searchProducts)//need to work on rating
+router.post('/search',searchProducts)//need to work on rating
 
 //admin's or superadmin's
 router.get("/products/:id", auth, hasAuthorization, getProducts)
