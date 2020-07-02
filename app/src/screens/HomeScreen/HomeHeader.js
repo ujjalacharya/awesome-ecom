@@ -15,7 +15,6 @@ export class HomeHeader extends Component {
         <Appbar.Content title="Title" />
         <Appbar.Action icon="magnify" />
         <Appbar.Action icon="dots-vertical" />
-        {/* <Appbar.Content title={headerTitle || } /> */}
       </Appbar.Header>
     );
   }
