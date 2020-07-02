@@ -55,20 +55,20 @@ const getProductDetails = (slug) => {
   };
 };
 
-const getProductsByCategory = (query) => {
-  return async (dispatch) => {
-    const productService = new ProductService();
-    const response = await productService.getProductsByCategory(query);
-    if (response.isSuccess) {
-      dispatch({ type: PRODUCT_BY_CATEGORY, payload: response.data });
-    } else if (!response.isSuccess) {
-      dispatch({
-        type: PRODUCT_ERROR,
-        payload: response.errorMessage,
-      });
-    }
-  };
-};
+// const getProductsByCategory = (query) => {
+//   return async (dispatch) => {
+//     const productService = new ProductService();
+//     const response = await productService.getProductsByCategory(query);
+//     if (response.isSuccess) {
+//       dispatch({ type: PRODUCT_BY_CATEGORY, payload: response.data });
+//     } else if (!response.isSuccess) {
+//       dispatch({
+//         type: PRODUCT_ERROR,
+//         payload: response.errorMessage,
+//       });
+//     }
+//   };
+// };
 
 const getOrders = (ctx) => {
   return async (dispatch) => {
@@ -96,5 +96,5 @@ export default {
   productCategories,
   getProductDetails,
   getOrders,
-  getProductsByCategory
+  // getProductsByCategory
 };

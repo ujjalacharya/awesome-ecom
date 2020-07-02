@@ -72,10 +72,22 @@ class Listing extends Component {
       checkedBrands: e
     })
 
-    let body = {
-      keyword: this.props.router.query.slug,
-      brands: e
+    console.log(this.props.router)
+    let pathName = this.props.router.pathname.split('/')[1]
+    console.log(pathName)
+    let body = {}
+    if(pathName === 'search'){
+      body = {
+        keyword: this.props.router.query.slug,
+        brands: e
+      }
+    }else if(pathName === 'category'){
+      body = {
+        cat_id: this.props.router.query.cate,
+        brands: e
+      }
     }
+
 
     let appendUrl = `&keyword=${this.props.router.query.slug}&brands=${e}`
 
@@ -83,7 +95,7 @@ class Listing extends Component {
   } 
 
   render() {
-    
+    console.log(this.props)
     return (
       <div className="wrapper">
         <section className="listing">

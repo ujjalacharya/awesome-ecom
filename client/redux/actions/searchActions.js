@@ -17,6 +17,21 @@ const searchProducts = (query, body) => {
   };
 };
 
+const getProductsByCategory = (query) => {
+  return async (dispatch) => {
+    const searchService = new SearchService();
+    const response = await searchService.getProductsByCategory(query);
+    if (response.isSuccess) {
+      dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: SEARCH_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 const searchFilter = (query) => {
   return async (dispatch) => {
     const searchService = new SearchService();
@@ -35,4 +50,5 @@ const searchFilter = (query) => {
 export default {
   searchProducts,
   searchFilter,
+  getProductsByCategory
 };
