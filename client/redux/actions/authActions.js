@@ -11,7 +11,7 @@ const authenticate = (body, type) => {
   }
   return (dispatch) => {
     axios
-      .post(`http://localhost:3001/api/user-auth/signin`, body)
+      .post(`${process.env.SERVER_BASE_URL}/api/user-auth/signin`, body)
       .then((response) => {
         setCookie("token", response.data.accessToken);
         dispatch({ type: AUTHENTICATE, payload: response.data.token });

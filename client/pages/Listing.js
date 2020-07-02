@@ -68,7 +68,6 @@ class Listing extends Component {
   }
 
   onCheckBrands = (e) => {
-    console.log(e)
     this.setState({
       checkedBrands: e
     })
@@ -79,7 +78,7 @@ class Listing extends Component {
   } 
 
   render() {
-    console.log(this.props);
+    
     return (
       <div className="wrapper">
         <section className="listing">

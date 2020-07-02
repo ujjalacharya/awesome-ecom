@@ -48,3 +48,12 @@ export const isTokenExpired = (token) => {
   }
   return false;
 };
+
+export const getUserInfo = (token) => {
+  let data = ''
+  if(token){
+    data = jwt.decode(token);
+    return data
+  }
+  return data
+}

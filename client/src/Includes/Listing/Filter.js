@@ -11,7 +11,7 @@ class Filter extends Component {
     const { data } = this.props;
     
     let brandOptions = [];
-    data.brands.length > 0 && data.brands.map((brand) => {
+    data.brands && data.brands.length > 0 && data.brands.map((brand) => {
       let ele = { label: brand.brandName, value: brand._id };
       brandOptions.push(ele);
     });
@@ -23,7 +23,7 @@ class Filter extends Component {
     ];
 
     let colorOptions = [];
-    data.colors.length > 0 && data.colors.map((color) => {
+    data && data.colors && data.colors.length > 0 && data.colors.map((color) => {
       let ele = { label: color, value: color };
       colorOptions.push(ele);
     });
@@ -52,7 +52,7 @@ class Filter extends Component {
           <div className="type-title">Ratings</div>
           <div className="type-list">
             {
-              data.ratings.length > 0 && data.ratings.map((rate,i) => {
+              data && data.ratings && data.ratings.length > 0 && data.ratings.map((rate,i) => {
                 return(
                   <div key={i} className="rate-stars">
                     {

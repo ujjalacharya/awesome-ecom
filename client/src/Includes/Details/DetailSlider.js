@@ -7,7 +7,7 @@ import ReactImageMagnify from "react-image-magnify";
 class DetailSlider extends Component {
   state = {
     imageUrl:
-      "http://localhost:3001/uploads/" + this.props.data.images[0].large,
+      `${process.env.SERVER_BASE_URL}/uploads/${this.props.data.images[0].large}`,
   };
 
   changeImage = (url) => {
@@ -69,9 +69,9 @@ class DetailSlider extends Component {
               return(
                 <img
                   key={i}
-                  src={"http://localhost:3001/uploads/"+imgs.thumbnail}
+                  src={`${process.env.SERVER_BASE_URL}/uploads/${imgs.thumbnail}`}
                   alt={this.props.data.name}
-                  onClick={() => this.changeImage("http://localhost:3001/uploads/"+imgs.large)}
+                  onClick={() => this.changeImage(`${process.env.SERVER_BASE_URL}/uploads/${imgs.large}`)}
                   className="prod-img"
                 />
               )
