@@ -28,7 +28,7 @@ class ProfileDetails extends Component {
       this.setState({
         userData: nextProps.userData,
         activeLoc: nextProps.activeLoc,
-      })
+      });
     }
   }
 
@@ -76,11 +76,13 @@ class ProfileDetails extends Component {
         },
       ];
     }
+
+    let checkSekelton = this.state.userData.email === '' ? true : false
     return (
       <div className="profile-details">
         <div className="main-profile">
           {!_.isEmpty(userData) && (
-            <Row className={this.state.userData.email === "" && "skeleton"}>
+            <Row className={checkSekelton && "skeleton"}>
               <Col span={6} className="left-prof">
                 <img src="/images/profile-pic.jpg" />
               </Col>
@@ -90,14 +92,20 @@ class ProfileDetails extends Component {
                 </h3>
                 <div className="em-det">
                   <div>
-                    Email: <span className="small-line loading">{userData.email}</span>
+                    <span className="small-line loading">
+                      {!checkSekelton && 'Email:'} {userData.email}
+                    </span>
                   </div>
                   {!_.isEmpty(activeLoc) && (
-                    <div>Mobile: <span className="medium-line loading">{activeLoc.phoneno}</span></div>
+                    <div>
+                      <span className="medium-line loading">
+                        {!checkSekelton && 'Mobile:'} {activeLoc.phoneno}
+                      </span>
+                    </div>
                   )}
                   <div className="em-det">
-                    Joined on:{" "}
                     <span className="large-line">
+                      {!checkSekelton && 'Joined on:'}{" "}
                       {userData.createdAt &&
                         convertDateToCurrentTz(userData.createdAt)}
                     </span>
