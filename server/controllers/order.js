@@ -527,6 +527,9 @@ exports.toggleDispatchOrder = async (req,res) => {
         await order.save()
         return res.json(order)
     }
+    if (order.status.dispatchedDetail.dispatchedBy._id.toString() !== req.dispatcher._id.toString()) {
+        return res.status(401).json({ error: `Unauthorized Dispatcher.` })
+    }
     if (order.status.currentStatus === 'dispatch') {
         order.status.currentStatus = 'approve'
         order.status.dispatchedDetail = {
