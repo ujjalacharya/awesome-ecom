@@ -8,7 +8,7 @@ import ConstantColors from "../constants/ConstantColors";
 const CustomDrawer = () => {
   return (
     <>
-      <Appbar.Header statusBarHeight={0}>
+      <Appbar.Header statusBarHeight={10}>
         <Appbar.Content
           color={ConstantColors.headerTintColor}
           title={"All Categories"}

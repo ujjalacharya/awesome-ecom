@@ -12,9 +12,15 @@ export class HomeHeader extends Component {
           color={ConstantColors.headerTintColor}
           onPress={() => this.props.navigation.openDrawer()}
         />
-        <Appbar.Content title="Title" />
-        <Appbar.Action icon="magnify" />
-        <Appbar.Action icon="dots-vertical" />
+        <Appbar.Content
+          color={ConstantColors.headerTintColor}
+          title="KINDEEM"
+        />
+        {/* <Appbar.Action icon="magnify" /> */}
+        <Appbar.Action
+          color={ConstantColors.headerTintColor}
+          icon="dots-vertical"
+        />
       </Appbar.Header>
     );
   }
