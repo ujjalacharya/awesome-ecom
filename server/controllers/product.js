@@ -217,7 +217,7 @@ exports.searchProducts = async (req, res) => {
     warranties,
     weights,
     cat_id,
-  } = req.query;
+  } = req.body;
   let categories;
   if (cat_id) {
     categories = await Category.find({
@@ -231,20 +231,12 @@ exports.searchProducts = async (req, res) => {
   let searchingFactor = {};
   if (keyword && !cat_id) {
     //that is if only with keyword
-    // searchingFactor = {
-    //     $or: [{ name: { $regex: keyword, $options: 'i' } },
-    //     { tags: { $regex: keyword, $options: 'i' } }
-    //     ],
-    //     isVerified: { "$ne": null }, isDeleted: null
-    // }
     searchingFactor.isVerified = { $ne: null };
     searchingFactor.isDeleted = null;
     searchingFactor.$or = [
       { name: { $regex: keyword, $options: "i" } },
       { tags: { $regex: keyword, $options: "i" } },
     ];
-    // searchingFactor.name = { $regex: keyword, $options: 'i' }
-    // searchingFactor.tags = { $regex: keyword, $options: 'i' }
     if (brands) searchingFactor.brand = brands;
     if (max_price && min_price)
       searchingFactor.price = { $lte: +max_price, $gte: +min_price };
@@ -265,8 +257,6 @@ exports.searchProducts = async (req, res) => {
     if (weights) searchingFactor.weight = { $in: weights };
     if (warranties) searchingFactor.warranty = warranties;
   }
-  console.log(brands);
-  console.log(searchingFactor);
   const products = await Product.find(searchingFactor)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
