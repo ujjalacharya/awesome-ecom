@@ -9,6 +9,8 @@ export default function Main() {
   const theme = {
     ...DefaultTheme,
     roundness: 2,
+    dark: false,
+    mode: "adaptive",
     colors: {
       ...DefaultTheme.colors,
       primary: COLORCONSTANT.tintColor,

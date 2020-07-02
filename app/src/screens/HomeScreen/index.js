@@ -3,10 +3,10 @@ import { Text, View, StyleSheet, Alert } from "react-native";
 import { Colors, TouchableRipple } from "react-native-paper";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import HomeHeader from "../../components/HomeHeader";
+import HomeHeader from "./HomeHeader";
 import { Button, Card } from "react-native-paper";
 import ConstantColors from "../../constants/ConstantColors";
-import AllBusScrollView from "../../components/AllBusScrollView";
+import AllProductScrollView from "../../components/AllProductScrollView";
 
 import { jorneyAction } from "../../store/actions/journey_actions";
 
@@ -31,7 +31,7 @@ export class HomeScreen extends Component {
               </Button>
             </View>
           </Card>
-          <AllBusScrollView />
+          <AllProductScrollView />
         </View>
       </>
     );

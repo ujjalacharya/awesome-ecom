@@ -5,7 +5,7 @@ import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { busData } from "../utils/mock";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const AllBusScrollView = () => (
+const AllProductScrollView = () => (
   <View style={styles.container}>
     <ScrollView
       horizontal={true}
@@ -53,4 +53,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllBusScrollView;
+export default AllProductScrollView;

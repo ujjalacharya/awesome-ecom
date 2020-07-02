@@ -1,16 +1,11 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../../screens/HomeScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { View } from "react-native";
 
 import { connect } from "react-redux";
+import CustomDrawer from "../../components/CustomDrawerComponent";
 
 const Drawer = createDrawerNavigator();
-
-const CustomDrawer = () => {
-  return <View style={{ width: "100%", backgroundColor: "red", height: "100%" }}></View>;
-};
 
 const HomeStack = ({ isAuth }) => {
   return (
