@@ -2,39 +2,27 @@ import React, { Component } from "react";
 import { Row, Col, Input } from "antd";
 import { connect } from "react-redux";
 
-import { getChildCategories } from "../../utils/common";
+import { getChildCategories, getUserInfo } from "../../utils/common";
 import Link from "next/link";
 import actions from "../../redux/actions";
 import initialize from "../../utils/initialize";
 import Router from "next/router";
 import cookie from "js-cookie";
+import next from "next";
 
 class Header extends Component {
   state = {
     search: "",
+    parentCate: [],
+    loginToken: "",
+    userInfo: {},
   };
 
   componentDidMount() {
     this.props.productCategories();
-  }
 
-  static getInitialProps(ctx) {
-    initialize(ctx);
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    Router.push("/search/[slug]", "/search/" + this.state.search);
-  };
-
-  searchProducts = (e, slug, cateId) => {
-    e.stopPropagation()
-    Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
-  };
-
-  render() {
     let loginToken = this.props.authentication.token;
+    let userInfo = getUserInfo(loginToken);
 
     let { data } = this.props;
     let parentCategory = [];
@@ -56,6 +44,45 @@ class Header extends Component {
       });
     }
 
+    this.setState({
+      parentCate,
+      loginToken,
+      userInfo,
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.authentication.token !== nextProps.authentication.token) {
+
+      let userInfo = [];
+      if (nextProps.authentication.token) {
+        userInfo = getUserInfo(loginToken);
+      }
+      this.setState({
+        loginToken: nextProps.authentication.token,
+        userInfo,
+      });
+    }
+  }
+
+  static getInitialProps(ctx) {
+    initialize(ctx);
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    Router.push("/search/[slug]", "/search/" + this.state.search);
+  };
+
+  searchProducts = (e, slug, cateId) => {
+    e.stopPropagation();
+    Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
+  };
+
+  render() {
+    let { parentCate, loginToken, userInfo } = this.state;
+    
     return (
       <div className="main-header">
         <Row>
@@ -72,9 +99,7 @@ class Header extends Component {
                   <ul className="category">
                     {parentCate.map((cate, i) => {
                       return (
-                        <li
-                          key={i}
-                        >
+                        <li key={i}>
                           <div className="title">
                             <span>{cate.displayName}</span>
                             <span className="title-icon">
@@ -170,7 +195,7 @@ class Header extends Component {
             </form>
           </Col>
           <Col lg={4} md={5} className="menu-right">
-            <Link href="/dashboard">
+            <Link href="/myprofile">
               <div className="menu-right-items">
                 <div className="list-icon">
                   <img src="/images/user.png" />
