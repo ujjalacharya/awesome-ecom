@@ -1,21 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware, compose } from "redux";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import promiseMiddleware from "redux-promise";
+
+import Main from "./src";
+
+import reducers from "./src/store/reducers";
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const createStoreWithMiddleware = createStore(
+  reducers,
+  composeEnhancers(applyMiddleware(promiseMiddleware))
+);
+
+class App extends React.Component {
+  render() {
+    return (
+      <Provider store={createStoreWithMiddleware}>
+        <Main />
+      </Provider>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
