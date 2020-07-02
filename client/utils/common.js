@@ -1,26 +1,7 @@
 import jwt from "jsonwebtoken";
+import * as moment from "moment-timezone";
 
 export const getChildCategories = (allCategories, parentCategory) => {
-  // let newParentCate = [];
-  // let finalData = []
-  // allCategories.map((cate) => {
-  //   let parentCategoryElements = { ...cate };
-  //   let childCate = [];
-  //   allCategories.forEach((allCate) => {
-  //     if (allCate.parent === cate._id) {
-  //       childCate.push(allCate);
-  //     }
-  //   });
-  //   parentCategoryElements.childCate = childCate;
-  //   newParentCate.push(parentCategoryElements);
-  // });
-
-  // newParentCate.forEach(datum => {
-  //   if (datum.parent === undefined) {
-  //     finalData.push(datum);
-  //   }
-  // });
-  // return finalData;
 
   let newParentCate = [];
   parentCategory.forEach((parentCate) => {
@@ -35,6 +16,7 @@ export const getChildCategories = (allCategories, parentCategory) => {
     newParentCate.push(parentCategoryElements);
   });
   return newParentCate;
+
 };
 
 export const isTokenExpired = (token) => {
@@ -56,4 +38,13 @@ export const getUserInfo = (token) => {
     return data
   }
   return data
+}
+
+export const convertDateToCurrentTz = (date) =>{
+  const currentTimeZone = moment.tz.guess();
+  return moment
+    .utc(date)
+    .tz(currentTimeZone)
+    .format("Do MMMM, YYYY")
+
 }

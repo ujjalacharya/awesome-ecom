@@ -1,4 +1,4 @@
-import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR } from "../types";
+import { USER_PROFILE, USER_ERROR } from "../types";
 
 const initialState = {
   userProfile: null,
