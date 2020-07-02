@@ -6,6 +6,7 @@ const Stack = createStackNavigator();
 
 import TabNavigators from "./TabNavigators";
 import SearchScreen from "../screens/AfterGo/SearchScreen";
+import DrawerNavigators from "./DrawerNavigators";
 
 export default function App() {
   return (
@@ -15,7 +16,7 @@ export default function App() {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="Root" component={TabNavigators} />
+        <Stack.Screen name="Home" component={DrawerNavigators} />
         <Stack.Screen name="Search" component={SearchScreen} />
       </Stack.Navigator>
     </NavigationContainer>

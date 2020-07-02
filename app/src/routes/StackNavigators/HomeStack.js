@@ -1,21 +1,19 @@
 import React from "react";
 import HomeScreen from "../../screens/HomeScreen";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-
 import { connect } from "react-redux";
-import CustomDrawer from "../../components/CustomDrawerComponent";
+import { createStackNavigator } from "@react-navigation/stack";
 
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
-const HomeStack = ({ isAuth }) => {
+const HomeStack = () => {
   return (
-    <Drawer.Navigator
-      drawerType="slide"
-      initialRouteName="Main"
-      drawerContent={(props) => CustomDrawer(props)}
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
     >
-      <Drawer.Screen name="Home" component={HomeScreen} />
-    </Drawer.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+    </Stack.Navigator>
   );
 };
 
