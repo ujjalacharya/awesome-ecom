@@ -12,15 +12,16 @@ import { ProductService } from "../services/productService";
 
 const productCategories = () => {
   return async (dispatch) => {
-    const resp = await fetch(
-      "http://localhost:3001/api/superadmin/product-categories"
-    );
-
-    const data = await resp.json();
-
-    dispatch({ type: MENU_CATEGORIES, payload: data });
-
-    return data;
+    const productService = new ProductService();
+    const response = await productService.productCategories();
+    if (response.isSuccess) {
+      dispatch({ type: MENU_CATEGORIES, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
   };
 };
 
@@ -41,48 +42,38 @@ const getLatestProducts = () => {
 
 const getProductDetails = (slug) => {
   return async (dispatch) => {
-    const resp = await fetch(`http://localhost:3001/api/product/${slug}`);
-
-    const data = await resp.json();
-
-    dispatch({ type: PRODUCT_DETAILS, payload: data });
-
-    return data;
-  };
-};
-
-const getProductBrands = () => {
-  return async (dispatch) => {
-    const resp = await fetch(
-      `http://localhost:3001/api/superadmin/product-brands`
-    );
-
-    const data = await resp.json();
-
-    dispatch({ type: PRODUCT_DETAILS, payload: data });
-
-    return data;
+    const productService = new ProductService();
+    const response = await productService.getProductDetails();
+    if (response.isSuccess) {
+      dispatch({ type: PRODUCT_DETAILS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
   };
 };
 
 const getProductsByCategory = (query) => {
   return async (dispatch) => {
-    const resp = await fetch(
-      `http://localhost:3001/api/product/by-category${query}`
-    );
-
-    const data = await resp.json();
-
-    dispatch({ type: PRODUCT_BY_CATEGORY, payload: data });
-
-    return data;
+    const productService = new ProductService();
+    const response = await productService.getProductsByCategory();
+    if (response.isSuccess) {
+      dispatch({ type: PRODUCT_BY_CATEGORY, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
   };
 };
 
 const getOrders = (ctx) => {
   return async (dispatch) => {
     const resp = await fetch(
-      `http://localhost:3001/api/cart-wishlist/carts?page=1`,
+      `${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?page=1`,
       {
         method: "GET",
         headers: {
@@ -104,7 +95,6 @@ export default {
   getLatestProducts,
   productCategories,
   getProductDetails,
-  getProductBrands,
   getOrders,
   getProductsByCategory
 };

@@ -2,20 +2,71 @@ import React, { Component } from "react";
 import { Row, Col, Input } from "antd";
 import { connect } from "react-redux";
 
-import { getChildCategories } from "../../utils/common";
+import { getChildCategories, getUserInfo } from "../../utils/common";
 import Link from "next/link";
 import actions from "../../redux/actions";
 import initialize from "../../utils/initialize";
 import Router from "next/router";
 import cookie from "js-cookie";
+import next from "next";
 
 class Header extends Component {
   state = {
     search: "",
+    parentCate: [],
+    loginToken: "",
+    userInfo: {},
   };
 
   componentDidMount() {
     this.props.productCategories();
+
+    let loginToken = this.props.authentication.token;
+    let userInfo = getUserInfo(loginToken);
+
+    this.setState({
+      loginToken,
+      userInfo,
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.authentication.token !== nextProps.authentication.token) {
+      let userInfo = [];
+      if (nextProps.authentication.token) {
+        userInfo = getUserInfo(loginToken);
+      }
+      this.setState({
+        loginToken: nextProps.authentication.token,
+        userInfo,
+      });
+    }
+    if (
+      this.props.menu.menuCategories !== nextProps.menu.menuCategories &&
+      nextProps.menu.menuCategories
+    ) {
+      let parentCategory = [];
+
+      let parentCate = [];
+      let { menuCategories } = nextProps.menu
+      menuCategories.map((cate) => {
+        if (cate.parent === undefined) {
+          parentCategory.push(cate);
+        }
+      });
+
+      let allCates = getChildCategories(menuCategories, parentCategory);
+
+      allCates.map((newChild) => {
+        let newallCates = getChildCategories(menuCategories, newChild.childCate);
+        let parentCateEle = { ...newChild, childCate: newallCates };
+        parentCate.push(parentCateEle);
+      });
+
+      this.setState({
+        parentCate
+      })
+    }
   }
 
   static getInitialProps(ctx) {
@@ -29,33 +80,12 @@ class Header extends Component {
   };
 
   searchProducts = (e, slug, cateId) => {
-    e.stopPropagation()
+    e.stopPropagation();
     Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
   };
 
   render() {
-    let loginToken = this.props.authentication.token;
-
-    let { data } = this.props;
-    let parentCategory = [];
-
-    let parentCate = [];
-    if (this.props.data) {
-      data.map((cate) => {
-        if (cate.parent === undefined) {
-          parentCategory.push(cate);
-        }
-      });
-
-      let allCates = getChildCategories(data, parentCategory);
-
-      allCates.map((newChild) => {
-        let newallCates = getChildCategories(data, newChild.childCate);
-        let parentCateEle = { ...newChild, childCate: newallCates };
-        parentCate.push(parentCateEle);
-      });
-    }
-
+    let { parentCate, loginToken, userInfo } = this.state;
     return (
       <div className="main-header">
         <Row>
@@ -72,9 +102,7 @@ class Header extends Component {
                   <ul className="category">
                     {parentCate.map((cate, i) => {
                       return (
-                        <li
-                          key={i}
-                        >
+                        <li key={i}>
                           <div className="title">
                             <span>{cate.displayName}</span>
                             <span className="title-icon">
@@ -170,7 +198,7 @@ class Header extends Component {
             </form>
           </Col>
           <Col lg={4} md={5} className="menu-right">
-            <Link href="/dashboard">
+            <Link href="/myprofile">
               <div className="menu-right-items">
                 <div className="list-icon">
                   <img src="/images/user.png" />

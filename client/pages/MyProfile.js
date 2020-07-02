@@ -1,18 +1,25 @@
 import React, { Component } from "react";
 import Menu from "../src/Includes/MyProfile/menu";
-import Header from "../src/Components/Header";
-import Footer from "../src/Components/Footer";
 import { Row, Col } from "antd";
+
+//includes
 import MenuDetails from "../src/Includes/MyProfile/MenuDetails";
 import MyOrders from "../src/Includes/MyProfile/MyOrders";
 import MyWishlist from "../src/Includes/MyProfile/MyWishlist";
 import MyReviews from "../src/Includes/MyProfile/MyReviews";
 import Layout from "../src/Components/Layout";
+import withPrivate from "../utils/auth/withPrivate";
+import { connect } from "react-redux";
+import actions from "../redux/actions";
 
 class MyProfile extends Component {
   state = {
     currentMenu: "manage-account",
   };
+
+  componentDidMount(){
+    console.log(this.props)
+  }
 
   changeMenuTab = (menu) => {
     this.setState({
@@ -51,4 +58,7 @@ class MyProfile extends Component {
   }
 }
 
-export default MyProfile;
+export default connect(
+  state => state,
+  actions
+)(withPrivate(MyProfile));
