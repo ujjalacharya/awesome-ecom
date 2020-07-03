@@ -16,7 +16,10 @@ export class HomeScreen extends Component {
       <View style={{ flex: 1 }}>
         <HomeHeader headerTitle="" {...this.props} />
         <View style={{ flex: 2 }}>
-          <SearchView />
+          <View style={{ flex: 1 }}>
+            <SearchView {...this.props} />
+            <View style={{ flex: 5 }}></View>
+          </View>
         </View>
         <View style={{ flex: 1 }}></View>
         <View style={{ flex: 1 }}>
@@ -36,7 +39,6 @@ export class HomeScreen extends Component {
     );
   }
 }
-
 
 function mapStateToProps(state) {
   return {
