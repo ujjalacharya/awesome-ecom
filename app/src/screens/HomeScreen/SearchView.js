@@ -2,6 +2,7 @@ import * as React from "react";
 import { View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import ConstantColors from "../../constants/ConstantColors";
+import styles from "./styles";
 
 const SearchView = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -10,18 +11,12 @@ const SearchView = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          backgroundColor: ConstantColors.tintColor,
-        }}
-      >
+      <View style={styles.searchViewWrapper}>
         <Searchbar
           placeholder="Search Products"
           onChangeText={onChangeSearch}
           value={searchQuery}
-          style={{ width: "90%", height: "80%" }}
+          style={styles.searchBar}
         />
       </View>
       <View style={{ flex: 5 }}></View>
