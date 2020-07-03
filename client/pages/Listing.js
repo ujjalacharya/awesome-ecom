@@ -99,12 +99,9 @@ class Listing extends Component {
       checkedColors: colors,
     });
 
-    console.log(this.state.filterBody);
-
     let body = {};
 
     body = getFilterAppendBody(this.state.filterBody, this.props, colors, 'colors')
-    console.log(body)
 
     this.setState({
       filterBody: body,
@@ -115,6 +112,10 @@ class Listing extends Component {
       body
     );
   };
+
+  onHandleRatings = (rating) => {
+    console.log(rating)
+  }
 
   render() {
     return (
@@ -130,6 +131,7 @@ class Listing extends Component {
                   checkedBrands={this.state.checkedBrands}
                   onChangeColors={this.onChangeColors}
                   checkedColors={this.state.checkedColors}
+                  onHandleRatings = {this.onHandleRatings}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -137,6 +139,7 @@ class Listing extends Component {
                   data={this.props.data}
                   perPage={this.props.perPage}
                   currentPage={this.state.currentPage}
+                  currentFilter = {this.state.filterBody}
                 />
                 <div className="pagination">
                   <div className="page-status">

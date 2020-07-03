@@ -227,20 +227,46 @@ a.view-more-less i {
   background-color: #eee;
   width: 200px;
   display: inline-block;
+  background: linear-gradient(to right, #eee 20%, #ddd 50%, #eee 80%);
+  animation-name: moving-gradient;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 .skeleton .medium-line {
   height: 8px;
   background-color: #eee;
   width: 150px;
   display: inline-block;
+  background: linear-gradient(to right, #eee 20%, #ddd 50%, #eee 80%);
+  animation-name: moving-gradient;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 .skeleton .small-line {
   height: 8px;
   background-color: #eee;
   width: 100px;
   display: inline-block;
+  background: linear-gradient(to right, #eee 20%, #ddd 50%, #eee 80%);
+  animation-name: moving-gradient;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
+@keyframes moving-gradient {
+  0% {
+    background-position: -250px 0;
+  }
+  100% {
+    background-position: 250px 0;
+  }
+}
 input {
   background: #F8F8F8;
   font-size: 12px;

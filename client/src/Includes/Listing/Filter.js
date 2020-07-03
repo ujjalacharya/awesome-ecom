@@ -54,7 +54,7 @@ class Filter extends Component {
             {
               data && data.ratings && data.ratings.length > 0 && data.ratings.map((rate,i) => {
                 return(
-                  <div key={i} className="rate-stars">
+                  <div key={i} className="rate-stars" onClick = {() => this.props.onHandleRatings(rate)}>
                     {
                       Array(rate)
                       .fill(0)
