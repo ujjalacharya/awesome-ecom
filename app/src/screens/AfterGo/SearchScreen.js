@@ -5,7 +5,7 @@ import { Appbar } from "react-native-paper";
 import { connect } from "react-redux";
 import SearchedSingleProduct from "../../components/SearchedSingleProduct";
 import { ScrollView } from "react-native-gesture-handler";
-import { busData } from "../../utils/mock";
+import { productData } from "../../utils/mock";
 
 export class SearchScreen extends Component {
   state = {
@@ -31,7 +31,7 @@ export class SearchScreen extends Component {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
-          {busData.map((bus, i) => (
+          {productData.map((bus, i) => (
             <SearchedSingleProduct bus={bus} key={i}/>
           ))}
         </ScrollView>
