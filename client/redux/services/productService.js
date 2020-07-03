@@ -37,7 +37,7 @@ export class ProductService {
     }
   }
 
-  async getProductDetails() {
+  async getProductDetails(slug) {
     try {
       const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/${slug}`);
 
@@ -54,23 +54,34 @@ export class ProductService {
       };
     }
   }
-
-  async getProductsByCategory() {
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/by-category${query}`);
-
-      const data = await resp.json();
-
-      return {
-        isSuccess: true,
-        data,
-      };
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
-  }
   
 }
+
+// async getProductsByCategory(query, body) {
+//   console.log(body)
+//   try {
+//     const resp = await fetch(
+//       `${process.env.SERVER_BASE_URL}/api/product/by-category${query}`,
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(body),
+//       }
+//     );
+
+//     const data = await resp.json();
+
+//     return {
+//       isSuccess: true,
+//       data,
+//     };
+//   } catch (err) {
+//     return {
+//       isSuccess: false,
+//       errorMessage: err,
+//     };
+//   }
+// }
+// }

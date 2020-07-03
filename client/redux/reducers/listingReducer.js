@@ -8,11 +8,11 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SEARCH_FILTER:
-      return { ...state, getSearchFilter: action.payload };
+      return { ...state, getSearchFilter: action.payload, hasError: false };
     case SEARCH_PRODUCTS:
-      return { ...state, getSearchData: action.payload };
+      return { ...state, getSearchData: action.payload, hasError: false };
     case SEARCH_ERROR:
-      return { ...state, getSearchData: action.payload, hasError: true };
+      return { ...state, searchError: action.payload, hasError: true };
     default:
       return state;
   }

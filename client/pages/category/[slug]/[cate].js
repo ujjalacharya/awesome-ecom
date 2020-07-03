@@ -26,6 +26,11 @@ class Search extends Component {
       actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
     );
 
+    // let body = {
+    //   cat_id: ctx.query.cate,
+    //   cat_slug: ctx.query.slug
+    // }
+
     const searchData = await ctx.store.dispatch(
       actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
     );
@@ -39,7 +44,7 @@ class Search extends Component {
   render() {
     return (
       <Layout>
-        <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.products.productByCategory} perPage={this.state.perPage} />
+        <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />
       </Layout>
     );
   }

@@ -11,14 +11,29 @@ import Layout from "../src/Components/Layout";
 import withPrivate from "../utils/auth/withPrivate";
 import { connect } from "react-redux";
 import actions from "../redux/actions";
+import { getUserInfo } from "../utils/common";
 
 class MyProfile extends Component {
   state = {
     currentMenu: "manage-account",
+    userInfo: {}
   };
 
-  componentDidMount(){
-    console.log(this.props)
+  componentDidMount() {
+    let loginToken = this.props.authentication.token;
+    let userInfo = getUserInfo(loginToken);
+
+    if (userInfo && userInfo._id) {
+      this.props.getUserProfile(userInfo._id);
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props.user.userProfile !== prevProps.user.userProfile && this.props.user.userProfile){
+      this.setState({
+        userInfo: this.props.user.userProfile
+      })
+    }
   }
 
   changeMenuTab = (menu) => {
@@ -28,6 +43,7 @@ class MyProfile extends Component {
   };
 
   render() {
+    
     return (
       <Layout title="My Profile">
         <div className="my-profile">
@@ -37,7 +53,7 @@ class MyProfile extends Component {
                 <Menu changeMenuTab={this.changeMenuTab} />
               </Col>
               <Col span={20} style={{ paddingLeft: 40 }}>
-                {this.state.currentMenu === "manage-account" && <MenuDetails />}
+                {this.state.currentMenu === "manage-account" && <MenuDetails data = {this.state.userInfo} />}
 
                 {this.state.currentMenu === "my-orders" && <MyOrders />}
 
@@ -58,7 +74,4 @@ class MyProfile extends Component {
   }
 }
 
-export default connect(
-  state => state,
-  actions
-)(withPrivate(MyProfile));
+export default connect((state) => state, actions)(withPrivate(MyProfile));

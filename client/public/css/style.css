@@ -222,6 +222,25 @@ a.view-more-less i {
   content: "" !important;
 }
 
+.skeleton .large-line {
+  height: 8px;
+  background-color: #eee;
+  width: 200px;
+  display: inline-block;
+}
+.skeleton .medium-line {
+  height: 8px;
+  background-color: #eee;
+  width: 150px;
+  display: inline-block;
+}
+.skeleton .small-line {
+  height: 8px;
+  background-color: #eee;
+  width: 100px;
+  display: inline-block;
+}
+
 input {
   background: #F8F8F8;
   font-size: 12px;
