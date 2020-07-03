@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert, Dimensions } from "react-native";
 import { Colors, TouchableRipple } from "react-native-paper";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -9,31 +9,31 @@ import ConstantColors from "../../constants/ConstantColors";
 import AllProductScrollView from "../../components/AllProductScrollView";
 
 import { jorneyAction } from "../../store/actions/journey_actions";
+import SearchView from "./SearchView";
 
 export class HomeScreen extends Component {
-  state = {};
-
   render() {
     return (
-      <>
-        <HomeHeader headerTitle="" {...this.props}/>
-        <View style={styles.container}>
-          <Card style={{ height: "55%", width: "90%", marginTop: 10 }}>
-            <View style={styles.submitButtonContainer}>
-              <Button
-                mode="contained"
-                onPress={() => {
-                  this.props.navigation.navigate("Search");
-                }}
-                style={styles.submitButton}
-              >
-                <Text style={{ fontSize: 20 }}>GO !</Text>
-              </Button>
-            </View>
-          </Card>
-          <AllProductScrollView />
+      <View style={{ flex: 1 }}>
+        <HomeHeader headerTitle="" {...this.props} />
+        <View style={{ flex: 2 }}>
+          <SearchView />
         </View>
-      </>
+        <View style={{ flex: 1 }}></View>
+        <View style={{ flex: 1 }}>
+          <View style={styles.submitButtonContainer}>
+            <Button
+              mode="contained"
+              onPress={() => {
+                this.props.navigation.navigate("Search");
+              }}
+              style={styles.submitButton}
+            >
+              <Text style={{ fontSize: 20 }}>GO !</Text>
+            </Button>
+          </View>
+        </View>
+      </View>
     );
   }
 }

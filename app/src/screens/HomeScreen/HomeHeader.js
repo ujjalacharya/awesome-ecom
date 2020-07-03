@@ -6,7 +6,7 @@ import ConstantColors from "../../constants/ConstantColors";
 export class HomeHeader extends Component {
   render() {
     return (
-      <Appbar.Header statusBarHeight={0}>
+      <Appbar.Header statusBarHeight={0} style={{ elevation: 0 }}>
         <Appbar.Action
           icon="menu"
           color={ConstantColors.headerTintColor}
