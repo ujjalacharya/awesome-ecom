@@ -145,9 +145,9 @@ exports.createOrder = async (req, res) => {
     if (product.quantity < req.body.quantity) {
         return res.status(403).json({error:`There are only ${product.quantity} products available.`})
     }
-    let address = await Address.findOne({user:req.user._id, isActive:{$ne:null}})
+    let address = await Address.findOne({ user: req.user._id, label:'ship-to'})
     if (!address) {
-        return res.status(404).json({error:"Address is not available."})
+        return res.status(404).json({error:"Shipping address is not available."})
     }
     // new order
     const newOrder = new Order()
@@ -591,7 +591,6 @@ exports.returnOrder = async (req, res) => {
     updateOrder.status.returnedDetail.returneddBy = req.dispatcher._id
     let product = await Product.findById(order.product._id)
     let updateProduct = product.toObject()
-    updateProduct.quantity = order.quantity + product.quantity
 
     let results = await task
         .save(newRemark)
