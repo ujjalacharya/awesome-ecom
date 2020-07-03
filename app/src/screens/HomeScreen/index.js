@@ -9,6 +9,7 @@ import AllProductScrollView from "../../components/AllProductScrollView";
 
 import { jorneyAction } from "../../store/actions/journey_actions";
 import SearchView from "./SearchView";
+import MainCarousel from "./MainCarousel";
 
 export class HomeScreen extends Component {
   render() {
@@ -18,23 +19,16 @@ export class HomeScreen extends Component {
         <View style={{ flex: 2 }}>
           <View style={{ flex: 1 }}>
             <SearchView {...this.props} />
-            <View style={{ flex: 5 }}></View>
+            {/* <View style={{ flex: 0.25 }}></View> */}
+
+            <View style={{ flex: 4 }}>
+              <MainCarousel />
+            </View>
+            <View style={{ flex: 1 }}></View>
           </View>
         </View>
         <View style={{ flex: 1 }}></View>
-        <View style={{ flex: 1 }}>
-          {/* <View style={styles.submitButtonContainer}>
-            <Button
-              mode="contained"
-              onPress={() => {
-                this.props.navigation.navigate("Search");
-              }}
-              style={styles.submitButton}
-            >
-              <Text style={{ fontSize: 20 }}>GO !</Text>
-            </Button>
-          </View> */}
-        </View>
+        <View style={{ flex: 1 }}></View>
       </View>
     );
   }
