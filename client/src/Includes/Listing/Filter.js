@@ -73,7 +73,7 @@ class Filter extends Component {
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Color</div>
           <div className="type-list">
-            <Checkbox.Group options={colorOptions} onChange={this.onChange} />
+            <Checkbox.Group options={colorOptions} onChange={(e) => this.props.onChangeColors(e)} values={this.props.checkedColors}/>
           </div>
         </div>
         <div className="sticky-filter inside-filter-sticky">

@@ -46,5 +46,56 @@ export const convertDateToCurrentTz = (date) =>{
     .utc(date)
     .tz(currentTimeZone)
     .format("Do MMMM, YYYY")
+}
 
+export const getFilterAppendBody = (body, props, filter, type) => {
+
+  let pathName = props.router.pathname.split("/")[1];
+  if (_.isEmpty(body)) {
+    if (pathName === "search") {
+      if (_.isEmpty(filter)) {
+        body = {
+          keyword: props.router.query.slug,
+        };
+      } else {
+        body = {
+          keyword: props.router.query.slug,
+          [type]: filter,
+        };
+      }
+    } else if (pathName === "category") {
+      if (_.isEmpty(filter)) {
+        body = {
+          cat_id: props.router.query.cate,
+        };
+      } else {
+        body = {
+          cat_id: props.router.query.cate,
+          [type]: filter,
+        };
+      }
+    }
+  } else {
+    if (pathName === "search") {
+      if (_.isEmpty(filter)) {
+        delete body[type]
+      } else {
+        body = {
+          ...body,
+          [type]: filter,
+        };
+      }
+    } else if (pathName === "category") {
+      if (_.isEmpty(filter)) {
+        delete body[type]
+      } else {
+        body = {
+          ...body,
+          [type]: filter,
+        };
+      }
+    }
+  }
+
+  return body;
 }

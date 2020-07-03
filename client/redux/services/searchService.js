@@ -26,6 +26,25 @@ export class SearchService {
     }
   }
 
+  
+  async getProductsByCategory(query) {
+    try {
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/by-category${query}`);
+
+      const data = await resp.json();
+
+      return {
+        isSuccess: true,
+        data,
+      };
+    } catch (err) {
+      return {
+        isSuccess: false,
+        errorMessage: err,
+      };
+    }
+  }
+
   async searchFilter(query) {
     try {
       const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/product/generate-filter${query}`);
