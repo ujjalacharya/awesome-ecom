@@ -179,9 +179,9 @@ exports.getProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are available." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are available." });
+  // }
   const totalCount = await Product.countDocuments({ soldBy: req.profile._id });
   res.json({ products, totalCount });
 };
@@ -197,9 +197,9 @@ exports.latestProducts = async (req, res) => {
     .limit(20)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are available." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are available." });
+  // }
   res.json(products);
 };
 
@@ -264,9 +264,9 @@ exports.searchProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean();
-  if (!products.length) {
-    return res.status(404).json({ error: "Products not found." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "Products not found." });
+  // }
   //need to work on rating...
   const totalCount = await Product.countDocuments(searchingFactor);
   res.json({ products, totalCount });
@@ -291,9 +291,9 @@ exports.getProductsByCategory = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are available." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are available." });
+  // }
   const totalCount = await Product.countDocuments({
     category: { $in: categories },
   });
@@ -373,9 +373,9 @@ exports.generateFilter = async (req, res) => {
     })
       .populate("brand", "brandName slug")
       .select("-_id brand warranty size color weight price");
-    if (!products.length) {
-      return res.status(404).json({ error: "Cannot generate filter" });
-    }
+    // if (!products.length) {
+    //   return res.status(404).json({ error: "Cannot generate filter" });
+    // }
     let generatedFilters = filterGenerate(products);
     return res.json(generatedFilters);
   } else {
@@ -397,9 +397,9 @@ exports.generateFilter = async (req, res) => {
     })
       .populate("brand", "brandName slug")
       .select("-_id brand warranty size color weight price");
-    if (!products.length) {
-      return res.status(404).json({ error: "Cannot generate filter" });
-    }
+    // if (!products.length) {
+    //   return res.status(404).json({ error: "Cannot generate filter" });
+    // }
     let generatedFilters = filterGenerate(products);
     return res.json(generatedFilters);
   }
@@ -416,9 +416,9 @@ exports.outOfTheStockProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are out of stock." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are out of stock." });
+  // }
   const totalCount = await Product.countDocuments({
     soldBy: req.profile._id,
     quantity: 0,
@@ -439,9 +439,9 @@ exports.verifiedProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are available." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are available." });
+  // }
   const totalCount = await Product.countDocuments({
     soldBy: req.profile._id,
     isVerified: { $ne: null },
@@ -462,9 +462,9 @@ exports.notVerifiedProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are available." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are available." });
+  // }
   const totalCount = await Product.countDocuments({
     soldBy: req.profile._id,
     isVerified: null,
@@ -485,9 +485,9 @@ exports.deletedProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are available." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are available." });
+  // }
   const totalCount = await Product.countDocuments({
     soldBy: req.profile._id,
     isDeleted: { $ne: null },
@@ -508,9 +508,9 @@ exports.notDeletedProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort({ created: -1 });
-  if (!products.length) {
-    return res.status(404).json({ error: "No products are available." });
-  }
+  // if (!products.length) {
+  //   return res.status(404).json({ error: "No products are available." });
+  // }
   const totalCount = await Product.countDocuments({
     soldBy: req.profile._id,
     isDeleted: null,

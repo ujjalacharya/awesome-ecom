@@ -63,9 +63,9 @@ exports.getReviews = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!reviews.length) {
-        return res.status(404).json({ error: "No reviews found" });
-    }
+    // if (!reviews.length) {
+    //     return res.status(404).json({ error: "No reviews found" });
+    // }
     const totalCount = await Review.countDocuments({ product: product._id })
     res.json({ reviews, totalCount });
 };
@@ -77,9 +77,9 @@ exports.myReviews = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!myReviews.length) {
-        return res.status(404).json({ error: "No reviews found" });
-    }
+    // if (!myReviews.length) {
+    //     return res.status(404).json({ error: "No reviews found" });
+    // }
     const totalCount = await Review.countDocuments({ user: req.user._id })
     res.json({ myReviews, totalCount });
 }
@@ -244,9 +244,9 @@ exports.getQNAs = async (req, res) => {
     let totalCount = QnA.qna.length
     QnA.qna = _.drop(QnA.qna, perPage * page - perPage)
     QnA.qna = _.take(QnA.qna,perPage)
-    if (!QnA.qna.length) {
-        return res.status(404).json({error:'QNA not found'})
-    }
+    // if (!QnA.qna.length) {
+    //     return res.status(404).json({error:'QNA not found'})
+    // }
     res.json({ QnA, totalCount })
 
 }
