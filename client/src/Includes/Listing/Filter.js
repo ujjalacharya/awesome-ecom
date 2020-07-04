@@ -6,7 +6,6 @@ import { getBrandOptions, getColorOptions } from "../../../utils/common";
 class Filter extends Component {
   state = {
     checkedBrands: [],
-    
   };
 
   // componentWillReceiveProps(nextProps) {
@@ -62,7 +61,13 @@ class Filter extends Component {
               value={this.props.maxPrice}
               onChange={(e) => this.props.changePrice(e.target.value, "max")}
             />
-            <button onClick={() => this.props.searchPrice(this.props.minPrice, this.props.maxPrice)}><i class="fa fa-search" aria-hidden="true"></i></button>
+            <button
+              onClick={() =>
+                this.props.searchPrice(this.props.minPrice, this.props.maxPrice)
+              }
+            >
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
@@ -89,6 +94,18 @@ class Filter extends Component {
                           ></i>
                         );
                       })}
+                    {Array(5 - rate)
+                      .fill(0)
+                      .map((num, k) => {
+                        return (
+                          <i
+                            className="fa fa-star fade-star"
+                            aria-hidden="true"
+                            key={k}
+                          ></i>
+                        );
+                      })}
+                    {rate !== 5 && <span>And Up</span>}
                   </div>
                 );
               })}
