@@ -489,7 +489,7 @@ exports.getProducts = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: 1 })
     // if (!products.length) {
     //     return res.status(404).json({ error: 'No products are available.' })
     // }
@@ -499,7 +499,7 @@ exports.getProducts = async (req, res) => {
     //     product.quantity += 50
     // return await product.save()
     // })
-    products = await Promise.all(products)
+    // products = await Promise.all(products)
     let totalCount = await Product.countDocuments()
     res.json({products,totalCount});
 }
