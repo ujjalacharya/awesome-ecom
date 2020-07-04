@@ -145,6 +145,16 @@ class ProductList extends Component {
                   </span>
                 );
               })}
+
+            {!_.isEmpty(currentFilter.sizes) && (
+              <span
+                className="filter-tags"
+                onClick={() => this.props.removeSize()}
+              >
+                Size: {currentFilter.sizes}
+                <i className="fa fa-times" aria-hidden="true"></i>
+              </span>
+            )}
           </div>
         )}
         <div className="card-list">

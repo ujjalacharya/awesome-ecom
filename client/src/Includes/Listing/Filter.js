@@ -127,13 +127,27 @@ class Filter extends Component {
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
-          <div className="type-title">Warrenty</div>
+          <div className="type-title">Warrenty Period</div>
           <div className="type-list">
             <Radio.Group onChange={(e) => this.props.onChangeWarrenty(e.target.value)} value={this.props.selectedWarrenty}>
               {data.warranties && data.warranties.map((warrenty) => {
                 return (
                   <Radio style={radioStyle} value={warrenty}>
                     {warrenty}
+                  </Radio>
+                );
+              })}
+            </Radio.Group>
+          </div>
+        </div>
+        <div className="filter-types last-child-fi-type">
+          <div className="type-title">Sizes</div>
+          <div className="type-list">
+            <Radio.Group onChange={(e) => this.props.onChangeSize(e.target.value)} value={this.props.selectedSize}>
+              {data.sizes && data.sizes.map((size) => {
+                return (
+                  <Radio style={radioStyle} value={size}>
+                    {size}
                   </Radio>
                 );
               })}

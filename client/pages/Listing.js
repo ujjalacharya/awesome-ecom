@@ -67,12 +67,12 @@ class Listing extends Component {
     this.setState({
       currentPage: page,
     });
-    let body = {
-      keyword: this.props.router.query.slug,
-    };
+    // let body = {
+    //   keyword: this.props.router.query.slug,
+    // };
     this.props.searchProducts(
       `?page=${page}&perPage=${this.props.perPage}`,
-      body
+      this.state.filterBody
     );
   };
 
@@ -217,6 +217,31 @@ class Listing extends Component {
     );
   }
 
+  onChangeSize = (size) => {
+    
+    this.setState({
+      selectedSize: size
+    })
+
+    let body = {};
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      (size),
+      "sizes"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
+  }
+
   removeBrand = (brand) => {
     let allBrands = this.state.checkedBrands;
     let newBrands = allBrands.filter((obj) => {return obj !== brand})
@@ -244,12 +269,12 @@ class Listing extends Component {
   }
 
   removeWarrenty = () => {
-    this.setState({
-      warrenty: '',
-    })
     this.onChangeWarrenty('')
   }
 
+  removeSize = () => {
+    this.onChangeSize('')
+  }
   render() {
     return (
       <div className="wrapper">
@@ -271,6 +296,8 @@ class Listing extends Component {
                   maxPrice = {this.state.maxPrice}
                   onChangeWarrenty = {this.onChangeWarrenty}
                   selectedWarrenty = {this.state.selectedWarrenty}
+                  onChangeSize = {this.onChangeSize}
+                  selectedSize = {this.state.selectedSize}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -285,6 +312,7 @@ class Listing extends Component {
                   removeRating = {this.removeRating}
                   removePrice = {this.removePrice}
                   removeWarrenty = {this.removeWarrenty}
+                  removeSize = {this.removeSize}
                 />
                 <div className="pagination">
                   <div className="page-status">
