@@ -168,7 +168,7 @@ class Listing extends Component {
   }
 
   render() {
-
+    console.log(this.props)
     return (
       <div className="wrapper">
         <section className="listing">

@@ -1,5 +1,5 @@
 import fetch from "isomorphic-unfetch";
-import { USER_ERROR, USER_PROFILE } from "../types";
+import { USER_PROFILE, GLOBAL_ERROR } from "../types";
 import { UserService } from "../services/userService";
 
 const getUserProfile = (id) => {
@@ -10,7 +10,7 @@ const getUserProfile = (id) => {
       dispatch({ type: USER_PROFILE, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: USER_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }

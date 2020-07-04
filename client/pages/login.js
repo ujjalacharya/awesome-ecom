@@ -28,6 +28,8 @@ class Login extends Component {
     const onFinishFailed = (errorInfo) => {
       console.log("Failed:", errorInfo);
     };
+
+    console.log(this.props)
     return (
       <Layout title="Login">
         <div className="container">

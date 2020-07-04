@@ -7,10 +7,17 @@ export class ProductService {
 
       const data = await resp.json();
 
-      return {
-        isSuccess: true,
-        data,
-      };
+      if(resp.status >= 200 && resp.status < 300){
+        return {
+            isSuccess: true,
+            data,
+          };
+      }else{
+        return {
+            isSuccess: false,
+            errorMessage: data.error,
+          };    
+      }
     } catch (err) {
       return {
         isSuccess: false,
@@ -25,10 +32,17 @@ export class ProductService {
 
       const data = await resp.json();
 
-      return {
-        isSuccess: true,
-        data,
-      };
+      if(resp.status >= 200 && resp.status < 300){
+        return {
+            isSuccess: true,
+            data,
+          };
+      }else{
+        return {
+            isSuccess: false,
+            errorMessage: data.error,
+          };    
+      }
     } catch (err) {
       return {
         isSuccess: false,
@@ -43,10 +57,17 @@ export class ProductService {
 
       const data = await resp.json();
 
-      return {
-        isSuccess: true,
-        data,
-      };
+      if(resp.status >= 200 && resp.status < 300){
+        return {
+            isSuccess: true,
+            data,
+          };
+      }else{
+        return {
+            isSuccess: false,
+            errorMessage: data.error,
+          };    
+      }
     } catch (err) {
       return {
         isSuccess: false,

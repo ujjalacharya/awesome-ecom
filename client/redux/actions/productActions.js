@@ -4,8 +4,7 @@ import {
   LATEST_PRODUCTS,
   MENU_CATEGORIES,
   PRODUCT_DETAILS,
-  PRODUCT_BY_CATEGORY,
-  PRODUCT_ERROR,
+  GLOBAL_ERROR,
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -18,7 +17,7 @@ const productCategories = () => {
       dispatch({ type: MENU_CATEGORIES, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: PRODUCT_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
@@ -33,7 +32,7 @@ const getLatestProducts = () => {
       dispatch({ type: LATEST_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: PRODUCT_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
@@ -48,7 +47,7 @@ const getProductDetails = (slug) => {
       dispatch({ type: PRODUCT_DETAILS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: PRODUCT_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
