@@ -139,6 +139,29 @@ class Listing extends Component {
 
   onHandleRatings = (rating) => {
     console.log(rating);
+    this.setState({
+      currentRating: rating
+    })
+
+    let body = {};
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      rating,
+      "ratings"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    console.log(body)
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
   };
 
   render() {
