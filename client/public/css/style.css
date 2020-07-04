@@ -222,6 +222,27 @@ a.view-more-less i {
   content: "" !important;
 }
 
+.filtered-by {
+  padding-left: 40px;
+  padding-top: 15px;
+}
+.filtered-by .filter-tags {
+  font-size: 12px;
+  border: 1px solid #eee;
+  padding: 6px 10px;
+  border-radius: 15px;
+  color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+  margin-right: 8px;
+}
+.filtered-by .filter-tags:hover {
+  border-color: #48b5dc;
+  color: #48b5dc;
+}
+.filtered-by i {
+  margin-left: 4px;
+}
+
 .skeleton .large-line {
   height: 8px;
   background-color: #eee;

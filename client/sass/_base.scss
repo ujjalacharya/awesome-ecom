@@ -168,3 +168,24 @@ a.view-more-less  i{
 .show-review + .view-more-less .fa-caret-down:before {
   content: '\f0d8' !important;
 }
+
+.filtered-by{
+  padding-left: 40px;
+  padding-top: 15px;
+  .filter-tags{
+    font-size: 12px;
+    border: 1px solid #eee;
+    padding: 6px 10px;
+    border-radius: 15px;
+    color: rgba(0,0,0,.65);
+    cursor: pointer;
+    margin-right: 8px;
+    &:hover{
+      border-color: $secondary-color;
+      color: $secondary-color;
+    }
+  }
+  i{
+    margin-left: 4px;
+  }
+}

@@ -1,20 +1,25 @@
 import React, { Component } from "react";
 import { Checkbox, Input } from "antd";
 import { Icon, Row, Col } from "antd";
+import { getBrandOptions } from "../../../utils/common";
 
 class Filter extends Component {
   state = {
     checkedBrands: []
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   if(this.props.checkedBrands !== nextProps.checkedBrands){
+  //     this.setState({
+  //       checkedBrands: nextProps.checkedBrands
+  //     })
+  //   }
+  // }
+
   render() {
     const { data } = this.props;
     
-    let brandOptions = [];
-    data.brands && data.brands.length > 0 && data.brands.map((brand) => {
-      let ele = { label: brand.brandName, value: brand._id };
-      brandOptions.push(ele);
-    });
+    let brandOptions = getBrandOptions(data);
 
     const priceOptions = [
       { label: "Rs. 179 to Rs. 1977", value: "179-1977" },
@@ -28,6 +33,8 @@ class Filter extends Component {
       colorOptions.push(ele);
     });
 
+    console.log(this.props.checkedBrands)
+
     return (
       <div className={"listing-filter " + this.props.removeThisFilter}>
         <div className={"filter-title " + this.props.removeThisTitle}>
@@ -37,7 +44,7 @@ class Filter extends Component {
         <div className="filter-types">
           <div className="type-title">BRAND</div>
           <div className="type-list">
-            <Checkbox.Group options={brandOptions} onChange={(e) => this.props.onCheckBrands(e)} values={this.props.checkedBrands} />
+            <Checkbox.Group options={brandOptions} onChange={(e) => this.props.onCheckBrands(e)} value={this.props.checkedBrands} />
           </div>
         </div>
         <div className="filter-types">

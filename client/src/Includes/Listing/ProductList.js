@@ -1,18 +1,19 @@
 import React, { Component } from "react";
 import { Select, Row, Col } from "antd";
 import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
-import _ from 'lodash'
+import _ from "lodash";
 
 //includes
 import ProductCard from "../../Components/Includes/ProductCard";
+import { getBrandOptions } from "../../../utils/common";
 
 // Select Option
 const { Option } = Select;
 
 class ProductList extends Component {
   render() {
-    const { data } = this.props;
-    // let filterTags = Object.keys(this.props.currentFilter);
+    const { data, searchFilter } = this.props;
+    let brandOptions = getBrandOptions(searchFilter);
     return (
       <div className="product-lists">
         <div className="sorting-page">
@@ -36,11 +37,28 @@ class ProductList extends Component {
           </div>
         </div>
         <div className="filtered-by">
-          {/* {
-            !_.isEmpty(this.props.currentFilter) ? (
-              this.props.currentFilter.brands && this.props.currentFilter.brands
-            ) 
-          } */}
+          {!_.isEmpty(this.props.currentFilter)
+            ? this.props.currentFilter.brands &&
+              this.props.currentFilter.brands.length > 0 &&
+              this.props.currentFilter.brands.map((brand, i) => {
+                return (
+                  <>
+                    {brandOptions.map((allBrand) => {
+                      return (
+                        <>
+                          {brand === allBrand.value && (
+                            <span className="filter-tags" onClick={() => this.props.removeBrand(brand)} key={i}>
+                              {allBrand.label}
+                              <i className="fa fa-times" aria-hidden="true"></i>
+                            </span>
+                          )}
+                        </>
+                      );
+                    })}
+                  </>
+                );
+              })
+            : ""}
         </div>
         <div className="card-list">
           <Row gutter={30}>

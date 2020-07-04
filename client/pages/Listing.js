@@ -81,8 +81,13 @@ class Listing extends Component {
     let pathName = this.props.router.pathname.split("/")[1];
 
     let body = {};
-    
-    body = getFilterAppendBody(this.state.filterBody, this.props, brands, 'brands')
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      brands,
+      "brands"
+    );
 
     this.setState({
       filterBody: body,
@@ -101,7 +106,12 @@ class Listing extends Component {
 
     let body = {};
 
-    body = getFilterAppendBody(this.state.filterBody, this.props, colors, 'colors')
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      colors,
+      "colors"
+    );
 
     this.setState({
       filterBody: body,
@@ -113,11 +123,19 @@ class Listing extends Component {
     );
   };
 
-  onHandleRatings = (rating) => {
-    console.log(rating)
+  removeBrand = (brand) => {
+    let allBrands = this.state.checkedBrands;
+    let newBrands = allBrands.filter((obj) => {return obj !== brand})
+
+    this.onCheckBrands(newBrands)
   }
 
+  onHandleRatings = (rating) => {
+    console.log(rating);
+  };
+
   render() {
+
     return (
       <div className="wrapper">
         <section className="listing">
@@ -131,7 +149,7 @@ class Listing extends Component {
                   checkedBrands={this.state.checkedBrands}
                   onChangeColors={this.onChangeColors}
                   checkedColors={this.state.checkedColors}
-                  onHandleRatings = {this.onHandleRatings}
+                  onHandleRatings={this.onHandleRatings}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -139,7 +157,9 @@ class Listing extends Component {
                   data={this.props.data}
                   perPage={this.props.perPage}
                   currentPage={this.state.currentPage}
-                  currentFilter = {this.state.filterBody}
+                  currentFilter={this.state.filterBody}
+                  searchFilter={this.props.getSearchFilter}
+                  removeBrand = {this.removeBrand}
                 />
                 <div className="pagination">
                   <div className="page-status">
