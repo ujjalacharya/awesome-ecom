@@ -19,6 +19,8 @@ class Listing extends Component {
     currentPage: 1,
     checkedColors: [],
     filterBody: {},
+    minPrice: '',
+    maxPrice: ''
   };
 
   static getInitialProps(ctx) {
@@ -146,6 +148,72 @@ class Listing extends Component {
       body
     );
   };
+  
+  changePrice = (price, type) => {
+    if(type === 'min'){
+      this.setState({
+        minPrice: price
+      })
+    }else{
+      this.setState({
+        maxPrice: price
+      })
+    }
+  }
+
+  searchPrice = (minPrice, maxPrice) => {
+
+    let body = {};
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      (minPrice+''),
+      "min_price"
+    );
+
+    body = getFilterAppendBody(
+      body,
+      this.props,
+      (maxPrice+''),
+      "max_price"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
+  }
+
+  removeBrand = (brand) => {
+    let allBrands = this.state.checkedBrands;
+    let newBrands = allBrands.filter((obj) => {return obj !== brand})
+
+    this.onCheckBrands(newBrands)
+  }
+
+  removeColor = (color) => {
+    let allColors = this.state.checkedColors;
+    let newColors = allColors.filter((obj) => {return obj !== color})
+
+    this.onChangeColors(newColors)
+  }
+
+  removeRating = (rating) => {
+    this.onHandleRatings('')
+  }
+
+  removePrice = ( minPrice, maxPrice ) => {
+    this.setState({
+      minPrice: '',
+      maxPrice: ''
+    })
+    this.searchPrice('', '')
+  }
 
   removeBrand = (brand) => {
     let allBrands = this.state.checkedBrands;
@@ -180,6 +248,10 @@ class Listing extends Component {
                   onChangeColors={this.onChangeColors}
                   checkedColors={this.state.checkedColors}
                   onHandleRatings={this.onHandleRatings}
+                  searchPrice = {this.searchPrice}
+                  changePrice = {this.changePrice}
+                  minPrice = {this.state.minPrice}
+                  maxPrice = {this.state.maxPrice}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -192,6 +264,7 @@ class Listing extends Component {
                   removeBrand = {this.removeBrand}
                   removeColor = {this.removeColor}
                   removeRating = {this.removeRating}
+                  removePrice = {this.removePrice}
                 />
                 <div className="pagination">
                   <div className="page-status">

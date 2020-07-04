@@ -169,6 +169,17 @@ a.view-more-less i {
   content: "\f0d8" !important;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .filtered-by {
   padding-left: 40px;
   padding-top: 15px;

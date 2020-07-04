@@ -56,7 +56,7 @@ class Login extends Component {
                         message: "Please input your Email!",
                       },
                     ]}
-                    initialValue="Pravin@gmail.com"
+                    initialValue="Tek@gmail.com"
                   >
                     <Input
                       prefix={<UserOutlined className="site-form-item-icon" />}
