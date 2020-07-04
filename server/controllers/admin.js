@@ -20,6 +20,8 @@ exports.profile = async (req, res, next) => {
 
 // getProfile
 exports.getProfile = async (req, res) => {
+    req.profile.resetPasswordLink = undefined
+    req.profile.emailVerifyLink = undefined
     res.json(req.profile)
 }
 
@@ -41,9 +43,7 @@ exports.updateProfile = async (req, res) => {
     profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
 
     profile = _.extend(profile, req.body)
-    profile = await profile.save();
-    profile.salt = undefined;
-    profile.password = undefined;
+    await profile.save();
 
     res.json(profile);
 }
@@ -159,7 +159,7 @@ exports.bankinfo = async (req, res) => {
             fs.unlinkSync(filePath)//remove old file from respective folders
             docs["chequeCopy"] = `bank/${filename}`;//updating docs
         }
-        docs = await docs.save()
+        await docs.save()
         return res.json(docs)
     }
     //first check if cheque is empty or not

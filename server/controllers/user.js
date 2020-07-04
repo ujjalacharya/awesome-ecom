@@ -67,20 +67,18 @@ exports.uploadPhoto = async (req, res) => {
 
 exports.addAddress = async(req,res) => {
     let profile = req.user
-    //if there are already home and office addresses
-    if (profile.location.length===2) {
+    //if there are already home,office and ship-to addresses
+    if (profile.location.length===3) {
         return res.status(403).json({error: "Cannot add more address."})
     }
-    //if there is one address, make sure newAddress is not of the same address label
-    if (profile.location.length === 1) {
-        let address = await Address.findById(profile.location[0])
-        if (address.label=== req.body.label) {
-            return res.status(403).json({error:`There is already address of label ${address.label}`})
-        }
+    //if there is already same label of address of the user then do not create new Address.
+    let addresses = profile.location
+    if (addresses.some(a => a.label === req.body.label)) {
+        return res.status(403).json({ error: `There is already address of label ${req.body.label}` })
     }
     let newAddress = new Address(req.body)
-    //if newAddress is the first address, then it should be active
-    if (profile.location.length === 0 ) {
+    //if newAddress is the first address and label is not ship-to, then it should be active
+    if (!profile.location.length && newAddress.label!=='ship-to') {
         newAddress.isActive = Date.now()
     }
     // geolocation
@@ -92,16 +90,16 @@ exports.addAddress = async(req,res) => {
         newAddress.geolocation = geolocation;
     }
     newAddress.user = profile._id
-    let user = await (await User.findById(profile._id)).select('location')
+    let user = await User.findById(profile._id)
     updateuser = user.toObject()
     updateuser.location.push(newAddress._id)
     const results = await task
-        .save(newAddress)
         .update(user, updateuser)
         .options({ viaSave: true })
+        .save(newAddress)
         .run({ useMongoose: true })
 
-    res.json(results)
+    res.json(results[1])
 }
 
 exports.editAddress = async(req,res) => {
@@ -112,7 +110,7 @@ exports.editAddress = async(req,res) => {
     if (!address) {
         return res.status(404).json({error:"Address not found."})
     }
-    //user cannot edit label
+    //user cannot edit label and activeness
     if(req.body.label) req.body.label=undefined
     if(req.body.isActive) req.body.isActive = undefined
     address = _.extend(address,req.body)
@@ -121,11 +119,11 @@ exports.editAddress = async(req,res) => {
 }
 
 exports.toggleAddressActiveness = async(req,res) => {
-    let addresses = await Address.find({user:req.user._id})
+    let addresses = await Address.find({user:req.user._id ,label:{$ne:'ship-to'}})
     if (!addresses.length) {
         return res.json(addresses)
     }
-    //if there is single address make update isActive to Date.now()
+    //if there is single address make it isActive
     if (addresses.length === 1) {
         addresses[0].isActive = Date.now()
         await addresses[0].save()

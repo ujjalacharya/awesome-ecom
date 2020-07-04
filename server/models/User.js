@@ -24,6 +24,13 @@ const userSchema = new mongoose.Schema({
     photo: {
         type: String
     },
+    dob:{
+        type: String
+    },
+    gender:{
+        type:String,
+        enum:['male','female','other']
+    },
     resetPasswordLink: {
         type: String,
         default: ""

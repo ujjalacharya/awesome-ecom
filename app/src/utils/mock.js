@@ -53,7 +53,7 @@ export const addressData = [
   },
 ];
 
-export const busData = [
+export const productData = [
     {
         id: 1,
         title: "Redmi Note 8 Pro",

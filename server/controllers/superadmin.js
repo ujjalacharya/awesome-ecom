@@ -68,7 +68,7 @@ exports.banner = async (req, res) => {
             // remove image from public/uploads
             const Path = `public/uploads/${filename}`;
             fs.unlinkSync(Path);
-            return res.status(403).json({ error: "Product not found." })
+            return res.status(404).json({ error: "Product not found." })
         }
         newBanner.product = product._id
     }
@@ -100,9 +100,9 @@ exports.getBanners = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!banners.length) {
-        return res.status(404).json({ error: 'Banners not available.' })
-    }
+    // if (!banners.length) {
+    //     return res.status(404).json({ error: 'Banners not available.' })
+    // }
     const totalCount = await Banner.countDocuments({ isDeleted: null })
     res.json({banners,totalCount})
 }
@@ -114,9 +114,9 @@ exports.getDeletedBanners = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!banners.length) {
-        return res.status(404).json({ error: 'Banners not available.' })
-    }
+    // if (!banners.length) {
+    //     return res.status(404).json({ error: 'Banners not available.' })
+    // }
     const totalCount = await Banner.countDocuments({ isDeleted: { "$ne": null } })
     res.json({ banners, totalCount })
 }
@@ -129,9 +129,9 @@ exports.getAllAdmins = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!admins.length) {
-        return res.status(404).json({ error: 'No Admins are Available' })
-    }
+    // if (!admins.length) {
+    //     return res.status(404).json({ error: 'No Admins are Available' })
+    // }
     const totalCount = await Admin.countDocuments()
     res.json({ admins, totalCount })
 }
@@ -282,9 +282,9 @@ exports.getBlockedAdmins = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!admins.length) {
-        return res.status(404).json({ error: "No admins are blocked" })
-    }
+    // if (!admins.length) {
+    //     return res.status(404).json({ error: "No admins are blocked" })
+    // }
     const totalCount = await Admin.countDocuments({ isBlocked: { "$ne": null } })
     res.json({admins,totalCount})
 }
@@ -296,9 +296,9 @@ exports.getNotBlockedAdmins = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!admins.length) {
-        return res.status(404).json({ error: "Every admins are blocked" })
-    }
+    // if (!admins.length) {
+    //     return res.status(404).json({ error: "Every admins are blocked" })
+    // }
     const totalCount = await Admin.countDocuments({ isBlocked: null })
     res.json({ admins, totalCount })
 }
@@ -310,9 +310,9 @@ exports.getVerifiedAdmins = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!admins.length) {
-        return res.status(404).json({ error: "No admins are verified" })
-    }
+    // if (!admins.length) {
+    //     return res.status(404).json({ error: "No admins are verified" })
+    // }
     const totalCount = await Admin.countDocuments({ isVerified: { "$ne": null } })
     res.json({ admins, totalCount })
 }
@@ -324,9 +324,9 @@ exports.getUnverifiedAdmins = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    if (!admins.length) {
-        return res.status(404).json({ error: "All admins are verified" })
-    }
+    // if (!admins.length) {
+    //     return res.status(404).json({ error: "All admins are verified" })
+    // }
     const totalCount = await Admin.countDocuments({ isVerified: null })
     res.json({ admins, totalCount })
 }
@@ -358,10 +358,11 @@ exports.category = async (req, res) => {
 }
 exports.getCategories = async (req, res) => {
     let categories = await Category.find()
-    if (!categories.length) {
-        return res.status(404).json({ error: "No categories are available" })
-    }
-    res.json(categories)
+    // if (!categories.length) {
+    //     return res.status(404).json({ error: "No categories are available" })
+    // }
+    let totalCount = await Category.countDocuments()
+    res.json({categories,totalCount})
 
     // product -> this.category ID
     // product -> this.brand ID
@@ -425,7 +426,7 @@ exports.approveProduct = async (req, res) => {
         return res.status(404).json({ error: "Categories not found of this product." })
     }
 
-
+    // if product has new brand 
     const addBrandToCategory = (brand, categories) => categories.forEach(cat => {
         if (!cat.brands.includes(brand)) cat.brands.push(brand)
         const updateCat = cat.toObject()
@@ -489,9 +490,9 @@ exports.getProducts = async (req, res) => {
         .limit(perPage)
         .lean()
         .sort({ created: -1 })
-    if (!products.length) {
-        return res.status(404).json({ error: 'No products are available.' })
-    }
+    // if (!products.length) {
+    //     return res.status(404).json({ error: 'No products are available.' })
+    // }
 
     // let products = await Product.find()
     // products = products.map(async product => {
@@ -514,9 +515,9 @@ exports.verifiedProducts = async (req, res) => {
         .limit(perPage)
         .lean()
         .sort({ created: -1 })
-    if (!products.length) {
-        return res.status(404).json({ error: 'No products are available.' })
-    }
+    // if (!products.length) {
+    //     return res.status(404).json({ error: 'No products are available.' })
+    // }
     //make 3 products of every admin verified
     // const admins = await Admin.find({role:'admin'})
     // let products = admins.map(async a => {
@@ -545,9 +546,9 @@ exports.notVerifiedProducts = async (req, res) => {
         .limit(perPage)
         .lean()
         .sort({ created: -1 })
-    if (!products.length) {
-        return res.status(404).json({ error: 'No products are available.' })
-    }
+    // if (!products.length) {
+    //     return res.status(404).json({ error: 'No products are available.' })
+    // }
     let totalCount = await Product.countDocuments({ isVerified: null })
     res.json({ products, totalCount });
 }
@@ -563,9 +564,9 @@ exports.deletedProducts = async (req, res) => {
         .limit(perPage)
         .lean()
         .sort({ created: -1 })
-    if (!products.length) {
-        return res.status(404).json({ error: 'No products are available.' })
-    }
+    // if (!products.length) {
+    //     return res.status(404).json({ error: 'No products are available.' })
+    // }
     let totalCount = await Product.countDocuments({ isDeleted: { "$ne": null } })
     res.json({ products, totalCount });
 }
@@ -581,9 +582,9 @@ exports.notDeletedProducts = async (req, res) => {
         .limit(perPage)
         .lean()
         .sort({ created: -1 })
-    if (!products.length) {
-        return res.status(404).json({ error: 'No products are available.' })
-    }
+    // if (!products.length) {
+    //     return res.status(404).json({ error: 'No products are available.' })
+    // }
     let totalCount = await Product.countDocuments({ isDeleted: null })
     res.json({ products, totalCount });
 }
@@ -612,9 +613,9 @@ exports.productBrand = async (req, res) => {
 
 exports.getProductBrands = async (req, res) => {
     let productbrands = await ProductBrand.find()
-    if (!productbrands.length) {
-        return res.status(404).json({ error: "No product brands are available" })
-    }
+    // if (!productbrands.length) {
+    //     return res.status(404).json({ error: "No product brands are available" })
+    // }
     res.json(productbrands)
 
 }

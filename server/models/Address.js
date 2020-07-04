@@ -19,7 +19,7 @@ const addressSchema = new mongoose.Schema({
     label: {
         type: String,
         trim: true,
-        enum:['home','office']
+        enum:['home','office','ship-to']
     },
     region: {//pradesh
         type: String,
