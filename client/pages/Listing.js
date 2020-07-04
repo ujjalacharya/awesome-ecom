@@ -123,6 +123,31 @@ class Listing extends Component {
     );
   };
 
+  onHandleRatings = (rating) => {
+    console.log(rating);
+    this.setState({
+      currentRating: rating
+    })
+
+    let body = {};
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      (rating+''),
+      "ratings"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
+  };
+
   removeBrand = (brand) => {
     let allBrands = this.state.checkedBrands;
     let newBrands = allBrands.filter((obj) => {return obj !== brand})
@@ -137,32 +162,10 @@ class Listing extends Component {
     this.onChangeColors(newColors)
   }
 
-  onHandleRatings = (rating) => {
-    console.log(rating);
-    this.setState({
-      currentRating: rating
-    })
-
-    let body = {};
-
-    body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
-      rating,
-      "ratings"
-    );
-
-    this.setState({
-      filterBody: body,
-    });
-
-    console.log(body)
-
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
-      body
-    );
-  };
+  removeRating = (rating) => {
+    console.log(rating)
+    this.onHandleRatings('')
+  }
 
   render() {
 
@@ -191,6 +194,7 @@ class Listing extends Component {
                   searchFilter={this.props.getSearchFilter}
                   removeBrand = {this.removeBrand}
                   removeColor = {this.removeColor}
+                  removeRating = {this.removeRating}
                 />
                 <div className="pagination">
                   <div className="page-status">

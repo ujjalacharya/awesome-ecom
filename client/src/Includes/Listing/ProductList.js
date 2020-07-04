@@ -14,7 +14,6 @@ class ProductList extends Component {
   render() {
     const { data, searchFilter } = this.props;
     let brandOptions = getBrandOptions(searchFilter);
-    let colorOptions = getColorOptions(searchFilter);
 
     return (
       <div className="product-lists">
@@ -55,7 +54,7 @@ class ProductList extends Component {
                             onClick={() => this.props.removeBrand(brand)}
                             key={i}
                           >
-                            {allBrand.label}
+                            Brand: {allBrand.label}
                             <i className="fa fa-times" aria-hidden="true"></i>
                           </span>
                         )}
@@ -76,11 +75,23 @@ class ProductList extends Component {
                   onClick={() => this.props.removeColor(color)}
                   key={i}
                 >
-                  {color}
+                  Color: {color}
                   <i className="fa fa-times" aria-hidden="true"></i>
                 </span>
               );
             })}
+            
+            {
+              !_.isEmpty(this.props.currentFilter) &&
+              this.props.currentFilter.ratings &&
+              <span
+                  className="filter-tags"
+                  onClick={() => this.props.removeRating(this.props.currentFilter.ratings)}
+                >
+                  Rating: {this.props.currentFilter.ratings}
+                  <i className="fa fa-times" aria-hidden="true"></i>
+                </span>
+            }
         </div>
         <div className="card-list">
           <Row gutter={30}>
