@@ -5,11 +5,39 @@ import { Tooltip } from "antd";
 import QuickViewModal from "./QuickViewModal";
 import Link from "next/link";
 import ProductSpecs from "../../Includes/Details/ProductSpecs";
+import next from "next";
 
+const products = {
+  category: [
+    {
+      displayName: "",
+      slug: "",
+    },
+  ],
+  images: [
+    {
+      large: "/images/default-image.png",
+      medium: "/images/default-image.png",
+      thumbnail: "/images/default-image.png",
+    },
+  ],
+  name: "",
+  price: "",
+};
 class ProductCard extends Component {
   state = {
     showQuickView: false,
+    productData: products,
   };
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    if(nextProps.data !== prevState.data && nextProps.data){
+      return{
+        productData: nextProps.data
+      }
+    }
+    return null;
+  }
 
   showModal = () => {
     this.setState({
@@ -24,17 +52,18 @@ class ProductCard extends Component {
   };
 
   render() {
-    const { data } = this.props;
+    const { productData } = this.state;
 
+    let checkSkeleton = this.state.productData.name === "" ? true : false;
     return (
-      <div className="product-card">
+      <div className={"product-card " + (checkSkeleton && "skeleton")}>
         {this.state.showQuickView && (
           <QuickViewModal
             title="Quick View Product"
             visible={this.state.showQuickView}
             // onOk={this.handleOk}
             onCancel={this.handleCancel}
-            data={data}
+            data={productData}
           />
         )}
         {/* <ReactTooltip place="top" type="dark" effect="float" /> */}
@@ -86,17 +115,16 @@ class ProductCard extends Component {
             </div>
             <Link
               href={`/products/[slug]`}
-              key={data.slug}
-              as={`/products/${data.slug}`}
+              key={productData.slug}
+              as={`/products/${productData.slug}`}
             >
-              <div className="image">
+              <div className="image img-skeleton">
                 <img
-                  src={`${process.env.SERVER_BASE_URL}/uploads/${data.images[0].medium}`}
-                  // onError={(ev) => {
-                  //   ev.target.src =
-                  //     "/images/prod-bag.jpg";
-                  // }}
-                  alt={data.name}
+                  src={`${process.env.SERVER_BASE_URL}/uploads/${productData.images[0].medium}`}
+                  onError={(ev) => {
+                    ev.target.src = "/images/default-image.png";
+                  }}
+                  alt={productData.name}
                 />
               </div>
             </Link>
@@ -104,30 +132,34 @@ class ProductCard extends Component {
 
           <Link
             href={`/products/[slug]`}
-            key={data.slug}
-            as={`/products/${data.slug}`}
+            key={productData.slug}
+            as={`/products/${productData.slug}`}
           >
             <div className="card-body">
-              <div className="card-category">
+              <div className="card-category small-line">
                 <div className="cate">
-                  {data.category.map((cate, i) => {
+                  {productData.category.map((cate, i) => {
                     return (
                       <span key={i}>
                         {cate.displayName}
-                        {data.category.length !== i + 1 && " - "}
+                        {productData.category.length !== i + 1 && " - "}
                       </span>
                     );
                   })}
                 </div>
-                <div className="stars">
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                  <i className="fa fa-star" aria-hidden="true"></i>
-                </div>
+                {!checkSkeleton && (
+                  <div className="stars">
+                    <i className="fa fa-star" aria-hidden="true"></i>
+                    <i className="fa fa-star" aria-hidden="true"></i>
+                    <i className="fa fa-star" aria-hidden="true"></i>
+                    <i className="fa fa-star" aria-hidden="true"></i>
+                  </div>
+                )}
               </div>
-              <div className="prod-name">{data.name}</div>
-              <div className="prod-price">Rs {data.price}</div>
+              <div className="prod-name medium-line">{productData.name}</div>
+              <div className="prod-price large-line">
+                {!checkSkeleton && "Rs"} {productData.price}
+              </div>
             </div>
           </Link>
         </div>

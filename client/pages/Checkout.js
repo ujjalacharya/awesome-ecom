@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Row, Col } from "antd";
 
 //includes
-import OrderSummary from "./Includes/Cart/OrderSummary";
-import CartItems from "./Includes/Cart/CartItems";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import OrderSummary from "../src/Includes/Cart/OrderSummary";
+import CartItems from "../src/Includes/Cart/CartItems";
+import Header from "../src/Components/Header";
+import Footer from "../src/Components/Footer";
 
 class Checkout extends Component {
   render() {

@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Row, Col } from "antd";
 
 //includes
-import AddressForm from "./Includes/DeliveryAddress/AddressForm";
-import OrderSummary from "./Includes/Cart/OrderSummary";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import AddressForm from "../src/Includes/DeliveryAddress/AddressForm";
+import OrderSummary from "../src/Includes/Cart/OrderSummary";
+import Header from "../src/Components/Header";
+import Footer from "../src/Components/Footer";
 
 class DeliveryAddress extends Component {
   render() {

@@ -49,7 +49,7 @@ export const getFilterAppendBody = (body, props, filter, type) => {
   let pathName = props.router.pathname.split("/")[1];
   if (_.isEmpty(body)) {
     if (pathName === "search") {
-      if (_.isEmpty(filter) && isNaN(filter)) {
+      if (_.isEmpty(filter)) {
         body = {
           keyword: props.router.query.slug,
         };
@@ -73,7 +73,7 @@ export const getFilterAppendBody = (body, props, filter, type) => {
     }
   } else {
     if (pathName === "search") {
-      if (_.isEmpty(filter) && isNaN(filter)) {
+      if (_.isEmpty(filter)) {
         delete body[type];
       } else {
         body = {

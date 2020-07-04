@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Row, Col, Breadcrumb } from "antd";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-import DetailSlider from "./Includes/Details/DetailSlider";
-import ProductSpecs from "./Includes/Details/ProductSpecs";
-import OtherDetails from "./Includes/Details/OtherDetails";
+import Header from "../src/Components/Header";
+import Footer from "../src/Components/Footer";
+import DetailSlider from "../src/Includes/Details/DetailSlider";
+import ProductSpecs from "../src/Includes/Details/ProductSpecs";
+import OtherDetails from "../src/Includes/Details/OtherDetails";
 
 class Details extends Component {
   render() {

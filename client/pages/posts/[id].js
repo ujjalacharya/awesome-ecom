@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import Layout from "../../components/Layout";
-import SinglePostComponent from "../../components/SinglePostComponent";
 import initialize from "../../utils/initialize";
-import actions from "../../redux/actions";
+import Layout from "../../src/Components/Layout";
 
 export class Post extends Component {
   static async getInitialProps(ctx) {
@@ -21,7 +19,7 @@ export class Post extends Component {
   render() {
     return (
       <Layout title={`Post ${this.props.id}`}>
-        <SinglePostComponent id={this.props.id} />
+        {/* <SinglePostComponent id={this.props.id} /> */}
       </Layout>
     );
   }

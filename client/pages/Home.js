@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import Header from "./Components/Header";
-import MainCarousel from "./Components/Carousel";
-import ProductSlider from "./Components/ProductSlider";
-import SliderHeader from "./Components/SliderHeader";
+import Header from "../src/Components/Header";
+import MainCarousel from "../src/Components/Carousel";
+import ProductSlider from "../src/Components/ProductSlider";
+import SliderHeader from "../src/Components/SliderHeader";
 import { Row, Col } from "antd";
-import Popular from "./Components/Popular";
-import LatestSLider from "./Components/LatestSlider";
-import Footer from "./Components/Footer";
+import Popular from "../src/Components/Popular";
+import LatestSLider from "../src/Components/LatestSlider";
+import Footer from "../src/Components/Footer";
 
 class Home extends Component {
   render() {

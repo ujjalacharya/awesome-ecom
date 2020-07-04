@@ -92,13 +92,13 @@ class ProfileDetails extends Component {
                 </h3>
                 <div className="em-det">
                   <div>
-                    <span className="small-line loading">
+                    <span className="small-line">
                       {!checkSekelton && 'Email:'} {userData.email}
                     </span>
                   </div>
                   {!_.isEmpty(activeLoc) && (
                     <div>
-                      <span className="medium-line loading">
+                      <span className="medium-line">
                         {!checkSekelton && 'Mobile:'} {activeLoc.phoneno}
                       </span>
                     </div>
