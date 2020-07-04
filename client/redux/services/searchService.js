@@ -31,7 +31,7 @@ export class SearchService {
   async getProductsByCategory(query) {
     try {
       const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/by-categorys${query}`
+        `${process.env.SERVER_BASE_URL}/api/product/by-category${query}`
       );
 
       const data = await resp.json();
