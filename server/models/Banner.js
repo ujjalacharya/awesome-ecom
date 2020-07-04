@@ -4,6 +4,9 @@ const bannerSchema = mongoose.Schema({
     bannerPhoto :{
      type:String   
     },
+    link: {
+        type: String
+    },
     product: {
         type: Schema.Types.ObjectId,
         ref: 'product'

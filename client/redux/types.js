@@ -1,5 +1,7 @@
 // auth types
 export const AUTHENTICATE = 'authenticate';
+export const AUTHENTICATE_ERROR = 'AUTHENTICATE_ERROR';
+
 export const DEAUTHENTICATE = 'deauthenticate';
 
 // menu categories
@@ -20,4 +22,10 @@ export const SEARCH_ERROR = "SEARCH_ERROR"
 // user
 export const USER_PROFILE = "USER_PROFILE"
 export const USER_ERROR = "USER_ERROR"
+
+// error
+export const GLOBAL_ERROR = "GLOBAL_ERROR"
+
+//loading
+export const LATEST_LOADING = 'LATEST_LOADING'
 

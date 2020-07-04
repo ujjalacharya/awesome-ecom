@@ -81,8 +81,13 @@ class Listing extends Component {
     let pathName = this.props.router.pathname.split("/")[1];
 
     let body = {};
-    
-    body = getFilterAppendBody(this.state.filterBody, this.props, brands, 'brands')
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      brands,
+      "brands"
+    );
 
     this.setState({
       filterBody: body,
@@ -99,12 +104,14 @@ class Listing extends Component {
       checkedColors: colors,
     });
 
-    console.log(this.state.filterBody);
-
     let body = {};
 
-    body = getFilterAppendBody(this.state.filterBody, this.props, colors, 'colors')
-    console.log(body)
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      colors,
+      "colors"
+    );
 
     this.setState({
       filterBody: body,
@@ -115,6 +122,48 @@ class Listing extends Component {
       body
     );
   };
+
+  onHandleRatings = (rating) => {
+    this.setState({
+      currentRating: rating
+    })
+
+    let body = {};
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      (rating+''),
+      "ratings"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
+  };
+
+  removeBrand = (brand) => {
+    let allBrands = this.state.checkedBrands;
+    let newBrands = allBrands.filter((obj) => {return obj !== brand})
+
+    this.onCheckBrands(newBrands)
+  }
+
+  removeColor = (color) => {
+    let allColors = this.state.checkedColors;
+    let newColors = allColors.filter((obj) => {return obj !== color})
+
+    this.onChangeColors(newColors)
+  }
+
+  removeRating = (rating) => {
+    this.onHandleRatings('')
+  }
 
   render() {
     return (
@@ -130,6 +179,7 @@ class Listing extends Component {
                   checkedBrands={this.state.checkedBrands}
                   onChangeColors={this.onChangeColors}
                   checkedColors={this.state.checkedColors}
+                  onHandleRatings={this.onHandleRatings}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -137,6 +187,11 @@ class Listing extends Component {
                   data={this.props.data}
                   perPage={this.props.perPage}
                   currentPage={this.state.currentPage}
+                  currentFilter={this.state.filterBody}
+                  searchFilter={this.props.getSearchFilter}
+                  removeBrand = {this.removeBrand}
+                  removeColor = {this.removeColor}
+                  removeRating = {this.removeRating}
                 />
                 <div className="pagination">
                   <div className="page-status">

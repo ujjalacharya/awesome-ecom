@@ -20,7 +20,6 @@ class ProfileDetails extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (
       this.props.userData !== nextProps.userData &&
       this.props.activeLoc !== nextProps.activeLoc
@@ -34,7 +33,6 @@ class ProfileDetails extends Component {
 
   render() {
     let { userData, activeLoc } = this.state;
-    console.log(this.state);
     const columns = [
       {
         title: "Name",
@@ -92,13 +90,13 @@ class ProfileDetails extends Component {
                 </h3>
                 <div className="em-det">
                   <div>
-                    <span className="small-line loading">
+                    <span className="small-line">
                       {!checkSekelton && 'Email:'} {userData.email}
                     </span>
                   </div>
                   {!_.isEmpty(activeLoc) && (
                     <div>
-                      <span className="medium-line loading">
+                      <span className="medium-line">
                         {!checkSekelton && 'Mobile:'} {activeLoc.phoneno}
                       </span>
                     </div>

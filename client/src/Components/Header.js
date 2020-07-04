@@ -48,17 +48,17 @@ class Header extends Component {
       let parentCategory = [];
 
       let parentCate = [];
-      let { menuCategories } = nextProps.menu
-      menuCategories.map((cate) => {
+      let { menuCategories: {categories} } = nextProps.menu
+      categories.map((cate) => {
         if (cate.parent === undefined) {
           parentCategory.push(cate);
         }
       });
 
-      let allCates = getChildCategories(menuCategories, parentCategory);
+      let allCates = getChildCategories(categories, parentCategory);
 
       allCates.map((newChild) => {
-        let newallCates = getChildCategories(menuCategories, newChild.childCate);
+        let newallCates = getChildCategories(categories, newChild.childCate);
         let parentCateEle = { ...newChild, childCate: newallCates };
         parentCate.push(parentCateEle);
       });

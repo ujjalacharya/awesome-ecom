@@ -3,6 +3,7 @@ import App from "next/app";
 import withRedux from "next-redux-wrapper";
 import { initStore } from "../redux";
 import "../public/nprogress.css";
+import GlobalErrorComponent from "../src/Components/GlobalErrorComponent";
 
 export default withRedux(initStore, { debug: false })(
   class MyApp extends App {
@@ -20,6 +21,7 @@ export default withRedux(initStore, { debug: false })(
       const { Component, pageProps, store } = this.props;
       return (
         <Provider store={store}>
+          <GlobalErrorComponent {...this.props} />
           <Component {...pageProps} />
         </Provider>
       );

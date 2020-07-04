@@ -11,7 +11,6 @@ import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
-
   return (
     <Layout title="Home">
       <div className="wrapper">

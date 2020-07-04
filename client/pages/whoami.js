@@ -1,7 +1,7 @@
 import axios from "axios";
 import { connect } from "react-redux";
 import initialize from "../utils/initialize";
-import Layout from "../components/Layout";
+import Layout from "../src/Components/Layout";
 import fetch from "isomorphic-unfetch";
 
 const Whoami = ({ user }) => (

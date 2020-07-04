@@ -28,6 +28,7 @@ class Login extends Component {
     const onFinishFailed = (errorInfo) => {
       console.log("Failed:", errorInfo);
     };
+
     return (
       <Layout title="Login">
         <div className="container">

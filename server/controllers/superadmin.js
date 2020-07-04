@@ -80,9 +80,56 @@ exports.banner = async (req, res) => {
     const Path = `public/uploads/${filename}`;
     fs.unlinkSync(Path);
     newBanner.bannerPhoto = `banner/${filename}`
+    newBanner.link = req.body.link
     await newBanner.save()
     res.json(newBanner)
 }
+
+exports.editBanner = async(req,res) => {
+    let banner = await Banner.findById(req.body.banner_id)
+    if (!banner) {
+        if (req.file) {
+            const { filename } = req.file;
+            // remove image from public/uploads
+            const Path = `public/uploads/${filename}`;
+            fs.unlinkSync(Path);
+        }
+        return res.status(404).json({ error: 'Banner not found.' })
+    }
+    if (req.body.productSlug) {
+        let product = await Product.findOne({
+            slug: req.body.productSlug, isVerified: { "$ne": null },
+            isDeleted: null
+        })
+        if (!product) {
+            if (req.file) {
+                const { filename } = req.file;
+                // remove image from public/uploads
+                const Path = `public/uploads/${filename}`;
+                fs.unlinkSync(Path);
+            }
+            return res.status(404).json({ error: "Product not found." })
+        }
+        banner.product = product._id
+    }
+    if (req.file) {
+        const { filename, path: filepath, destination } = req.file
+        await sharp(filepath)
+            .resize(8480)
+            .toFile(path.resolve(destination, 'banner', filename))
+        //remove old banner pic from bannner folder
+        let Path = `public/uploads/${banner.bannerPhoto}`;
+        fs.unlinkSync(Path);
+        // remove image from public/uploads
+        Path = `public/uploads/${filename}`;
+        fs.unlinkSync(Path);
+        banner.bannerPhoto = `banner/${filename}`
+    }
+    banner.link = req.body.link
+    await banner.save()
+    res.json(banner)
+}
+
 exports.deleteBanner = async (req, res) => {
     let banner = await Banner.findById(req.body.banner_id)
     if (!banner) {

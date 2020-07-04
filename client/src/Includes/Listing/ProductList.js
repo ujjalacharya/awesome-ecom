@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import { Select, Row, Col } from "antd";
 import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
+import _ from "lodash";
 
 //includes
 import ProductCard from "../../Components/Includes/ProductCard";
+import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
 // Select Option
 const { Option } = Select;
 
 class ProductList extends Component {
   render() {
-    console.log(this.props)
-    const { data } = this.props;
+    const { data, searchFilter } = this.props;
+    let brandOptions = getBrandOptions(searchFilter);
+
     return (
       <div className="product-lists">
         <div className="sorting-page">
@@ -31,18 +34,76 @@ class ProductList extends Component {
           </div>
           <div className="page-status">
             Page {this.props.currentPage} of{" "}
-            {Math.ceil(data && (data.totalCount / this.props.perPage))}
+            {Math.ceil(data && data.totalCount / this.props.perPage)}
           </div>
+        </div>
+        <div className="filtered-by">
+          <span className="title">Filtered By:</span>
+          {!_.isEmpty(this.props.currentFilter) &&
+            this.props.currentFilter.brands &&
+            this.props.currentFilter.brands.length > 0 &&
+            this.props.currentFilter.brands.map((brand, i) => {
+              return (
+                <>
+                  {brandOptions.map((allBrand) => {
+                    return (
+                      <>
+                        {brand === allBrand.value && (
+                          <span
+                            className="filter-tags"
+                            onClick={() => this.props.removeBrand(brand)}
+                            key={i}
+                          >
+                            Brand: {allBrand.label}
+                            <i className="fa fa-times" aria-hidden="true"></i>
+                          </span>
+                        )}
+                      </>
+                    );
+                  })}
+                </>
+              );
+            })}
+
+          {!_.isEmpty(this.props.currentFilter) &&
+            this.props.currentFilter.colors &&
+            this.props.currentFilter.colors.length > 0 &&
+            this.props.currentFilter.colors.map((color, i) => {
+              return (
+                <span
+                  className="filter-tags"
+                  onClick={() => this.props.removeColor(color)}
+                  key={i}
+                >
+                  Color: {color}
+                  <i className="fa fa-times" aria-hidden="true"></i>
+                </span>
+              );
+            })}
+            
+            {
+              !_.isEmpty(this.props.currentFilter) &&
+              this.props.currentFilter.ratings &&
+              <span
+                  className="filter-tags"
+                  onClick={() => this.props.removeRating(this.props.currentFilter.ratings)}
+                >
+                  Rating: {this.props.currentFilter.ratings}
+                  <i className="fa fa-times" aria-hidden="true"></i>
+                </span>
+            }
         </div>
         <div className="card-list">
           <Row gutter={30}>
-            {data && data.products ? (data.products.map((data, i) => {
-              return (
-                <Col lg={6} sm={12} xs={24} key={i}>
-                  <ProductCard data={data} />
-                </Col>
-              );
-            })): 'No Products Available'}
+            {data && data.products
+              ? data.products.map((data, i) => {
+                  return (
+                    <Col lg={6} sm={12} xs={24} key={i}>
+                      <ProductCard data={data} />
+                    </Col>
+                  );
+                })
+              : "No Products Available"}
           </Row>
         </div>
       </div>

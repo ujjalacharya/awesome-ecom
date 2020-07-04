@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import * as moment from "moment-timezone";
 
 export const getChildCategories = (allCategories, parentCategory) => {
-
   let newParentCate = [];
   parentCategory.forEach((parentCate) => {
     let parentCategoryElements = { ...parentCate };
@@ -16,7 +15,6 @@ export const getChildCategories = (allCategories, parentCategory) => {
     newParentCate.push(parentCategoryElements);
   });
   return newParentCate;
-
 };
 
 export const isTokenExpired = (token) => {
@@ -32,24 +30,20 @@ export const isTokenExpired = (token) => {
 };
 
 export const getUserInfo = (token) => {
-  let data = ''
-  if(token){
+  let data = "";
+  if (token) {
     data = jwt.decode(token);
-    return data
+    return data;
   }
-  return data
-}
+  return data;
+};
 
-export const convertDateToCurrentTz = (date) =>{
+export const convertDateToCurrentTz = (date) => {
   const currentTimeZone = moment.tz.guess();
-  return moment
-    .utc(date)
-    .tz(currentTimeZone)
-    .format("Do MMMM, YYYY")
-}
+  return moment.utc(date).tz(currentTimeZone).format("Do MMMM, YYYY");
+};
 
 export const getFilterAppendBody = (body, props, filter, type) => {
-
   let pathName = props.router.pathname.split("/")[1];
   if (_.isEmpty(body)) {
     if (pathName === "search") {
@@ -78,7 +72,7 @@ export const getFilterAppendBody = (body, props, filter, type) => {
   } else {
     if (pathName === "search") {
       if (_.isEmpty(filter)) {
-        delete body[type]
+        delete body[type];
       } else {
         body = {
           ...body,
@@ -87,7 +81,7 @@ export const getFilterAppendBody = (body, props, filter, type) => {
       }
     } else if (pathName === "category") {
       if (_.isEmpty(filter)) {
-        delete body[type]
+        delete body[type];
       } else {
         body = {
           ...body,
@@ -98,4 +92,27 @@ export const getFilterAppendBody = (body, props, filter, type) => {
   }
 
   return body;
-}
+};
+
+export const getBrandOptions = (data) => {
+  let brandOptions = [];
+  data.brands &&
+    data.brands.length > 0 &&
+    data.brands.map((brand) => {
+      let ele = { label: brand.brandName, value: brand._id };
+      brandOptions.push(ele);
+    });
+  return brandOptions;
+};
+
+export const getColorOptions = (data) => {
+  let colorOptions = [];
+  data &&
+    data.colors &&
+    data.colors.length > 0 &&
+    data.colors.map((color) => {
+      let ele = { label: color, value: color };
+      colorOptions.push(ele);
+    });
+  return colorOptions;
+};
