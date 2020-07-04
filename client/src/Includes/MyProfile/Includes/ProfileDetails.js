@@ -20,7 +20,6 @@ class ProfileDetails extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (
       this.props.userData !== nextProps.userData &&
       this.props.activeLoc !== nextProps.activeLoc
@@ -34,7 +33,6 @@ class ProfileDetails extends Component {
 
   render() {
     let { userData, activeLoc } = this.state;
-    console.log(this.state);
     const columns = [
       {
         title: "Name",

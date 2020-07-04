@@ -10,7 +10,7 @@ const authenticate = (body, type) => {
   return async (dispatch) => {
     const authService = new AuthService();
     const response = await authService.loginUser(body);
-    console.log(response)
+    
     if (response.isSuccess) {
       setCookie("token", response.data.accessToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.token });

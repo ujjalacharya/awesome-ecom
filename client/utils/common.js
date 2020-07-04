@@ -44,8 +44,6 @@ export const convertDateToCurrentTz = (date) => {
 };
 
 export const getFilterAppendBody = (body, props, filter, type) => {
-  console.log(filter, type)
-  console.log(_.isEmpty(filter))
   let pathName = props.router.pathname.split("/")[1];
   if (_.isEmpty(body)) {
     if (pathName === "search") {

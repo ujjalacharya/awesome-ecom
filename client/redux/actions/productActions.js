@@ -5,6 +5,7 @@ import {
   MENU_CATEGORIES,
   PRODUCT_DETAILS,
   GLOBAL_ERROR,
+  LATEST_LOADING,
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -26,6 +27,7 @@ const productCategories = () => {
 
 const getLatestProducts = () => {
   return async (dispatch) => {
+    dispatch({type: LATEST_LOADING, payload: []})
     const productService = new ProductService();
     const response = await productService.getLatestProducts();
     if (response.isSuccess) {

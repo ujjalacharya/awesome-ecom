@@ -124,7 +124,6 @@ class Listing extends Component {
   };
 
   onHandleRatings = (rating) => {
-    console.log(rating);
     this.setState({
       currentRating: rating
     })
@@ -163,12 +162,10 @@ class Listing extends Component {
   }
 
   removeRating = (rating) => {
-    console.log(rating)
     this.onHandleRatings('')
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className="wrapper">
         <section className="listing">

@@ -26,3 +26,6 @@ export const USER_ERROR = "USER_ERROR"
 // error
 export const GLOBAL_ERROR = "GLOBAL_ERROR"
 
+//loading
+export const LATEST_LOADING = 'LATEST_LOADING'
+

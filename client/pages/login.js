@@ -29,7 +29,6 @@ class Login extends Component {
       console.log("Failed:", errorInfo);
     };
 
-    console.log(this.props)
     return (
       <Layout title="Login">
         <div className="container">
