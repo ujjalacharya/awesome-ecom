@@ -38,19 +38,20 @@ exports.getGeoLocation = async (req, res) => {
     res.json(superadmin.geolocation)
 }
 
-exports.shippingRate = async (req, res) => {
+exports.shippingData = async (req, res) => {
     let superadmin = req.admin //i.e. superadmin
     superadmin.shippingRate = req.body.shippingRate
+    superadmin.shippingCost = req.body.shippingCost
     await superadmin.save()
-    res.json(superadmin.shippingRate)
+    res.json({ shippingRate: superadmin.shippingRate, shippingCost: superadmin.shippingCost})
 }
 
-exports.getShippingRate = async (req, res) => {
+exports.getShippingData = async (req, res) => {
     let superadmin = await Admin.findOne({ role: 'superadmin' })
     if (!superadmin) {
         return res.status(404).json({ error: 'Cannot find shipping rate' })
     }
-    res.json(superadmin.shippingRate)
+    res.json({ shippingRate: superadmin.shippingRate, shippingCost: superadmin.shippingCost })
 }
 
 exports.banner = async (req, res) => {
