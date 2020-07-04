@@ -1,23 +1,28 @@
 import React, { Component } from "react";
 import { Checkbox, Input } from "antd";
-import { Icon, Row, Col } from "antd";
+import { Radio, Row, Col } from "antd";
 import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
+const radioStyle = {
+  display: 'block',
+  height: '30px',
+  lineHeight: '30px',
+};
 class Filter extends Component {
   state = {
-    checkedBrands: [],
+    checkedBrands: [],  
+    value: 1,
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   if(this.props.checkedBrands !== nextProps.checkedBrands){
-  //     this.setState({
-  //       checkedBrands: nextProps.checkedBrands
-  //     })
-  //   }
-  // }
+  onChange = e => {
+    console.log('radio checked', e.target.value);
+    this.setState({
+      value: e.target.value,
+    });
+  };
 
   render() {
-    const { data } = this.props;
+    const { data, value } = this.props;
 
     let brandOptions = getBrandOptions(data);
 
@@ -119,6 +124,20 @@ class Filter extends Component {
               onChange={(e) => this.props.onChangeColors(e)}
               value={this.props.checkedColors}
             />
+          </div>
+        </div>
+        <div className="filter-types last-child-fi-type">
+          <div className="type-title">Warrenty</div>
+          <div className="type-list">
+            <Radio.Group onChange={(e) => this.props.onChangeWarrenty(e.target.value)} value={this.props.selectedWarrenty}>
+              {data.warranties && data.warranties.map((warrenty) => {
+                return (
+                  <Radio style={radioStyle} value={warrenty}>
+                    {warrenty}
+                  </Radio>
+                );
+              })}
+            </Radio.Group>
           </div>
         </div>
         <div className="sticky-filter inside-filter-sticky">

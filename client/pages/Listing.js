@@ -20,7 +20,8 @@ class Listing extends Component {
     checkedColors: [],
     filterBody: {},
     minPrice: '',
-    maxPrice: ''
+    maxPrice: '',
+    selectedWarrenty: ''
   };
 
   static getInitialProps(ctx) {
@@ -189,6 +190,33 @@ class Listing extends Component {
     );
   }
 
+  onChangeWarrenty = (warrenty) => {
+    
+    this.setState({
+      selectedWarrenty: warrenty
+    })
+
+    let body = {};
+
+    let warenty = warrenty === '' ? [] : [warrenty]
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      (warenty),
+      "warranties"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
+  }
+
   removeBrand = (brand) => {
     let allBrands = this.state.checkedBrands;
     let newBrands = allBrands.filter((obj) => {return obj !== brand})
@@ -207,12 +235,19 @@ class Listing extends Component {
     this.onHandleRatings('')
   }
 
-  removePrice = ( minPrice, maxPrice ) => {
+  removePrice = () => {
     this.setState({
       minPrice: '',
       maxPrice: ''
     })
     this.searchPrice('', '')
+  }
+
+  removeWarrenty = () => {
+    this.setState({
+      warrenty: '',
+    })
+    this.onChangeWarrenty('')
   }
 
   render() {
@@ -234,6 +269,8 @@ class Listing extends Component {
                   changePrice = {this.changePrice}
                   minPrice = {this.state.minPrice}
                   maxPrice = {this.state.maxPrice}
+                  onChangeWarrenty = {this.onChangeWarrenty}
+                  selectedWarrenty = {this.state.selectedWarrenty}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -247,6 +284,7 @@ class Listing extends Component {
                   removeColor = {this.removeColor}
                   removeRating = {this.removeRating}
                   removePrice = {this.removePrice}
+                  removeWarrenty = {this.removeWarrenty}
                 />
                 <div className="pagination">
                   <div className="page-status">
