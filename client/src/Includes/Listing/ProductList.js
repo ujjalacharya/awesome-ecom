@@ -71,24 +71,14 @@ class ProductList extends Component {
             this.props.currentFilter.colors.length > 0 &&
             this.props.currentFilter.colors.map((color, i) => {
               return (
-                <>
-                  {colorOptions.map((allColor) => {
-                    return (
-                      <>
-                        {color === allColor.value && (
-                          <span
-                            className="filter-tags"
-                            onClick={() => this.props.removeColor(color)}
-                            key={i}
-                          >
-                            {allColor.label}
-                            <i className="fa fa-times" aria-hidden="true"></i>
-                          </span>
-                        )}
-                      </>
-                    );
-                  })}
-                </>
+                <span
+                  className="filter-tags"
+                  onClick={() => this.props.removeColor(color)}
+                  key={i}
+                >
+                  {color}
+                  <i className="fa fa-times" aria-hidden="true"></i>
+                </span>
               );
             })}
         </div>
