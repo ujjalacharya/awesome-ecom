@@ -5,8 +5,11 @@ import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
 class Filter extends Component {
   state = {
-    checkedBrands: []
-  }
+    checkedBrands: [],
+    minPrice: '',
+    maxPrice: ''
+    
+  };
 
   // componentWillReceiveProps(nextProps) {
   //   if(this.props.checkedBrands !== nextProps.checkedBrands){
@@ -16,9 +19,22 @@ class Filter extends Component {
   //   }
   // }
 
+  
+  changePrice = (price, type) => {
+    if(type === 'min'){
+      this.setState({
+        minPrice: price
+      })
+    }else{
+      this.setState({
+        maxPrice: price
+      })
+    }
+  }
+
   render() {
     const { data } = this.props;
-    
+
     let brandOptions = getBrandOptions(data);
 
     const priceOptions = [
@@ -38,43 +54,69 @@ class Filter extends Component {
         <div className="filter-types">
           <div className="type-title">BRAND</div>
           <div className="type-list">
-            <Checkbox.Group options={brandOptions} onChange={(e) => this.props.onCheckBrands(e)} value={this.props.checkedBrands} />
+            <Checkbox.Group
+              options={brandOptions}
+              onChange={(e) => this.props.onCheckBrands(e)}
+              value={this.props.checkedBrands}
+            />
           </div>
         </div>
         <div className="filter-types">
           <div className="type-title">Price</div>
           <div className="type-list price-filter">
-            <Input placeholder="Min" type="number"/>
+            <Input
+              placeholder="Min"
+              type="number"
+              value={this.state.minPrice}
+              onChange={(e) => this.changePrice(e.target.value, "min")}
+            />
             <span> - </span>
-            <Input placeholder="Max"  type="number"/>
+            <Input
+              placeholder="Max"
+              type="number"
+              value={this.state.maxPrice}
+              onChange={(e) => this.changePrice(e.target.value, "max")}
+            />
+            <button onClick={() => this.props.searchPrice(this.state.minPrice, this.state.maxPrice)}><i class="fa fa-search" aria-hidden="true"></i></button>
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Ratings</div>
           <div className="type-list">
-            {
-              data && data.ratings && data.ratings.length > 0 && data.ratings.map((rate,i) => {
-                return(
-                  <div key={i} className="rate-stars" onClick = {() => this.props.onHandleRatings(rate)}>
-                    {
-                      Array(rate)
+            {data &&
+              data.ratings &&
+              data.ratings.length > 0 &&
+              data.ratings.map((rate, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="rate-stars"
+                    onClick={() => this.props.onHandleRatings(rate)}
+                  >
+                    {Array(rate)
                       .fill(0)
-                      .map((num,j) => {
-                        return(
-                          <i className="fa fa-star" aria-hidden="true" key={j}></i>
-                        )
-                      })
-                    }
+                      .map((num, j) => {
+                        return (
+                          <i
+                            className="fa fa-star"
+                            aria-hidden="true"
+                            key={j}
+                          ></i>
+                        );
+                      })}
                   </div>
-                )
-              })
-            }
+                );
+              })}
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Color</div>
           <div className="type-list">
-            <Checkbox.Group options={colorOptions} onChange={(e) => this.props.onChangeColors(e)} value={this.props.checkedColors}/>
+            <Checkbox.Group
+              options={colorOptions}
+              onChange={(e) => this.props.onChangeColors(e)}
+              value={this.props.checkedColors}
+            />
           </div>
         </div>
         <div className="sticky-filter inside-filter-sticky">

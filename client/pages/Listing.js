@@ -147,6 +147,35 @@ class Listing extends Component {
     );
   };
 
+  searchPrice = (minPrice, maxPrice) => {
+    let body = {};
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      (minPrice+''),
+      "min_price"
+    );
+
+    body = getFilterAppendBody(
+      body,
+      this.props,
+      (maxPrice+''),
+      "max_price"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    console.log(body)
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
+  }
+
   removeBrand = (brand) => {
     let allBrands = this.state.checkedBrands;
     let newBrands = allBrands.filter((obj) => {return obj !== brand})
@@ -166,6 +195,7 @@ class Listing extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div className="wrapper">
         <section className="listing">
@@ -180,6 +210,7 @@ class Listing extends Component {
                   onChangeColors={this.onChangeColors}
                   checkedColors={this.state.checkedColors}
                   onHandleRatings={this.onHandleRatings}
+                  searchPrice = {this.searchPrice}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">

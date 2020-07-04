@@ -11,8 +11,28 @@ import { getBrandOptions, getColorOptions } from "../../../utils/common";
 const { Option } = Select;
 
 class ProductList extends Component {
+  state = {
+    min_price: "",
+    max_price: "",
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let max_price = "";
+    let min_price = "";
+    if (nextProps.currentFilter.max_price !== prevState.max_price) {
+      max_price = nextProps.currentFilter.max_price;
+    }
+    if (nextProps.currentFilter.min_price !== prevState.min_price) {
+      min_price = nextProps.currentFilter.min_price;
+    }
+    return {
+      max_price,
+      min_price
+    }
+  }
+
   render() {
-    const { data, searchFilter } = this.props;
+    const { data, searchFilter, currentFilter } = this.props;
     let brandOptions = getBrandOptions(searchFilter);
 
     return (
@@ -39,10 +59,10 @@ class ProductList extends Component {
         </div>
         <div className="filtered-by">
           <span className="title">Filtered By:</span>
-          {!_.isEmpty(this.props.currentFilter) &&
-            this.props.currentFilter.brands &&
-            this.props.currentFilter.brands.length > 0 &&
-            this.props.currentFilter.brands.map((brand, i) => {
+          {!_.isEmpty(currentFilter) &&
+            currentFilter.brands &&
+            currentFilter.brands.length > 0 &&
+            currentFilter.brands.map((brand, i) => {
               return (
                 <>
                   {brandOptions.map((allBrand) => {
@@ -65,10 +85,10 @@ class ProductList extends Component {
               );
             })}
 
-          {!_.isEmpty(this.props.currentFilter) &&
-            this.props.currentFilter.colors &&
-            this.props.currentFilter.colors.length > 0 &&
-            this.props.currentFilter.colors.map((color, i) => {
+          {!_.isEmpty(currentFilter) &&
+            currentFilter.colors &&
+            currentFilter.colors.length > 0 &&
+            currentFilter.colors.map((color, i) => {
               return (
                 <span
                   className="filter-tags"
@@ -80,18 +100,32 @@ class ProductList extends Component {
                 </span>
               );
             })}
-            
-            {
-              !_.isEmpty(this.props.currentFilter) &&
-              this.props.currentFilter.ratings &&
+
+          {!_.isEmpty(currentFilter) && currentFilter.ratings && (
+            <span
+              className="filter-tags"
+              onClick={() => this.props.removeRating(currentFilter.ratings)}
+            >
+              Rating: {currentFilter.ratings}
+              <i className="fa fa-times" aria-hidden="true"></i>
+            </span>
+          )}
+
+          {!_.isEmpty(currentFilter) &&
+            (this.state.max_price || this.state.min_price) && (
               <span
-                  className="filter-tags"
-                  onClick={() => this.props.removeRating(this.props.currentFilter.ratings)}
-                >
-                  Rating: {this.props.currentFilter.ratings}
-                  <i className="fa fa-times" aria-hidden="true"></i>
-                </span>
-            }
+                className="filter-tags"
+                onClick={() =>
+                  this.props.removePrice(
+                    this.state.min_price,
+                    this.state.max_price
+                  )
+                }
+              >
+                Price: {this.state.min_price} - {this.state.max_price}
+                <i className="fa fa-times" aria-hidden="true"></i>
+              </span>
+            )}
         </div>
         <div className="card-list">
           <Row gutter={30}>

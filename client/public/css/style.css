@@ -222,6 +222,17 @@ a.view-more-less i {
   content: "" !important;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .filtered-by {
   padding-left: 40px;
   padding-top: 15px;
@@ -1211,6 +1222,16 @@ button.no-color:hover {
 }
 .listing-filter .filter-types .type-list.price-filter span {
   padding: 0 10px;
+}
+.listing-filter .filter-types .type-list.price-filter button {
+  height: 32px !important;
+  padding: 10px 12px;
+  padding-top: 6px;
+  margin-left: 10px;
+  margin-right: 10px;
+  background: #61ce70;
+  color: #fff;
+  border-radius: 2px !important;
 }
 .listing-filter .filter-types .type-list .ant-checkbox-group .ant-checkbox-group-item {
   display: block;
