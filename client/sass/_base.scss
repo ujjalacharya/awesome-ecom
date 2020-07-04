@@ -69,38 +69,38 @@ body {
 h1 {
   font-size: 35px;
   @media screen and (max-width: 480px) {
-      font-size: 29px;
+    font-size: 29px;
   }
 }
 h2 {
   font-size: 29px;
   @media screen and (max-width: 480px) {
-      font-size: 24px;
+    font-size: 24px;
   }
 }
 h3 {
   font-size: 24px;
   @media screen and (max-width: 480px) {
-      font-size: 20px;
+    font-size: 20px;
   }
 }
 h4 {
   font-size: 20px;
   @media screen and (max-width: 480px) {
-      font-size: 16px;
+    font-size: 16px;
   }
 }
 h5,
 p {
   font-size: 16px;
   @media screen and (max-width: 480px) {
-      font-size: 14px;
+    font-size: 14px;
   }
 }
 h6 {
   font-size: 14px;
   @media screen and (max-width: 480px) {
-      font-size: 12px;
+    font-size: 12px;
   }
 }
 
@@ -160,32 +160,36 @@ a.view-more-less {
   font-weight: 600;
   cursor: pointer;
 }
-a.view-more-less  i{
+a.view-more-less i {
   margin-left: 5px;
   font-size: 11px !important;
   margin-bottom: 0 !important;
 }
 .show-review + .view-more-less .fa-caret-down:before {
-  content: '\f0d8' !important;
+  content: "\f0d8" !important;
 }
 
-.filtered-by{
+.filtered-by {
   padding-left: 40px;
   padding-top: 15px;
-  .filter-tags{
+  .title {
+    margin-right: 10px;
+    color: rgba(0, 0, 0, 0.65);
+  }
+  .filter-tags {
     font-size: 12px;
     border: 1px solid #eee;
     padding: 6px 10px;
     border-radius: 15px;
-    color: rgba(0,0,0,.65);
+    color: rgba(0, 0, 0, 0.65);
     cursor: pointer;
     margin-right: 8px;
-    &:hover{
+    &:hover {
       border-color: $secondary-color;
       color: $secondary-color;
     }
   }
-  i{
+  i {
     margin-left: 4px;
   }
 }

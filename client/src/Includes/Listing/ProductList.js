@@ -5,7 +5,7 @@ import _ from "lodash";
 
 //includes
 import ProductCard from "../../Components/Includes/ProductCard";
-import { getBrandOptions } from "../../../utils/common";
+import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
 // Select Option
 const { Option } = Select;
@@ -14,6 +14,8 @@ class ProductList extends Component {
   render() {
     const { data, searchFilter } = this.props;
     let brandOptions = getBrandOptions(searchFilter);
+    let colorOptions = getColorOptions(searchFilter);
+
     return (
       <div className="product-lists">
         <div className="sorting-page">
@@ -37,28 +39,58 @@ class ProductList extends Component {
           </div>
         </div>
         <div className="filtered-by">
-          {!_.isEmpty(this.props.currentFilter)
-            ? this.props.currentFilter.brands &&
-              this.props.currentFilter.brands.length > 0 &&
-              this.props.currentFilter.brands.map((brand, i) => {
-                return (
-                  <>
-                    {brandOptions.map((allBrand) => {
-                      return (
-                        <>
-                          {brand === allBrand.value && (
-                            <span className="filter-tags" onClick={() => this.props.removeBrand(brand)} key={i}>
-                              {allBrand.label}
-                              <i className="fa fa-times" aria-hidden="true"></i>
-                            </span>
-                          )}
-                        </>
-                      );
-                    })}
-                  </>
-                );
-              })
-            : ""}
+          <span className="title">Filtered By:</span>
+          {!_.isEmpty(this.props.currentFilter) &&
+            this.props.currentFilter.brands &&
+            this.props.currentFilter.brands.length > 0 &&
+            this.props.currentFilter.brands.map((brand, i) => {
+              return (
+                <>
+                  {brandOptions.map((allBrand) => {
+                    return (
+                      <>
+                        {brand === allBrand.value && (
+                          <span
+                            className="filter-tags"
+                            onClick={() => this.props.removeBrand(brand)}
+                            key={i}
+                          >
+                            {allBrand.label}
+                            <i className="fa fa-times" aria-hidden="true"></i>
+                          </span>
+                        )}
+                      </>
+                    );
+                  })}
+                </>
+              );
+            })}
+
+          {!_.isEmpty(this.props.currentFilter) &&
+            this.props.currentFilter.colors &&
+            this.props.currentFilter.colors.length > 0 &&
+            this.props.currentFilter.colors.map((color, i) => {
+              return (
+                <>
+                  {colorOptions.map((allColor) => {
+                    return (
+                      <>
+                        {color === allColor.value && (
+                          <span
+                            className="filter-tags"
+                            onClick={() => this.props.removeColor(color)}
+                            key={i}
+                          >
+                            {allColor.label}
+                            <i className="fa fa-times" aria-hidden="true"></i>
+                          </span>
+                        )}
+                      </>
+                    );
+                  })}
+                </>
+              );
+            })}
         </div>
         <div className="card-list">
           <Row gutter={30}>

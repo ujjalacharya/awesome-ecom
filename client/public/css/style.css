@@ -226,6 +226,10 @@ a.view-more-less i {
   padding-left: 40px;
   padding-top: 15px;
 }
+.filtered-by .title {
+  margin-right: 10px;
+  color: rgba(0, 0, 0, 0.65);
+}
 .filtered-by .filter-tags {
   font-size: 12px;
   border: 1px solid #eee;

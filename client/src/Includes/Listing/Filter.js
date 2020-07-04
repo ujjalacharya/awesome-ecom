@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Checkbox, Input } from "antd";
 import { Icon, Row, Col } from "antd";
-import { getBrandOptions } from "../../../utils/common";
+import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
 class Filter extends Component {
   state = {
@@ -27,13 +27,7 @@ class Filter extends Component {
       { label: "Rs. 3775 to Rs. 5179", value: "3775-5179" },
     ];
 
-    let colorOptions = [];
-    data && data.colors && data.colors.length > 0 && data.colors.map((color) => {
-      let ele = { label: color, value: color };
-      colorOptions.push(ele);
-    });
-
-    console.log(this.props.checkedBrands)
+    let colorOptions = getColorOptions(data);
 
     return (
       <div className={"listing-filter " + this.props.removeThisFilter}>
@@ -80,7 +74,7 @@ class Filter extends Component {
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Color</div>
           <div className="type-list">
-            <Checkbox.Group options={colorOptions} onChange={(e) => this.props.onChangeColors(e)} values={this.props.checkedColors}/>
+            <Checkbox.Group options={colorOptions} onChange={(e) => this.props.onChangeColors(e)} value={this.props.checkedColors}/>
           </div>
         </div>
         <div className="sticky-filter inside-filter-sticky">

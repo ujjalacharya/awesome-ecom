@@ -130,6 +130,13 @@ class Listing extends Component {
     this.onCheckBrands(newBrands)
   }
 
+  removeColor = (color) => {
+    let allColors = this.state.checkedColors;
+    let newColors = allColors.filter((obj) => {return obj !== color})
+
+    this.onChangeColors(newColors)
+  }
+
   onHandleRatings = (rating) => {
     console.log(rating);
   };
@@ -160,6 +167,7 @@ class Listing extends Component {
                   currentFilter={this.state.filterBody}
                   searchFilter={this.props.getSearchFilter}
                   removeBrand = {this.removeBrand}
+                  removeColor = {this.removeColor}
                 />
                 <div className="pagination">
                   <div className="page-status">

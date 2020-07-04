@@ -102,5 +102,17 @@ export const getBrandOptions = (data) => {
       let ele = { label: brand.brandName, value: brand._id };
       brandOptions.push(ele);
     });
-  return brandOptions
+  return brandOptions;
+};
+
+export const getColorOptions = (data) => {
+  let colorOptions = [];
+  data &&
+    data.colors &&
+    data.colors.length > 0 &&
+    data.colors.map((color) => {
+      let ele = { label: color, value: color };
+      colorOptions.push(ele);
+    });
+  return colorOptions;
 };
