@@ -17,18 +17,23 @@ class ProductList extends Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    let max_price = "";
-    let min_price = "";
-    if (nextProps.currentFilter.max_price !== prevState.max_price) {
+    if (
+      nextProps.currentFilter.max_price !== prevState.max_price ||
+      nextProps.currentFilter.min_price !== prevState.min_price
+    ) {
+      let max_price = "";
+      let min_price = "";
+
       max_price = nextProps.currentFilter.max_price;
-    }
-    if (nextProps.currentFilter.min_price !== prevState.min_price) {
       min_price = nextProps.currentFilter.min_price;
+
+      return {
+        max_price,
+        min_price,
+      };
     }
-    return {
-      max_price,
-      min_price
-    }
+
+    return null;
   }
 
   render() {
@@ -57,62 +62,60 @@ class ProductList extends Component {
             {Math.ceil(data && data.totalCount / this.props.perPage)}
           </div>
         </div>
-        <div className="filtered-by">
-          <span className="title">Filtered By:</span>
-          {!_.isEmpty(currentFilter) &&
-            currentFilter.brands &&
-            currentFilter.brands.length > 0 &&
-            currentFilter.brands.map((brand, i) => {
-              return (
-                <>
-                  {brandOptions.map((allBrand) => {
-                    return (
-                      <>
-                        {brand === allBrand.value && (
-                          <span
-                            className="filter-tags"
-                            onClick={() => this.props.removeBrand(brand)}
-                            key={i}
-                          >
-                            Brand: {allBrand.label}
-                            <i className="fa fa-times" aria-hidden="true"></i>
-                          </span>
-                        )}
-                      </>
-                    );
-                  })}
-                </>
-              );
-            })}
+        {!_.isEmpty(currentFilter) && (_.size(currentFilter) > 1) && (
+          <div className="filtered-by">
+            <span className="title">Filtered By:</span>
+            {currentFilter.brands &&
+              currentFilter.brands.length > 0 &&
+              currentFilter.brands.map((brand, i) => {
+                return (
+                  <>
+                    {brandOptions.map((allBrand) => {
+                      return (
+                        <>
+                          {brand === allBrand.value && (
+                            <span
+                              className="filter-tags"
+                              onClick={() => this.props.removeBrand(brand)}
+                              key={i}
+                            >
+                              Brand: {allBrand.label}
+                              <i className="fa fa-times" aria-hidden="true"></i>
+                            </span>
+                          )}
+                        </>
+                      );
+                    })}
+                  </>
+                );
+              })}
 
-          {!_.isEmpty(currentFilter) &&
-            currentFilter.colors &&
-            currentFilter.colors.length > 0 &&
-            currentFilter.colors.map((color, i) => {
-              return (
-                <span
-                  className="filter-tags"
-                  onClick={() => this.props.removeColor(color)}
-                  key={i}
-                >
-                  Color: {color}
-                  <i className="fa fa-times" aria-hidden="true"></i>
-                </span>
-              );
-            })}
+            {currentFilter.colors &&
+              currentFilter.colors.length > 0 &&
+              currentFilter.colors.map((color, i) => {
+                return (
+                  <span
+                    className="filter-tags"
+                    onClick={() => this.props.removeColor(color)}
+                    key={i}
+                  >
+                    Color: {color}
+                    <i className="fa fa-times" aria-hidden="true"></i>
+                  </span>
+                );
+              })}
 
-          {!_.isEmpty(currentFilter) && currentFilter.ratings && (
-            <span
-              className="filter-tags"
-              onClick={() => this.props.removeRating(currentFilter.ratings)}
-            >
-              Rating: {currentFilter.ratings}
-              <i className="fa fa-times" aria-hidden="true"></i>
-            </span>
-          )}
+            {currentFilter.ratings && (
+              <span
+                className="filter-tags"
+                onClick={() => this.props.removeRating(currentFilter.ratings)}
+              >
+                Rating: {currentFilter.ratings}
+                <i className="fa fa-times" aria-hidden="true"></i>
+              </span>
+            )}
 
-          {!_.isEmpty(currentFilter) &&
-            (this.state.max_price || this.state.min_price) && (
+            {(this.state.max_price || this.state.min_price) && (
               <span
                 className="filter-tags"
                 onClick={() =>
@@ -122,11 +125,14 @@ class ProductList extends Component {
                   )
                 }
               >
-                Price: {this.state.min_price} - {this.state.max_price}
+                Price: {this.state.min_price}{" "}
+                {this.state.min_price && this.state.max_price && "-"}{" "}
+                {this.state.max_price}
                 <i className="fa fa-times" aria-hidden="true"></i>
               </span>
             )}
-        </div>
+          </div>
+        )}
         <div className="card-list">
           <Row gutter={30}>
             {data && data.products

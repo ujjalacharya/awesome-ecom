@@ -6,8 +6,6 @@ import { getBrandOptions, getColorOptions } from "../../../utils/common";
 class Filter extends Component {
   state = {
     checkedBrands: [],
-    minPrice: '',
-    maxPrice: ''
     
   };
 
@@ -18,19 +16,6 @@ class Filter extends Component {
   //     })
   //   }
   // }
-
-  
-  changePrice = (price, type) => {
-    if(type === 'min'){
-      this.setState({
-        minPrice: price
-      })
-    }else{
-      this.setState({
-        maxPrice: price
-      })
-    }
-  }
 
   render() {
     const { data } = this.props;
@@ -67,17 +52,17 @@ class Filter extends Component {
             <Input
               placeholder="Min"
               type="number"
-              value={this.state.minPrice}
-              onChange={(e) => this.changePrice(e.target.value, "min")}
+              value={this.props.minPrice}
+              onChange={(e) => this.props.changePrice(e.target.value, "min")}
             />
             <span> - </span>
             <Input
               placeholder="Max"
               type="number"
-              value={this.state.maxPrice}
-              onChange={(e) => this.changePrice(e.target.value, "max")}
+              value={this.props.maxPrice}
+              onChange={(e) => this.props.changePrice(e.target.value, "max")}
             />
-            <button onClick={() => this.props.searchPrice(this.state.minPrice, this.state.maxPrice)}><i class="fa fa-search" aria-hidden="true"></i></button>
+            <button onClick={() => this.props.searchPrice(this.props.minPrice, this.props.maxPrice)}><i class="fa fa-search" aria-hidden="true"></i></button>
           </div>
         </div>
         <div className="filter-types last-child-fi-type">

@@ -19,6 +19,8 @@ class Listing extends Component {
     currentPage: 1,
     checkedColors: [],
     filterBody: {},
+    minPrice: '',
+    maxPrice: ''
   };
 
   static getInitialProps(ctx) {
@@ -146,8 +148,21 @@ class Listing extends Component {
       body
     );
   };
+  
+  changePrice = (price, type) => {
+    if(type === 'min'){
+      this.setState({
+        minPrice: price
+      })
+    }else{
+      this.setState({
+        maxPrice: price
+      })
+    }
+  }
 
   searchPrice = (minPrice, maxPrice) => {
+
     let body = {};
 
     body = getFilterAppendBody(
@@ -167,8 +182,6 @@ class Listing extends Component {
     this.setState({
       filterBody: body,
     });
-
-    console.log(body)
 
     this.props.searchProducts(
       `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
@@ -194,8 +207,15 @@ class Listing extends Component {
     this.onHandleRatings('')
   }
 
+  removePrice = ( minPrice, maxPrice ) => {
+    this.setState({
+      minPrice: '',
+      maxPrice: ''
+    })
+    this.searchPrice('', '')
+  }
+
   render() {
-    console.log(this.state)
     return (
       <div className="wrapper">
         <section className="listing">
@@ -211,6 +231,9 @@ class Listing extends Component {
                   checkedColors={this.state.checkedColors}
                   onHandleRatings={this.onHandleRatings}
                   searchPrice = {this.searchPrice}
+                  changePrice = {this.changePrice}
+                  minPrice = {this.state.minPrice}
+                  maxPrice = {this.state.maxPrice}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -223,6 +246,7 @@ class Listing extends Component {
                   removeBrand = {this.removeBrand}
                   removeColor = {this.removeColor}
                   removeRating = {this.removeRating}
+                  removePrice = {this.removePrice}
                 />
                 <div className="pagination">
                   <div className="page-status">

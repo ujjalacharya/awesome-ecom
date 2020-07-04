@@ -319,6 +319,9 @@ button {
   text-transform: capitalize !important;
   border: 0px;
 }
+button:focus {
+  outline: none;
+}
 button.primary {
   background-color: #61ce70;
   color: #fff;
@@ -1236,6 +1239,9 @@ button.no-color:hover {
 .listing-filter .filter-types .type-list .ant-checkbox-group .ant-checkbox-group-item {
   display: block;
   margin-bottom: 5px;
+}
+.listing-filter .filter-types .type-list .rate-stars {
+  cursor: pointer;
 }
 .listing-filter .filter-types .type-list .rate-stars i {
   color: #f2c900;
