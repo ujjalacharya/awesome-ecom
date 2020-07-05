@@ -203,6 +203,13 @@ exports.latestProducts = async (req, res) => {
   res.json(products);
 };
 
+exports.suggestKeywords = async(req,res) => {
+  let products = await Product.find({ tags: { $regex: req.query.keyword, $options: "i" }}).select('-_id tags')
+  products = products.map(p=>p.tags)
+  products = _.flattenDeep(products)
+  res.json(products)
+}
+
 exports.searchProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
@@ -239,7 +246,9 @@ exports.searchProducts = async (req, res) => {
     ];
     if (brands) searchingFactor.brand = brands;
     if (max_price && min_price)
-      searchingFactor.price = { $lte: +max_price, $gte: +min_price };
+      searchingFactor.price = { $lte: +max_price , $gte: +min_price };
+    if (!max_price && min_price)
+      searchingFactor.price = { $gte: +min_price };
     if (sizes) searchingFactor.size = { $in: sizes };
     if (colors) searchingFactor.color = { $in: colors };
     if (weights) searchingFactor.weight = { $in: weights };
