@@ -19,7 +19,7 @@ const addressSchema = new mongoose.Schema({
     label: {
         type: String,
         trim: true,
-        enum:['home','office','ship-to']
+        enum:['home','office','other']
     },
     region: {//pradesh
         type: String,
@@ -50,5 +50,6 @@ const addressSchema = new mongoose.Schema({
         default: null
     }
 }, { timestamps: true });
+addressSchema.index({ geolocation: "2dsphere" });
 
 module.exports = mongoose.model("address", addressSchema);
