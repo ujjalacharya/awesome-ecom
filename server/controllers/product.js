@@ -1,6 +1,7 @@
 const Admin = require("../models/Admin");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
+const SuggestKeywords = require("../models/SuggestKeywords")
 const ProductBrand = require("../models/ProductBrand");
 const ProductImages = require("../models/ProductImages");
 const shortid = require("shortid");
@@ -204,10 +205,13 @@ exports.latestProducts = async (req, res) => {
 };
 
 exports.suggestKeywords = async(req,res) => {
-  let products = await Product.find({ tags: { $regex: req.query.keyword, $options: "i" }}).select('-_id tags')
-  products = products.map(p=>p.tags)
-  products = _.flattenDeep(products)
-  res.json(products)
+  let limits = +req.query.limits || 5
+  let suggestedKeywords = await SuggestKeywords
+      .find({ keyword: { $regex: req.query.keyword || '', $options: "i" },isDeleted:null})
+      .select('-_id keyword')
+      .limit(limits)
+  suggestedKeywords = suggestedKeywords.map(s=>s.keyword)
+  res.json(suggestedKeywords)
 }
 
 exports.searchProducts = async (req, res) => {

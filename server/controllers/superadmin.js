@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const User = require("../models/User")
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
+const SuggestKeywords = require("../models/SuggestKeywords")
 const AdminWarehouse = require("../models/AdminWarehouse")
 const ProductBrand = require("../models/ProductBrand")
 const Banner = require("../models/Banner")
@@ -173,7 +174,7 @@ exports.getAllAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
     const admins = await Admin.find({})
-        .select("-password -salt")
+        .select("-password -salt -resetPasswordLink -emailVerifyLink")
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -256,7 +257,7 @@ exports.flipAdminWarehouseApproval = async (req, res) => {
 
 exports.flipAdminAccountApproval = async (req, res) => {
     let adminAccount = await await Admin.findById(req.params.a_id)
-        .select('-password -salt -resetPasswordLink ')
+        .select('-password -salt -resetPasswordLink -emailVerifyLink')
         .populate('businessInfo', 'isVerified')
         .populate('adminBank', 'isVerified')
         .populate('adminWareHouse', 'isVerified')
@@ -326,7 +327,7 @@ exports.getBlockedAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isBlocked: { "$ne": null } })
-        .select('-password -salt')
+        .select('-password -salt -resetPasswordLink -emailVerifyLink')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -340,7 +341,7 @@ exports.getNotBlockedAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isBlocked: null })
-        .select('-password -salt')
+        .select('-password -salt  -resetPasswordLink -emailVerifyLink')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -354,7 +355,7 @@ exports.getVerifiedAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isVerified: { "$ne": null } })
-        .select('-password -salt')
+        .select('-password -salt -resetPasswordLink -emailVerifyLink')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -368,7 +369,7 @@ exports.getUnverifiedAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     let admins = await Admin.find({ isVerified: null })
-        .select('-password -salt')
+        .select('-password -salt -resetPasswordLink -emailVerifyLink')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -411,7 +412,9 @@ exports.getCategories = async (req, res) => {
     // }
     let totalCount = await Category.countDocuments()
     res.json({categories,totalCount})
-
+    
+    // let keywords = await SuggestKeywords.find().select('-_id keyword')
+    // console.log(keywords);
     // product -> this.category ID
     // product -> this.brand ID
 
@@ -481,11 +484,26 @@ exports.approveProduct = async (req, res) => {
         task.update(cat, updateCat).options({ viaSave: true })
     })
 
+    //add tags to suggestKeywords 
+    const addKeywords = async tags => {
+        let keywords = await SuggestKeywords.find().select('-_id keyword')
+        keywords = keywords.map(key => key.keyword)
+        keywords = _.flattenDeep(keywords)
+        let Keywords = tags.map(async tag => {
+            if(!keywords.includes(tag)) {
+                let newKeyWord = new SuggestKeywords({keyword:tag})
+                await newKeyWord.save()
+            }
+            return tag
+        })
+        await Promise.all(Keywords)
+    }
 
     if (!product.remark) {
         const updateProduct = product.toObject()
         updateProduct.isVerified = Date.now()
         addBrandToCategory(updateProduct.brand, categories)
+        addKeywords(product.tags)
         const results = await task
             .update(product, updateProduct)
             .options({ viaSave: true })
@@ -501,8 +519,10 @@ exports.approveProduct = async (req, res) => {
     const updateProduct = product.toObject()
     updateProduct.isVerified = Date.now()
     addBrandToCategory(updateProduct.brand, categories)
+    addKeywords(product.tags)
     const results = await task
         .update(remark, updateRemark)
+        .options({ viaSave: true })
         .update(product, updateProduct)
         .options({ viaSave: true })
         .run({ useMongoose: true })
