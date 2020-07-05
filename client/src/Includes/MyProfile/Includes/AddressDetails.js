@@ -1,13 +1,29 @@
 import React, { Component } from "react";
-import { Row, Col, Button } from "antd";
-import { Table, Tag, Space } from "antd";
+import { Button } from "antd";
+import { Table, Space } from "antd";
+import _ from 'lodash'
+
+// includes
 import EditAddressForm from "./EditAddressForm";
 
 class AddressDetails extends Component {
   state = {
     show: "table",
+    userData: [],
+    allAddress: [],
   };
+
+  componentDidMount() {
+    if (!_.isEmpty(this.props.userData)) {
+      this.setState({
+        userData: this.props.userData,
+        allAddress: this.props.userData.location,
+      });
+    }
+  }
+
   render() {
+    console.log(this.state)
     const columns = [
       {
         title: "Full Name",
@@ -16,15 +32,40 @@ class AddressDetails extends Component {
         render: (text) => <a>{text}</a>,
       },
       {
-        title: "Location",
-        dataIndex: "location",
-        key: "location",
+        title: "Label",
+        dataIndex: "label",
+        key: "label",
         render: (text) => <a>{text}</a>,
       },
       {
         title: "Address",
         dataIndex: "address",
         key: "address",
+      },
+      {
+        title: "Area",
+        dataIndex: "area",
+        key: "area",
+      },
+      {
+        title: "City",
+        dataIndex: "city",
+        key: "city",
+      },
+      {
+        title: "Region",
+        dataIndex: "region",
+        key: "region",
+      },
+      {
+        title: "Phone Number",
+        dataIndex: "phoneNo",
+        key: "phoneNo",
+      },
+      {
+        title: "Active",
+        dataIndex: "isActive",
+        key: "isActive",
       },
       {
         title: "Action",
@@ -45,20 +86,24 @@ class AddressDetails extends Component {
       },
     ];
 
-    const data = [
-      {
-        key: "1",
-        fullname: "Utsav Shrestha",
-        location: "Home",
-        address: "kamalpokhari",
-      },
-      {
-        key: "2",
-        fullname: "Utsav Shrestha",
-        location: "Office",
-        address: "Jaulakhel",
-      },
-    ];
+    let data = []
+    if(this.state.allAddress.length > 0){
+      this.state.allAddress.map((address,i) => {
+        let ele = {
+          key: i+1,
+          fullname: this.state.userData.name,
+          label: address.label,
+          address: address.address,
+          area: address.area,
+          city: address.city,
+          region: address.region,
+          phoneNo: address.phoneno ? address.phoneno : '-',
+          isActive: address.isActive ? 'true' : 'false',
+        }
+
+        data.push(ele)
+      })
+    }
     return (
       <div className="address-details">
         <div className="title-add">
