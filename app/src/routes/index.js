@@ -4,7 +4,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
-import TabNavigators from "./TabNavigators";
 import SearchScreen from "../screens/AfterGo/SearchScreen";
 import DrawerNavigators from "./DrawerNavigators";
 

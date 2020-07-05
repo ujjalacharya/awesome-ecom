@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import MessagesScreen from "../../screens/MessagesScreen";
+import CartScreen from "../../screens/CartScreen";
 import { headerOptions } from "../../utils/common";
 
 const Stack = createStackNavigator();
@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 const MessageStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Messages" component={MessagesScreen} options={headerOptions("Messages")}/>
+      <Stack.Screen name="Messages" component={CartScreen} options={headerOptions("Cart")}/>
     </Stack.Navigator>
   );
 };

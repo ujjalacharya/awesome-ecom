@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   HomeStack,
-  MessageStack,
+  CartStack,
   ProfileStack,
   NotificationStack,
 } from "./StackNavigators";
@@ -23,10 +23,8 @@ export default function TabNavigators() {
             iconName = `face-profile`;
           } else if (route.name === "Notifications") {
             iconName = `notification`;
-          } else if (route.name === "Messages") {
+          } else if (route.name === "Cart") {
             iconName = `shoppingcart`;
-          } else if (route.name === "Help") {
-            iconName = `ios-call`;
           }
 
           if (route.name === "Profile")
@@ -54,7 +52,7 @@ export default function TabNavigators() {
     >
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Notifications" component={NotificationStack} />
-      <Tab.Screen name="Messages" component={MessageStack} />
+      <Tab.Screen name="Cart" component={CartStack} />
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   );
