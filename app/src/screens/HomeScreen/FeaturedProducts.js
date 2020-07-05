@@ -5,6 +5,7 @@ import { productData } from "../../utils/mock";
 
 import SingleCard from "../../components/SingleCard";
 import { getPhoneDetails } from "../../utils/common";
+import Constants from "../../constants/Constants";
 
 const FeaturedProducts = (props) => (
   <View style={styles.container}>
@@ -26,6 +27,7 @@ const FeaturedProducts = (props) => (
   </View>
 );
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginLeft: "3%",
-    fontSize: getPhoneDetails().height < 600 ? 16 : 21,
+     fontSize: getPhoneDetails().height < 600 ? Constants.smallScreenHeaderSize : Constants.normalScreenHeaderSize,
     fontWeight: "bold",
   },
 });

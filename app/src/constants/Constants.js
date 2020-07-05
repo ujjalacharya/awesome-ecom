@@ -21,5 +21,8 @@ export default {
   warningText: '#666804',
   noticeBackground: tintColor,
   noticeText: '#fff',
-  // backgroundColor: "#001529"
+  normalScreenHeaderSize: 21,
+  smallScreenHeaderSize: 16,
+  normalScreenDescriptionSize: 14,
+  smallScreenDescriptionSize: 10,
 };

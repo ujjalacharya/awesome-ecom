@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { Button, Colors } from "react-native-paper";
-import ConstantColors from "../constants/ConstantColors";
+import Constants from "../constants/Constants";
 
 export class Banner extends Component {
   render() {
     return (
       <Button
         mode="contained"
-        color={ConstantColors.tintColor}
+        color={Constants.tintColor}
         style={styles.sloganButton}
         onPress={() => console.log("Pressed")}
       >
@@ -21,7 +21,7 @@ export class Banner extends Component {
 const styles = StyleSheet.create({
   sloganButton: {
     borderWidth: 1,
-    borderColor: ConstantColors.tintColor,
+    borderColor: Constants.tintColor,
     marginTop: -5,
   },
 });

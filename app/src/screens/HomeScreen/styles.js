@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
-import ConstantColors from "../../constants/ConstantColors";
+import Constants from "../../constants/Constants";
 
 export default styles = StyleSheet.create({
   searchViewWrapper: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: ConstantColors.tintColor,
+    backgroundColor: Constants.tintColor,
   },
 
   inputField: {
@@ -13,8 +13,8 @@ export default styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: "row",
     justifyContent: "center",
-    backgroundColor: ConstantColors.cardColor,
-    borderColor: ConstantColors.tintColor,
+    backgroundColor: Constants.cardColor,
+    borderColor: Constants.tintColor,
     borderWidth: 1,
     borderRadius: 5,
     // elevation: 5,
@@ -23,7 +23,7 @@ export default styles = StyleSheet.create({
 
   inputText: {
     paddingLeft: 10,
-    color: ConstantColors.grayColor ,
+    color: Constants.grayColor ,
     fontSize: 15,
   },
 

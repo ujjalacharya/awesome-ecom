@@ -4,6 +4,7 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
 import { getPhoneDetails } from "../utils/common";
+import Constants from "../constants/Constants";
 
 
 const SingleCard = ({ product }) => {
@@ -47,10 +48,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: getPhoneDetails().height < 600 ? 10 : 14,
+    fontSize: getPhoneDetails().height < 600 ? Constants.smallScreenDescriptionSize : Constants.normalScreenDescriptionSize,
   },
   price: {
-    fontSize: getPhoneDetails().height < 600 ? 10 : 14,
+    fontSize: getPhoneDetails().height < 600 ? Constants.smallScreenDescriptionSize : Constants.normalScreenDescriptionSize,
   },
 });
 

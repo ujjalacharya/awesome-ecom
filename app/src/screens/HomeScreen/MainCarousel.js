@@ -3,7 +3,7 @@ import { View, Image, StyleSheet } from "react-native";
 
 import Swiper from "react-native-swiper";
 import { bannerData } from "../../utils/mock";
-import ConstantColors from "../../constants/ConstantColors";
+import Constants from "../../constants/Constants";
 
 class MainCarousel extends Component {
   render() {
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   activeDot: {
-    backgroundColor: ConstantColors.tintColor,
+    backgroundColor: Constants.tintColor,
     width: 8,
     height: 8,
     borderRadius: 4,
