@@ -14,7 +14,7 @@ const SingleCard = ({ product }) => {
       <>
         <Image style={styles.tinyLogo} source={{ uri: product.image }} />
         <Card style={styles.productDetails}>
-          <Text style={{ fontWeight: "bold" }}>{product.title}</Text>
+          <Text style={styles.title}>{product.title}</Text>
           <Text>{product.price}</Text>
         </Card>
       </>
@@ -40,6 +40,9 @@ const styles = StyleSheet.create({
     height: "70%",
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
+  },
+  title: {
+    fontWeight: "bold",
   },
 });
 
