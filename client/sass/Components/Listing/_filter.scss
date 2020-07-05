@@ -53,6 +53,14 @@
         i {
           color: #f2c900;
           padding-left: 5px;
+          &.fade-star{
+            color: #eee;
+          }
+        }
+        span {
+          color: rgba(0, 0, 0, 0.65);
+          font-size: 13px;
+          margin-left: 10px;
         }
       }
     }

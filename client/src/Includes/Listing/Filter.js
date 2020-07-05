@@ -1,21 +1,25 @@
 import React, { Component } from "react";
 import { Checkbox, Input } from "antd";
-import { Icon, Row, Col } from "antd";
+import { Radio, Row, Col } from "antd";
 import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
+const radioStyle = {
+  display: 'block',
+  height: '30px',
+  lineHeight: '30px',
+};
 class Filter extends Component {
   state = {
-    checkedBrands: [],
-    
+    checkedBrands: [],  
+    value: 1,
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   if(this.props.checkedBrands !== nextProps.checkedBrands){
-  //     this.setState({
-  //       checkedBrands: nextProps.checkedBrands
-  //     })
-  //   }
-  // }
+  onChange = e => {
+    console.log('radio checked', e.target.value);
+    this.setState({
+      value: e.target.value,
+    });
+  };
 
   // componentWillReceiveProps(nextProps) {
   //   if(this.props.checkedBrands !== nextProps.checkedBrands){
@@ -69,7 +73,13 @@ class Filter extends Component {
               value={this.props.maxPrice}
               onChange={(e) => this.props.changePrice(e.target.value, "max")}
             />
-            <button onClick={() => this.props.searchPrice(this.props.minPrice, this.props.maxPrice)}><i class="fa fa-search" aria-hidden="true"></i></button>
+            <button
+              onClick={() =>
+                this.props.searchPrice(this.props.minPrice, this.props.maxPrice)
+              }
+            >
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
@@ -96,6 +106,18 @@ class Filter extends Component {
                           ></i>
                         );
                       })}
+                    {Array(5 - rate)
+                      .fill(0)
+                      .map((num, k) => {
+                        return (
+                          <i
+                            className="fa fa-star fade-star"
+                            aria-hidden="true"
+                            key={k}
+                          ></i>
+                        );
+                      })}
+                    {rate !== 5 && <span>And Up</span>}
                   </div>
                 );
               })}
@@ -109,6 +131,34 @@ class Filter extends Component {
               onChange={(e) => this.props.onChangeColors(e)}
               value={this.props.checkedColors}
             />
+          </div>
+        </div>
+        <div className="filter-types last-child-fi-type">
+          <div className="type-title">Warrenty Period</div>
+          <div className="type-list">
+            <Radio.Group onChange={(e) => this.props.onChangeWarrenty(e.target.value)} value={this.props.selectedWarrenty}>
+              {data.warranties && data.warranties.map((warrenty) => {
+                return (
+                  <Radio style={radioStyle} value={warrenty}>
+                    {warrenty}
+                  </Radio>
+                );
+              })}
+            </Radio.Group>
+          </div>
+        </div>
+        <div className="filter-types last-child-fi-type">
+          <div className="type-title">Sizes</div>
+          <div className="type-list">
+            <Radio.Group onChange={(e) => this.props.onChangeSize(e.target.value)} value={this.props.selectedSize}>
+              {data.sizes && data.sizes.map((size) => {
+                return (
+                  <Radio style={radioStyle} value={size}>
+                    {size}
+                  </Radio>
+                );
+              })}
+            </Radio.Group>
           </div>
         </div>
         <div className="sticky-filter inside-filter-sticky">
