@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { HomeStack, MessageStack, ProfileStack } from "./StackNavigators";
+import { HomeStack, MessageStack, ProfileStack, NotificationStack } from "./StackNavigators";
 import Constants from "../constants/Constants";
 
 const Tab = createBottomTabNavigator();
@@ -14,9 +14,14 @@ export default function TabNavigators() {
           let iconName;
           if (route.name === "Home") {
             iconName = `ios-home`;
-          } else if (route.name === "Profile") {
+          }
+           else if (route.name === "Profile") {
             iconName = `ios-man`;
-          } else if (route.name === "Messages") {
+          }
+           else if (route.name === "Notifications") {
+            iconName = `ios-notifications-outline`;
+          }
+           else if (route.name === "Messages") {
             iconName = `ios-information-circle`;
           } else if (route.name === "Help") {
             iconName = `ios-call`;
@@ -37,7 +42,8 @@ export default function TabNavigators() {
       }}
     >
       <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Messages" component={MessageStack} />
+      <Tab.Screen name="Notifications" component={NotificationStack} />
+      <Tab.Screen name="Messages" component={Notification} />
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   );
