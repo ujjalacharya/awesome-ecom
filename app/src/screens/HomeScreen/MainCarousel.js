@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Image, StyleSheet } from "react-native";
 
 import Swiper from "react-native-swiper";
-import { productData } from "../../utils/mock";
+import { bannerData } from "../../utils/mock";
 import ConstantColors from "../../constants/ConstantColors";
 
 class MainCarousel extends Component {
@@ -16,10 +16,10 @@ class MainCarousel extends Component {
         activeDot={<View style={styles.activeDot} />}
         showsButtons={false}
       >
-        {productData.map((product) => {
+        {bannerData.map((product) => {
           return (
             <View style={styles.slide1} key={product.id}>
-              <Image style={styles.image} source={{ uri: product.image }} />
+              <Image style={styles.image} source={product.image} />
             </View>
           );
         })}
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   wrapper: {
-    height: 200,
+    height: "100%",
   },
   slide1: {
     flex: 1,
