@@ -57,25 +57,26 @@ class MenuDetails extends Component {
       })
     }
   }
+  
+  renderTabBar = (props, DefaultTabBar) => (
+    <Sticky bottomOffset={80}>
+      {({ style }) => (
+        <DefaultTabBar
+          {...props}
+          className="site-custom-tab-bar"
+          style={{ ...style }}
+        />
+      )}
+    </Sticky>
+  );
 
   render() {
     
-    const renderTabBar = (props, DefaultTabBar) => (
-      <Sticky bottomOffset={80}>
-        {({ style }) => (
-          <DefaultTabBar
-            {...props}
-            className="site-custom-tab-bar"
-            style={{ ...style }}
-          />
-        )}
-      </Sticky>
-    );
     return (
       <div className="menu-details">
         <h3>Manage my accounts</h3>
         <StickyContainer>
-          <Tabs defaultActiveKey="1" renderTabBar={renderTabBar}>
+          <Tabs defaultActiveKey="1" renderTabBar={this.renderTabBar}>
             <TabPane tab="My Profile" key="1">
               <ProfileDetails userData = {this.state.userData} activeLoc = {this.state.activeLoc} />
             </TabPane>

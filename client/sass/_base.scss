@@ -204,3 +204,7 @@ input[type="number"] {
     margin-left: 4px;
   }
 }
+
+.ant-form-item-has-error .ant-form-item-explain, .ant-form-item-has-error .ant-form-item-split{
+  margin-top: 5px;
+}

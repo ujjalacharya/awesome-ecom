@@ -19,14 +19,14 @@ class ProfileDetails extends Component {
     activeLoc: activeLoc,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      this.props.userData !== nextProps.userData &&
-      this.props.activeLoc !== nextProps.activeLoc
+      this.props.userData !== prevProps.userData &&
+      this.props.activeLoc !== prevProps.activeLoc
     ) {
       this.setState({
-        userData: nextProps.userData,
-        activeLoc: nextProps.activeLoc,
+        userData: this.props.userData,
+        activeLoc: this.props.activeLoc,
       });
     }
   }
@@ -49,17 +49,17 @@ class ProfileDetails extends Component {
 
     let data = [];
 
-    if (!_.isEmpty(activeLoc.address)) {
+    if (!_.isEmpty(activeLoc.address) && !_.isEmpty(userData)) {
       data = [
         {
           key: "1",
           name: "Date of Birth",
-          age: "1996-01-25 AD",
+          age: userData.dob,
         },
         {
           key: "2",
           name: "Gender",
-          age: "Male",
+          age: userData.gender,
         },
         {
           key: "3",

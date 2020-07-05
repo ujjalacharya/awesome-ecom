@@ -3,7 +3,7 @@ import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import { StyleSheet, Text, View } from "react-native";
 import RootRoute from "./routes";
 
-import COLORCONSTANT from "./constants/ConstantColors";
+import COLORCONSTANT from "./constants/Constants";
 
 export default function Main() {
   const theme = {
