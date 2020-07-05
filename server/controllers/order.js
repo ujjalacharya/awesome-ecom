@@ -101,23 +101,32 @@ exports.calculateShippingCharge = async(req,res) => {
     if (!superadmin) {
         return res.status(404).json({ error: 'Cannot find shipping rate' })
     }
-    const shippingRate = superadmin.shippingRate
-    const systemGeoCoordinates = superadmin.geolocation.coordinates
-    const userGeoCoordinates = req.user.geolocation.coordinates
-    const distance = calculateDistance(
-        systemGeoCoordinates[0],
-        systemGeoCoordinates[1],
-        userGeoCoordinates[0],
-        userGeoCoordinates[1])
-    let shippingCharge = distance * shippingRate
-    shippingCharge = Math.round(shippingCharge)
-    if (shippingCharge < 10) {
-        return res.json(0)
+    const shippingAddress = await Address.findOne({ user: req.user._id, label: 'ship-to' })
+    if (!shippingAddress) {
+        return res.status(404).json({error:'Cannot found shipping address of the user.'})
     }
-    let rem = shippingCharge % 10
-    if (rem < 3) return res.json(shippingCharge - rem || superadmin.shippingCost)
-    if (rem < 7) return res.json(shippingCharge - rem + 5 || superadmin.shippingCost)
-    if (rem >= 7) return res.json(shippingCharge + (10 - rem) || superadmin.shippingCost)
+    if (shippingAddress.geolocation !== undefined) {
+        const shippingRate = superadmin.shippingRate
+        const systemGeoCoordinates = superadmin.geolocation.coordinates
+        const userGeoCoordinates = shippingAddress.geolocation.coordinates
+        const distance = calculateDistance(
+            systemGeoCoordinates[0],
+            systemGeoCoordinates[1],
+            userGeoCoordinates[0],
+            userGeoCoordinates[1])
+        let shippingCharge = distance * shippingRate
+        shippingCharge = Math.round(shippingCharge)
+        if (shippingCharge < 10) {
+            return res.json(0)
+        }
+        let rem = shippingCharge % 10
+        if (rem < 3) return res.json(shippingCharge - rem)
+        if (rem < 7) return res.json(shippingCharge - rem + 5)
+        if (rem >= 7) return res.json(shippingCharge + (10 - rem))
+        
+    } else {
+        return res.json(superadmin.shippingCost)
+    }
     
 }
 

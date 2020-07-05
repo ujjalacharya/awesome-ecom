@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { createProduct, product, getProduct, updateProduct, productImages, deleteImage, getProducts, verifiedProducts, notDeletedProducts, deletedProducts, notVerifiedProducts, deleteProduct, outOfTheStockProducts, latestProducts, deleteImageById, getProductsByCategory, generateFilter, searchProducts} = require("../controllers/product")
+const { createProduct, product, getProduct, updateProduct, productImages, deleteImage, getProducts, verifiedProducts, notDeletedProducts, deletedProducts, notVerifiedProducts, deleteProduct, outOfTheStockProducts, latestProducts, deleteImageById, getProductsByCategory, generateFilter, searchProducts, suggestKeywords} = require("../controllers/product")
 const { profile } = require("../controllers/admin")
 const { uploadProductImages } = require("../middleware/helpers");
 const { validateProduct } = require("../middleware/validator")
@@ -13,6 +13,7 @@ router.get('/latest',latestProducts)
 router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
 router.post('/search',searchProducts)//need to work on rating
+router.get('/suggest-keywords',suggestKeywords)//?keyword=
 
 //admin's or superadmin's
 router.get("/products/:id", auth, hasAuthorization, getProducts)
