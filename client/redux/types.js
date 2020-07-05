@@ -21,6 +21,7 @@ export const SEARCH_ERROR = "SEARCH_ERROR"
 
 // user
 export const USER_PROFILE = "USER_PROFILE"
+export const EDIT_ADDRESS = "EDIT_ADDRESS"
 export const USER_ERROR = "USER_ERROR"
 
 // error

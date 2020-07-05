@@ -110,7 +110,7 @@ class ProductList extends Component {
                 className="filter-tags"
                 onClick={() => this.props.removeRating(currentFilter.ratings)}
               >
-                Rating: {currentFilter.ratings}
+                Rating: {currentFilter.ratings} And Up
                 <i className="fa fa-times" aria-hidden="true"></i>
               </span>
             )}
