@@ -28,10 +28,7 @@ export class HomeScreen extends Component {
         </View>
         <View style={{ flex: 0.5 }}>
           <Image
-            source={{
-              uri:
-                "https://lh3.googleusercontent.com/proxy/KM_PfdEEjZV3cFAiZBM7y4zeFXq7zLMYO3CWHoN34LEzMLvXQf2_nUNjstkEcMtqGgCcVtoqS14GnUF2DORHojy3jk4CnPG333-gyX0zzVIBs6O88sNL78L48uCm8bDIjPTIL-pZt0TUkInhJ8igKh8x_3-kVg",
-            }}
+            source={require("../../../assets/ad.jpg")}
             style={{height: "100%"}}
           ></Image>
         </View>

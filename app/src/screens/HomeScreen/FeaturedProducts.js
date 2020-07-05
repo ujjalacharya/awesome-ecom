@@ -4,6 +4,7 @@ import { View, ScrollView, Text, StyleSheet } from "react-native";
 import { productData } from "../../utils/mock";
 
 import SingleCard from "../../components/SingleCard";
+import { getPhoneDetails } from "../../utils/common";
 
 const FeaturedProducts = (props) => (
   <View style={styles.container}>
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginLeft: "3%",
-    fontSize: 21,
+    fontSize: getPhoneDetails().height < 600 ? 16 : 21,
     fontWeight: "bold",
   },
 });
