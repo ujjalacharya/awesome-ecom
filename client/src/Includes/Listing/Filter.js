@@ -21,9 +21,16 @@ class Filter extends Component {
     });
   };
 
-  render() {
-    const { data, value } = this.props;
+  // componentWillReceiveProps(nextProps) {
+  //   if(this.props.checkedBrands !== nextProps.checkedBrands){
+  //     this.setState({
+  //       checkedBrands: nextProps.checkedBrands
+  //     })
+  //   }
+  // }
 
+  render() {
+    const { data } = this.props;
     let brandOptions = getBrandOptions(data);
 
     const priceOptions = [

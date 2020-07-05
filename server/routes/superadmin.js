@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingRate, getShippingRate, blockUnblockUser, banner, deleteBanner, getBanners, getDeletedBanners
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
@@ -12,12 +12,13 @@ const router = express.Router();
 router.route('/geo-location')
     .put(auth, isSuperAdmin,geoLocation)//create and update
     .get(auth,isSuperAdmin,getGeoLocation)
-router.route('/shipping-rate')
-    .put(auth,isSuperAdmin,shippingRate)//create and update
-    .get(auth,isSuperAdmin,getShippingRate)
+router.route('/shipping-data')
+    .put(auth,isSuperAdmin,shippingData)//create and update
+    .get(auth,isSuperAdmin,getShippingData)
 router.route('/banner')
     .post(auth,isSuperAdmin,uploadBannerPhoto,banner)//create
     .patch(auth,isSuperAdmin,deleteBanner)//delete
+    .put(auth, isSuperAdmin, uploadBannerPhoto, editBanner)//edit
     .get(getBanners)//not deletedBanners
 router.get('/deleted-banners', auth, isSuperAdmin, getDeletedBanners)
 

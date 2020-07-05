@@ -115,9 +115,9 @@ exports.calculateShippingCharge = async(req,res) => {
         return res.json(0)
     }
     let rem = shippingCharge % 10
-    if (rem < 3) return res.json(shippingCharge - rem)
-    if (rem < 7) return res.json(shippingCharge - rem + 5)
-    if (rem >= 7) return res.json(shippingCharge + (10 - rem))
+    if (rem < 3) return res.json(shippingCharge - rem || superadmin.shippingCost)
+    if (rem < 7) return res.json(shippingCharge - rem + 5 || superadmin.shippingCost)
+    if (rem >= 7) return res.json(shippingCharge + (10 - rem) || superadmin.shippingCost)
     
 }
 

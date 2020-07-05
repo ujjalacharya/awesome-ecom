@@ -33,6 +33,9 @@ const adminSchema = new mongoose.Schema({
     shippingRate: {
         type: Number// added only by superadmin
     },
+    shippingCost: {
+        type: Number// added only by superadmin
+    },
     district: {
         type: String,
         trim: true,

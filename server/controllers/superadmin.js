@@ -38,19 +38,20 @@ exports.getGeoLocation = async (req, res) => {
     res.json(superadmin.geolocation)
 }
 
-exports.shippingRate = async (req, res) => {
+exports.shippingData = async (req, res) => {
     let superadmin = req.admin //i.e. superadmin
     superadmin.shippingRate = req.body.shippingRate
+    superadmin.shippingCost = req.body.shippingCost
     await superadmin.save()
-    res.json(superadmin.shippingRate)
+    res.json({ shippingRate: superadmin.shippingRate, shippingCost: superadmin.shippingCost})
 }
 
-exports.getShippingRate = async (req, res) => {
+exports.getShippingData = async (req, res) => {
     let superadmin = await Admin.findOne({ role: 'superadmin' })
     if (!superadmin) {
         return res.status(404).json({ error: 'Cannot find shipping rate' })
     }
-    res.json(superadmin.shippingRate)
+    res.json({ shippingRate: superadmin.shippingRate, shippingCost: superadmin.shippingCost })
 }
 
 exports.banner = async (req, res) => {
@@ -80,9 +81,56 @@ exports.banner = async (req, res) => {
     const Path = `public/uploads/${filename}`;
     fs.unlinkSync(Path);
     newBanner.bannerPhoto = `banner/${filename}`
+    newBanner.link = req.body.link
     await newBanner.save()
     res.json(newBanner)
 }
+
+exports.editBanner = async(req,res) => {
+    let banner = await Banner.findById(req.body.banner_id)
+    if (!banner) {
+        if (req.file) {
+            const { filename } = req.file;
+            // remove image from public/uploads
+            const Path = `public/uploads/${filename}`;
+            fs.unlinkSync(Path);
+        }
+        return res.status(404).json({ error: 'Banner not found.' })
+    }
+    if (req.body.productSlug) {
+        let product = await Product.findOne({
+            slug: req.body.productSlug, isVerified: { "$ne": null },
+            isDeleted: null
+        })
+        if (!product) {
+            if (req.file) {
+                const { filename } = req.file;
+                // remove image from public/uploads
+                const Path = `public/uploads/${filename}`;
+                fs.unlinkSync(Path);
+            }
+            return res.status(404).json({ error: "Product not found." })
+        }
+        banner.product = product._id
+    }
+    if (req.file) {
+        const { filename, path: filepath, destination } = req.file
+        await sharp(filepath)
+            .resize(8480)
+            .toFile(path.resolve(destination, 'banner', filename))
+        //remove old banner pic from bannner folder
+        let Path = `public/uploads/${banner.bannerPhoto}`;
+        fs.unlinkSync(Path);
+        // remove image from public/uploads
+        Path = `public/uploads/${filename}`;
+        fs.unlinkSync(Path);
+        banner.bannerPhoto = `banner/${filename}`
+    }
+    banner.link = req.body.link
+    await banner.save()
+    res.json(banner)
+}
+
 exports.deleteBanner = async (req, res) => {
     let banner = await Banner.findById(req.body.banner_id)
     if (!banner) {
@@ -489,7 +537,7 @@ exports.getProducts = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: 1 })
     // if (!products.length) {
     //     return res.status(404).json({ error: 'No products are available.' })
     // }
@@ -499,7 +547,7 @@ exports.getProducts = async (req, res) => {
     //     product.quantity += 50
     // return await product.save()
     // })
-    products = await Promise.all(products)
+    // products = await Promise.all(products)
     let totalCount = await Product.countDocuments()
     res.json({products,totalCount});
 }
