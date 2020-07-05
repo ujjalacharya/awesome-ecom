@@ -122,14 +122,16 @@ class AddressDetails extends Component {
         <div className="title-add">
           <h4>Profile Details</h4>
           {this.state.show === "table" && (
-            <Button className="secondary">Add new address</Button>
+            <Button className="secondary" onClick={() => this.setState({show: 'form'})}>
+              Add new address
+            </Button>
           )}
         </div>
         {this.state.show === "form" ? (
           <EditAddressForm
             changeShow={this.changeShow}
             editAddressData={this.state.editAddressData}
-            userId = {this.state.userData._id}
+            userId={this.state.userData._id}
           />
         ) : (
           <Table columns={columns} dataSource={data} pagination={false} />
