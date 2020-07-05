@@ -129,6 +129,7 @@ class AddressDetails extends Component {
           <EditAddressForm
             changeShow={this.changeShow}
             editAddressData={this.state.editAddressData}
+            userId = {this.state.userData._id}
           />
         ) : (
           <Table columns={columns} dataSource={data} pagination={false} />

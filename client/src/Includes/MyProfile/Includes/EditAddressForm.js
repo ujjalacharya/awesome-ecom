@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
 import _ from "lodash";
+import { connect } from "react-redux";
+import actions from "../../../../redux/actions";
+import { openNotification } from "../../../../utils/common";
 
 const layout = {
   labelCol: { span: 6 },
@@ -20,9 +23,18 @@ class EditAddressForm extends Component {
     city: "",
     region: "",
     phoneNo: "",
-    geoLocation: "",
+    long: "",
+    lat: "",
     isActive: "false",
   };
+
+  componentDidUpdate(prevProps) {
+    console.log(this.props)
+    if(this.props.user.editAddressResp !== prevProps.user.editAddressResp && this.props.user.editAddressResp){
+      openNotification('Success', 'Address Updated Successfully');
+      this.props.changeShow("table")
+    }
+  } 
 
   componentDidMount() {
     let { editAddressData } = this.props;
@@ -35,19 +47,22 @@ class EditAddressForm extends Component {
         area: editAddressData.area,
         city: editAddressData.city,
         region: editAddressData.region,
-        phoneNo: editAddressData.phoneNo,
-        geoLocation: {long: editAddressData.geoLocation[0], lat:editAddressData.geoLocation[1]},
+        phoneNo: editAddressData.phoneNo === "-" ? "" : editAddressData.phoneNo,
+        long: editAddressData.geoLocation[0],
+        lat: editAddressData.geoLocation[1],
         isActive: editAddressData.isActive ? "true" : "false",
       });
     }
   }
-  
+
   onFinish = (values) => {
     let body = {
       ...values,
-      geoLocation: this.state.geoLocation
-    }
-    console.log(body)
+      long: this.state.long,
+      lat: this.state.lat,
+    };
+    
+    this.props.editAddress(this.state.addressId, body)
   };
 
   onFinishFailed = (errorInfo) => {};
@@ -55,35 +70,34 @@ class EditAddressForm extends Component {
   getMyLocation = () => {
     if (navigator.geolocation) {
       let pos = navigator.geolocation.getCurrentPosition(this.showPosition);
-      console.log(pos);
+      
     } else {
       alert("Geolocation is not supported by this browser.");
     }
   };
 
   showPosition = (position) => {
-    console.log(position);
+    
     this.setState({
-      geoLocation: {long: position.coords.longitude, lat:position.coords.latitude}
+      long: position.coords.longitude,
+      lat: position.coords.latitude,
     });
   };
 
   changeGeoLocation = (e, geoLoc) => {
-    let geoLocation = [];
-
-    if(geoLoc === 'long'){
+    if (geoLoc === "long") {
       this.setState({
-        geoLocation: {...geoLocation, long: position.coords.longitude}
-      })
-    }else{
+        long: e.target.value,
+      });
+    } else {
       this.setState({
-        geoLocation: {...geoLocation, lat: position.coords.latitude}
-      })
+        lat: e.target.value,
+      });
     }
-  }
+  };
 
   render() {
-    console.log(this.state);
+    
     return (
       <div className="edit-address">
         {!_.isEmpty(this.state.address) && (
@@ -95,7 +109,7 @@ class EditAddressForm extends Component {
             onFinishFailed={this.onFinishFailed}
           >
             <Row gutter={15}>
-              <Col span={12}>
+              {/* <Col span={12}>
                 <Form.Item
                   label="Full Name"
                   name="fullname"
@@ -106,7 +120,7 @@ class EditAddressForm extends Component {
                 >
                   <Input />
                 </Form.Item>
-              </Col>
+              </Col> */}
               <Col span={12}>
                 <Form.Item
                   label="Address"
@@ -143,7 +157,7 @@ class EditAddressForm extends Component {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              {/* <Col span={12}>
                 <Form.Item
                   label="Label"
                   name="label"
@@ -154,11 +168,46 @@ class EditAddressForm extends Component {
                 >
                   <Input />
                 </Form.Item>
+              </Col> */}
+              <Col span={12}>
+                <Form.Item
+                  label="Region"
+                  name="region"
+                  rules={[
+                    { required: true, message: "Please input your region!" },
+                  ]}
+                  initialValue={this.state.region}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="Geo Location">
+                  <div style={{ display: "flex" }}>
+                    <label style={{ marginRight: 10, width: 65 }}>
+                      Longitude
+                    </label>
+                    <Input
+                      value={this.state.long}
+                      onChange={(e) => this.changeGeoLocation(e, "long")}
+                    />
+                  </div>
+                  <div style={{ display: "flex", marginTop: 10 }}>
+                    <label style={{ marginRight: 10, width: 65 }}>
+                      Latitude
+                    </label>
+                    <Input
+                      value={this.state.lat}
+                      onChange={(e) => this.changeGeoLocation(e, "lat")}
+                    />
+                  </div>
+                  <Button style = {{ marginTop: 10}} onClick={this.getMyLocation}>Get My Location</Button>
+                </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
                   label="Phone Number"
-                  name="phoneNo"
+                  name="phoneno"
                   rules={[
                     {
                       required: true,
@@ -168,19 +217,6 @@ class EditAddressForm extends Component {
                   initialValue={this.state.phoneNo}
                 >
                   <Input />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Geo Location" name="geoLocation">
-                  <Button onClick={this.getMyLocation}>Get My Location</Button>
-                  <div style={{ display: "flex", marginTop: 10 }}>
-                    <label style={{ marginRight: 10, width: 65 }}>Longitude</label>
-                    <Input value={this.state.geoLocation.long} onChange={(e) => this.changeGeoLocation(e, 'long')} />
-                  </div>
-                  <div style={{ display: "flex", marginTop: 10 }}>
-                    <label style={{ marginRight: 10, width: 65 }}>Latitude</label>
-                    <Input value={this.state.geoLocation.lat} onChange={(e) => this.changeGeoLocation(e, 'lat')} />
-                  </div>
                 </Form.Item>
               </Col>
               <Col span={24}>
@@ -204,4 +240,4 @@ class EditAddressForm extends Component {
   }
 }
 
-export default EditAddressForm;
+export default connect((state) => state, actions)(EditAddressForm);
