@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { View, Image, StyleSheet, Alert, Text } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import ConstantColors from "../constants/ConstantColors";
+import Constants from "../constants/Constants";
 
 const SearchedSingleProduct = ({ bus }) => {
   return (
@@ -19,7 +19,7 @@ const SearchedSingleProduct = ({ bus }) => {
           </Card.Content>
           <Card.Actions
             style={{
-              backgroundColor: ConstantColors.initialColor,
+              backgroundColor: Constants.initialColor,
               marginTop: 5,
             }}
           >

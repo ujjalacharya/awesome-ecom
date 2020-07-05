@@ -3,21 +3,21 @@ import React from "react";
 import { List, Appbar } from "react-native-paper";
 
 import { ScrollView } from "react-native-gesture-handler";
-import ConstantColors from "../constants/ConstantColors";
+import Constants from "../constants/Constants";
 
 const CustomDrawer = () => {
   return (
     <>
       <Appbar.Header statusBarHeight={10}>
         <Appbar.Content
-          color={ConstantColors.headerTintColor}
+          color={Constants.headerTintColor}
           title={"All Categories"}
         />
       </Appbar.Header>
       <ScrollView
         style={{
           width: "100%",
-          backgroundColor: ConstantColors.headerTintColor,
+          backgroundColor: Constants.headerTintColor,
           height: "100%",
         }}
       >

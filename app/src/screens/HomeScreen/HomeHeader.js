@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Appbar } from "react-native-paper";
-import ConstantColors from "../../constants/ConstantColors";
+import Constants from "../../constants/Constants";
 
 export class HomeHeader extends Component {
   render() {
@@ -8,15 +8,15 @@ export class HomeHeader extends Component {
       <Appbar.Header statusBarHeight={0} style={{ elevation: 0 }}>
         <Appbar.Action
           icon="menu"
-          color={ConstantColors.headerTintColor}
+          color={Constants.headerTintColor}
           onPress={() => this.props.navigation.openDrawer()}
         />
         <Appbar.Content
-          color={ConstantColors.headerTintColor}
+          color={Constants.headerTintColor}
           title="KINDEEM"
         />
         <Appbar.Action
-          color={ConstantColors.headerTintColor}
+          color={Constants.headerTintColor}
           icon="dots-vertical"
         />
       </Appbar.Header>

@@ -25,7 +25,7 @@ export class SearchScreen extends Component {
           <Appbar.BackAction onPress={this._goBack} />
           <Appbar.Content title="Search" />
         </Appbar.Header>
-        {/* <ActivityIndicator animating={true} color={ConstantColors.tintColor}/> */}
+        {/* <ActivityIndicator animating={true} color={Constants.tintColor}/> */}
         <ScrollView
           style={{ height: "85%", margin: 15 }}
           showsVerticalScrollIndicator={false}

@@ -79,3 +79,14 @@ export const productData = [
         price: "Rs 1000",
     },
 ]
+
+export const bannerData = [
+  {
+    id: 1,
+    image: require("../../assets/banner1.jpg"),
+  },
+  {
+    id: 2,
+    image: require("../../assets/banner2.jpg"),
+  }
+]
