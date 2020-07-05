@@ -28,3 +28,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+#css
+/public/css/style.css.map
+/public/css/style.css   
