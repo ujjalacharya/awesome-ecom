@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema
-
+const pointSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ['Point']
+    },
+    coordinates: {
+        type: [Number]
+    }
+});
 const orderSchema = new mongoose.Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -83,9 +91,31 @@ const orderSchema = new mongoose.Schema({
             },
         },
     },
-    address: {
-        type: Schema.Types.ObjectId,
-        ref: "address"
+    shipto:{
+        region: {//pradesh
+            type: String,
+            trim: true,
+        },
+        city: {
+            type: String,
+            trim: true,
+        },
+        area: {//tole,area name
+            type: String,
+            trim: true,
+        },
+        address: {//street level address
+            type: String,
+            trim: true,
+        },
+        geolocation: {
+            type: pointSchema,
+        },
+        phoneno: {
+            type: String,
+            trim: true,
+            max: 9999999999,
+        }
     },
     isPaid:{
         type: Boolean,
@@ -99,5 +129,6 @@ const orderSchema = new mongoose.Schema({
         type: String
     }
 }, { timestamps: true });
+orderSchema.index({ geolocation: "2dsphere" });
 
 module.exports = mongoose.model("order", orderSchema);
