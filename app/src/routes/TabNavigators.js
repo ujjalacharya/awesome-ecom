@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { HomeStack, MessageStack, ProfileStack } from "./StackNavigators";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  HomeStack,
+  CartStack,
+  ProfileStack,
+  NotificationStack,
+} from "./StackNavigators";
 import Constants from "../constants/Constants";
 
 const Tab = createBottomTabNavigator();
@@ -13,16 +18,25 @@ export default function TabNavigators() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === "Home") {
-            iconName = `ios-home`;
+            iconName = `home`;
           } else if (route.name === "Profile") {
-            iconName = `ios-man`;
-          } else if (route.name === "Messages") {
-            iconName = `ios-information-circle`;
-          } else if (route.name === "Help") {
-            iconName = `ios-call`;
+            iconName = `face-profile`;
+          } else if (route.name === "Notifications") {
+            iconName = `notification`;
+          } else if (route.name === "Cart") {
+            iconName = `shoppingcart`;
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          if (route.name === "Profile")
+            return (
+              <MaterialCommunityIcons
+                name={iconName}
+                size={size}
+                color={color}
+              />
+            );
+
+          return <AntDesign name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
@@ -37,7 +51,8 @@ export default function TabNavigators() {
       }}
     >
       <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Messages" component={MessageStack} />
+      <Tab.Screen name="Notifications" component={NotificationStack} />
+      <Tab.Screen name="Cart" component={CartStack} />
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   );
