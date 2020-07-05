@@ -1,8 +1,11 @@
 import React from "react";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 
-import { Text, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
+import { getPhoneDetails } from "../utils/common";
+import Constants from "../constants/Constants";
+
 
 const SingleCard = ({ product }) => {
   return (
@@ -12,11 +15,14 @@ const SingleCard = ({ product }) => {
       onPress={() => console.warn("Pressed")}
     >
       <>
-        <Image style={styles.tinyLogo} source={{ uri: product.image }} />
+        <View style={{ flex: 2 }}>
+          <Image style={styles.tinyLogo} source={{ uri: product.image }} />
+        </View>
         <Card style={styles.productDetails}>
           <Text style={styles.title}>{product.title}</Text>
-          <Text>{product.price}</Text>
+          <Text style={styles.price}>{product.price}</Text>
         </Card>
+        <View style={{ flex: 0.25 }}></View>
       </>
     </TouchableNativeFeedback>
   );
@@ -24,25 +30,28 @@ const SingleCard = ({ product }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
+    flex: 1,
     marginLeft: 10,
     marginRight: 10,
-    width: 150,
+    width: 120,
     borderRadius: 50,
-    height: "95%",
   },
   productDetails: {
-    width: "100%",
-    height: "100%",
-    padding: 5,
+    flex: 1,
+    paddingLeft: 5,
   },
   tinyLogo: {
     width: "100%",
-    height: "70%",
+    height: "100%",
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
   },
   title: {
     fontWeight: "bold",
+    fontSize: getPhoneDetails().height < 600 ? Constants.smallScreenDescriptionSize : Constants.normalScreenDescriptionSize,
+  },
+  price: {
+    fontSize: getPhoneDetails().height < 600 ? Constants.smallScreenDescriptionSize : Constants.normalScreenDescriptionSize,
   },
 });
 
