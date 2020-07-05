@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 import { Table, Space } from "antd";
-import _ from 'lodash'
+import _ from "lodash";
 
 // includes
 import EditAddressForm from "./EditAddressForm";
@@ -11,6 +11,7 @@ class AddressDetails extends Component {
     show: "table",
     userData: [],
     allAddress: [],
+    editAddressData: [],
   };
 
   componentDidMount() {
@@ -22,8 +23,13 @@ class AddressDetails extends Component {
     }
   }
 
+  changeShow = (show) => {
+    this.setState({
+      show,
+    });
+  };
+
   render() {
-    console.log(this.state)
     const columns = [
       {
         title: "Full Name",
@@ -63,6 +69,11 @@ class AddressDetails extends Component {
         key: "phoneNo",
       },
       {
+        title: "GeoLocation",
+        dataIndex: "geoLocation",
+        key: "geoLocation",
+      },
+      {
         title: "Active",
         dataIndex: "isActive",
         key: "isActive",
@@ -70,14 +81,15 @@ class AddressDetails extends Component {
       {
         title: "Action",
         key: "action",
-        render: (text, record) => (
+        render: (record) => (
           <Space size="middle">
             <a
-              onClick={() =>
+              onClick={() => {
                 this.setState({
-                  show: "form",
-                })
-              }
+                  editAddressData: record,
+                });
+                this.changeShow("form");
+              }}
             >
               Edit
             </a>
@@ -86,32 +98,38 @@ class AddressDetails extends Component {
       },
     ];
 
-    let data = []
-    if(this.state.allAddress.length > 0){
-      this.state.allAddress.map((address,i) => {
+    let data = [];
+    if (this.state.allAddress.length > 0) {
+      this.state.allAddress.map((address, i) => {
         let ele = {
-          key: i+1,
+          key: address._id,
           fullname: this.state.userData.name,
           label: address.label,
           address: address.address,
           area: address.area,
           city: address.city,
           region: address.region,
-          phoneNo: address.phoneno ? address.phoneno : '-',
-          isActive: address.isActive ? 'true' : 'false',
-        }
+          phoneNo: address.phoneno ? address.phoneno : "-",
+          geoLocation: address.geolocation.coordinates,
+          isActive: address.isActive ? "true" : "false",
+        };
 
-        data.push(ele)
-      })
+        data.push(ele);
+      });
     }
     return (
       <div className="address-details">
         <div className="title-add">
           <h4>Profile Details</h4>
-          <Button className="secondary">Add new address</Button>
+          {this.state.show === "table" && (
+            <Button className="secondary">Add new address</Button>
+          )}
         </div>
         {this.state.show === "form" ? (
-          <EditAddressForm />
+          <EditAddressForm
+            changeShow={this.changeShow}
+            editAddressData={this.state.editAddressData}
+          />
         ) : (
           <Table columns={columns} dataSource={data} pagination={false} />
         )}
