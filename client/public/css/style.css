@@ -1247,6 +1247,14 @@ button.no-color:hover {
   color: #f2c900;
   padding-left: 5px;
 }
+.listing-filter .filter-types .type-list .rate-stars i.fade-star {
+  color: #eee;
+}
+.listing-filter .filter-types .type-list .rate-stars span {
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 13px;
+  margin-left: 10px;
+}
 
 @media screen and (max-width: 480px) {
   .product-lists {

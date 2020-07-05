@@ -62,7 +62,7 @@ class ProductList extends Component {
             {Math.ceil(data && data.totalCount / this.props.perPage)}
           </div>
         </div>
-        {!_.isEmpty(currentFilter) && (_.size(currentFilter) > 1) && (
+        {!_.isEmpty(currentFilter) && _.size(currentFilter) > 1 && (
           <div className="filtered-by">
             <span className="title">Filtered By:</span>
             {currentFilter.brands &&
@@ -128,6 +128,30 @@ class ProductList extends Component {
                 Price: {this.state.min_price}{" "}
                 {this.state.min_price && this.state.max_price && "-"}{" "}
                 {this.state.max_price}
+                <i className="fa fa-times" aria-hidden="true"></i>
+              </span>
+            )}
+
+            {!_.isEmpty(currentFilter.warranties) &&
+              currentFilter.warranties.map((warenty, i) => {
+                return (
+                  <span
+                    className="filter-tags"
+                    onClick={() => this.props.removeWarrenty(warenty)}
+                    key={i}
+                  >
+                    Warrenty: {warenty}
+                    <i className="fa fa-times" aria-hidden="true"></i>
+                  </span>
+                );
+              })}
+
+            {!_.isEmpty(currentFilter.sizes) && (
+              <span
+                className="filter-tags"
+                onClick={() => this.props.removeSize()}
+              >
+                Size: {currentFilter.sizes}
                 <i className="fa fa-times" aria-hidden="true"></i>
               </span>
             )}
