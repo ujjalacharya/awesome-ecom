@@ -48,10 +48,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: getPhoneDetails().height < 650 ? Constants.smallScreenDescriptionSize : Constants.normalScreenDescriptionSize,
+    fontSize: Constants.normalScreenDescriptionSize,
   },
   price: {
-    fontSize: getPhoneDetails().height < 650 ? Constants.smallScreenDescriptionSize : Constants.normalScreenDescriptionSize,
+    fontSize: Constants.normalScreenDescriptionSize,
   },
 });
 
