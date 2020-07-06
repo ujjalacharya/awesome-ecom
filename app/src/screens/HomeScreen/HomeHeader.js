@@ -11,13 +11,11 @@ export class HomeHeader extends Component {
           color={Constants.headerTintColor}
           onPress={() => this.props.navigation.openDrawer()}
         />
-        <Appbar.Content
-          color={Constants.headerTintColor}
-          title="KINDEEM"
-        />
+        <Appbar.Content color={Constants.headerTintColor} title="KINDEEM" />
         <Appbar.Action
           color={Constants.headerTintColor}
-          icon="dots-vertical"
+          icon="heart-outline"
+          onPress={() => this.props.navigation.navigate("WishList")}
         />
       </Appbar.Header>
     );

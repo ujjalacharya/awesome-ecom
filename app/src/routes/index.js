@@ -6,6 +6,7 @@ const Stack = createStackNavigator();
 
 import SearchScreen from "../screens/AfterGo/SearchScreen";
 import DrawerNavigators from "./DrawerNavigators";
+import WishListScreen from "../screens/WishList";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       >
         <Stack.Screen name="Home" component={DrawerNavigators} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="WishList" component={WishListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
