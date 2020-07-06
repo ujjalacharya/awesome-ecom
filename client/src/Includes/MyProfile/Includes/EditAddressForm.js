@@ -38,7 +38,14 @@ class EditAddressForm extends Component {
       this.props.user.editAddressResp
     ) {
       openNotification("Success", "Address Updated Successfully");
-      this.props.changeShow("table");
+      this.props.changeShow("table", this.props.user.editAddressResp.user);
+    }
+    if (
+      this.props.user.addAddressResp !== prevProps.user.addAddressResp &&
+      this.props.user.addAddressResp
+    ) {
+      openNotification("Success", "Address added Successfully");
+      this.props.changeShow("table", this.props.user.editAddressResp.user);
     }
   }
 
@@ -84,8 +91,12 @@ class EditAddressForm extends Component {
       long: this.state.long,
       lat: this.state.lat,
     };
-
-    this.props.editAddress(this.state.addressId, body);
+    if (!_.isEmpty(this.props.editAddressData)) {
+      this.props.editAddress(this.state.addressId, body);
+    }else{
+      console.log(body)
+      this.props.addAddress(body)
+    }
   };
 
   onFinishFailed = (errorInfo) => {};
@@ -239,7 +250,7 @@ class EditAddressForm extends Component {
             <Col span={24}>
               <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit">
-                  Update
+                  Submit
                 </Button>
                 <Button
                   type="secondary"

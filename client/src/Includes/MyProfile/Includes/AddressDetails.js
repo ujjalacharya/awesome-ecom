@@ -5,6 +5,9 @@ import _ from "lodash";
 
 // includes
 import EditAddressForm from "./EditAddressForm";
+import { connect } from "react-redux";
+import actions from "../../../../redux/actions";
+import { getUserInfo } from "../../../../utils/common";
 
 class AddressDetails extends Component {
   state = {
@@ -12,22 +15,46 @@ class AddressDetails extends Component {
     userData: [],
     allAddress: [],
     editAddressData: [],
-    showAddNewForm: 'addTable'
+    showAddNewForm: "addTable",
   };
 
   componentDidMount() {
-    if (!_.isEmpty(this.props.userData)) {
+    let loginToken = this.props.authentication.token;
+    let userInfo = getUserInfo(loginToken);
+
+    if (userInfo?._id) {
+      this.props.getUserProfile(userInfo._id);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.user.userProfile !== prevProps.user.userProfile &&
+      this.props.user.userProfile
+    ) {
       this.setState({
-        userData: this.props.userData,
-        allAddress: this.props.userData.location,
+        userData: this.props.user.userProfile,
+        allAddress: this.props.user.userProfile.location,
+        // userInfo: this.props.user.userProfile,
       });
     }
   }
 
-  changeShow = (show) => {
+  // if (!_.isEmpty(this.props.userData)) {
+  //   this.setState({
+  //     userData: this.props.userData,
+  //     allAddress: this.props.userData.location,
+  //   });
+  // }
+
+  changeShow = (show, userId) => {
     this.setState({
       show,
+      showAddNewForm: "addTable",
     });
+    if (userId) {
+      this.props.getUserProfile(userId);
+    }
   };
 
   render() {
@@ -122,30 +149,31 @@ class AddressDetails extends Component {
       <div className="address-details">
         <div className="title-add">
           <h4>Profile Details</h4>
-          {this.state.show === "table" && (
-            <Button
-              className="secondary"
-              onClick={() =>
-                this.setState({ showAddNewForm: "addForm" })
-              }
-            >
-              Add new address
-            </Button>
-          )}
-          {this.state.showAddNewForm === "addForm" && this.state.show === 'table' && (
-            <EditAddressForm
-              changeShow={this.changeShowAdd}
-              editAddressData={{}}
-              userId=''
-            />
-          )}
+          {this.state.show === "table" &&
+            this.state.showAddNewForm === "addTable" && (
+              <Button
+                className="secondary"
+                onClick={() => this.setState({ showAddNewForm: "addForm" })}
+              >
+                Add new address
+              </Button>
+            )}
         </div>
-        {this.state.show === "form" && this.state.showAddNewForm === 'addTable' ? (
-          <EditAddressForm
-            changeShow={this.changeShow}
-            editAddressData={this.state.editAddressData}
-            userId={this.state.userData._id}
-          />
+        {this.state.show === "form" ||
+        this.state.showAddNewForm === "addForm" ? (
+          this.state.show === "form" ? (
+            <EditAddressForm
+              changeShow={this.changeShow}
+              editAddressData={this.state.editAddressData}
+              userId={this.state.userData._id}
+            />
+          ) : (
+            <EditAddressForm
+              changeShow={this.changeShow}
+              editAddressData={{}}
+              userId=""
+            />
+          )
         ) : (
           <Table columns={columns} dataSource={data} pagination={false} />
         )}
@@ -154,4 +182,4 @@ class AddressDetails extends Component {
   }
 }
 
-export default AddressDetails;
+export default connect((state) => state, actions)(AddressDetails);

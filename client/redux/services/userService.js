@@ -27,10 +27,41 @@ export class UserService {
     }
   }
 
+  async addAddress(body) {
+    
+    try {
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user/add-address`,{
+        method: 'POST',
+        headers:{
+          'content-type':'application/json',
+          "x-auth-token": cookie.get("token")
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await resp.json();
+
+      if (resp.status >= 200 && resp.status < 300) {
+        return {
+          isSuccess: true,
+          data,
+        };
+      } else {
+        return {
+          isSuccess: false,
+          errorMessage: data.error,
+        };
+      }
+    } catch (err) {
+      return {
+        isSuccess: false,
+        errorMessage: err,
+      };
+    }
+  }
+
   async editAddress(id, body) {
-    console.log(id)
-    console.log(body)
-    // let token = 
+    
     try {
       const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user/edit-address/${id}`,{
         method: 'PUT',
