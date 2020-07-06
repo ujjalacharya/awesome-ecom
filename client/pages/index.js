@@ -1,21 +1,21 @@
-import React, { Component } from "react";
+import { Row, Col } from "antd";
+import { connect } from "react-redux";
 import MainCarousel from "../src/Components/Carousel";
 import ProductSlider from "../src/Components/ProductSlider";
 import SliderHeader from "../src/Components/SliderHeader";
-import { Row, Col } from "antd";
 import Popular from "../src/Components/Popular";
 import LatestSLider from "../src/Components/LatestSlider";
-import { connect } from "react-redux";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
+  console.log(props)
   return (
     <Layout title="Home">
       <div className="wrapper">
         <div className="main-carousel">
-          <MainCarousel />
+          <MainCarousel data={props.other?.getBannerImages} />
         </div>
         <div className="container">
           <SliderHeader
@@ -53,8 +53,9 @@ Index.getInitialProps = async (ctx) => {
 
   const latestProducts = await ctx.store.dispatch(actions.getLatestProducts());
 
-  const orders = await ctx.store.dispatch(actions.getOrders(ctx.req))
+  const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
 
+  const bannerImages = await ctx.store.dispatch(actions.getBannerImages());
 
   return {
     latestProducts,

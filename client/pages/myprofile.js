@@ -23,7 +23,7 @@ class MyProfile extends Component {
     let loginToken = this.props.authentication.token;
     let userInfo = getUserInfo(loginToken);
 
-    if (userInfo && userInfo._id) {
+    if (userInfo?._id) {
       this.props.getUserProfile(userInfo._id);
     }
   }

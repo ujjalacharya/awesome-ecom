@@ -4,7 +4,10 @@ import { Table, Space } from "antd";
 import _ from "lodash";
 
 // includes
-import EditAddressForm from "./EditAddressForm";
+import { connect } from "react-redux";
+import actions from "../../../../redux/actions";
+import { getUserInfo, openNotification } from "../../../../utils/common";
+import AddressForm from "./AddressForm";
 
 class AddressDetails extends Component {
   state = {
@@ -12,22 +15,50 @@ class AddressDetails extends Component {
     userData: [],
     allAddress: [],
     editAddressData: [],
+    showAddNewForm: "addTable",
   };
 
   componentDidMount() {
-    if (!_.isEmpty(this.props.userData)) {
-      this.setState({
-        userData: this.props.userData,
-        allAddress: this.props.userData.location,
-      });
+    let loginToken = this.props.authentication.token;
+    let userInfo = getUserInfo(loginToken);
+
+    if (userInfo?._id) {
+      this.props.getUserProfile(userInfo._id);
     }
   }
 
-  changeShow = (show) => {
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.user.userProfile !== prevProps.user.userProfile &&
+      this.props.user.userProfile
+    ) {
+      this.setState({
+        userData: this.props.user.userProfile,
+        allAddress: this.props.user.userProfile.location,
+      });
+    }
+    if (
+      this.props.user.toggleActiveAddResp !== prevProps.user.toggleActiveAddResp &&
+      this.props.user.toggleActiveAddResp
+    ) {
+      openNotification("Success", "Active address changed successfully");
+      this.props.getUserProfile(this.state.userData._id)
+    }
+  }
+
+  changeShow = (show, userId) => {
     this.setState({
       show,
+      showAddNewForm: "addTable",
     });
+    if (userId) {
+      this.props.getUserProfile(userId);
+    }
   };
+
+  toggleAddress = (label) => {
+    this.props.toggleActiveAddress(`label=${label}`)
+  }
 
   render() {
     const columns = [
@@ -111,7 +142,21 @@ class AddressDetails extends Component {
           region: address.region,
           phoneNo: address.phoneno ? address.phoneno : "-",
           geoLocation: address.geolocation.coordinates,
-          isActive: address.isActive ? "true" : "false",
+          isActive: (
+            <div className="yes-no">
+              <span>No</span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  onChange={() => {!address.label && this.toggleAddress(address.label)}}
+                  checked={address.isActive ? true : false}
+                />
+                <span className="slider round"></span>
+              </label>
+              <span>Yes</span>
+            </div>
+          ),
+          // isActive: address.isActive ? "true" : "false",
         };
 
         data.push(ele);
@@ -121,16 +166,31 @@ class AddressDetails extends Component {
       <div className="address-details">
         <div className="title-add">
           <h4>Profile Details</h4>
-          {this.state.show === "table" && (
-            <Button className="secondary">Add new address</Button>
-          )}
+          {this.state.show === "table" &&
+            this.state.showAddNewForm === "addTable" && (
+              <Button
+                className="secondary"
+                onClick={() => this.setState({ showAddNewForm: "addForm" })}
+              >
+                Add new address
+              </Button>
+            )}
         </div>
-        {this.state.show === "form" ? (
-          <EditAddressForm
-            changeShow={this.changeShow}
-            editAddressData={this.state.editAddressData}
-            userId = {this.state.userData._id}
-          />
+        {this.state.show === "form" ||
+        this.state.showAddNewForm === "addForm" ? (
+          this.state.show === "form" ? (
+            <AddressForm
+              changeShow={this.changeShow}
+              editAddressData={this.state.editAddressData}
+              userId={this.state.userData._id}
+            />
+          ) : (
+            <AddressForm
+              changeShow={this.changeShow}
+              editAddressData={{}}
+              userId=""
+            />
+          )
         ) : (
           <Table columns={columns} dataSource={data} pagination={false} />
         )}
@@ -139,4 +199,4 @@ class AddressDetails extends Component {
   }
 }
 
-export default AddressDetails;
+export default connect((state) => state, actions)(AddressDetails);

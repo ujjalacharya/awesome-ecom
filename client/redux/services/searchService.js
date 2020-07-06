@@ -1,6 +1,26 @@
 import fetch from "isomorphic-unfetch";
 
 export class SearchService {
+  async getSearchKeywords(query) {
+    try {
+      const resp = await fetch(
+        `${process.env.SERVER_BASE_URL}/api/product/suggest-keywords?keyword=${query}&limits=8`
+      );
+
+      const data = await resp.json();
+
+      return {
+        isSuccess: true,
+        data,
+      };
+    } catch (err) {
+      return {
+        isSuccess: false,
+        errorMessage: err,
+      };
+    }
+  }
+
   async searchProducts(query, body) {
     try {
       const resp = await fetch(
@@ -36,7 +56,7 @@ export class SearchService {
 
       const data = await resp.json();
 
-      if ( resp.status >= 200 && resp.status < 300 ) {
+      if (resp.status >= 200 && resp.status < 300) {
         return {
           isSuccess: true,
           data,

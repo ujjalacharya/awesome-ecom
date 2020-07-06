@@ -1,6 +1,21 @@
 import fetch from "isomorphic-unfetch";
-import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR, GLOBAL_ERROR } from "../types";
+import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR, GLOBAL_ERROR, SEARCH_KEYWORD } from "../types";
 import { SearchService } from "../services/searchService";
+
+const getSearchKeywords = (query) => {
+  return async (dispatch) => {
+    const searchService = new SearchService();
+    const response = await searchService.getSearchKeywords(query);
+    if (response.isSuccess) {
+      dispatch({ type: SEARCH_KEYWORD, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 const searchProducts = (query, body) => {
   return async (dispatch) => {
@@ -10,7 +25,7 @@ const searchProducts = (query, body) => {
       dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: SEARCH_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
@@ -50,5 +65,6 @@ const searchFilter = (query) => {
 export default {
   searchProducts,
   searchFilter,
-  getProductsByCategory
+  getProductsByCategory,
+  getSearchKeywords
 };

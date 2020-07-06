@@ -4,33 +4,40 @@ import { Carousel, Button } from "antd";
 // import Carousel from "nuka-carousel";
 
 class MainCarousel extends Component {
-  onChange = (a, b, c) => {
-    
-  };
+  onChange = (a, b, c) => {};
   render() {
     const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        draggable: true
-      };
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      draggable: true,
+    };
     return (
-      <Carousel {...settings} >
-        <div className="img-text">
-          <div className="carousel-text">
+      <Carousel {...settings}>
+        {/* <div className="img-text"> */}
+          {this.props.data.banners &&
+            this.props.data.banners.map((banner) => {
+              return (
+                <div className="img-text">
+                  <div className="carousel-text"></div>
+                  <img src={process.env.IMAGE_BASE_URL+'/'+banner.bannerPhoto} alt="banner" />
+                </div>
+              );
+            })}
+          {/* <div className="carousel-text">
             <h2>GET UPTO 60% OFF</h2>
             <div className="main-text">SUMMER SALE</div>
             <h4 className="sub-text">Limited items available at this Price</h4>
             <Button className="primary">Shop Now</Button>
-          </div>
-          <img src="/images/banner.jpg" />
-        </div>
-        <div className="img-text">
+          </div> */}
+          {/* <img src="/images/banner.jpg" /> */}
+        {/* </div> */}
+        {/* <div className="img-text">
           <div className="carousel-text"></div>
           <img src="/images/carousel-img.jpg" />
-        </div>
+        </div> */}
       </Carousel>
     );
   }

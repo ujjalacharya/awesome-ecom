@@ -21,11 +21,11 @@ export default (WrappedComponent) => {
       // Handle server-side and client-side rendering.
       if (ctx.res) {
         ctx.res.writeHead(302, {
-          Location: login,
+          Location: login+"?origin="+ctx.pathname,
         });
         ctx.res.end();
       } else {
-        Router.replace(login);
+        Router.replace(login+"?origin="+ctx.pathname);
       }
     } else if (WrappedComponent.getInitialProps) {
       const wrappedProps = await WrappedComponent.getInitialProps(userAuth);

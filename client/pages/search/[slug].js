@@ -7,7 +7,7 @@ import Layout from "../../src/Components/Layout";
 import initialize from "../../utils/initialize";
 import actions from "../../redux/actions";
 import Filter from "../../src/Includes/Listing/Filter";
-import Listing from "../Listing";
+import Listing from "../listing";
 import { connect } from "react-redux";
 import { withRouter } from "next/router";
 
