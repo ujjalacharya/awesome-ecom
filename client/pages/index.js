@@ -1,11 +1,10 @@
-import React, { Component } from "react";
+import { Row, Col } from "antd";
+import { connect } from "react-redux";
 import MainCarousel from "../src/Components/Carousel";
 import ProductSlider from "../src/Components/ProductSlider";
 import SliderHeader from "../src/Components/SliderHeader";
-import { Row, Col } from "antd";
 import Popular from "../src/Components/Popular";
 import LatestSLider from "../src/Components/LatestSlider";
-import { connect } from "react-redux";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";

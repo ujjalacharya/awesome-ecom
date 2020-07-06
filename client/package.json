@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next -p 3002 & yarn run sass",
+    "dev": "next -p 3002",
     "build": "next build",
-    "start": "next start",
-    "sass": "sass --watch sass/index.scss:public/css/style.css"
+    "start": "next start"
   },
   "dependencies": {
+    "@zeit/next-sass": "^1.0.1",
     "antd": "^4.2.2",
     "cookie-parser": "^1.4.5",
     "isomorphic-unfetch": "^3.0.0",
@@ -19,6 +19,7 @@
     "moment-timezone": "^0.5.31",
     "next": "9.4.0",
     "next-redux-wrapper": "^6.0.0-rc.7",
+    "node-sass": "^4.14.1",
     "nprogress": "^0.2.0",
     "react": "16.13.1",
     "react-cookie": "^4.0.3",
@@ -30,7 +31,5 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },
-  "devDependencies": {
-    "sass": "^1.26.9"
-  }
+  "devDependencies": {}
 }
