@@ -6,7 +6,7 @@ import _ from "lodash";
 // includes
 import { connect } from "react-redux";
 import actions from "../../../../redux/actions";
-import { getUserInfo } from "../../../../utils/common";
+import { getUserInfo, openNotification } from "../../../../utils/common";
 import AddressForm from "./AddressForm";
 
 class AddressDetails extends Component {
@@ -35,17 +35,16 @@ class AddressDetails extends Component {
       this.setState({
         userData: this.props.user.userProfile,
         allAddress: this.props.user.userProfile.location,
-        // userInfo: this.props.user.userProfile,
       });
     }
+    if (
+      this.props.user.toggleActiveAddResp !== prevProps.user.toggleActiveAddResp &&
+      this.props.user.toggleActiveAddResp
+    ) {
+      openNotification("Success", "Active address changed successfully");
+      this.props.getUserProfile(this.state.userData._id)
+    }
   }
-
-  // if (!_.isEmpty(this.props.userData)) {
-  //   this.setState({
-  //     userData: this.props.userData,
-  //     allAddress: this.props.userData.location,
-  //   });
-  // }
 
   changeShow = (show, userId) => {
     this.setState({
@@ -56,6 +55,10 @@ class AddressDetails extends Component {
       this.props.getUserProfile(userId);
     }
   };
+
+  toggleAddress = (label) => {
+    this.props.toggleActiveAddress(`label=${label}`)
+  }
 
   render() {
     const columns = [
@@ -139,7 +142,21 @@ class AddressDetails extends Component {
           region: address.region,
           phoneNo: address.phoneno ? address.phoneno : "-",
           geoLocation: address.geolocation.coordinates,
-          isActive: address.isActive ? "true" : "false",
+          isActive: (
+            <div className="yes-no">
+              <span>No</span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  onChange={() => {!address.label && this.toggleAddress(address.label)}}
+                  checked={address.isActive ? true : false}
+                />
+                <span className="slider round"></span>
+              </label>
+              <span>Yes</span>
+            </div>
+          ),
+          // isActive: address.isActive ? "true" : "false",
         };
 
         data.push(ele);

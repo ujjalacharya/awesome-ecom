@@ -1,9 +1,10 @@
-import { USER_PROFILE, USER_ERROR, EDIT_ADDRESS, ADD_ADDRESS } from "../types";
+import { USER_PROFILE, USER_ERROR, EDIT_ADDRESS, ADD_ADDRESS, TOGGLE_ACTIVE_ADDRESS } from "../types";
 
 const initialState = {
   userProfile: null,
   editAddressResp: null,
-  addAddressResp: null
+  addAddressResp: null,
+  toggleActiveAddResp: null
 };
 
 export default (state = initialState, action) => {
@@ -14,6 +15,8 @@ export default (state = initialState, action) => {
       return { ...state, addAddressResp: action.payload, hasError: false };
     case EDIT_ADDRESS:
       return { ...state, editAddressResp: action.payload, hasError: false };
+    case TOGGLE_ACTIVE_ADDRESS:
+      return { ...state, toggleActiveAddResp: action.payload, hasError: false };
     case USER_ERROR:
       return { ...state, userError: action.payload, hasError: true };
     default:

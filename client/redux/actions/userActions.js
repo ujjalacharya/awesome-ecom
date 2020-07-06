@@ -1,5 +1,4 @@
-import fetch from "isomorphic-unfetch";
-import { USER_PROFILE, GLOBAL_ERROR, EDIT_ADDRESS, ADD_ADDRESS } from "../types";
+import { USER_PROFILE, GLOBAL_ERROR, EDIT_ADDRESS, ADD_ADDRESS, TOGGLE_ACTIVE_ADDRESS } from "../types";
 import { UserService } from "../services/userService";
 
 const getUserProfile = (id) => {
@@ -22,7 +21,6 @@ const addAddress = (body) => {
     const userService = new UserService();
     const response = await userService.addAddress(body);
     if (response.isSuccess) {
-      console.log(response)
       dispatch({ type: ADD_ADDRESS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
@@ -38,8 +36,22 @@ const editAddress = (id, body) => {
     const userService = new UserService();
     const response = await userService.editAddress(id, body);
     if (response.isSuccess) {
-      console.log(response)
       dispatch({ type: EDIT_ADDRESS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
+const toggleActiveAddress = (query) => {
+  return async (dispatch) => {
+    const userService = new UserService();
+    const response = await userService.toggleActiveAddress(query);
+    if (response.isSuccess) {
+      dispatch({ type: TOGGLE_ACTIVE_ADDRESS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -53,5 +65,6 @@ const editAddress = (id, body) => {
 export default {
     getUserProfile,
     editAddress,
-    addAddress
+    addAddress,
+    toggleActiveAddress
 };

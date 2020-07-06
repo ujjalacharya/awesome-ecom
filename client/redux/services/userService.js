@@ -92,5 +92,37 @@ export class UserService {
       };
     }
   }
+
+  async toggleActiveAddress(query) {
+    
+    try {
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user/toggle-address-activeness?${query}`,{
+        method: 'PATCH',
+        headers:{
+          'content-type':'application/json',
+          "x-auth-token": cookie.get("token")
+        }
+      });
+
+      const data = await resp.json();
+
+      if (resp.status >= 200 && resp.status < 300) {
+        return {
+          isSuccess: true,
+          data,
+        };
+      } else {
+        return {
+          isSuccess: false,
+          errorMessage: data.error,
+        };
+      }
+    } catch (err) {
+      return {
+        isSuccess: false,
+        errorMessage: err,
+      };
+    }
+  }
   
 }

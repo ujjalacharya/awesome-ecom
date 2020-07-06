@@ -23,6 +23,7 @@ export const SEARCH_ERROR = "SEARCH_ERROR"
 export const USER_PROFILE = "USER_PROFILE"
 export const ADD_ADDRESS = "ADD_ADDRESS"
 export const EDIT_ADDRESS = "EDIT_ADDRESS"
+export const TOGGLE_ACTIVE_ADDRESS = "TOGGLE_ACTIVE_ADDRESS"
 export const USER_ERROR = "USER_ERROR"
 
 // error
