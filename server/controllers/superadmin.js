@@ -323,6 +323,35 @@ exports.blockUnblockUser = async (req, res) => {
     res.json(user)
 }
 
+exports.getBlockedUsers = async (req, res) => {
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
+    let users = await User.find({ isBlocked: { "$ne": null } })
+        .select('-password -salt -resetPasswordLink -emailVerifyLink')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    // if (!users.length) {
+    //     return res.status(404).json({ error: "No users are blocked" })
+    // }
+    const totalCount = await User.countDocuments({ isBlocked: { "$ne": null } })
+    res.json({ users, totalCount })
+}
+exports.getNotBlockedUsers = async (req, res) => {
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10
+    let users = await User.find({ isBlocked: null })
+        .select('-password -salt  -resetPasswordLink -emailVerifyLink')
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    // if (!users.length) {
+    //     return res.status(404).json({ error: "Every users are blocked" })
+    // }
+    const totalCount = await User.countDocuments({ isBlocked: null })
+    res.json({ users, totalCount })
+}
+
 exports.getBlockedAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
