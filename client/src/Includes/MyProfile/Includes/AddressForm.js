@@ -15,7 +15,7 @@ const tailLayout = {
 
 // const form = Form.useForm();
 
-class EditAddressForm extends Component {
+class AddressForm extends Component {
   formRef = React.createRef();
   state = {
     addressId: "",
@@ -272,4 +272,4 @@ class EditAddressForm extends Component {
   }
 }
 
-export default connect((state) => state, actions)(EditAddressForm);
+export default connect((state) => state, actions)(AddressForm);

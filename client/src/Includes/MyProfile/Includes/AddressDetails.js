@@ -4,10 +4,10 @@ import { Table, Space } from "antd";
 import _ from "lodash";
 
 // includes
-import EditAddressForm from "./EditAddressForm";
 import { connect } from "react-redux";
 import actions from "../../../../redux/actions";
 import { getUserInfo } from "../../../../utils/common";
+import AddressForm from "./AddressForm";
 
 class AddressDetails extends Component {
   state = {
@@ -162,13 +162,13 @@ class AddressDetails extends Component {
         {this.state.show === "form" ||
         this.state.showAddNewForm === "addForm" ? (
           this.state.show === "form" ? (
-            <EditAddressForm
+            <AddressForm
               changeShow={this.changeShow}
               editAddressData={this.state.editAddressData}
               userId={this.state.userData._id}
             />
           ) : (
-            <EditAddressForm
+            <AddressForm
               changeShow={this.changeShow}
               editAddressData={{}}
               userId=""
