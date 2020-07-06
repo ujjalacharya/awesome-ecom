@@ -6,7 +6,6 @@ import { Card } from "react-native-paper";
 import { getPhoneDetails } from "../utils/common";
 import Constants from "../constants/Constants";
 
-
 const SingleCard = ({ product }) => {
   return (
     <TouchableNativeFeedback
@@ -19,8 +18,12 @@ const SingleCard = ({ product }) => {
           <Image style={styles.tinyLogo} source={{ uri: product.image }} />
         </View>
         <Card style={styles.productDetails}>
-          <Text style={styles.title}>{product.title}</Text>
-          <Text style={styles.price}>{product.price}</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.title}>{product.title}</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.price}>{product.price}</Text>
+          </View>
         </Card>
         <View style={{ flex: 0.25 }}></View>
       </>
@@ -33,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     marginRight: 10,
-    width: 120,
+    width: 150,
     borderRadius: 50,
   },
   productDetails: {
