@@ -5,6 +5,7 @@ import menuReducer from './menuReducer';
 import listingReducer from './listingReducer';
 import userReducer from './userReducer';
 import globalErrorReducer from './globalErrorReducer';
+import otherReducer from './otherReducer';
 
 const rootReducer = combineReducers({
   authentication: authReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   menu: menuReducer,
   listing: listingReducer,
   user: userReducer,
-  globalError: globalErrorReducer
+  globalError: globalErrorReducer,
+  other: otherReducer
 });
 
 export default rootReducer;

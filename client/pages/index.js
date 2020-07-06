@@ -10,11 +10,12 @@ import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
+  console.log(props)
   return (
     <Layout title="Home">
       <div className="wrapper">
         <div className="main-carousel">
-          <MainCarousel />
+          <MainCarousel data={props.other?.getBannerImages} />
         </div>
         <div className="container">
           <SliderHeader
@@ -52,8 +53,9 @@ Index.getInitialProps = async (ctx) => {
 
   const latestProducts = await ctx.store.dispatch(actions.getLatestProducts());
 
-  const orders = await ctx.store.dispatch(actions.getOrders(ctx.req))
+  const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
 
+  const bannerImages = await ctx.store.dispatch(actions.getBannerImages());
 
   return {
     latestProducts,

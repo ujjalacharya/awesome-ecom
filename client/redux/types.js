@@ -32,3 +32,6 @@ export const GLOBAL_ERROR = "GLOBAL_ERROR"
 //loading
 export const LATEST_LOADING = 'LATEST_LOADING'
 
+// other
+export const GET_BANNER_IMAGES = 'GET_BANNER_IMAGES'
+

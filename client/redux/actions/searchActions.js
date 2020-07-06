@@ -10,7 +10,7 @@ const searchProducts = (query, body) => {
       dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: SEARCH_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
