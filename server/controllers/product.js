@@ -172,6 +172,11 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   const products = await Product.find({ soldBy: req.profile._id })
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
@@ -179,7 +184,7 @@ exports.getProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
@@ -188,6 +193,13 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.latestProducts = async (req, res) => {
+  const page = +req.query.page || 1;
+  const perPage = +req.query.perPage || 10;
+  const { createdAt, updatedAt, price } = req.query
+  let sortFactor = { createdAt: 'desc' };
+  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
+  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
   const products = await Product.find({
     isVerified: { $ne: null },
     isDeleted: null,
@@ -195,9 +207,11 @@ exports.latestProducts = async (req, res) => {
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
-    .limit(20)
+    .skip(perPage * page - perPage)
+    .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .lean()
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
@@ -217,6 +231,11 @@ exports.suggestKeywords = async(req,res) => {
 exports.searchProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   let {
     keyword = "",
     brands,
@@ -276,7 +295,8 @@ exports.searchProducts = async (req, res) => {
     .populate("images", "-createdAt -updatedAt -__v")
     .skip(perPage * page - perPage)
     .limit(perPage)
-    .lean();
+    .lean()
+    .sort(sortFactor)
   // if (!products.length) {
   //   return res.status(404).json({ error: "Products not found." });
   // }
@@ -288,6 +308,11 @@ exports.searchProducts = async (req, res) => {
 exports.getProductsByCategory = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   let categories = await Category.find({
     $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],
     isDisabled: null,
@@ -303,7 +328,7 @@ exports.getProductsByCategory = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
@@ -421,6 +446,11 @@ exports.generateFilter = async (req, res) => {
 exports.outOfTheStockProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   const products = await Product.find({ soldBy: req.profile._id, quantity: 0 })
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
@@ -428,7 +458,7 @@ exports.outOfTheStockProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are out of stock." });
   // }
@@ -441,6 +471,11 @@ exports.outOfTheStockProducts = async (req, res) => {
 exports.verifiedProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   const products = await Product.find({
     soldBy: req.profile._id,
     isVerified: { $ne: null },
@@ -451,7 +486,7 @@ exports.verifiedProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
@@ -464,6 +499,11 @@ exports.verifiedProducts = async (req, res) => {
 exports.notVerifiedProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   const products = await Product.find({
     soldBy: req.profile._id,
     isVerified: null,
@@ -474,7 +514,7 @@ exports.notVerifiedProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
@@ -487,6 +527,11 @@ exports.notVerifiedProducts = async (req, res) => {
 exports.deletedProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   const products = await Product.find({
     soldBy: req.profile._id,
     isDeleted: { $ne: null },
@@ -497,7 +542,7 @@ exports.deletedProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
@@ -510,6 +555,11 @@ exports.deletedProducts = async (req, res) => {
 exports.notDeletedProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
+  const {createdAt,updatedAt,price} = req.query
+  let sortFactor = {createdAt:'desc'} ;
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
+  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
   const products = await Product.find({
     soldBy: req.profile._id,
     isDeleted: null,
@@ -520,7 +570,7 @@ exports.notDeletedProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .sort({ created: -1 });
+    .sort(sortFactor);
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }

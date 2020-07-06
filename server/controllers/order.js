@@ -218,7 +218,7 @@ exports.userOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({error: "No orders found"})
     // }
@@ -234,7 +234,7 @@ exports.userActiveOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No active orders found" })
     // }
@@ -251,7 +251,7 @@ exports.userCompleteOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No complete orders found" })
     // }
@@ -268,7 +268,7 @@ exports.userCancelOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No cancel orders found" })
     // }
@@ -285,7 +285,7 @@ exports.userReturnOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No return orders found" })
     // }
@@ -302,7 +302,7 @@ exports.adminOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No orders found" })
     // }
@@ -319,7 +319,7 @@ exports.adminActiveOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No active orders found" })
     // }
@@ -336,7 +336,7 @@ exports.adminApproveOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No approve orders found" })
     // }
@@ -353,7 +353,7 @@ exports.adminDispatchOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No dispatch orders found" })
     // }
@@ -370,7 +370,7 @@ exports.adminCancelOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No cancel orders found" })
     // }
@@ -387,7 +387,7 @@ exports.adminCompleteOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No complete orders found" })
     // }
@@ -404,7 +404,7 @@ exports.adminToBeReturnOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No to be return orders found" })
     // }
@@ -421,7 +421,7 @@ exports.dispatcherToBeReturnOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No to be return orders found" })
     // }
@@ -438,7 +438,7 @@ exports.adminReturnOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No return orders found" })
     // }
@@ -571,7 +571,7 @@ exports.approvedOrders = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-        .sort({ created: -1 })
+        .sort({ createdAt: -1 })
     // if (!orders.length) {
     //     return res.status(404).json({error: "No orders are ready to ship."})
     // }
