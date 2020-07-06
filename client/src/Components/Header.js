@@ -5,10 +5,8 @@ import { connect } from "react-redux";
 import { getChildCategories, getUserInfo } from "../../utils/common";
 import Link from "next/link";
 import actions from "../../redux/actions";
-import initialize from "../../utils/initialize";
-import Router from "next/router";
-import cookie from "js-cookie";
-import next from "next";
+import Router, { withRouter } from "next/router";
+import { AutoComplete } from "antd";
 
 class Header extends Component {
   state = {
@@ -16,13 +14,24 @@ class Header extends Component {
     parentCate: [],
     loginToken: "",
     userInfo: {},
+    searchOptions: [],
+    searchValue: ''
   };
 
   componentDidMount() {
+
     this.props.productCategories();
 
     let loginToken = this.props.authentication.token;
     let userInfo = getUserInfo(loginToken);
+
+    let slug = this.props.router.asPath?.split('/')[1]
+
+    if(slug === 'search'){
+      this.setState({
+        searchValue: this.props.router.query.slug
+      })
+    }
 
     this.setState({
       loginToken,
@@ -31,6 +40,7 @@ class Header extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+
     if (this.props.authentication.token !== nextProps.authentication.token) {
       let userInfo = [];
       if (nextProps.authentication.token) {
@@ -41,6 +51,7 @@ class Header extends Component {
         userInfo,
       });
     }
+
     if (
       this.props.menu.menuCategories !== nextProps.menu.menuCategories &&
       nextProps.menu.menuCategories
@@ -48,7 +59,9 @@ class Header extends Component {
       let parentCategory = [];
 
       let parentCate = [];
-      let { menuCategories: {categories} } = nextProps.menu
+      let {
+        menuCategories: { categories },
+      } = nextProps.menu;
       categories.map((cate) => {
         if (cate.parent === undefined) {
           parentCategory.push(cate);
@@ -64,19 +77,32 @@ class Header extends Component {
       });
 
       this.setState({
-        parentCate
+        parentCate,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+
+    let { listing: {getSearchKeywords} } = this.props
+
+    if (getSearchKeywords !== prevProps.listing.getSearchKeywords && getSearchKeywords) {
+      let searchOpts = []
+      getSearchKeywords.map(opt => {
+        let ele = {value: opt}
+        searchOpts.push(ele)
+      })
+
+      this.setState({
+        searchOptions: searchOpts
       })
     }
   }
 
-  static getInitialProps(ctx) {
-    initialize(ctx);
-  }
-
   handleSubmit = (e) => {
     e.preventDefault();
-
-    Router.push("/search/[slug]", "/search/" + this.state.search);
+    
+    Router.push("/search/[slug]", "/search/" + this.state.searchValue);
   };
 
   searchProducts = (e, slug, cateId) => {
@@ -86,6 +112,7 @@ class Header extends Component {
 
   render() {
     let { parentCate, loginToken, userInfo } = this.state;
+    
     return (
       <div className="main-header">
         <Row>
@@ -185,16 +212,19 @@ class Header extends Component {
           </Col>
           <Col lg={6} md={6} className="search">
             <form onSubmit={this.handleSubmit}>
-              {/* <Link
-              href={`/search?[slug]`}
-              key={this.state.search}
-              as={`/search?${this.state.search}`}
-            > */}
-              <Input
+              <AutoComplete
+                value={this.state.searchValue}
+                options={this.state.searchOptions}
+                style={{
+                  width: 200,
+                }}
+                onSelect={(select) => {Router.push("/search/[slug]", "/search/" + select); this.setState({searchValue: select})}}
+                onSearch={(search) => {
+                  this.props.getSearchKeywords(search);
+                  this.setState({ searchValue: search });
+                }}
                 placeholder="Search for products, brands and more"
-                onChange={(e) => this.setState({ search: e.target.value })}
               />
-              {/* </Link> */}
             </form>
           </Col>
           <Col lg={4} md={5} className="menu-right">
@@ -238,4 +268,4 @@ class Header extends Component {
   }
 }
 
-export default connect((state) => state, actions)(Header);
+export default connect((state) => state, actions)(withRouter(Header));
