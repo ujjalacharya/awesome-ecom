@@ -202,7 +202,7 @@ exports.latestProducts = async (req, res) => {
   if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
   const products = await Product.find({
     isVerified: { $ne: null },
-    isDeleted: null,
+    isDeleted: null
   })
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
@@ -210,12 +210,15 @@ exports.latestProducts = async (req, res) => {
     .skip(perPage * page - perPage)
     .limit(perPage)
     .lean()
-    .lean()
     .sort(sortFactor);
+    const totalCount = await Product.countDocuments({
+      isVerified: { $ne: null },
+      isDeleted: null,
+    })  
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
-  res.json(products);
+  res.json({products,totalCount});
 };
 
 exports.suggestKeywords = async(req,res) => {
