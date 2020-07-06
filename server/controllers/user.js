@@ -114,47 +114,39 @@ exports.editAddress = async(req,res) => {
     if(req.body.label) req.body.label=undefined
     if(req.body.isActive) req.body.isActive = undefined
     address = _.extend(address,req.body)
+    if (req.body.lat && req.body.long) {
+        let geolocation = {
+            type: "Point",
+            coordinates: [req.body.long, req.body.lat]
+        };
+        address.geolocation = geolocation;
+    }
     address = await address.save()
     res.json(address)
 }
 
 exports.toggleAddressActiveness = async(req,res) => {
-    let addresses = await Address.find({user:req.user._id ,label:{$ne:'ship-to'}})
-    if (!addresses.length) {
-        return res.json(addresses)
+    let activeAddress = await Address.findOne({user:req.user._id,isActive:{$ne:null}})
+    if (!activeAddress) {
+        return res.status(404).json({error:'Current active address not found.'})
     }
-    //if there is single address make it isActive
-    if (addresses.length === 1) {
-        addresses[0].isActive = Date.now()
-        await addresses[0].save()
-        return res.json(addresses)
+    if (activeAddress.label == req.query.label) {
+        return res.json({address:activeAddress})
     }
-    // else there are 2 addresses so toggle isActive
-    let add1 = addresses[0].toObject()
-    let add2 = addresses[1].toObject()
-    if (add1.isActive === null) {
-        add1.isActive = Date.now()
-        add2.isActive = null
-        const results = await task
-            .update(addresses[0], add1)
-            .options({ viaSave: true })
-            .update(addresses[1], add2)
-            .options({ viaSave: true })
-            .run({ useMongoose: true })
+    let tobeActiveAddress = await Address.findOne({ user: req.user._id, label:req.query.label})
+    if (!tobeActiveAddress) {
+        return res.status(404).json({ error: `Address labelled ${req.query.label} not found.` })
+    }
+    let updateActiveAddress = activeAddress.toObject()
+    let updateToBeActiveAddress = tobeActiveAddress.toObject()
+    updateActiveAddress.isActive = null
+    updateToBeActiveAddress.isActive = Date.now()
+    const results = await task
+        .update(tobeActiveAddress, updateToBeActiveAddress)
+        .options({ viaSave: true })
+        .update(activeAddress,updateActiveAddress)
+        .options({ viaSave: true })
+        .run({ useMongoose: true });
+    res.json({ address: results[0] })
 
-        return res.json(results)
-    }
-    if (add2.isActive === null) {
-        add2.isActive = Date.now()
-        add1.isActive = null
-        const results = await task
-            .update(addresses[0], add1)
-            .options({ viaSave: true })
-            .update(addresses[1], add2)
-            .options({ viaSave: true })
-            .run({ useMongoose: true })
-
-        return res.json(results)
-    }
-    
 }

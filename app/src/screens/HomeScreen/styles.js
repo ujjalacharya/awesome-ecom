@@ -10,7 +10,7 @@ export default styles = StyleSheet.create({
 
   inputField: {
     flex: 1,
-    marginBottom: 10,
+    margin: 10,
     flexDirection: "row",
     justifyContent: "center",
     backgroundColor: Constants.cardColor,

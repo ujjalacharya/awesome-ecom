@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image } from "react-native";
+import { View, Image, ScrollView } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import HomeHeader from "./HomeHeader";
@@ -12,30 +12,35 @@ import FeaturedProducts from "./FeaturedProducts";
 export class HomeScreen extends Component {
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <HomeHeader headerTitle="" {...this.props} />
-        <View style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            <SearchView {...this.props} />
-          </View>
-
-          <View style={{ flex: 3 }}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ height: 50 }}>
+          <HomeHeader headerTitle="" {...this.props} />
+        </View>
+        <View style={{ height: 60 }}>
+          <SearchView {...this.props} />
+        </View>
+        <View style={{ height: 800 }}>
+          <View style={{ flex: 1.5 }}>
             <MainCarousel />
           </View>
+          <View style={{ flex: 2 }}>
+            <FeaturedProducts title={"Featured Products"} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Image
+              source={require("../../../assets/ad.jpg")}
+              style={{ height: "100%" }}
+            ></Image>
+          </View>
+          <View style={{ flex: 2 }}>
+            <FeaturedProducts title={"Latest Products"} />
+          </View>
         </View>
-        <View style={{ flex: 0.75 }}>
-          <FeaturedProducts title={"Featured Products"} />
-        </View>
-        <View style={{ flex: 0.5 }}>
-          <Image
-            source={require("../../../assets/ad.jpg")}
-            style={{height: "100%"}}
-          ></Image>
-        </View>
-        <View style={{ flex: 0.75 }}>
-          <FeaturedProducts title={"Latest Products"} />
-        </View>
-      </View>
+      </ScrollView>
     );
   }
 }

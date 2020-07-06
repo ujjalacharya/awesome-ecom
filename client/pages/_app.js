@@ -2,8 +2,9 @@ import { Provider } from "react-redux";
 import App from "next/app";
 import withRedux from "next-redux-wrapper";
 import { initStore } from "../redux";
-import "../public/nprogress.css";
 import GlobalErrorComponent from "../src/Components/GlobalErrorComponent";
+import "../public/nprogress.css";
+import "../sass/index.scss"
 
 export default withRedux(initStore, { debug: false })(
   class MyApp extends App {

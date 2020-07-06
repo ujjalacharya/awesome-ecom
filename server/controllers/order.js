@@ -9,7 +9,7 @@ const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
 const ProductImages = require("../models/ProductImages")
 const Order = require("../models/Order")
-const {calculateDistance} = require("../middleware/helpers")
+const { calculateDistance } = require("../middleware/helpers")
 const sharp = require("sharp")
 const shortid = require('shortid');
 const path = require("path");
@@ -19,11 +19,11 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
 
-exports.order = async(req,res,next) => {
+exports.order = async (req, res, next) => {
     const order = await Order.findById(req.params.order_id)
-        .populate('user','-password -salt -resetPasswordLink -emailVerifyLink')
-        .populate('payment','-user -order')
-        .populate('product','_id slug name slug category brand return isVerified isDeleted warranty quantity')
+        .populate('user', '-password -salt -resetPasswordLink -emailVerifyLink')
+        .populate('payment', '-user -order')
+        .populate('product', '_id slug name slug category brand return isVerified isDeleted warranty quantity')
         .populate({
             path: 'soldBy',
             select: 'name shopName address isVerified isBlocked holidayMode photo email',
@@ -32,7 +32,6 @@ exports.order = async(req,res,next) => {
                 model: 'adminwarehouse'
             }
         })
-        .populate('address')
         .populate({
             path: 'status.cancelledDetail.remark',
             model: 'remark'
@@ -51,7 +50,7 @@ exports.order = async(req,res,next) => {
         .populate({
             path: 'status.dispatchedDetail.dispatchedBy',
             model: 'dispatcher',
-            select:'name email address phone'
+            select: 'name email address phone'
         })
         .populate({
             path: 'status.returnedDetail.returneddBy',
@@ -63,16 +62,16 @@ exports.order = async(req,res,next) => {
             model: 'remark',
         })
     if (!order) {
-        return res.status(404).json({error:"Order not found"})
+        return res.status(404).json({ error: "Order not found" })
     }
     req.order = order
     next();
 }
 
-exports.userOrder = (req,res) => {
+exports.userOrder = (req, res) => {
     let order = req.order
     if (order.user._id.toString() !== req.user._id.toString()) {
-        return res.status(401).json({error:"Unauthorized User."})
+        return res.status(401).json({ error: "Unauthorized User." })
     }
     order.soldBy = undefined
     order.status.returnedDetail.returneddBy = undefined
@@ -96,14 +95,14 @@ exports.dispatcherOrder = (req, res) => {
     res.json(order)
 }
 
-exports.calculateShippingCharge = async(req,res) => {
+exports.calculateShippingCharge = async (req, res) => {
     const superadmin = await Admin.findOne({ role: 'superadmin' })
     if (!superadmin) {
         return res.status(404).json({ error: 'Cannot find shipping rate' })
     }
-    const shippingAddress = await Address.findOne({ user: req.user._id, label: 'ship-to' })
+    const shippingAddress = await Address.findOne({ user: req.user._id, isActive: { $ne: null } })
     if (!shippingAddress) {
-        return res.status(404).json({error:'Cannot found shipping address of the user.'})
+        return res.status(404).json({ error: 'Cannot found shipping address of the user.' })
     }
     if (shippingAddress.geolocation !== undefined) {
         const shippingRate = superadmin.shippingRate
@@ -123,19 +122,25 @@ exports.calculateShippingCharge = async(req,res) => {
         if (rem < 3) return res.json(shippingCharge - rem)
         if (rem < 7) return res.json(shippingCharge - rem + 5)
         if (rem >= 7) return res.json(shippingCharge + (10 - rem))
-        
+
     } else {
         return res.json(superadmin.shippingCost)
     }
-    
+
 }
 
 exports.createOrder = async (req, res) => {
-    const product = await Product.findOne({ 
-        slug: req.body.p_slug, 
-        isVerified: { "$ne": null }, 
+    const {region,area,city,address,phoneno,lat,long,p_slug,quantity,shippingCharge,method,productAttributes} = req.body
+    //vaidate address 
+    if (!region || !area || !city || !address || !phoneno) {
+        return res.status(403).json({error:'Address fields are required.'})
+    }
+    //validate product
+    const product = await Product.findOne({
+        slug: p_slug,
+        isVerified: { "$ne": null },
         isDeleted: null
-    }).populate('soldBy','isBlocked isVerified holidayMode')
+    }).populate('soldBy', 'isBlocked isVerified holidayMode')
     const isAdminOnHoliday = (first, last) => {
         let week = [0, 1, 2, 3, 4, 5, 6]
         let firstIndex = week.indexOf(first);
@@ -148,24 +153,33 @@ exports.createOrder = async (req, res) => {
     if (!product || product.soldBy.isBlocked || !product.soldBy.isVerified || isAdminOnHoliday(product.soldBy.holidayMode.start, product.soldBy.holidayMode.end)) {
         return res.status(404).json({ error: "Product not found." })
     }
-    if (product.quantity === 0 ) {
-        return res.status(403).json({error:"Product is out of the stock."})
+    if (product.quantity === 0) {
+        return res.status(403).json({ error: "Product is out of the stock." })
     }
-    if (product.quantity < req.body.quantity) {
-        return res.status(403).json({error:`There are only ${product.quantity} products available.`})
-    }
-    let address = await Address.findOne({ user: req.user._id, label:'ship-to'})
-    if (!address) {
-        return res.status(404).json({error:"Shipping address is not available."})
+    if (product.quantity < quantity) {
+        return res.status(403).json({ error: `There are only ${product.quantity} products available.` })
     }
     // new order
     const newOrder = new Order()
     newOrder.user = req.user._id
     newOrder.product = product._id
     newOrder.soldBy = product.soldBy
-    newOrder.quantity = req.body.quantity
-    newOrder.productAttributes = req.body.productAttributes
-    newOrder.address = address._id
+    newOrder.quantity = quantity
+    newOrder.productAttributes = productAttributes
+    newOrder.shipto = {
+        region:region,
+        city: city,
+        area: area,
+        address: address,
+        phoneno: phoneno,
+    }
+    if (lat && long) {
+        let geolocation = {
+            type: "Point",
+            coordinates: [long, lat]
+        };
+        newOrder.shipto.geolocation = geolocation;
+    }
     const status = {
         currentStatus: 'active',
         activeDate: Date.now()
@@ -176,8 +190,8 @@ exports.createOrder = async (req, res) => {
     const newPayent = new Payment({
         user: req.user._id,
         order: newOrder._id,
-        method: req.body.method,
-        shippingCharge: req.body.shippingCharge,
+        method: method,
+        shippingCharge: shippingCharge,
         transactionCode: shortid.generate(),
         amount: Math.round((product.price - (product.price * (product.discountRate / 100))) * newOrder.quantity),
         from: req.user.phone
@@ -190,13 +204,13 @@ exports.createOrder = async (req, res) => {
     const results = await task
         .save(newOrder)
         .save(newPayent)
-        .update(product,updateProduct)
-        .options({viaSave:true})
+        .update(product, updateProduct)
+        .options({ viaSave: true })
         .run({ useMongoose: true })
-    res.json({order:results[0],payment:results[1]})
+    res.json({ order: results[0], payment: results[1] })
 }
 
-exports.userOrders = async(req,res) => {
+exports.userOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     let orders = await Order.find({user:req.user._id})
@@ -214,7 +228,7 @@ exports.userOrders = async(req,res) => {
 exports.userActiveOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ user: req.user._id ,'status.currentStatus':'active'})
+    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'active' })
         .select('product quantity status')
         .populate('product', 'name slug')
         .skip(perPage * page - perPage)
@@ -299,7 +313,7 @@ exports.adminOrders = async (req, res) => {
 exports.adminActiveOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus':'active' })
+    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'active' })
         .select('product quantity status')
         .populate('product', 'name slug')
         .skip(perPage * page - perPage)
@@ -401,7 +415,7 @@ exports.adminToBeReturnOrders = async (req, res) => {
 exports.dispatcherToBeReturnOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let orders = await Order.find({'status.currentStatus': 'tobereturn' })
+    let orders = await Order.find({ 'status.currentStatus': 'tobereturn' })
         .select('product quantity status')
         .populate('product', 'name slug')
         .skip(perPage * page - perPage)
@@ -432,13 +446,13 @@ exports.adminReturnOrders = async (req, res) => {
     res.json({ orders, totalCount })
 }
 
-exports.toggleOrderApproval = async(req,res) => {
+exports.toggleOrderApproval = async (req, res) => {
     let order = req.order
     if (order.soldBy._id.toString() !== req.profile._id.toString()) {
-        return res.status(401).json({error:"Unauthorized Admin"})
+        return res.status(401).json({ error: "Unauthorized Admin" })
     }
     if (order.status.currentStatus !== 'active' && order.status.currentStatus !== 'approve') {
-        return res.status(403).json({error:`This order cannot be approve or activate. Order current status is ${order.status.currentStatus}`})
+        return res.status(403).json({ error: `This order cannot be approve or activate. Order current status is ${order.status.currentStatus}` })
     }
     if (order.status.currentStatus === 'active') {
         order.status.currentStatus = 'approve'
@@ -467,19 +481,19 @@ exports.orderCancelByAdmin = async (req, res) => {
     if (order.status.currentStatus === 'cancel') {
         return res.status(403).json({ error: "Order has already been cancelled." })
     }
-    const newRemark = new Remark({comment:req.body.remark})
+    const newRemark = new Remark({ comment: req.body.remark })
     let updateOrder = order.toObject()
     updateOrder.status.currentStatus = 'cancel'
     updateOrder.status.cancelledDetail.cancelledDate = Date.now()
     updateOrder.status.cancelledDetail.cancelledBy = req.profile._id,
-    updateOrder.status.cancelledDetail.remark = newRemark._id
+        updateOrder.status.cancelledDetail.remark = newRemark._id
     let product = await Product.findById(order.product._id)
     let updateProduct = product.toObject()
     updateProduct.quantity = order.quantity + product.quantity
 
     let results = await task
         .save(newRemark)
-        .update(order,updateOrder)
+        .update(order, updateOrder)
         .options({ viaSave: true })
         .update(product, updateProduct)
         .options({ viaSave: true })
@@ -497,14 +511,14 @@ exports.orderCancelByUser = async (req, res) => {
         return res.status(403).json({ error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.` })
     }
     if (order.status.currentStatus === 'cancel') {
-        return res.status(403).json({error:"Order has already been cancelled."})
+        return res.status(403).json({ error: "Order has already been cancelled." })
     }
     const newRemark = new Remark({ comment: req.body.remark })
     let updateOrder = order.toObject()
     updateOrder.status.currentStatus = 'cancel'
     updateOrder.status.cancelledDetail.cancelledDate = Date.now()
     updateOrder.status.cancelledDetail.cancelledBy = req.user._id,
-    updateOrder.status.cancelledDetail.remark = newRemark._id
+        updateOrder.status.cancelledDetail.remark = newRemark._id
 
     let product = await Product.findById(order.product._id)
     let updateProduct = product.toObject()
@@ -522,15 +536,15 @@ exports.orderCancelByUser = async (req, res) => {
     return res.json(results)
 }
 
-exports.toggleDispatchOrder = async (req,res) => {
+exports.toggleDispatchOrder = async (req, res) => {
     let order = req.order
     if (order.status.currentStatus !== 'approve' && order.status.currentStatus !== 'dispatch') {
-        return res.status(403).json({error:`This order cannot be dispatched or rollback to approve state. Order current status is ${order.status.currentStatus}`})
+        return res.status(403).json({ error: `This order cannot be dispatched or rollback to approve state. Order current status is ${order.status.currentStatus}` })
     }
     if (order.status.currentStatus === 'approve') {
         order.status.currentStatus = 'dispatch'
         order.status.dispatchedDetail = {
-            dispatchedDate:Date.now(),
+            dispatchedDate: Date.now(),
             dispatchedBy: req.dispatcher._id
         }
         await order.save()
@@ -550,10 +564,10 @@ exports.toggleDispatchOrder = async (req,res) => {
     }
 }
 
-exports.approvedOrders = async(req,res) => {
+exports.approvedOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let orders = await Order.find({'status.currentStatus':'approve'})
+    let orders = await Order.find({ 'status.currentStatus': 'approve' })
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -613,7 +627,7 @@ exports.returnOrder = async (req, res) => {
 
 exports.toggletobeReturnOrder = async (req, res) => {
     let order = req.order
-    if (order.status.currentStatus !== 'complete' && order.status.currentStatus !== 'tobereturn' ) {
+    if (order.status.currentStatus !== 'complete' && order.status.currentStatus !== 'tobereturn') {
         return res.status(403).json({ error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}` })
     }
     let updateOrder = order.toObject()
@@ -626,9 +640,9 @@ exports.toggletobeReturnOrder = async (req, res) => {
         updatePayment.returnedAmount = req.body.returnedAmount
 
         let results = await task
-            .update(order, updateOrder) 
-            .options({ viaSave: true }) 
-            .update(payment,updatePayment)
+            .update(order, updateOrder)
+            .options({ viaSave: true })
+            .update(payment, updatePayment)
             .options({ viaSave: true })
             .run({ useMongoose: true })
         return res.json(results)
