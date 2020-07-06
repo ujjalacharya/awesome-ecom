@@ -32,7 +32,6 @@ class EditAddressForm extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    console.log(this.props);
     if (
       this.props.user.editAddressResp !== prevProps.user.editAddressResp &&
       this.props.user.editAddressResp
@@ -51,8 +50,6 @@ class EditAddressForm extends Component {
 
   componentDidMount() {
     let { editAddressData } = this.props;
-
-    console.log(editAddressData);
 
     if (!_.isEmpty(editAddressData)) {
       this.setState({
@@ -86,16 +83,19 @@ class EditAddressForm extends Component {
   }
 
   onFinish = (values) => {
-    let body = {
-      ...values,
-      long: this.state.long,
-      lat: this.state.lat,
-    };
+    let body = values
+    if
+     (this.state.long && this.state.lat) {
+      body = {
+        ...body,
+        long: this.state.long,
+        lat: this.state.lat,
+      };
+    }
     if (!_.isEmpty(this.props.editAddressData)) {
       this.props.editAddress(this.state.addressId, body);
-    }else{
-      console.log(body)
-      this.props.addAddress(body)
+    } else {
+      this.props.addAddress(body);
     }
   };
 
@@ -185,7 +185,8 @@ class EditAddressForm extends Component {
                 <Input />
               </Form.Item>
             </Col>
-            {/* <Col span={12}>
+            {_.isEmpty(this.props.editAddressData) && (
+              <Col span={12}>
                 <Form.Item
                   label="Label"
                   name="label"
@@ -196,7 +197,8 @@ class EditAddressForm extends Component {
                 >
                   <Input />
                 </Form.Item>
-              </Col> */}
+              </Col>
+            )}
             <Col span={12}>
               <Form.Item
                 label="Region"
@@ -205,6 +207,21 @@ class EditAddressForm extends Component {
                   { required: true, message: "Please input your region!" },
                 ]}
                 initialValue={this.state.region}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Phone Number"
+                name="phoneno"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Phone Number!",
+                  },
+                ]}
+                initialValue={this.state.phoneno}
               >
                 <Input />
               </Form.Item>
@@ -230,21 +247,6 @@ class EditAddressForm extends Component {
                 <Button style={{ marginTop: 10 }} onClick={this.getMyLocation}>
                   Get My Location
                 </Button>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Phone Number"
-                name="phoneno"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your Phone Number!",
-                  },
-                ]}
-                initialValue={this.state.phoneno}
-              >
-                <Input />
               </Form.Item>
             </Col>
             <Col span={24}>
