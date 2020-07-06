@@ -45,7 +45,7 @@ class EditAddressForm extends Component {
   componentDidMount() {
     let { editAddressData } = this.props;
 
-    console.log(editAddressData)
+    console.log(editAddressData);
 
     if (!_.isEmpty(editAddressData)) {
       this.setState({
@@ -243,7 +243,9 @@ class EditAddressForm extends Component {
                 </Button>
                 <Button
                   type="secondary"
-                  onClick={() => this.props.changeShow("table")}
+                  onClick={() => {
+                    this.props.changeShow("table");
+                  }}
                 >
                   Cancel
                 </Button>

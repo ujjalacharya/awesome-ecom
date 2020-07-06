@@ -12,6 +12,7 @@ class AddressDetails extends Component {
     userData: [],
     allAddress: [],
     editAddressData: [],
+    showAddNewForm: 'addTable'
   };
 
   componentDidMount() {
@@ -122,12 +123,24 @@ class AddressDetails extends Component {
         <div className="title-add">
           <h4>Profile Details</h4>
           {this.state.show === "table" && (
-            <Button className="secondary" onClick={() => this.setState({show: 'form'})}>
+            <Button
+              className="secondary"
+              onClick={() =>
+                this.setState({ showAddNewForm: "addForm" })
+              }
+            >
               Add new address
             </Button>
           )}
+          {this.state.showAddNewForm === "addForm" && this.state.show === 'table' && (
+            <EditAddressForm
+              changeShow={this.changeShowAdd}
+              editAddressData={{}}
+              userId=''
+            />
+          )}
         </div>
-        {this.state.show === "form" ? (
+        {this.state.show === "form" && this.state.showAddNewForm === 'addTable' ? (
           <EditAddressForm
             changeShow={this.changeShow}
             editAddressData={this.state.editAddressData}
