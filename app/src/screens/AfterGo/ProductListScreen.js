@@ -7,7 +7,7 @@ import SearchedSingleProduct from "../../components/SearchedSingleProduct";
 import { ScrollView } from "react-native-gesture-handler";
 import { productData } from "../../utils/mock";
 
-export class SearchScreen extends Component {
+export class ProductListScreen extends Component {
   state = {
     progressBar: 0,
     intervalId: "",
@@ -46,4 +46,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(SearchScreen);
+export default connect(mapStateToProps)(ProductListScreen);

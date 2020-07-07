@@ -23,6 +23,6 @@ export default {
   noticeText: '#fff',
   normalScreenHeaderSize: 21,
   smallScreenHeaderSize: 16,
-  normalScreenDescriptionSize: 14,
+  normalScreenDescriptionSize: 16,
   smallScreenDescriptionSize: 10,
 };
