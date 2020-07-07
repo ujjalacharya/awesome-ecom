@@ -29,6 +29,21 @@
     display: inline-block;
     @include gradient-liner;
   }
+  .productImg-loader{
+    background-color: #eee;
+    display: inline-block;
+    @include gradient-liner;
+  }
+  .card-body{
+    padding: 10px;
+    div{
+      display: block;
+      &.medium-line{
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+  }
 }
 
 @keyframes moving-gradient {

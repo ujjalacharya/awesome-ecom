@@ -121,10 +121,11 @@ class ProductCard extends Component {
               <div className="image img-skeleton">
                 <img
                   src={`${process.env.SERVER_BASE_URL}/uploads/${productData.images[0].medium}`}
-                  onError={(ev) => {
-                    ev.target.src = "/images/default-image.png";
-                  }}
+                  // onError={(ev) => {
+                  //   ev.target.src = "/images/default-image.png";
+                  // }}
                   alt={productData.name}
+                  className="productImg-loader"
                 />
               </div>
             </Link>
