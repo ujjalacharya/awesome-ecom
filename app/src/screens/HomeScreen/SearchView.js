@@ -10,7 +10,7 @@ const SearchView = (props) => {
     <View style={styles.searchViewWrapper}>
       <TouchableRipple
         style={styles.inputField}
-        onPress={() => props.navigation.navigate("Search")}
+        onPress={() => props.navigation.navigate("Products")}
       >
         <>
           <View style={styles.searchIconWrapper}>

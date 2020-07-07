@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
-import SearchScreen from "../screens/AfterGo/SearchScreen";
+import ProductListScreen from "../screens/AfterGo/ProductListScreen";
 import DrawerNavigators from "./DrawerNavigators";
 import WishListScreen from "../screens/WishList";
 
@@ -17,7 +17,7 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Home" component={DrawerNavigators} />
-        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Products" component={ProductListScreen} />
         <Stack.Screen name="WishList" component={WishListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
