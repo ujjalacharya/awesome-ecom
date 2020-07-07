@@ -172,12 +172,18 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
-  const {createdAt,updatedAt,price} = req.query
+  const {createdAt,updatedAt,price, status} = req.query
+
+  
   let sortFactor = {createdAt:'desc'} ;
   if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
   if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
   if(price && (price==='asc' || price==='desc')) sortFactor = {price}
-  const products = await Product.find({ soldBy: req.profile._id })
+
+  let query = { soldBy: req.profile._id }
+
+
+  const products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -188,7 +194,7 @@ exports.getProducts = async (req, res) => {
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
-  const totalCount = await Product.countDocuments({ soldBy: req.profile._id });
+  const totalCount = await Product.countDocuments(query);
   res.json({ products, totalCount });
 };
 

@@ -1,10 +1,11 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners,getBlockedUsers,getNotBlockedUsers
+    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getBlockedUsers, getNotBlockedUsers, getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
+const { validateDispatcher,validateUpdateDispatcher} = require("../middleware/validator")
 
 const router = express.Router();
 
@@ -39,6 +40,13 @@ router.get('/verified-admins',auth,isSuperAdmin,getVerifiedAdmins)
 router.get('/unverified-admins', auth, isSuperAdmin, getUnverifiedAdmins)
 router.get('/blocked-admins', auth, isSuperAdmin, getBlockedAdmins)
 router.get('/unblocked-admins', auth, isSuperAdmin, getNotBlockedAdmins)
+
+//dispatcher's..
+router.get('/dispatchers', auth,isSuperAdmin, getAllDispatchers)
+router.post('/add-dispatcher', auth,isSuperAdmin,validateDispatcher,addDispatcher)
+router.put('/update-dispatcher', auth, isSuperAdmin, validateUpdateDispatcher,editDispatcher)
+router.patch('/block-unblock-dispatcher/:dispatcher_id',auth,isSuperAdmin,blockUnbolckDispatcher)
+
 
 // category's..
 router.put('/product-category', auth, isSuperAdmin, category)//create and update

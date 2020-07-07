@@ -44,7 +44,8 @@ exports.updateProfile = async (req, res) => {
 
     profile = _.extend(profile, req.body)
     await profile.save();
-
+    profile.password = undefined
+    profile.salt = undefined
     res.json(profile);
 }
 

@@ -213,7 +213,13 @@ exports.createOrder = async (req, res) => {
 exports.userOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let orders = await Order.find({user:req.user._id})
+    const status = req.query.status
+    let query = {user:req.user._id}
+    if (status && (status === 'active' || status === 'cancel' || status === 'return' || status === 'complete')) query = {
+        ...query,
+        'status.currentStatus': status
+    }
+    let orders = await Order.find(query )
         .populate('product', 'name slug')
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -222,81 +228,22 @@ exports.userOrders = async (req, res) => {
     // if (!orders.length) {
     //     return res.status(404).json({error: "No orders found"})
     // }
-    const totalCount = await Order.countDocuments({ user: req.user._id })
+    const totalCount = await Order.countDocuments(query)
     res.json({orders,totalCount})
-}
-exports.userActiveOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'active' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No active orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'active' })
-    res.json({ orders, totalCount })
-}
-
-exports.userCompleteOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'complete' })
-        .select('product quantity status isPaid')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No complete orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'complete' })
-    res.json({ orders, totalCount })
-}
-
-exports.userCancelOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'cancel' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No cancel orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'cancel' })
-    res.json({ orders, totalCount })
-}
-
-exports.userReturnOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ user: req.user._id, 'status.currentStatus': 'return' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No return orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ user: req.user._id, 'status.currentStatus': 'return' })
-    res.json({ orders, totalCount })
 }
 
 exports.adminOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id })
+    const status = req.query.status
+    let query = { soldBy: req.profile._id }
+    if (
+        status &&
+        (status === 'tobereturned' ||status === 'dispatch' ||status === 'approve' ||status === 'active' || status === 'cancel' || status === 'return' || status === 'complete')) query = {
+        ...query,
+        'status.currentStatus': status
+    }
+    let orders = await Order.find(query)
         .select('product quantity status')
         .populate('product', 'name slug')
         .skip(perPage * page - perPage)
@@ -306,143 +253,7 @@ exports.adminOrders = async (req, res) => {
     // if (!orders.length) {
     //     return res.status(404).json({ error: "No orders found" })
     // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id })
-    res.json({ orders, totalCount })
-}
-
-exports.adminActiveOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'active' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No active orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'active' })
-    res.json({ orders, totalCount })
-}
-
-exports.adminApproveOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'approve' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No approve orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'approve' })
-    res.json({ orders, totalCount })
-}
-
-exports.adminDispatchOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'dispatch' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No dispatch orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'dispatch' })
-    res.json({ orders, totalCount })
-}
-
-exports.adminCancelOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'cancel' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No cancel orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'cancel' })
-    res.json({ orders, totalCount })
-}
-
-exports.adminCompleteOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'complete' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No complete orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'complete' })
-    res.json({ orders, totalCount })
-}
-
-exports.adminToBeReturnOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'tobereturn' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No to be return orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'tobereturn' })
-    res.json({ orders, totalCount })
-}
-
-exports.dispatcherToBeReturnOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ 'status.currentStatus': 'tobereturn' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No to be return orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ 'status.currentStatus': 'tobereturn' })
-    res.json({ orders, totalCount })
-}
-
-exports.adminReturnOrders = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ soldBy: req.profile._id, 'status.currentStatus': 'return' })
-        .select('product quantity status')
-        .populate('product', 'name slug')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort({ createdAt: -1 })
-    // if (!orders.length) {
-    //     return res.status(404).json({ error: "No return orders found" })
-    // }
-    const totalCount = await Order.countDocuments({ soldBy: req.profile._id, 'status.currentStatus': 'return' })
+    const totalCount = await Order.countDocuments(query)
     res.json({ orders, totalCount })
 }
 
@@ -564,10 +375,13 @@ exports.toggleDispatchOrder = async (req, res) => {
     }
 }
 
-exports.approvedOrders = async (req, res) => {
+exports.dispatcherOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let orders = await Order.find({ 'status.currentStatus': 'approve' })
+    const status = req.query.status
+    let query = { 'status.currentStatus': 'approve' }
+    if (status && status === 'tobereturned') query = {'status.currentStatus': status }
+    let orders = await Order.find(query)
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -575,7 +389,7 @@ exports.approvedOrders = async (req, res) => {
     // if (!orders.length) {
     //     return res.status(404).json({error: "No orders are ready to ship."})
     // }
-    const totalCount = await Order.countDocuments({ 'status.currentStatus': 'approve' })
+    const totalCount = await Order.countDocuments(query)
     res.json({ orders, totalCount })
 }
 
