@@ -68,6 +68,9 @@ exports.uploadPhoto = async (req, res) => {
 exports.addAddress = async(req,res) => {
     let profile = req.user
     //if there are already home,office and ship-to addresses
+    if (!req.body.label) {
+        return res.status(403).json({error:'Address label undefined.'})
+    }
     if (profile.location.length===3) {
         return res.status(403).json({error: "Cannot add more address."})
     }
