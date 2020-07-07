@@ -28,11 +28,7 @@ class QA extends Component {
         {!this.state.token && (
           <div className="not-logged-in">
             <Link
-              // href=`/login?origin=`
-              href={{
-                pathname: "/login",
-                query: { origin: ""+this.props.router.asPath},
-              }}
+              href={`/login?origin=${this.props.router.asPath}`}
             >
               Login
             </Link>{" "}

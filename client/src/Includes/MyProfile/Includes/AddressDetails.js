@@ -141,7 +141,7 @@ class AddressDetails extends Component {
           city: address.city,
           region: address.region,
           phoneNo: address.phoneno ? address.phoneno : "-",
-          geoLocation: address.geolocation.coordinates,
+          geoLocation: address.geolocation.coordinates[0]+' , '+address.geolocation.coordinates[1],
           isActive: (
             <div className="yes-no">
               <span>No</span>
