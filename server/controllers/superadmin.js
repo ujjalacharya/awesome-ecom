@@ -1,5 +1,6 @@
 const Admin = require("../models/Admin");
 const User = require("../models/User")
+const Dispatcher = require("../models/Dispatcher")
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const SuggestKeywords = require("../models/SuggestKeywords")
@@ -183,6 +184,72 @@ exports.getAllAdmins = async (req, res) => {
     // }
     const totalCount = await Admin.countDocuments()
     res.json({ admins, totalCount })
+}
+
+exports.getAllDispatchers = async (req, res) => {
+    const page = +req.query.page || 1
+    const perPage = +req.query.perPage || 10;
+    const dispatchers = await Dispatcher.find({})
+        .select("-password -salt -resetPasswordLink ")
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .lean()
+    // if (!dispatchers.length) {
+    //     return res.status(404).json({ error: 'No Admins are Available' })
+    // }
+    const totalCount = await Dispatcher.countDocuments()
+    res.json({ dispatchers, totalCount })
+}
+
+exports.addDispatcher = async(req,res) => {
+    let dispatcher = await Dispatcher.findOne({email:req.body.email})
+    if (dispatcher) {
+        return res.status(403).json({error:'Email is taken.'})
+    }
+    dispatcher = new Dispatcher(req.body)
+    await dispatcher.save()
+    dispatcher.password = undefined
+    dispatcher.salt = undefined
+    dispatcher.resetPasswordLink = undefined
+    res.json(dispatcher)
+}
+
+exports.editDispatcher = async(req,res) => {
+    let dispatcher = await Dispatcher.findById(req.body.dispatcher_id).select('-password -salt -resetPasswordLink')
+    if (!dispatcher) {
+        return res.status(404).json({error:'Dispatcher not found.'})
+    }
+    // password update
+    if (req.body.oldPassword && req.body.newPassword) {
+        let disPatcher = await Dispatcher.findByCredentials(dispatcher.email, req.body.oldPassword)
+        if (!disPatcher) {
+            return res.status(403).json({
+                error: "Wrong Password."
+            });
+        }
+        dispatcher.password = req.body.newPassword
+    }
+
+    dispatcher = _.extend(dispatcher,req.body)
+    await dispatcher.save()
+    dispatcher.password = undefined
+    dispatcher.salt = undefined
+    res.json(dispatcher)
+}
+
+exports.blockUnbolckDispatcher = async (req, res) => {
+    let dispatcher = await Dispatcher.findById(req.params.dispatcher_id).select('-password -salt -resetPasswordLink')
+    if (!dispatcher) {
+        return res.status(404).json({ error: 'Dispatcher not found.' })
+    }
+    if (dispatcher.isBlocked) {
+        dispatcher.isBlocked = null
+        await dispatcher.save()
+        return res.json(dispatcher)
+    }
+    dispatcher.isBlocked = Date.now()
+    await dispatcher.save()
+    res.json(dispatcher)
 }
 
 exports.flipAdminBusinessApproval = async (req, res) => {

@@ -14,7 +14,7 @@ const router = express.Router();
 router
     .route("/:id")
     .get(getProfile)
-    .put(auth, hasAuthorization, uploadAdminPhoto,validateAdminProfile, updateProfile)//update or create
+    .put(auth, hasAuthorization,validateAdminProfile, updateProfile)//update or create
     .patch(auth, hasAuthorization,uploadAdminPhoto, uploadPhoto)
 
 router.route('/businessinfo/:id')
