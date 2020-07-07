@@ -4,6 +4,8 @@ import {
   LATEST_LOADING,
   PRODUCT_QA,
   POST_QUESTION,
+  PRODUCT_REVIEWS,
+  POST_PRODUCT_REVIEWS,
 } from "../types";
 
 const initialState = {
@@ -12,7 +14,9 @@ const initialState = {
   hasError: false,
   latestLoading: false,
   productQA: null,
-  postQnsResp: null
+  postQnsResp: null,
+  productReviews: null,
+  postReviewResp:null
 };
 
 export default (state = initialState, action) => {
@@ -37,6 +41,10 @@ export default (state = initialState, action) => {
       return { ...state, productQA: action.payload, hasError: false };
     case POST_QUESTION:
       return { ...state, postQnsResp: action.payload, hasError: false };
+    case PRODUCT_REVIEWS:
+      return { ...state, productReviews: action.payload, hasError: false };
+    case POST_PRODUCT_REVIEWS:
+      return { ...state, postReviewResp: action.payload, hasError: false };
     default:
       return state;
   }

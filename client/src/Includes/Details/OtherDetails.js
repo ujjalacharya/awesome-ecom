@@ -13,7 +13,6 @@ class OtherDetails extends Component {
   };
 
   render() {
-    console.log(this.props.data)
     let { data } = this.props;
 
     let addInfo = {

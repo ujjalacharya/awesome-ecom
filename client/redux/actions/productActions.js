@@ -8,6 +8,8 @@ import {
   LATEST_LOADING,
   PRODUCT_QA,
   POST_QUESTION,
+  PRODUCT_REVIEWS,
+  POST_PRODUCT_REVIEWS,
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -88,6 +90,36 @@ const postQuestion = (query, body) => {
   };
 };
 
+const getProductReviews = (query) => {
+  return async (dispatch) => {
+    const productService = new ProductService();
+    const response = await productService.getProductReviews(query);
+    if (response.isSuccess) {
+      dispatch({ type: PRODUCT_REVIEWS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
+const postReviews = (query, body) => {
+  return async (dispatch) => {
+    const productService = new ProductService();
+    const response = await productService.postReviews(query, body);
+    if (response.isSuccess) {
+      dispatch({ type: POST_PRODUCT_REVIEWS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 const getOrders = (ctx) => {
   return async (dispatch) => {
     const resp = await fetch(
@@ -115,5 +147,7 @@ export default {
   getProductDetails,
   getOrders,
   getQandA,
-  postQuestion
+  postQuestion,
+  getProductReviews,
+  postReviews
 };
