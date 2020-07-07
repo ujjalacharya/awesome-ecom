@@ -57,7 +57,7 @@ class Details extends Component {
               )}
               <Row>
                 <Col lg={24}>
-                  <OtherDetails />
+                  <OtherDetails data = {this.props.products?.productDetails} />
                 </Col>
               </Row>
             </div>
