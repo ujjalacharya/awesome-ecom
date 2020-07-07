@@ -6,6 +6,8 @@ import {
   PRODUCT_DETAILS,
   GLOBAL_ERROR,
   LATEST_LOADING,
+  PRODUCT_QA,
+  POST_QUESTION,
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -56,20 +58,35 @@ const getProductDetails = (slug) => {
   };
 };
 
-// const getProductsByCategory = (query) => {
-//   return async (dispatch) => {
-//     const productService = new ProductService();
-//     const response = await productService.getProductsByCategory(query);
-//     if (response.isSuccess) {
-//       dispatch({ type: PRODUCT_BY_CATEGORY, payload: response.data });
-//     } else if (!response.isSuccess) {
-//       dispatch({
-//         type: PRODUCT_ERROR,
-//         payload: response.errorMessage,
-//       });
-//     }
-//   };
-// };
+const getQandA = (query) => {
+  return async (dispatch) => {
+    const productService = new ProductService();
+    const response = await productService.getQandA(query);
+    if (response.isSuccess) {
+      dispatch({ type: PRODUCT_QA, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
+const postQuestion = (query, body) => {
+  return async (dispatch) => {
+    const productService = new ProductService();
+    const response = await productService.postQuestion(query, body);
+    if (response.isSuccess) {
+      dispatch({ type: POST_QUESTION, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: PRODUCT_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 const getOrders = (ctx) => {
   return async (dispatch) => {
@@ -97,5 +114,6 @@ export default {
   productCategories,
   getProductDetails,
   getOrders,
-  // getProductsByCategory
+  getQandA,
+  postQuestion
 };

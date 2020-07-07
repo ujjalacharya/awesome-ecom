@@ -7,6 +7,18 @@
     .not-logged-in {
       margin: 15px 0;
     }
+    .ask-qns-form {
+      margin-top: 20px;
+      form {
+        display: flex;
+        input {
+          width: 350px;
+        }
+      }
+      button {
+        margin-left: 10px;
+      }
+    }
     .qns-ans-section {
       .title {
         margin: 10px 0;
@@ -93,8 +105,8 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
-    .no-reviews{
-        margin-bottom: 10px;
+    .no-reviews {
+      margin-bottom: 10px;
     }
     .all-reviews {
       .user-review {
@@ -118,19 +130,19 @@
             color: #adadad;
             font-size: 12px;
           }
-          .ver{
+          .ver {
             margin-left: 10px;
             color: #61ce70;
-            img{
-                height: 20px;
-                margin-right: 4px;
+            img {
+              height: 20px;
+              margin-right: 4px;
             }
           }
         }
       }
     }
   }
-  .reviews-form{
+  .reviews-form {
     max-width: 400px;
     .title {
       font-size: 18px;

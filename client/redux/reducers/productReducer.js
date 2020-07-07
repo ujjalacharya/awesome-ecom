@@ -1,8 +1,9 @@
 import {
   LATEST_PRODUCTS,
   PRODUCT_DETAILS,
-  PRODUCT_ERROR,
   LATEST_LOADING,
+  PRODUCT_QA,
+  POST_QUESTION,
 } from "../types";
 
 const initialState = {
@@ -10,10 +11,11 @@ const initialState = {
   productDetails: null,
   hasError: false,
   latestLoading: false,
+  productQA: null,
+  postQnsResp: null
 };
 
 export default (state = initialState, action) => {
-  
   switch (action.type) {
     case LATEST_PRODUCTS:
       return {
@@ -31,13 +33,10 @@ export default (state = initialState, action) => {
       };
     case PRODUCT_DETAILS:
       return { ...state, productDetails: action.payload, hasError: false };
-    case PRODUCT_ERROR:
-      return {
-        ...state,
-        productError: action.payload,
-        hasError: true,
-        latestLoading: false,
-      };
+    case PRODUCT_QA:
+      return { ...state, productQA: action.payload, hasError: false };
+    case POST_QUESTION:
+      return { ...state, postQnsResp: action.payload, hasError: false };
     default:
       return state;
   }

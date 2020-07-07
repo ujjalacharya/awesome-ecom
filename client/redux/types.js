@@ -13,6 +13,8 @@ export const PRODUCT_DETAILS = "PRODUCT_DETAILS"
 export const GET_BRANDS = "GET_BRANDS"
 export const PRODUCT_ERROR = "PRODUCT_ERROR"
 export const PRODUCT_BY_CATEGORY = "PRODUCT_BY_CATEGORY"
+export const PRODUCT_QA = "PRODUCT_QA"
+export const POST_QUESTION = "POST_QUESTION"
 
 // search
 export const SEARCH_PRODUCTS = "SEARCH_PRODUCTS"

@@ -22,6 +22,10 @@ class Details extends Component {
       actions.getProductDetails(ctx.query.slug)
     );
 
+    const qa = await ctx.store.dispatch(
+      actions.getQandA(ctx.query.slug+"?page=1&perPage=10")
+    );
+
     // return {
     //   data,
     // };
