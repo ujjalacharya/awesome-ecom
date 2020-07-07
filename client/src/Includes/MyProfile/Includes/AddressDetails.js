@@ -141,14 +141,14 @@ class AddressDetails extends Component {
           city: address.city,
           region: address.region,
           phoneNo: address.phoneno ? address.phoneno : "-",
-          geoLocation: address.geolocation.coordinates,
+          geoLocation: address.geolocation.coordinates[0]+' , '+address.geolocation.coordinates[1],
           isActive: (
             <div className="yes-no">
               <span>No</span>
               <label className="switch">
                 <input
                   type="checkbox"
-                  onChange={() => {!address.label && this.toggleAddress(address.label)}}
+                  onChange={() => {!address.isActive && this.toggleAddress(address.label)}}
                   checked={address.isActive ? true : false}
                 />
                 <span className="slider round"></span>

@@ -15,22 +15,21 @@ class Header extends Component {
     loginToken: "",
     userInfo: {},
     searchOptions: [],
-    searchValue: ''
+    searchValue: "",
   };
 
   componentDidMount() {
-
     this.props.productCategories();
 
     let loginToken = this.props.authentication.token;
     let userInfo = getUserInfo(loginToken);
 
-    let slug = this.props.router.asPath?.split('/')[1]
+    let slug = this.props.router.asPath?.split("/")[1];
 
-    if(slug === 'search'){
+    if (slug === "search") {
       this.setState({
-        searchValue: this.props.router.query.slug
-      })
+        searchValue: this.props.router.query.slug,
+      });
     }
 
     this.setState({
@@ -40,7 +39,6 @@ class Header extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
     if (this.props.authentication.token !== nextProps.authentication.token) {
       let userInfo = [];
       if (nextProps.authentication.token) {
@@ -83,25 +81,29 @@ class Header extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    let {
+      listing: { getSearchKeywords },
+    } = this.props;
 
-    let { listing: {getSearchKeywords} } = this.props
-
-    if (getSearchKeywords !== prevProps.listing.getSearchKeywords && getSearchKeywords) {
-      let searchOpts = []
-      getSearchKeywords.map(opt => {
-        let ele = {value: opt}
-        searchOpts.push(ele)
-      })
+    if (
+      getSearchKeywords !== prevProps.listing.getSearchKeywords &&
+      getSearchKeywords
+    ) {
+      let searchOpts = [];
+      getSearchKeywords.map((opt) => {
+        let ele = { value: opt };
+        searchOpts.push(ele);
+      });
 
       this.setState({
-        searchOptions: searchOpts
-      })
+        searchOptions: searchOpts,
+      });
     }
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    
+
     Router.push("/search/[slug]", "/search/" + this.state.searchValue);
   };
 
@@ -112,7 +114,7 @@ class Header extends Component {
 
   render() {
     let { parentCate, loginToken, userInfo } = this.state;
-    
+
     return (
       <div className="main-header">
         <Row>
@@ -218,7 +220,10 @@ class Header extends Component {
                 style={{
                   width: 200,
                 }}
-                onSelect={(select) => {Router.push("/search/[slug]", "/search/" + select); this.setState({searchValue: select})}}
+                onSelect={(select) => {
+                  Router.push("/search/[slug]", "/search/" + select);
+                  this.setState({ searchValue: select });
+                }}
                 onSearch={(search) => {
                   this.props.getSearchKeywords(search);
                   this.setState({ searchValue: search });
@@ -229,14 +234,16 @@ class Header extends Component {
           </Col>
           <Col lg={4} md={5} className="menu-right">
             <Link href="/myprofile">
-              <div className="menu-right-items">
-                <div className="list-icon">
-                  <img src="/images/user.png" />
+              <a>
+                <div className="menu-right-items">
+                  <div className="list-icon">
+                    <img src="/images/user.png" />
+                  </div>
+                  <div className="list-text">
+                    {loginToken ? "Profile" : "Login"}
+                  </div>
                 </div>
-                <div className="list-text">
-                  {loginToken ? "Profile" : "Login"}
-                </div>
-              </div>
+              </a>
             </Link>
             <div className="menu-right-items">
               <div className="list-icon">

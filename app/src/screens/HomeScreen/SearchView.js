@@ -14,11 +14,7 @@ const SearchView = (props) => {
       >
         <>
           <View style={styles.searchIconWrapper}>
-            <AntDesign
-              name="search1"
-              size={20}
-              color={Constants.grayColor}
-            />
+            <AntDesign name="search1" size={20} color={Constants.grayColor} />
           </View>
           <View style={styles.searchText}>
             <Text style={styles.inputText}>{"Search Products"}</Text>

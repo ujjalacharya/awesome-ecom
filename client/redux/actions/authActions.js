@@ -10,7 +10,7 @@ import { isTokenExpired } from "../../utils/common";
 import { AuthService } from "../services/authService";
 
 // gets token from the api and stores it in the redux store and in cookie
-const authenticate = (body, type) => {
+const authenticate = (body, type, redirectUrl) => {
   return async (dispatch) => {
     const authService = new AuthService();
     const response = await authService.loginUser(body);
@@ -18,6 +18,8 @@ const authenticate = (body, type) => {
     if (response.isSuccess) {
       setCookie("token", response.data.accessToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.token });
+      console.log(window.location)
+      console.log(redirectUrl)
       const redirectUrl = window.location.search
         ? window.location.search.split("=")[1]
         : "/";

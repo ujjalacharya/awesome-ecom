@@ -22,6 +22,14 @@ class Details extends Component {
       actions.getProductDetails(ctx.query.slug)
     );
 
+    const qa = await ctx.store.dispatch(
+      actions.getQandA(ctx.query.slug+"?page=1&perPage=10")
+    );
+
+    const productReview = await ctx.store.dispatch(
+      actions.getProductReviews(ctx.query.slug+"?page=1&perPage=10")
+    );
+
     // return {
     //   data,
     // };
@@ -57,7 +65,7 @@ class Details extends Component {
               )}
               <Row>
                 <Col lg={24}>
-                  <OtherDetails />
+                  <OtherDetails data = {this.props.products?.productDetails} />
                 </Col>
               </Row>
             </div>

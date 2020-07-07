@@ -13,6 +13,15 @@ class OtherDetails extends Component {
   };
 
   render() {
+    let { data } = this.props;
+
+    let addInfo = {
+      weight: data?.weight,
+      color: data?.color,
+      size: data?.size,
+      warranty: data?.warranty
+    }
+
     return (
       <div className="other-details">
         <Tabs defaultActiveKey="1" onChange={this.callback}>
@@ -22,16 +31,11 @@ class OtherDetails extends Component {
           <TabPane tab="Description" key="2">
             <div className="desc-tab">
               <div className="title">Description</div>
-              <ul>
-                <li>Lorem ipsum dolor sit amet</li>
-                <li>consectetur adipiscing elit</li>
-                <li>Lorem ipsum dolor sit amet</li>
-                <li>Nam non enim mollis</li>
-              </ul>
+              {data?.description}
             </div>
           </TabPane>
           <TabPane tab="Additional Information" key="3">
-            <AdditionalInformation />
+            <AdditionalInformation data={addInfo} />
           </TabPane>
           <TabPane tab="Reviews" key="4">
             <Reviews />

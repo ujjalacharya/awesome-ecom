@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Form, Input, Button, Rate  } from "antd";
+import { connect } from "react-redux";
+import actions from "../../../../redux/actions";
+import { withRouter } from "next/router";
 
 const layout = {
   labelCol: { span: 24 },
@@ -10,11 +13,13 @@ const tailLayout = {
 };
 
 class ReviewsForm extends Component {
+  formRef = React.createRef();
+
   onFinish = (values) => {
+    this.props.postReviews(this.props.router.query.slug, values)
+    this.formRef.current.resetFields();
   };
 
-  onFinishFailed = (errorInfo) => {
-  };
   render() {
     return (
       <div className="reviews-form">
@@ -24,19 +29,19 @@ class ReviewsForm extends Component {
           name="basic"
           initialValues={{ remember: true }}
           onFinish={this.onFinish}
-          onFinishFailed={this.onFinishFailed}
+          ref={this.formRef}
         >
             <Form.Item
             label="Rating"
-            name="Rating"
+            name="star"
             rules={[{ required: true, message: "Please give stars!" }]}
           >
             <Rate />
           </Form.Item>
           <Form.Item
-            label="Introduction"
-            name="introduction"
-            rules={[{ required: true, message: "Please enter you review!" }]}
+            label="Comment"
+            name="comment"
+            rules={[{ required: true, message: "Please enter you comment!" }]}
           >
             <Input.TextArea rows={4}/>
           </Form.Item>
@@ -52,4 +57,4 @@ class ReviewsForm extends Component {
   }
 }
 
-export default ReviewsForm;
+export default connect((state) => state, actions)(withRouter(ReviewsForm));
