@@ -65,7 +65,7 @@ class QA extends Component {
     console.log(this.state);
     return (
       <div className="q-a-tab">
-        <h3>Questions about this product (5)</h3>
+        <h3>Questions about this product ({this.state.QAdetails?.QnA?.qna?.length})</h3>
         {!this.state.token ? (
           <div className="not-logged-in">
             <Link href={`/login?origin=${this.props.router.asPath}`}>
