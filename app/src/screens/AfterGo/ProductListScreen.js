@@ -60,7 +60,7 @@ export class ProductListScreen extends Component {
         </Appbar.Header>
         {/* <ActivityIndicator animating={true} color={Constants.tintColor}/> */}
         <ScrollView
-          style={{ height: "85%", margin: 15 }}
+          style={{ height: "100%", margin: 15 }}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >

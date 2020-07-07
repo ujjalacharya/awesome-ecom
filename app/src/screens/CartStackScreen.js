@@ -1,8 +1,8 @@
 import React from "react";
 import CartScreen from "./CartScreen";
 
-function CartStackScreen() {
-  return <CartScreen />;
-}
+const CartStackScreen = (props) => {
+  return <CartScreen {...props} />;
+};
 
 export default CartStackScreen;

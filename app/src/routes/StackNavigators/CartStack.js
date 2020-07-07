@@ -13,7 +13,7 @@ const MessageStack = () => {
       }}
     >
       <Stack.Screen
-        name="Messages"
+        name="Cart"
         component={CartScreen}
         options={headerOptions("Cart")}
       />
