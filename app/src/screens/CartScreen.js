@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Text, View } from "react-native";
 
 import { Appbar } from "react-native-paper";
-import { AntDesign } from "@expo/vector-icons";
 import Constants from "../constants/Constants";
 
 export class CartScreen extends Component {

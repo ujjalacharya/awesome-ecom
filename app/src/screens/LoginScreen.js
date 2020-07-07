@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Button, AsyncStorage } from "react-native";
-import { connect } from 'react-redux';
+import { Text, View, StyleSheet, Button } from "react-native";
+import { connect } from "react-redux";
+import { Appbar } from "react-native-paper";
+import { bindActionCreators } from "redux";
 
-import { signIn} from '../store/actions/user_actions';
-import { bindActionCreators } from 'redux';
+import { signIn } from "../store/actions/user_actions";
+import Constants from "../constants/Constants";
 
 export class LoginScreen extends Component {
   componentDidMount() {
@@ -17,6 +19,12 @@ export class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Appbar.Header statusBarHeight={0}>
+          <Appbar.Content
+            title="Login/Register"
+            color={Constants.headerTintColor}
+          />
+        </Appbar.Header>
         <Text> Login Screen </Text>
         <Button title="Login" onPress={this.handleLogin} />
       </View>
@@ -28,15 +36,14 @@ const styles = StyleSheet.create({
   container: {},
 });
 
-
-function mapStateToProps(state){
+function mapStateToProps(state) {
   return {
-      isAuth: state.User.auth.isAuth
-  }
+    isAuth: state.User.auth.isAuth,
+  };
 }
 
-function mapDispatchToProps(dispatch){
-  return bindActionCreators({signIn},dispatch);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ signIn }, dispatch);
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(LoginScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
