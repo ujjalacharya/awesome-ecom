@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Input, Button } from "antd";
+import { withRouter } from "next/router";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
 
 class ProductSpecs extends Component {
   state = {
@@ -26,6 +29,14 @@ class ProductSpecs extends Component {
         showStatus: "More",
       });
     }
+  };
+
+  addToCart = () => {
+    console.log(this.props);
+    console.log(this.state);
+    this.props.addToCart(this.props.router.query.slug, {
+      quantity: this.state.pdQty,
+    });
   };
 
   render() {
@@ -113,7 +124,9 @@ class ProductSpecs extends Component {
               </span>
             </div>
 
-            <Button className="primary">Add to Cart</Button>
+            <Button className="primary" onClick={this.addToCart}>
+              Add to Cart
+            </Button>
           </div>
           <div className="wish-comp-btn">
             <div className="wish-btn">
@@ -152,4 +165,4 @@ class ProductSpecs extends Component {
   }
 }
 
-export default ProductSpecs;
+export default connect((state) => state, actions)(withRouter(ProductSpecs));

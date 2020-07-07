@@ -42,4 +42,5 @@ export const GET_BANNER_IMAGES = 'GET_BANNER_IMAGES'
 
 //cart
 export const CART_PRODUCTS = 'CART_PRODUCTS'
+export const ADD_TO_CART = 'ADD_TO_CART'
 
