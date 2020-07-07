@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, TouchableRipple } from "react-native-paper";
 import Constants from "../../constants/Constants";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -19,17 +19,18 @@ const SeachScreen = (props) => {
               autoFocus={true}
               clearIcon={() => <AntDesign name="closecircle" />}
               icon="arrow-left"
-              placeholder="Search"
+              placeholder="Search Products"
               onChangeText={onChangeSearch}
               value={searchQuery}
               onIconPress={() => props.navigation.pop()}
             />
           </View>
-          <View
+          <TouchableRipple
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            onPress={() => props.navigation.navigate("Products")}
           >
             <Text style={{ fontWeight: "bold" }}>{`Go`}</Text>
-          </View>
+          </TouchableRipple>
         </View>
       </View>
       <View
