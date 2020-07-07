@@ -23,7 +23,7 @@ class QA extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
+    
     if (this.props.authentication?.token) {
       this.setState({
         token: this.props.authentication.token,
@@ -38,7 +38,7 @@ class QA extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props);
+    
     if (
       this.props.products.productQA !== prevProps.products.productQA &&
       this.props.products.productQA
@@ -61,8 +61,7 @@ class QA extends Component {
   };
 
   render() {
-    console.log(this.props);
-    console.log(this.state);
+    
     return (
       <div className="q-a-tab">
         <h3>Questions about this product ({this.state.QAdetails?.QnA?.qna?.length})</h3>
