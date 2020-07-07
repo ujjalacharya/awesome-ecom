@@ -94,7 +94,7 @@ class QA extends Component {
 
               <Form.Item>
                 <Button className="secondary" htmlType="submit">
-                  Submit
+                  Ask Question
                 </Button>
               </Form.Item>
             </Form>
