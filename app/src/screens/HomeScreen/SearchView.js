@@ -10,15 +10,11 @@ const SearchView = (props) => {
     <View style={styles.searchViewWrapper}>
       <TouchableRipple
         style={styles.inputField}
-        onPress={() => props.navigation.navigate("Products")}
+        onPress={() => props.navigation.navigate("Search")}
       >
         <>
           <View style={styles.searchIconWrapper}>
-            <AntDesign
-              name="search1"
-              size={20}
-              color={Constants.grayColor}
-            />
+            <AntDesign name="search1" size={20} color={Constants.grayColor} />
           </View>
           <View style={styles.searchText}>
             <Text style={styles.inputText}>{"Search Products"}</Text>
