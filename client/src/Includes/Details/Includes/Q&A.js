@@ -1,13 +1,44 @@
 import React, { Component } from "react";
+import { getUserInfo } from "../../../../utils/common";
+import { connect } from "react-redux";
+import actions from "../../../../redux/actions";
+import Link from "next/link";
+import { withRouter } from "next/router";
 
 class QA extends Component {
+  state = {
+    token: "",
+  };
+
+  componentDidMount() {
+    console.log(this.props);
+    if (this.props.authentication?.token) {
+      this.setState({
+        token: this.props.authentication.token,
+      });
+    }
+  }
+
   render() {
+    console.log(this.props)
+    console.log(this.props.router.asPath)
     return (
       <div className="q-a-tab">
         <h3>Questions about this product (5)</h3>
-        <div className="not-logged-in">
-          <a>Login</a> or <a>Register</a> to ask questions
-        </div>
+        {!this.state.token && (
+          <div className="not-logged-in">
+            <Link
+              // href=`/login?origin=`
+              href={{
+                pathname: "/login",
+                query: { origin: ""+this.props.router.asPath},
+              }}
+            >
+              Login
+            </Link>{" "}
+            or <a>Register</a> to ask questions
+          </div>
+        )}
         <div className="qns-ans-section">
           <div className="title">Questions answered by The Fashionista</div>
           <div className="qns-details">
@@ -99,4 +130,4 @@ class QA extends Component {
   }
 }
 
-export default QA;
+export default connect((state) => state, actions)(withRouter(QA));

@@ -6,6 +6,7 @@ import initialize from "../utils/initialize";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import withUnAuth from "../utils/auth/withUnAuth";
+import { withRouter } from "next/router";
 
 const layout = {
   labelCol: { span: 8 },
@@ -22,7 +23,9 @@ class Login extends Component {
         email: values.email,
         password: values.password,
       };
-      this.props.authenticate(body, "signin");
+      console.log(this.props)
+      let redirectUrl = this.props.router.query.redirectUrl
+      this.props.authenticate(body, "signin", redirectUrl);
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -115,4 +118,4 @@ class Login extends Component {
   }
 }
 
-export default withUnAuth(connect((state) => state, actions)(Login));
+export default withUnAuth(connect((state) => state, actions)(withRouter(Login)));

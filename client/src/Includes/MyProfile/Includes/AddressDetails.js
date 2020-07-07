@@ -148,7 +148,7 @@ class AddressDetails extends Component {
               <label className="switch">
                 <input
                   type="checkbox"
-                  onChange={() => {!address.label && this.toggleAddress(address.label)}}
+                  onChange={() => {!address.isActive && this.toggleAddress(address.label)}}
                   checked={address.isActive ? true : false}
                 />
                 <span className="slider round"></span>
