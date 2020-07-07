@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAllAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, verifiedProducts, notDeletedProducts, notVerifiedProducts, deletedProducts, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getBlockedUsers, getNotBlockedUsers, getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher
+    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers, getNotBlockedUsers, getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
@@ -25,21 +25,17 @@ router.get('/deleted-banners', auth, isSuperAdmin, getDeletedBanners)
 
 //user's..
 router.patch('/block-unblock-user/:user_id', auth, isSuperAdmin,blockUnblockUser)
-router.get('/blocked-users', auth, isSuperAdmin, getBlockedUsers)
+router.get('/users', auth, isSuperAdmin, getUsers)
 router.get('/unblocked-users', auth, isSuperAdmin, getNotBlockedUsers)
 
 
 // admin's..
-router.get('/admins', auth, isSuperAdmin, getAllAdmins)
+router.get('/admins', auth, isSuperAdmin, getAdmins)
 router.patch('/flip-admin-business-approval/:b_id', auth, isSuperAdmin, flipAdminBusinessApproval)
 router.patch('/flip-admin-bank-approval/:bank_id', auth, isSuperAdmin, flipAdminBankApproval)
 router.patch('/flip-admin-warehouse-approval/:w_id', auth, isSuperAdmin, flipAdminWarehouseApproval)
 router.patch('/flip-admin-account-approval/:a_id', auth, isSuperAdmin, flipAdminAccountApproval)
 router.patch('/block-unblock-admin/:id',auth,isSuperAdmin,blockUnblockAdmin)
-router.get('/verified-admins',auth,isSuperAdmin,getVerifiedAdmins)
-router.get('/unverified-admins', auth, isSuperAdmin, getUnverifiedAdmins)
-router.get('/blocked-admins', auth, isSuperAdmin, getBlockedAdmins)
-router.get('/unblocked-admins', auth, isSuperAdmin, getNotBlockedAdmins)
 
 //dispatcher's..
 router.get('/dispatchers', auth,isSuperAdmin, getAllDispatchers)
@@ -61,10 +57,6 @@ router.get('/product-brands',getProductBrands)
 router.patch('/approve-product/:p_slug', auth, isSuperAdmin, approveProduct)
 router.put('/disapprove-product/:p_slug', auth, isSuperAdmin, disApproveProduct)
 router.get("/products", auth, isSuperAdmin, getProducts)
-router.get("/verified-products", auth, isSuperAdmin, verifiedProducts)
-router.get("/unverified-products", auth, isSuperAdmin, notVerifiedProducts)
-router.get("/deleted-products", auth, isSuperAdmin, deletedProducts)
-router.get("/not-deleted-products", auth, isSuperAdmin, notDeletedProducts)
 
 
 module.exports = router;
