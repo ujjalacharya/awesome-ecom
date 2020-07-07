@@ -5,8 +5,22 @@ import Slider from "react-slick";
 import ProductCard from "./Includes/ProductCard";
 import PrevArrow from "./Includes/PrevArrow";
 import NextArrow from "./Includes/NextArrow";
+import { connect } from "react-redux";
+import actions from "../../redux/actions";
 
 class ProductSlider extends Component {
+  state = {
+    productData : []
+  }
+
+  componentDidMount(){
+    if(this.props.products.latestProducts){
+      this.setState({
+        productData: this.props.products.latestProducts
+      })
+    }
+  }
+
   render() {
     const settings = {
       dots: false,
@@ -45,8 +59,8 @@ class ProductSlider extends Component {
     return (
       <section className="product-slider">
         <Slider {...settings}>
-          {this.props.data.map((product, i) => {
-            return <ProductCard key={i} data={product} />;
+          {this.state.productData?.products?.map((product, i) => {
+            return <ProductCard key={i} data={product} />
           })}
         </Slider>
       </section>
@@ -54,4 +68,4 @@ class ProductSlider extends Component {
   }
 }
 
-export default ProductSlider;
+export default connect((state) => state, actions)(ProductSlider);

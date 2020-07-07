@@ -40,3 +40,6 @@ export const LATEST_LOADING = 'LATEST_LOADING'
 // other
 export const GET_BANNER_IMAGES = 'GET_BANNER_IMAGES'
 
+//cart
+export const CART_PRODUCTS = 'CART_PRODUCTS'
+

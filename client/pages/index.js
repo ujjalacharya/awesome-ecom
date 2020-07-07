@@ -24,7 +24,7 @@ const Index = (props) => {
           obliques"
           listLink = "latestProducts"
           />
-          <ProductSlider data={props.products.latestProducts} />
+          <ProductSlider />
           <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
