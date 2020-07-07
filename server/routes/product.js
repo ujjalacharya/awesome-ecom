@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { createProduct, product, getProduct, updateProduct, productImages, deleteImage, getProducts, verifiedProducts, notDeletedProducts, deletedProducts, notVerifiedProducts, deleteProduct, outOfTheStockProducts, latestProducts, deleteImageById, getProductsByCategory, generateFilter, searchProducts, suggestKeywords} = require("../controllers/product")
+const { createProduct, product, getProduct, updateProduct, productImages, deleteImage, getProducts, deleteProduct, latestProducts, deleteImageById, getProductsByCategory, generateFilter, searchProducts, suggestKeywords} = require("../controllers/product")
 const { profile } = require("../controllers/admin")
 const { uploadProductImages } = require("../middleware/helpers");
 const { validateProduct } = require("../middleware/validator")
@@ -10,11 +10,6 @@ const router = express.Router();
 
 //admin's or superadmin's
 router.get("/products/:id", auth, hasAuthorization, getProducts)
-router.get("/verified-products/:id", auth, hasAuthorization, verifiedProducts)
-router.get("/unverified-products/:id", auth, hasAuthorization, notVerifiedProducts)
-router.get("/deleted-products/:id", auth, hasAuthorization, deletedProducts)
-router.get("/not-deleted-products/:id", auth, hasAuthorization, notDeletedProducts)
-router.get("/outofthe-stock-products/:id", auth, hasAuthorization, outOfTheStockProducts)
 
 router.post("/images/:id", auth, hasAuthorization, uploadProductImages, productImages)
 router.delete("/image/:id", auth, hasAuthorization, deleteImageById)//?image_id=
