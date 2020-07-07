@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getVerifiedAdmins, getUnverifiedAdmins, getBlockedAdmins, getNotBlockedAdmins, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers, getNotBlockedUsers, getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher
+    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
@@ -26,7 +26,6 @@ router.get('/deleted-banners', auth, isSuperAdmin, getDeletedBanners)
 //user's..
 router.patch('/block-unblock-user/:user_id', auth, isSuperAdmin,blockUnblockUser)
 router.get('/users', auth, isSuperAdmin, getUsers)
-router.get('/unblocked-users', auth, isSuperAdmin, getNotBlockedUsers)
 
 
 // admin's..
