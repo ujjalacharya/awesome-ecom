@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Appbar, Button } from "react-native-paper";
 
 import { ScrollView } from "react-native-gesture-handler";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { connect } from "react-redux";
 import SearchedSingleProduct from "../../components/SearchedSingleProduct";
@@ -92,14 +92,40 @@ export class ProductListScreen extends Component {
                     onPress={this.handleModalVisibility}
                     style={{ width: "100%" }}
                   >
-                    <Text style={{ color: "black" }}>{"SORT"}</Text>
+                    <MaterialCommunityIcons
+                      name="sort"
+                      size={Constants.normalScreenDescriptionSize}
+                      color="black"
+                    />
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: Constants.normalScreenDescriptionSize,
+                      }}
+                    >
+                      {"SORT"}
+                    </Text>
                   </Button>
                 </View>
-                {/* <View style={{ backgroundColor: Constants.initialColor }}>
+                <View style={{ flex: .01, backgroundColor: Constants.initialColor }}>
                   <Text> </Text>
-                </View> */}
+                </View>
                 <View style={styles.filterWrapper}>
-                  <Text style={{ color: "black" }}>{"FILTER"}</Text>
+                  <Button style={{ width: "100%" }}>
+                    <MaterialCommunityIcons
+                      name="filter"
+                      size={Constants.normalScreenDescriptionSize}
+                      color="black"
+                    />
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: Constants.normalScreenDescriptionSize,
+                      }}
+                    >
+                      {"FILTER"}
+                    </Text>
+                  </Button>
                 </View>
               </View>
             </View>
