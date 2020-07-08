@@ -1,67 +1,22 @@
-import fetch from "isomorphic-unfetch";
-import cookie from 'js-cookie';
-import { getCookie } from "../../utils/cookie";
+import { postService, getTokenService, getService } from "../../utils/commonService";
 
 export class CartService {
-  async getCartProducts(query, ctx) {
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}`,{
-        method: 'GET',
-        headers:{
-          "x-auth-token": getCookie('token', ctx.req)
-        }
-      });
-      
-      const data = await resp.json();
-      if(resp.status >= 200 && resp.status < 300){
-        return {
-            isSuccess: true,
-            data,
-          };
-      }else{
-        return {
-            isSuccess: false,
-            errorMessage: data.error,
-          };    
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  getCartProducts(query, ctx) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}`
+    let data = getTokenService(url, 'GET', ctx);
+    return data;
   }
 
-  async addToCart(query, body) {
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/cart/${query}`,{
-        method: 'POST',
-        headers:{
-          'content-type': 'application/json',
-          "x-auth-token": cookie.get("token")
-        },
-        body: JSON.stringify(body)
-      });
+  addToCart(query, body) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/cart/${query}`
+    let data = postService(url, body);
+    return data;
+  }
 
-      const data = await resp.json();
-      
-      if(resp.status >= 200 && resp.status < 300){
-        return {
-            isSuccess: true,
-            data,
-          };
-      }else{
-        return {
-            isSuccess: false,
-            errorMessage: data.error,
-          };    
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  removeCart(id) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/delete-cart/${id}`
+    let data = getTokenService(url, 'PATCH');
+    return data;
   }
   
 }
