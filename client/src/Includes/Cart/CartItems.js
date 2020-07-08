@@ -8,12 +8,19 @@ import ProductListView from "../../Components/ProductListView";
 class CartItems extends Component {
   state = {
     cardItems: [],
+    totalAmount: ''
   };
 
   componentDidMount() {
     if (this.props.cart.getCartProducts) {
+      let totalAmount = 0
+      this.props.cart.getCartProducts.carts?.map(data => {
+        let discountedPrice = data.product.price - ((data.product.price * data.product.discountRate) / 100)
+        totalAmount += discountedPrice
+      })
       this.setState({
         cardItems: this.props.cart.getCartProducts,
+        totalAmount
       });
     }
   }
@@ -37,13 +44,13 @@ class CartItems extends Component {
               <span>Standard Delivery</span>
             </span>
             <span className="delivery-date">Get By: 25 - 28 Aug 2019</span>
-            <span className="price">Cost: $ 5</span>
+            <span className="price">Cost: Rs 5</span>
           </div>
         </div>
         <div className="bag-items">
           <div className="title">
-            <h4>My Cart (1 Items)</h4>
-            <div className="price">Total: $ 24</div>
+            <h4>My Cart ({this.state.cardItems?.totalCount} Items)</h4>
+            <div className="price">Total: Rs {this.state.totalAmount}</div>
           </div>
           <div className="items-list">
             <ProductListView data = {this.state.cardItems} />

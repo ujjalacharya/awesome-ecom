@@ -45,10 +45,10 @@ const getLatestProducts = () => {
   };
 };
 
-const getProductDetails = (slug) => {
+const getProductDetails = (slug, ctx) => {
   return async (dispatch) => {
     const productService = new ProductService();
-    const response = await productService.getProductDetails(slug);
+    const response = await productService.getProductDetails(slug, ctx);
     if (response.isSuccess) {
       dispatch({ type: PRODUCT_DETAILS, payload: response.data });
     } else if (!response.isSuccess) {

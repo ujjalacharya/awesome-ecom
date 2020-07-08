@@ -19,7 +19,7 @@ class Details extends Component {
     } = ctx;
 
     const data = await ctx.store.dispatch(
-      actions.getProductDetails(ctx.query.slug)
+      actions.getProductDetails(ctx.query.slug, ctx)
     );
 
     const qa = await ctx.store.dispatch(
@@ -35,7 +35,6 @@ class Details extends Component {
     // };
   }
   render() {
-    console.log(this.props)
     return (
       <Layout title={this.props.products?.productDetails?.product?.name}>
         <div className="wrapper">

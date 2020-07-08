@@ -1,5 +1,6 @@
 import fetch from "isomorphic-unfetch";
 import cookie from 'js-cookie';
+import { getCookie } from "../../utils/cookie";
 
 export class ProductService {
   async getLatestProducts() {
@@ -56,10 +57,15 @@ export class ProductService {
     }
   }
 
-  async getProductDetails(slug) {
+  async getProductDetails(slug, ctx) {
     try {
       const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/${slug}`
+        `${process.env.SERVER_BASE_URL}/api/product/${slug}`, {
+          method: 'GET',
+          headers: {
+            'x-auth-token': getCookie('token', ctx.req)
+          }
+        }
       );
 
       const data = await resp.json();
