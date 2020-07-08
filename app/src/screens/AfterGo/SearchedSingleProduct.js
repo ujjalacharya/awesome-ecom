@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { View, Image, StyleSheet, Alert, Text } from "react-native";
+
 import {
   TouchableNativeFeedback,
-  ForceTouchGestureHandler,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
@@ -27,6 +27,14 @@ const SearchedSingleProduct = ({ bus }) => {
                 <>
                   <Title>{bus.title}</Title>
                   <Paragraph>{bus.price}</Paragraph>
+                  <Avatar.Text
+                    size={24}
+                    label="4/5 stars"
+                    color={Constants.headerTintColor}
+                    backgroundColor="green"
+                    width={90}
+                    style={{ marginTop: 10 }}
+                  />
                 </>
               </View>
             </View>
