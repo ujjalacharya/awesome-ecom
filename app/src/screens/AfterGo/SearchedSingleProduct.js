@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { View, Image, StyleSheet, Alert, Text } from "react-native";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
+import {
+  TouchableNativeFeedback,
+  ForceTouchGestureHandler,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 
 import Constants from "../../constants/Constants";
 
 const SearchedSingleProduct = ({ bus }) => {
   return (
-    <>
+    <TouchableWithoutFeedback>
       <Card
         onPress={() => console.warn("main card")}
         style={{ marginBottom: 5 }}
@@ -54,7 +58,7 @@ const SearchedSingleProduct = ({ bus }) => {
           </View>
         </Card.Actions>
       </Card>
-    </>
+    </TouchableWithoutFeedback>
   );
 };
 

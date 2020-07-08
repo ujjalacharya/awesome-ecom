@@ -78,6 +78,18 @@ export const productData = [
         image: "https://5.imimg.com/data5/NY/IW/MY-1022901/tp-link-wireless-router-500x500.jpg",
         price: "Rs 1000",
     },
+    {
+        id: 5,
+        title: "Water Bottle",
+        image: "https://www.ikea.com/gb/en/images/products/ikea-365--water-bottle__0711280_PE728118_S5.JPG",
+        price: "Rs 100",
+    },
+    {
+        id: 6,
+        title: "Gaming Mouse",
+        image: "https://image.made-in-china.com/2f0j00asCEjBDdhUgH/Computer-Mouse-Mini-Size.jpg",
+        price: "Rs 1200",
+    },
 ]
 
 export const bannerData = [
