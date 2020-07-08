@@ -39,7 +39,22 @@ exports.getCarts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
     let carts = await Cart.find({ user: req.user._id })
-        .populate('product','name slug')
+        .populate({
+            path : 'product',
+            populate: {
+                path: 'images',
+                model: 'productimages'
+            }
+        })
+        .populate({
+            path: 'product',
+            select: 'name slug images soldBy discountRate price',
+            populate: {
+                path: 'soldBy',
+                model: 'admin',
+                select:'name shopName'
+            }
+        })
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -47,14 +62,14 @@ exports.getCarts = async (req, res) => {
     //     return res.status(404).json({ error: 'Carts not found' })
     // }
     const totalCount = await Cart.countDocuments({ user: req.user._id })
-    res.json({carts,totalCount})
+    res.json({ carts, totalCount })
 
 }
 
-exports.deleteCart = async (req,res) => {
-    let cart = await Cart.findOne({_id:req.params.cart_id,user:req.user._id})
+exports.deleteCart = async (req, res) => {
+    let cart = await Cart.findOne({ _id: req.params.cart_id, user: req.user._id })
     if (!cart) {
-        return res.status(404).json({error:'Cart not found.'})
+        return res.status(404).json({ error: 'Cart not found.' })
     }
     cart.isDeleted = Date.now()
     res.json(cart)
@@ -79,7 +94,22 @@ exports.getWishlists = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
     let wishlists = await Wishlist.find({ user: req.user._id })
-        .populate('product', 'name slug')
+        .populate({
+            path: 'product',
+            populate: {
+                path: 'images',
+                model: 'productimages'
+            }
+        })
+        .populate({
+            path: 'product',
+            select: 'name slug images soldBy discountRate price',
+            populate: {
+                path: 'soldBy',
+                model: 'admin',
+                select: 'name shopName'
+            }
+        })
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
