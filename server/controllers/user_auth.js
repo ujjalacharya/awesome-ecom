@@ -243,15 +243,15 @@ function parseToken(token) {
     }
 }
 
-// has authorization middleware
-exports.isSameUser = async (req, res, next) => {
-    try {
-        const sameUser = req.profile && req.user && req.profile._id.toString() === req.user._id.toString()
-        if (sameUser) {
-            return next();
+//checkUserSignin
+exports.checkUserSignin = async(req,res,next) => {
+    const token = req.header('x-auth-token');
+    if(token) {
+        const user = parseToken(token)
+        const foundUser = await User.findById(user._id).select('name')
+        if (foundUser) {
+            req.authUser = foundUser
         }
-        throw 'User is not authorized to perform this action'
-    } catch (error) {
-        res.status(401).json({ error: error })
     }
+    next();
 }
