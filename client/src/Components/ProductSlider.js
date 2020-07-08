@@ -10,14 +10,34 @@ import actions from "../../redux/actions";
 
 class ProductSlider extends Component {
   state = {
-    productData : []
-  }
+    productData: {
+      products: [
+        {
+          category: [
+            {
+              displayName: "",
+              slug: "",
+            },
+          ],
+          images: [
+            {
+              large: "/images/default-image.png",
+              medium: "/images/default-image.png",
+              thumbnail: "/images/default-image.png",
+            },
+          ],
+          name: "",
+          price: "",
+        },
+      ],
+    },
+  };
 
-  componentDidMount(){
-    if(this.props.products.latestProducts){
+  componentDidMount() {
+    if (this.props.products.latestProducts) {
       this.setState({
-        productData: this.props.products.latestProducts
-      })
+        productData: this.props.products.latestProducts,
+      });
     }
   }
 
@@ -59,8 +79,8 @@ class ProductSlider extends Component {
     return (
       <section className="product-slider">
         <Slider {...settings}>
-          {this.state.productData?.products?.map((product, i) => {
-            return <ProductCard key={i} data={product} />
+          {this.state.productData.products.map((product, i) => {
+            return <ProductCard key={i} data={product} />;
           })}
         </Slider>
       </section>

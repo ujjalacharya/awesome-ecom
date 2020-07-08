@@ -1,17 +1,32 @@
 import React, { Component } from "react";
 import { Row, Col } from "antd";
+import { connect } from "react-redux";
+import { withRouter } from "next/router";
 
 //includes
 import CartItems from "../src/Includes/Cart/CartItems";
 import OrderSummary from "../src/Includes/Cart/OrderSummary";
-import Header from "../src/Components/Header";
-import Footer from "../src/Components/Footer";
+import Layout from "../src/Components/Layout";
+import initialize from "../utils/initialize";
 
 class Cart extends Component {
+  static async getInitialProps(ctx) {
+    initialize(ctx);
+
+    const {
+      query: { slug },
+    } = ctx;
+
+    const data = await ctx.store.dispatch(actions.getCartProducts("page=1"));
+    
+    // return {
+    //   data,
+    // };
+  }
+
   render() {
     return (
-      <>
-        <Header />
+      <Layout title="Cart">
         <section className="cart-page">
           <div className="container">
             <Row>
@@ -26,10 +41,9 @@ class Cart extends Component {
             </Row>
           </div>
         </section>
-        <Footer />
-      </>
+      </Layout>
     );
   }
 }
 
-export default Cart;
+export default connect((state) => state)(withRouter(Cart));

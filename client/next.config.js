@@ -1,10 +1,10 @@
-const withSass = require("@zeit/next-sass");
-const sassConfig = withSass({
-  /* config options here */
-});
+// const withSass = require("@zeit/next-sass");
+// const sassConfig = withSass({
+//   /* config options here */
+// });
 
 module.exports = {
-  withSass: sassConfig,
+  // withSass: sassConfig,
   env: {
     BASE_URL: process.env.BASE_URL,
     SERVER_BASE_URL: process.env.SERVER_BASE_URL,

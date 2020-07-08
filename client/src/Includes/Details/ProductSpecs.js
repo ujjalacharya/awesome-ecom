@@ -1,11 +1,22 @@
 import React, { Component } from "react";
 import { Input, Button } from "antd";
+import { withRouter } from "next/router";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
+import { openNotification } from "../../../utils/common";
 
 class ProductSpecs extends Component {
   state = {
     pdQty: 1,
     showStatus: "More",
   };
+
+  componentDidUpdate(prevProps){
+    console.log(this.props)
+    if(this.props.cart.addToCartResp !== prevProps.cart.addToCartResp && this.props.cart.addToCartResp){
+      openNotification('Success', 'Product added to cart successfully')
+    }
+  }
 
   changePdValue = (num) => {
     let newPdQty = parseInt(this.state.pdQty) + num;
@@ -26,6 +37,12 @@ class ProductSpecs extends Component {
         showStatus: "More",
       });
     }
+  };
+
+  addToCart = () => {
+    this.props.addToCart(this.props.router.query.slug, {
+      quantity: this.state.pdQty,
+    });
   };
 
   render() {
@@ -113,7 +130,9 @@ class ProductSpecs extends Component {
               </span>
             </div>
 
-            <Button className="primary">Add to Cart</Button>
+            <Button className="primary" onClick={this.addToCart}>
+              Add to Cart
+            </Button>
           </div>
           <div className="wish-comp-btn">
             <div className="wish-btn">
@@ -152,4 +171,4 @@ class ProductSpecs extends Component {
   }
 }
 
-export default ProductSpecs;
+export default connect((state) => state, actions)(withRouter(ProductSpecs));

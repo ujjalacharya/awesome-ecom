@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next -p 3002",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "sass": "sass --watch sass/index.scss:public/css/style.css"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
@@ -31,5 +32,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "sass": "^1.26.10"
+  }
 }
