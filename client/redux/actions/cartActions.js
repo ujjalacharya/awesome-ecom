@@ -1,10 +1,10 @@
 import { CART_PRODUCTS, GLOBAL_ERROR, ADD_TO_CART } from "../types";
 import { CartService } from "../services/cartService";
 
-const getCartProducts = (query) => {
+const getCartProducts = (query, ctx) => {
   return async (dispatch) => {
     const cartService = new CartService();
-    const response = await cartService.getCartProducts(query);
+    const response = await cartService.getCartProducts(query, ctx);
     if (response.isSuccess) {
       dispatch({ type: CART_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {

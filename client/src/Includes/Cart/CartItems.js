@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 
@@ -6,17 +6,24 @@ import actions from "../../../redux/actions";
 import ProductListView from "../../Components/ProductListView";
 
 class CartItems extends Component {
+  state = {
+    cardItems: [],
+  };
 
-  componentDidMount(){
-    console.log(this.props)
+  componentDidMount() {
+    if (this.props.cart.getCartProducts) {
+      this.setState({
+        cardItems: this.props.cart.getCartProducts,
+      });
+    }
   }
 
-  componentDidUpdate(prevProps){
-    console.log(this.props, 'did update')
+  componentDidUpdate(prevProps) {
+    console.log(this.props, "did update");
   }
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -39,7 +46,7 @@ class CartItems extends Component {
             <div className="price">Total: $ 24</div>
           </div>
           <div className="items-list">
-            <ProductListView />
+            <ProductListView data = {this.state.cardItems} />
           </div>
         </div>
       </div>

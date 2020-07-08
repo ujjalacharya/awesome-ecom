@@ -8,6 +8,7 @@ import CartItems from "../src/Includes/Cart/CartItems";
 import OrderSummary from "../src/Includes/Cart/OrderSummary";
 import Layout from "../src/Components/Layout";
 import initialize from "../utils/initialize";
+import actions from "../redux/actions";
 
 class Cart extends Component {
   static async getInitialProps(ctx) {
@@ -17,8 +18,10 @@ class Cart extends Component {
       query: { slug },
     } = ctx;
 
-    const data = await ctx.store.dispatch(actions.getCartProducts("page=1"));
-    
+    const productReview = await ctx.store.dispatch(
+      actions.getCartProducts("page=1", ctx)
+    );
+
     // return {
     //   data,
     // };
@@ -46,4 +49,4 @@ class Cart extends Component {
   }
 }
 
-export default connect((state) => state)(withRouter(Cart));
+export default connect((state) => state)(Cart);

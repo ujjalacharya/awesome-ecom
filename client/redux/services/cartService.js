@@ -1,15 +1,14 @@
 import fetch from "isomorphic-unfetch";
 import cookie from 'js-cookie';
+import { getCookie } from "../../utils/cookie";
 
 export class CartService {
-  async getCartProducts(query) {
-    let token = cookie.get("token")
-    console.log(token)
+  async getCartProducts(query, ctx) {
     try {
       const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}`,{
         method: 'GET',
         headers:{
-          "x-auth-token": cookie.get("token")
+          "x-auth-token": getCookie('token', ctx.req)
         }
       });
       
