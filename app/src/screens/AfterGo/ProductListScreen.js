@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { connect } from "react-redux";
-import SearchedSingleProduct from "../../components/SearchedSingleProduct";
+import SearchedSingleProduct from "./SearchedSingleProduct";
 import { productData } from "../../utils/mock";
 import SortModal from "./Modals/SortModal";
 import ProductListHeader from "./ProductListHeader";
