@@ -27,7 +27,7 @@ exports.postReview = async (req, res) => {
     if (!req.body.star || !req.body.comment) {
         return res.status(400).json({ error: 'Comment or star rating is required.' })
     }
-    if (req.body.star > 5 || req.body.star < 1) {
+    if (req.body.star && (req.body.star > 5 || req.body.star < 1)) {
         return res.status(403).json({ error: "Rating should be in range of 0 and 5" });
     }
     //ckeck if user has bought this product or not
@@ -39,6 +39,19 @@ exports.postReview = async (req, res) => {
     if (!orders) {
         return res.status(403).json({ error: "You have not bought this product." })
     }
+    //check if user has already given star and comment
+    const review = await Review.findOne({
+        user: req.user._id,
+        product: product._id
+    })
+    if (review.comment && req.body.comment) {
+        return res.status(403).json({error:"You have already commented on this product."})
+    }
+    if (review.star && req.body.star) {
+        return res.status(403).json({ error: "You have already rated on this product." })
+    }
+    //update if user has commented or  given star
+
     let newReview = {
         user: req.user._id,
         product: product._id,
@@ -153,7 +166,10 @@ exports.postAnswer = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA = {
+            qna: []
+        }
+        return res.json({ QnA, totalCount: 0 })
     }
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
@@ -188,7 +204,10 @@ exports.deleteQNAByAdmin = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA = {
+            qna: []
+        }
+        return res.json({ QnA, totalCount: 0 })
     }
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
@@ -211,7 +230,10 @@ exports.deleteQNAByUser = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA = {
+            qna: []
+        }
+        return res.json({ QnA, totalCount: 0 })
     }
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
@@ -238,7 +260,10 @@ exports.getQNAs = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA={
+            qna:[]
+        }
+        return res.json({QnA , totalCount:0 })
     }
     QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
