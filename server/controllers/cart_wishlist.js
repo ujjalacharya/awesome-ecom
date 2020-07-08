@@ -48,7 +48,7 @@ exports.getCarts = async (req, res) => {
         })
         .populate({
             path: 'product',
-            select: 'name slug images soldBy discountRate price',
+            select: 'name slug images soldBy discountRate price quantity',
             populate: {
                 path: 'soldBy',
                 model: 'admin',
@@ -72,6 +72,7 @@ exports.deleteCart = async (req, res) => {
         return res.status(404).json({ error: 'Cart not found.' })
     }
     cart.isDeleted = Date.now()
+    await cart.save()
     res.json(cart)
 }
 
@@ -103,7 +104,7 @@ exports.getWishlists = async (req, res) => {
         })
         .populate({
             path: 'product',
-            select: 'name slug images soldBy discountRate price',
+            select: 'name slug images soldBy discountRate price quantity',
             populate: {
                 path: 'soldBy',
                 model: 'admin',
@@ -127,5 +128,6 @@ exports.deleteWishlist = async (req, res) => {
         return res.status(404).json({ error: 'Wishlist not found.' })
     }
     wishlist.isDeleted = Date.now()
+    await wishlist.save()
     res.json(wishlist)
 }
