@@ -34,7 +34,7 @@ export class CartService {
 
   async addToCart(query, body) {
     try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts/${query}`,{
+      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/cart/${query}`,{
         method: 'POST',
         headers:{
           'content-type': 'application/json',

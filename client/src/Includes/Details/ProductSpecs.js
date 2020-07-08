@@ -3,12 +3,20 @@ import { Input, Button } from "antd";
 import { withRouter } from "next/router";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
+import { openNotification } from "../../../utils/common";
 
 class ProductSpecs extends Component {
   state = {
     pdQty: 1,
     showStatus: "More",
   };
+
+  componentDidUpdate(prevProps){
+    console.log(this.props)
+    if(this.props.cart.addToCartResp !== prevProps.cart.addToCartResp && this.props.cart.addToCartResp){
+      openNotification('Success', 'Product added to cart successfully')
+    }
+  }
 
   changePdValue = (num) => {
     let newPdQty = parseInt(this.state.pdQty) + num;
@@ -32,8 +40,6 @@ class ProductSpecs extends Component {
   };
 
   addToCart = () => {
-    console.log(this.props);
-    console.log(this.state);
     this.props.addToCart(this.props.router.query.slug, {
       quantity: this.state.pdQty,
     });
