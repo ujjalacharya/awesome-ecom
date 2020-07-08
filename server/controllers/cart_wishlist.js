@@ -52,7 +52,7 @@ exports.getCarts = async (req, res) => {
             populate: {
                 path: 'soldBy',
                 model: 'admin',
-                select:'name shopName'
+                select:'name shopName address'
             }
         })
         .skip(perPage * page - perPage)
@@ -107,7 +107,7 @@ exports.getWishlists = async (req, res) => {
             populate: {
                 path: 'soldBy',
                 model: 'admin',
-                select: 'name shopName'
+                select: 'name shopName address'
             }
         })
         .skip(perPage * page - perPage)
