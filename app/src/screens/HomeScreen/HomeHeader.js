@@ -14,7 +14,7 @@ export class HomeHeader extends Component {
         <Appbar.Content color={Constants.headerTintColor} title="KINDEEM" />
         <Appbar.Action
           color={Constants.headerTintColor}
-          icon="heart-outline"
+          icon="heart"
           onPress={() => this.props.navigation.navigate("WishList")}
         />
       </Appbar.Header>
