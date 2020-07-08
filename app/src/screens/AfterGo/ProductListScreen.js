@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import SearchedSingleProduct from "../../components/SearchedSingleProduct";
 import { productData } from "../../utils/mock";
 import Constants from "../../constants/Constants";
-import AddressModal from "./Modals/AddressModal";
+import SortModal from "./Modals/SortModal";
 
 export class ProductListScreen extends Component {
   state = {
@@ -32,7 +32,7 @@ export class ProductListScreen extends Component {
   render() {
     return (
       <>
-        <AddressModal
+        <SortModal
           handleModalVisibility={this.handleModalVisibility}
           showModal={this.state.showModal}
           addressState={this.state.addressState}

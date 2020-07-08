@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, Modal, StyleSheet } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export class AddressModal extends Component {
+export class SortModal extends Component {
   render() {
     return (
       <Modal
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: "30%",
     width: "100%",
-    margin: 20,
+    // margin: 20,
     backgroundColor: "#DCDCDC",
     borderRadius: 20,
     padding: 35,
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddressModal;
+export default SortModal;
