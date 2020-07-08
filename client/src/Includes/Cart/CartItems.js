@@ -1,10 +1,22 @@
 import React, {Component} from "react";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
 
 //includes
 import ProductListView from "../../Components/ProductListView";
 
 class CartItems extends Component {
+
+  componentDidMount(){
+    console.log(this.props)
+  }
+
+  componentDidUpdate(prevProps){
+    console.log(this.props, 'did update')
+  }
+
   render() {
+    console.log(this.props)
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -35,4 +47,4 @@ class CartItems extends Component {
   }
 }
 
-export default CartItems;
+export default connect((state) => state, actions)(CartItems);

@@ -2,6 +2,9 @@ const Admin = require("../models/Admin");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const SuggestKeywords = require("../models/SuggestKeywords")
+const Cart = require("../models/Cart")
+const Order = require("../models/Order")
+const Whislist = require("../models/WishList")
 const ProductBrand = require("../models/ProductBrand");
 const ProductImages = require("../models/ProductImages");
 const shortid = require("shortid");
@@ -26,12 +29,26 @@ exports.product = async (req, res, next) => {
   next();
 };
 
-exports.getProduct = (req, res) => {
+exports.getProduct = async (req, res) => {
   if (req.product.isVerified === null && req.product.isDeleted !== null)
     return res
       .status(404)
       .json({ error: "Product is not verified or has been deleted." });
-  res.json(req.product);
+  let hasOnCart = null
+  let hasBought = null
+  let hasOnWishlist = null
+  if (req.authUser) {
+    hasOnCart = await Cart.findOne({user:req.authUser._id,product:req.product._id})
+    hasOnCart?hasOnCart=true:hasOnCart=false
+
+    hasOnWishlist = await Whislist.findOne({ user: req.authUser._id, product: req.product._id })
+    hasOnWishlist ? hasOnWishlist = true : hasOnWishlist = false
+
+    hasBought = await Order.findOne({ user: req.authUser, $or: [{ 'status.currentStatus': 'complete' }, { 'status.currentStatus': 'tobereturned', 'status.currentStatus': 'return'}]})
+    hasBought ? hasBought = true : hasBought = false
+
+  }
+  res.json({product:req.product,hasOnCart,hasBought,hasOnWishlist});
 };
 
 exports.createProduct = async (req, res) => {

@@ -61,7 +61,7 @@ class ProductListView extends Component {
                     }}
                   />
                   <i
-                    class="fa fa-plus"
+                    className="fa fa-plus"
                     aria-hidden="true"
                     onClick={() => this.changePdValue(1)}
                   />

@@ -5,6 +5,7 @@ const { profile } = require("../controllers/admin")
 const { uploadProductImages } = require("../middleware/helpers");
 const { validateProduct } = require("../middleware/validator")
 const { auth, isSuperAdmin, isAdmin, hasAuthorization } = require('../controllers/admin_auth')
+const {checkUserSignin} = require("../controllers/user_auth")
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.post('/search',searchProducts)//need to work on rating nd $option in rege
 router.get('/suggest-keywords', suggestKeywords)//?keyword=
 router.post("/:id", auth, hasAuthorization, validateProduct, createProduct)
 router.put("/:id/:p_slug", auth, hasAuthorization, validateProduct, updateProduct)
-router.get('/:p_slug', getProduct)
+router.get('/:p_slug',checkUserSignin, getProduct)
 
 router.param('p_slug', product)
 router.param('id', profile)

@@ -35,8 +35,9 @@ class Details extends Component {
     // };
   }
   render() {
+    console.log(this.props)
     return (
-      <Layout title={this.props.products && this.props.products.productDetails && this.props.products.productDetails.name}>
+      <Layout title={this.props.products?.productDetails?.product?.name}>
         <div className="wrapper">
           <section className="detail">
             <div className="container">
@@ -53,19 +54,19 @@ class Details extends Component {
                   </Breadcrumb>
                 </Col>
               </Row>
-              {this.props.products.productDetails && (
+              {this.props.products.productDetails?.product && (
                 <Row>
                   <Col lg={10} xs={24} md={24}>
-                    <DetailSlider data={this.props.products.productDetails} />
+                    <DetailSlider data={this.props.products.productDetails.product} />
                   </Col>
                   <Col lg={14} xs={24} md={18}>
-                    <ProductSpecs data={this.props.products.productDetails} />
+                    <ProductSpecs data={this.props.products.productDetails.product} />
                   </Col>
                 </Row>
               )}
               <Row>
                 <Col lg={24}>
-                  <OtherDetails data = {this.props.products?.productDetails} />
+                  <OtherDetails data = {this.props.products?.productDetails.product} />
                 </Col>
               </Row>
             </div>
