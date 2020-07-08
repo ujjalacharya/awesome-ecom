@@ -4,7 +4,7 @@ import withRedux from "next-redux-wrapper";
 import { initStore } from "../redux";
 import GlobalErrorComponent from "../src/Components/GlobalErrorComponent";
 import "../public/nprogress.css";
-import "../sass/index.scss"
+// import "../sass/index.scss"
 
 export default withRedux(initStore, { debug: false })(
   class MyApp extends App {
