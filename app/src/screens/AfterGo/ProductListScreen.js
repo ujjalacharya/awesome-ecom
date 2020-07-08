@@ -39,48 +39,57 @@ export class ProductListScreen extends Component {
           handleFromTo={this.handleFromTo}
         />
         <View style={{ flex: 1 }}>
-          <Appbar.Header statusBarHeight={0}>
-            <Appbar.BackAction
-              color={Constants.headerTintColor}
-              onPress={this._goBack}
-            />
-            <Appbar.Content title="Search" color={Constants.headerTintColor} />
-            <Appbar.Action
-              color={Constants.headerTintColor}
-              icon={() => (
-                <AntDesign
-                  name="search1"
-                  size={20}
-                  color={Constants.headerTintColor}
-                />
-              )}
-              onPress={() => this.props.navigation.pop()}
-            />
-            <Appbar.Action
-              color={Constants.headerTintColor}
-              icon="heart"
-              onPress={() => this.props.navigation.navigate("WishList")}
-            />
-            <Appbar.Action
-              color={Constants.headerTintColor}
-              icon={() => (
-                <AntDesign
-                  name="shoppingcart"
-                  size={20}
-                  color={Constants.headerTintColor}
-                />
-              )}
-              onPress={() => this.props.navigation.navigate("CartStack")}
-            />
-          </Appbar.Header>
           {/* <ActivityIndicator animating={true} color={Constants.tintColor}/> */}
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}
-            stickyHeaderIndices={[0]}
+            stickyHeaderIndices={[1]}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
-            <View style={{ height: 50 }}>
+            <Appbar.Header statusBarHeight={0}>
+              <Appbar.BackAction
+                color={Constants.headerTintColor}
+                onPress={this._goBack}
+              />
+              <Appbar.Content
+                title="Search"
+                color={Constants.headerTintColor}
+              />
+              <Appbar.Action
+                color={Constants.headerTintColor}
+                icon={() => (
+                  <AntDesign
+                    name="search1"
+                    size={20}
+                    color={Constants.headerTintColor}
+                  />
+                )}
+                onPress={() => this.props.navigation.pop()}
+              />
+              <Appbar.Action
+                color={Constants.headerTintColor}
+                icon="heart"
+                onPress={() => this.props.navigation.navigate("WishList")}
+              />
+              <Appbar.Action
+                color={Constants.headerTintColor}
+                icon={() => (
+                  <AntDesign
+                    name="shoppingcart"
+                    size={20}
+                    color={Constants.headerTintColor}
+                  />
+                )}
+                onPress={() => this.props.navigation.navigate("CartStack")}
+              />
+            </Appbar.Header>
+            <View
+              style={{
+                height: 50,
+                borderBottomWidth: 2,
+                borderColor: Constants.initialColor,
+              }}
+            >
               <View
                 style={{
                   flex: 1,
@@ -107,7 +116,12 @@ export class ProductListScreen extends Component {
                     </Text>
                   </Button>
                 </View>
-                <View style={{ flex: .01, backgroundColor: Constants.initialColor }}>
+                <View
+                  style={{
+                    flex: 0.01,
+                    backgroundColor: Constants.initialColor,
+                  }}
+                >
                   <Text> </Text>
                 </View>
                 <View style={styles.filterWrapper}>
