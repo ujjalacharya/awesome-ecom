@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Appbar, Button } from "react-native-paper";
 
 import { ScrollView } from "react-native-gesture-handler";
@@ -38,7 +38,7 @@ export class ProductListScreen extends Component {
           addressState={this.state.addressState}
           handleFromTo={this.handleFromTo}
         />
-        <View>
+        <View style={{ flex: 1 }}>
           <Appbar.Header statusBarHeight={0}>
             <Appbar.BackAction
               color={Constants.headerTintColor}
@@ -75,22 +75,54 @@ export class ProductListScreen extends Component {
           </Appbar.Header>
           {/* <ActivityIndicator animating={true} color={Constants.tintColor}/> */}
           <ScrollView
-            style={{ height: "100%", margin: 15, backgroundColor: "green" }}
+            contentContainerStyle={{ flexGrow: 1 }}
+            stickyHeaderIndices={[0]}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
-            <Button onPress={this.handleModalVisibility}>
-              {"Click me to open modal"}
-            </Button>
-            {productData.map((bus, i) => (
-              <SearchedSingleProduct bus={bus} key={i} />
-            ))}
+            <View style={{ height: 50 }}>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                }}
+              >
+                <View style={styles.filterWrapper}>
+                  <Button
+                    onPress={this.handleModalVisibility}
+                    style={{ width: "100%" }}
+                  >
+                    <Text style={{ color: "black" }}>{"SORT"}</Text>
+                  </Button>
+                </View>
+                {/* <View style={{ backgroundColor: Constants.initialColor }}>
+                  <Text> </Text>
+                </View> */}
+                <View style={styles.filterWrapper}>
+                  <Text style={{ color: "black" }}>{"FILTER"}</Text>
+                </View>
+              </View>
+            </View>
+            <View style={{ flex: 5 }}>
+              {productData.map((bus, i) => (
+                <SearchedSingleProduct bus={bus} key={i} />
+              ))}
+            </View>
           </ScrollView>
         </View>
       </>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  filterWrapper: {
+    flex: 1,
+    backgroundColor: Constants.headerTintColor,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 function mapStateToProps(state) {
   return {
