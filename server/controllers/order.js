@@ -209,13 +209,60 @@ exports.createOrder = async (req, res) => {
         .run({ useMongoose: true })
     res.json({ order: results[0], payment: results[1] })
 }
+const search_orders = async (req,res,type) => {
+    const page = +req.query.page || 1;
+    const perPage = +req.query.perPage || 10;
+    const { keyword = '', status } = req.query
+    let sortFactor = { createdAt: 'desc' };
+
+    let query
+    type === 'user' ? query = { user: req.user._id } : query = { soldBy: req.profile._id }
+
+    if (status &&
+        (status === 'active' || status === 'cancel' || status === 'return' ||
+            status === 'complete' || status === 'tobereturned' || status === 'approve' ||
+            status === 'dispatch')
+    ) query = {
+        ...query,
+        'status.currentStatus': status
+    }
+    let orders = await Order.find(query)
+        .populate({
+            path: 'product',
+            match: {
+                name: { $regex: keyword, $options: "i" }
+            },
+            select: 'name'
+        })
+        // .skip(perPage * page - perPage)
+        // .limit(perPage)
+        .lean()
+        .sort(sortFactor)
+    // console.log(orders);
+    orders = orders.filter(o => o.product !== null)
+    let totalCount = orders.length
+    orders = _.drop(orders, perPage * page - perPage)
+    orders = _.take(orders, perPage)
+    res.json({ orders, totalCount });
+}
+exports.searchOrdersByUser = async(req,res) => {
+   await search_orders(req,res,'user')
+}
+
+exports.searchOrdersByAdmin = async (req, res) => {
+    await search_orders(req, res, 'admin')
+}
 
 exports.userOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     const status = req.query.status
     let query = {user:req.user._id}
-    if (status && (status === 'active' || status === 'cancel' || status === 'return' || status === 'complete')) query = {
+    if (status &&
+        (status === 'active' || status === 'cancel' || status === 'return' ||
+            status === 'complete' || status === 'tobereturned' || status === 'approve' ||
+            status === 'dispatch')
+    ) query = {
         ...query,
         'status.currentStatus': status
     }

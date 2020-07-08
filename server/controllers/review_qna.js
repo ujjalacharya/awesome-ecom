@@ -153,7 +153,10 @@ exports.postAnswer = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA = {
+            qna: []
+        }
+        return res.json({ QnA, totalCount: 0 })
     }
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
@@ -188,7 +191,10 @@ exports.deleteQNAByAdmin = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA = {
+            qna: []
+        }
+        return res.json({ QnA, totalCount: 0 })
     }
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
@@ -211,7 +217,10 @@ exports.deleteQNAByUser = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA = {
+            qna: []
+        }
+        return res.json({ QnA, totalCount: 0 })
     }
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
@@ -238,7 +247,10 @@ exports.getQNAs = async (req, res) => {
     }
     let QnA = await QNA.findOne({ product: product._id })
     if (!QnA) {
-        return res.status(404).json({ error: 'QNA not found' })
+        QnA={
+            qna:[]
+        }
+        return res.json({QnA , totalCount:0 })
     }
     QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
