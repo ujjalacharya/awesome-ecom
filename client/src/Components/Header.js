@@ -255,7 +255,11 @@ class Header extends Component {
               <div className="list-icon">
                 <img src="/images/bag.png" />
               </div>
-              <div className="list-text">Bag</div>
+              <Link href="/cart">
+                <a>
+                  <div className="list-text">Bag</div>
+                </a>
+              </Link>
             </div>
             {loginToken && (
               <div

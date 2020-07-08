@@ -3,6 +3,8 @@ import cookie from 'js-cookie';
 
 export class CartService {
   async getCartProducts(query) {
+    let token = cookie.get("token")
+    console.log(token)
     try {
       const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}`,{
         method: 'GET',
@@ -10,9 +12,8 @@ export class CartService {
           "x-auth-token": cookie.get("token")
         }
       });
-
-      const data = await resp.json();
       
+      const data = await resp.json();
       if(resp.status >= 200 && resp.status < 300){
         return {
             isSuccess: true,

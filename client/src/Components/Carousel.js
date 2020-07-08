@@ -18,9 +18,9 @@ class MainCarousel extends Component {
       <Carousel {...settings}>
         {/* <div className="img-text"> */}
           {this.props.data.banners &&
-            this.props.data.banners.map((banner) => {
+            this.props.data.banners.map((banner,i) => {
               return (
-                <div className="img-text">
+                <div className="img-text" key={i}>
                   <div className="carousel-text"></div>
                   <img src={process.env.IMAGE_BASE_URL+'/'+banner.bannerPhoto} alt="banner" />
                 </div>

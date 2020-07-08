@@ -7,6 +7,14 @@ import ProductListView from "../../Components/ProductListView";
 
 class CartItems extends Component {
 
+  componentDidMount(){
+    console.log(this.props)
+  }
+
+  componentDidUpdate(prevProps){
+    console.log(this.props, 'did update')
+  }
+
   render() {
     console.log(this.props)
     return (

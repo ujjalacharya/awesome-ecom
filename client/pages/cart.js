@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col } from "antd";
 import { connect } from "react-redux";
-import actions from "../redux/actions";
 import { withRouter } from "next/router";
 
 //includes
@@ -19,7 +18,7 @@ class Cart extends Component {
     } = ctx;
 
     const data = await ctx.store.dispatch(actions.getCartProducts("page=1"));
-
+    
     // return {
     //   data,
     // };
@@ -47,4 +46,4 @@ class Cart extends Component {
   }
 }
 
-export default connect((state) => state, actions)(withRouter(Cart));
+export default connect((state) => state)(withRouter(Cart));
