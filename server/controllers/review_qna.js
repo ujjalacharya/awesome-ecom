@@ -27,7 +27,7 @@ exports.postReview = async (req, res) => {
     if (!req.body.star || !req.body.comment) {
         return res.status(400).json({ error: 'Comment or star rating is required.' })
     }
-    if (req.body.star > 5 || req.body.star < 1) {
+    if (req.body.star && (req.body.star > 5 || req.body.star < 1)) {
         return res.status(403).json({ error: "Rating should be in range of 0 and 5" });
     }
     //ckeck if user has bought this product or not
@@ -39,6 +39,19 @@ exports.postReview = async (req, res) => {
     if (!orders) {
         return res.status(403).json({ error: "You have not bought this product." })
     }
+    //check if user has already given star and comment
+    const review = await Review.findOne({
+        user: req.user._id,
+        product: product._id
+    })
+    if (review.comment && req.body.comment) {
+        return res.status(403).json({error:"You have already commented on this product."})
+    }
+    if (review.star && req.body.star) {
+        return res.status(403).json({ error: "You have already rated on this product." })
+    }
+    //update if user has commented or  given star
+
     let newReview = {
         user: req.user._id,
         product: product._id,
