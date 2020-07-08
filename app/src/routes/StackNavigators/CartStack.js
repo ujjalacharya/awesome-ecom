@@ -7,8 +7,16 @@ const Stack = createStackNavigator();
 
 const MessageStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Messages" component={CartScreen} options={headerOptions("Cart")}/>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen
+        name="Cart"
+        component={CartScreen}
+        options={headerOptions("Cart")}
+      />
     </Stack.Navigator>
   );
 };

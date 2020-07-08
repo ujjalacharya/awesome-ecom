@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, Button, AsyncStorage } from "react-native";
+import { Text, View, Button } from "react-native";
 
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Appbar } from "react-native-paper";
 
 import { signOut } from "../store/actions/user_actions";
-import { bindActionCreators } from "redux";
+import Constants from "../constants/Constants";
 
 class ProfileScreen extends Component {
   handleLogout = async () => {
@@ -14,6 +16,9 @@ class ProfileScreen extends Component {
   render() {
     return (
       <View>
+        <Appbar.Header statusBarHeight={0}>
+          <Appbar.Content title="Profile" color={Constants.headerTintColor} />
+        </Appbar.Header>
         <Text> Profile Screen </Text>
         <Button title="Logout" onPress={this.handleLogout} />
       </View>

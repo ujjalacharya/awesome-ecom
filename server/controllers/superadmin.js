@@ -171,10 +171,24 @@ exports.getDeletedBanners = async (req, res) => {
     res.json({ banners, totalCount })
 }
 
-exports.getAllAdmins = async (req, res) => {
+exports.getAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    const admins = await Admin.find({})
+    const status = req.query.status
+    let query = {}
+    if (status && status === 'verified') query = {
+        isVerified: { $ne: null }
+    }
+    if (status && status === 'unverified') query = {
+        isVerified: null
+    }
+    if (status && status === 'blocked') query = {
+        isBlocked: { $ne: null }
+    }
+    if (status && status === 'unblocked') query = {
+        isBlocked: null
+    }
+    const admins = await Admin.find(query)
         .select("-password -salt -resetPasswordLink -emailVerifyLink")
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -182,7 +196,7 @@ exports.getAllAdmins = async (req, res) => {
     // if (!admins.length) {
     //     return res.status(404).json({ error: 'No Admins are Available' })
     // }
-    const totalCount = await Admin.countDocuments()
+    const totalCount = await Admin.countDocuments(query)
     res.json({ admins, totalCount })
 }
 
@@ -390,10 +404,18 @@ exports.blockUnblockUser = async (req, res) => {
     res.json(user)
 }
 
-exports.getBlockedUsers = async (req, res) => {
+exports.getUsers = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    let users = await User.find({ isBlocked: { "$ne": null } })
+    const status = req.query.status
+    let query = {}
+    if (status && status === 'blocked') query = {
+        isBlocked: { $ne: null }
+    }
+    if (status && status === 'unblocked') query = {
+        isBlocked: null
+    }
+    let users = await User.find(query)
         .select('-password -salt -resetPasswordLink -emailVerifyLink')
         .skip(perPage * page - perPage)
         .limit(perPage)
@@ -401,79 +423,8 @@ exports.getBlockedUsers = async (req, res) => {
     // if (!users.length) {
     //     return res.status(404).json({ error: "No users are blocked" })
     // }
-    const totalCount = await User.countDocuments({ isBlocked: { "$ne": null } })
+    const totalCount = await User.countDocuments(query)
     res.json({ users, totalCount })
-}
-exports.getNotBlockedUsers = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let users = await User.find({ isBlocked: null })
-        .select('-password -salt  -resetPasswordLink -emailVerifyLink')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-    // if (!users.length) {
-    //     return res.status(404).json({ error: "Every users are blocked" })
-    // }
-    const totalCount = await User.countDocuments({ isBlocked: null })
-    res.json({ users, totalCount })
-}
-
-exports.getBlockedAdmins = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let admins = await Admin.find({ isBlocked: { "$ne": null } })
-        .select('-password -salt -resetPasswordLink -emailVerifyLink')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-    // if (!admins.length) {
-    //     return res.status(404).json({ error: "No admins are blocked" })
-    // }
-    const totalCount = await Admin.countDocuments({ isBlocked: { "$ne": null } })
-    res.json({admins,totalCount})
-}
-exports.getNotBlockedAdmins = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let admins = await Admin.find({ isBlocked: null })
-        .select('-password -salt  -resetPasswordLink -emailVerifyLink')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-    // if (!admins.length) {
-    //     return res.status(404).json({ error: "Every admins are blocked" })
-    // }
-    const totalCount = await Admin.countDocuments({ isBlocked: null })
-    res.json({ admins, totalCount })
-}
-exports.getVerifiedAdmins = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let admins = await Admin.find({ isVerified: { "$ne": null } })
-        .select('-password -salt -resetPasswordLink -emailVerifyLink')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-    // if (!admins.length) {
-    //     return res.status(404).json({ error: "No admins are verified" })
-    // }
-    const totalCount = await Admin.countDocuments({ isVerified: { "$ne": null } })
-    res.json({ admins, totalCount })
-}
-exports.getUnverifiedAdmins = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    let admins = await Admin.find({ isVerified: null })
-        .select('-password -salt -resetPasswordLink -emailVerifyLink')
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-    // if (!admins.length) {
-    //     return res.status(404).json({ error: "All admins are verified" })
-    // }
-    const totalCount = await Admin.countDocuments({ isVerified: null })
-    res.json({ admins, totalCount })
 }
 
 exports.category = async (req, res) => {
@@ -508,45 +459,6 @@ exports.getCategories = async (req, res) => {
     // }
     let totalCount = await Category.countDocuments()
     res.json({categories,totalCount})
-    
-    // let keywords = await SuggestKeywords.find().select('-_id keyword')
-    // console.log(keywords);
-    // product -> this.category ID
-    // product -> this.brand ID
-
-    // this.category.brand Arr -> product -> this.category => brand
-
-    //     let products = await Product.find({})
-
-    //     let finalCat = [];
-
-    //     products.forEach((pr, i) => {
-    //             finalCat.push({
-    //                 category: pr.category,
-    //                 brand: pr.brand,
-    //             })
-    //     })
-    //     finalCat = Array.from(new Set(finalCat.map(JSON.stringify))).map(JSON.parse)
-
-    //    finalCat = finalCat.map( async data => {
-    //        const cat = await Category.findById(data.category)
-    //        cat.brands.push(data.brand)
-    //        return await cat.save()
-    //    })
-    //    finalCat = await Promise.all(finalCat)
-    //     res.json(finalCat)
-
-
-
-
-    // products = await Category.find()
-    // products = products.map(async c=> {
-    //     c.brands = []
-    //     return await c.save()
-    // })
-    // let c = await Promise.all(products)
-    //  c = (await ProductBrand.find())
-    // res.json(c)
 }
 
 exports.flipCategoryAvailablity = async (req, res) => {
@@ -645,12 +557,32 @@ exports.disApproveProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    const { createdAt, updatedAt, price } = req.query
+    const { createdAt, updatedAt, price ,status} = req.query
+
     let sortFactor = { createdAt: 'desc' };
     if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
     if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
     if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
-    let products = await Product.find()
+
+    let query = { }
+    if (status && status === 'verified') query = {
+        isVerified: { $ne: null }
+    }
+    if (status && status === 'unverified') query = {
+        isVerified: null
+    }
+    if (status && status === 'deleted') query = {
+        isDeleted: { $ne: null }
+    }
+    if (status && status === 'notdeleted') query = {
+        isDeleted: null
+    }
+    if (status && status === 'outofstock') query = {
+        quantity: 0
+    }
+
+
+    let products = await Product.find(query)
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
         .populate("soldBy", "name shopName")
@@ -659,123 +591,9 @@ exports.getProducts = async (req, res) => {
         .limit(perPage)
         .lean()
         .sort(sortFactor)
-    // if (!products.length) {
-    //     return res.status(404).json({ error: 'No products are available.' })
-    // }
 
-    // let products = await Product.find()
-    // products = products.map(async product => {
-    //     product.quantity += 50
-    // return await product.save()
-    // })
-    // products = await Promise.all(products)
-    let totalCount = await Product.countDocuments()
+    let totalCount = await Product.countDocuments(query)
     res.json({products,totalCount});
-}
-exports.verifiedProducts = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    const { createdAt, updatedAt, price } = req.query
-    let sortFactor = { createdAt: 'desc' };
-    if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
-    if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-    if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
-    const products = await Product.find({ isVerified: { "$ne": null } })
-        .populate("category", "displayName slug")
-        .populate("brand", "brandName slug")
-        .populate("soldBy", "name shopName")
-        .populate("images", "-createdAt -updatedAt -__v")
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort(sortFactor)
-    // if (!products.length) {
-    //     return res.status(404).json({ error: 'No products are available.' })
-    // }
-    //make 3 products of every admin verified
-    // const admins = await Admin.find({role:'admin'})
-    // let products = admins.map(async a => {
-    //     const products = await Product.find({soldBy:a._id})
-    //     for (let i = 0; i < 3; i++) {
-    //         const element = products[i];
-    //         element.isVerified = Date.now()
-    //         await products[i].save()
-    //     }
-    //     return products
-    // })
-    // products = await Promise.all(products)
-
-    let totalCount = await Product.countDocuments({ isVerified: { "$ne": null } })
-    res.json({ products, totalCount });
-}
-exports.notVerifiedProducts = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    const { createdAt, updatedAt, price } = req.query
-    let sortFactor = { createdAt: 'desc' };
-    if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
-    if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-    if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
-    const products = await Product.find({ isVerified: null })
-        .populate("category", "displayName slug")
-        .populate("brand", "brandName slug")
-        .populate("soldBy", "name shopName")
-        .populate("images", "-createdAt -updatedAt -__v")
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort(sortFactor)
-    // if (!products.length) {
-    //     return res.status(404).json({ error: 'No products are available.' })
-    // }
-    let totalCount = await Product.countDocuments({ isVerified: null })
-    res.json({ products, totalCount });
-}
-exports.deletedProducts = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    const { createdAt, updatedAt, price } = req.query
-    let sortFactor = { createdAt: 'desc' };
-    if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
-    if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-    if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
-    const products = await Product.find({ isDeleted: { "$ne": null } })
-        .populate("category", "displayName slug")
-        .populate("brand", "brandName slug")
-        .populate("soldBy", "name shopName")
-        .populate("images", "-createdAt -updatedAt -__v")
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort(sortFactor)
-    // if (!products.length) {
-    //     return res.status(404).json({ error: 'No products are available.' })
-    // }
-    let totalCount = await Product.countDocuments({ isDeleted: { "$ne": null } })
-    res.json({ products, totalCount });
-}
-exports.notDeletedProducts = async (req, res) => {
-    const page = +req.query.page || 1
-    const perPage = +req.query.perPage || 10
-    const { createdAt, updatedAt, price } = req.query
-    let sortFactor = { createdAt: 'desc' };
-    if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
-    if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-    if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
-    const products = await Product.find({ isDeleted: null })
-        .populate("category", "displayName slug")
-        .populate("brand", "brandName slug")
-        .populate("soldBy", "name shopName")
-        .populate("images", "-createdAt -updatedAt -__v")
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
-        .sort(sortFactor)
-    // if (!products.length) {
-    //     return res.status(404).json({ error: 'No products are available.' })
-    // }
-    let totalCount = await Product.countDocuments({ isDeleted: null })
-    res.json({ products, totalCount });
 }
 
 exports.productBrand = async (req, res) => {
