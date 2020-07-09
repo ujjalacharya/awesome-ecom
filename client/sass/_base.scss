@@ -53,7 +53,7 @@ body {
 }
 
 .ant-input-affix-wrapper {
-  height: 35px;
+  max-height: 35px;
 }
 
 .breadcrumb-all {
@@ -271,4 +271,27 @@ input:checked + .slider:before {
 
 .yes-no>span{
   padding: 0 5px;
+}
+
+.delete-product {
+  margin-top: 15px;
+  a {
+    button {
+      color: $primary-color;
+      border-color: $primary-color;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
+      &:hover {
+        background: $primary-color;
+        color: $white;
+      }
+      span {
+        font-size: 13px;
+      }
+    }
+    &:hover {
+      border-color: $primary-color;
+    }
+  }
 }

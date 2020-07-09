@@ -245,12 +245,12 @@ class Header extends Component {
                 </div>
               </a>
             </Link>
-            <div className="menu-right-items">
+            {/* <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/wishlist.png" />
               </div>
               <div className="list-text">Wishlist</div>
-            </div>
+            </div> */}
             <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/bag.png" />

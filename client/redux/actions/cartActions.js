@@ -1,4 +1,4 @@
-import { CART_PRODUCTS, GLOBAL_ERROR, ADD_TO_CART, REMOVE_FROM_CART } from "../types";
+import { CART_PRODUCTS, GLOBAL_ERROR, ADD_TO_CART, REMOVE_FROM_CART, EDIT_CART_QTY } from "../types";
 import { CartService } from "../services/cartService";
 
 const getCartProducts = (query, ctx) => {
@@ -46,9 +46,25 @@ const removeCart = (query) => {
   };
 };
 
+const editCartQty = (query) => {
+  return async (dispatch) => {
+    const cartService = new CartService();
+    const response = await cartService.editCartQty(query);
+    if (response.isSuccess) {
+      dispatch({ type: EDIT_CART_QTY, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 
 export default {
     getCartProducts,
     addToCart,
-    removeCart
+    removeCart,
+    editCartQty
 };
