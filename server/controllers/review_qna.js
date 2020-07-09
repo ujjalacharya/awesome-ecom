@@ -24,8 +24,8 @@ exports.postReview = async (req, res) => {
     if (!product.isVerified && product.isDeleted) {
         return res.status(404).json({ error: 'Product not found' })
     }
-    if (!req.body.star || !req.body.comment) {
-        return res.status(400).json({ error: 'Comment or star rating is required.' })
+    if (!req.body.star ) {
+        return res.status(400).json({ error: 'Rating is required.' })
     }
     if (req.body.star && (req.body.star > 5 || req.body.star < 1)) {
         return res.status(403).json({ error: "Rating should be in range of 0 and 5" });
@@ -44,13 +44,12 @@ exports.postReview = async (req, res) => {
         user: req.user._id,
         product: product._id
     })
-    if (review.comment && req.body.comment) {
+    if (review && review.comment && req.body.comment) {
         return res.status(403).json({error:"You have already commented on this product."})
     }
-    if (review.star && req.body.star) {
+    if (review && review.star && req.body.star) {
         return res.status(403).json({ error: "You have already rated on this product." })
     }
-    //update if user has commented or  given star
 
     let newReview = {
         user: req.user._id,
@@ -63,6 +62,37 @@ exports.postReview = async (req, res) => {
     res.json(newReview);
 }
 
+exports.editReview = async (req, res) => {
+    const product = req.product
+    if (!product.isVerified && product.isDeleted) {
+        return res.status(404).json({ error: 'Product not found' })
+    }
+    if (!req.body.star) {
+        return res.status(400).json({ error: 'Rating is required.' })
+    }
+    if (req.body.star && (req.body.star > 5 || req.body.star < 1)) {
+        return res.status(403).json({ error: "Rating should be in range of 0 and 5" });
+    }
+    //ckeck if user has bought this product or not
+    const orders = await Order.findOne({
+        user: req.user._id,
+        'status.currentStatus': { $in: ['complete', 'return'] },
+        product: product._id
+    })
+    if (!orders) {
+        return res.status(403).json({ error: "You have not bought this product." })
+    }
+    //check if user has already given star and comment
+    let review = await Review.findById(req.params.review_id)
+    if (!review) {
+        return res.status(404).json({error:'Review not found'})
+    }
+    review.comment = req.body.comment
+    review.star = req.body.star
+    await review.save();
+    res.json(review);
+}
+
 exports.getReviews = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
@@ -71,8 +101,7 @@ exports.getReviews = async (req, res) => {
         return res.status(404).json({ error: 'Product not found' })
     }
     const reviews = await Review.find({ product: product._id })
-        .populate('user', 'name lastname')
-        .populate('product', 'name slug')
+        .populate('user', 'name')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -259,6 +288,8 @@ exports.getQNAs = async (req, res) => {
         return res.status(404).json({ error: 'Product not found' })
     }
     let QnA = await QNA.findOne({ product: product._id })
+        .populate('user', 'name')
+        .populate('product', 'name slug')
     if (!QnA) {
         QnA={
             qna:[]
