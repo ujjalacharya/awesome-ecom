@@ -30,6 +30,34 @@ exports.product = async (req, res, next) => {
   next();
 };
 
+const getRatingInfo = async product => {
+  // const product = req.product
+  if (!product.isVerified && product.isDeleted) {
+    return res.status(404).json({ error: 'Product not found' })
+  }
+  let stars = await Review.find({ product: product._id }).select('star');
+  let fiveStars = 0, fourStars = 0, threeStars = 0, twoStars = 0, oneStars = 0;
+  stars.forEach(s => {
+    if (s.star === 5) fiveStars += 1
+    if (s.star === 4) fourStars += 1
+    if (s.star === 3) threeStars += 1
+    if (s.star === 2) twoStars += 1
+    if (s.star === 1) oneStars += 1
+  })
+  let totalRatingUsers = (fiveStars + fourStars + threeStars + twoStars + oneStars)
+  let averageStar = (5 * fiveStars + 4 * fourStars + 3 * threeStars + 2 * twoStars + oneStars) / totalRatingUsers
+
+  return stars = {
+    fiveStars,
+    fourStars,
+    threeStars,
+    twoStars,
+    oneStars,
+    averageStar,
+    totalRatingUsers
+  }
+}
+
 exports.getProduct = async (req, res) => {
   if (req.product.isVerified === null && req.product.isDeleted !== null)
     return res
@@ -41,22 +69,26 @@ exports.getProduct = async (req, res) => {
   let hasReviewed = null
   if (req.authUser) {
     //has on cart?
-    hasOnCart = await Cart.findOne({user:req.authUser._id,product:req.product._id})
-    hasOnCart?hasOnCart=true:hasOnCart=false
+    hasOnCart = await Cart.findOne({user:req.authUser._id,product:req.product._id , isDeleted:null})
+    if(!hasOnCart) hasOnCart=false
 
     // has on wishlist?
-    hasOnWishlist = await Whislist.findOne({ user: req.authUser._id, product: req.product._id })
-    hasOnWishlist ? hasOnWishlist = true : hasOnWishlist = false
-
+    hasOnWishlist = await Whislist.findOne({ user: req.authUser._id, product: req.product._id ,isDeleted:null})
+    if(!hasOnWishlist) hasOnWishlist = false
+    
     //has bought?
     hasBought = await Order.findOne({ user: req.authUser, $or: [{ 'status.currentStatus': 'complete' }, { 'status.currentStatus': 'tobereturned', 'status.currentStatus': 'return'}]})
     hasBought ? hasBought = true : hasBought = false
-
+    
     //has reviewed?
     hasReviewed = await Review.findOne({ user: req.authUser, product: req.product._id}).select('comment star user')
     if(!hasReviewed) hasReviewed = false
   }
-  res.json({product:req.product,hasOnCart,hasBought,hasOnWishlist, hasReviewed});
+  
+    //product's rating..
+    let stars = await getRatingInfo(req.product)
+  
+  res.json({product:req.product,hasOnCart,hasBought,hasOnWishlist, hasReviewed,stars});
 };
 
 exports.createProduct = async (req, res) => {
@@ -226,7 +258,7 @@ exports.getProducts = async (req, res) => {
     quantity:0
   }
 
-  const products = await Product.find(query)
+  let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -234,9 +266,10 @@ exports.getProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
-  // if (!products.length) {
-  //   return res.status(404).json({ error: "No products are available." });
-  // }
+  // hasOnCart hasOnWishlisht and ratng
+    products = products.map(async p => {
+
+    })
   const totalCount = await Product.countDocuments(query);
   res.json({ products, totalCount });
 };

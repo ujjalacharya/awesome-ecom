@@ -9,7 +9,7 @@ const { auth: adminAuth, hasAuthorization } = require('../controllers/admin_auth
 const router = express.Router();
 
 //review's..
-router.get("/review/average-rating/:p_slug", averageRating);
+// router.get("/review/average-rating/:p_slug", averageRating);
 router.get('/my-reviews',userAuth,myReviews)
 router.put('/review/:p_slug/:review_id',userAuth,editReview)
 router
