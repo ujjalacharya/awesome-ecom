@@ -79,7 +79,7 @@ class ProductSlider extends Component {
     return (
       <section className="product-slider">
         <Slider {...settings}>
-          {this.state.productData.products.map((product, i) => {
+          {this.props.data?.products.map((product, i) => {
             return <ProductCard key={i} data={product} />;
           })}
         </Slider>
