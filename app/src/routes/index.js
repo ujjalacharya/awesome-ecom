@@ -12,6 +12,7 @@ import DrawerNavigators from "./DrawerNavigators";
 import WishListScreen from "../screens/WishList";
 import SearchScreen from "../screens/SearchScreen";
 import CartStackScreen from "../screens/CartStackScreen";
+import ProductDetailScreen from "../screens/ProductDetailScreen";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name="Products" component={ProductListScreen} />
         <Stack.Screen name="WishList" component={WishListScreen} />
         <Stack.Screen name="CartStack" component={CartStackScreen} />
+        <Stack.Screen name="Detail" component={ProductDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
