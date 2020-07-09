@@ -3,6 +3,7 @@ const Category = require("../models/Category");
 const Product = require("../models/Product");
 const SuggestKeywords = require("../models/SuggestKeywords")
 const Cart = require("../models/Cart")
+const Review = require("../models/Review")
 const Order = require("../models/Order")
 const Whislist = require("../models/WishList")
 const ProductBrand = require("../models/ProductBrand");
@@ -37,18 +38,25 @@ exports.getProduct = async (req, res) => {
   let hasOnCart = null
   let hasBought = null
   let hasOnWishlist = null
+  let hasReviewed = null
   if (req.authUser) {
+    //has on cart?
     hasOnCart = await Cart.findOne({user:req.authUser._id,product:req.product._id})
     hasOnCart?hasOnCart=true:hasOnCart=false
 
+    // has on wishlist?
     hasOnWishlist = await Whislist.findOne({ user: req.authUser._id, product: req.product._id })
     hasOnWishlist ? hasOnWishlist = true : hasOnWishlist = false
 
+    //has bought?
     hasBought = await Order.findOne({ user: req.authUser, $or: [{ 'status.currentStatus': 'complete' }, { 'status.currentStatus': 'tobereturned', 'status.currentStatus': 'return'}]})
     hasBought ? hasBought = true : hasBought = false
 
+    //has reviewed?
+    hasReviewed = await Review.findOne({ user: req.authUser, product: req.product._id})
+    if(!hasReviewed) hasReviewed = false
   }
-  res.json({product:req.product,hasOnCart,hasBought,hasOnWishlist});
+  res.json({product:req.product,hasOnCart,hasBought,hasOnWishlist, hasReviewed});
 };
 
 exports.createProduct = async (req, res) => {
