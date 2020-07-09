@@ -50,7 +50,7 @@ class ProductListView extends Component {
       this.props.cart.editCartQtyResp
     ) {
       // openNotification("Success", "Removed from cart successfully");
-      this.props.getCartProducts("page=1");
+      // this.props.getCartProducts("page=1");
     }
   }
 
