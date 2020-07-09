@@ -46,3 +46,6 @@ export const ADD_TO_CART = 'ADD_TO_CART'
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
 export const EDIT_CART_QTY = 'EDIT_CART_QTY'
 
+//wishlist
+export const ADD_WISHLIST_ITEMS = 'ADD_WISHLIST_ITEMS'
+

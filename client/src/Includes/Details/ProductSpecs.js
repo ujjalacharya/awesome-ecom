@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { openNotification } from "../../../utils/common";
 import { DeleteOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 class ProductSpecs extends Component {
   state = {
@@ -18,6 +19,14 @@ class ProductSpecs extends Component {
       this.props.cart.addToCartResp
     ) {
       openNotification("Success", "Product added to cart successfully");
+    }
+
+    if (
+      this.props.wishlist.wishlistItemsResp !== prevProps.wishlist.wishlistItemsResp &&
+      this.props.wishlist.wishlistItemsResp
+    ) {
+      openNotification("Success", "Product added to wishlist successfully");
+      this.props.getProductDetails(this.props.router.query.slug)
     }
   }
 
@@ -53,7 +62,7 @@ class ProductSpecs extends Component {
       data: { product },
     } = this.props;
 
-    console.log(this.props)
+    console.log(this.props);
 
     let description = "";
     let allDescription = "";
@@ -66,6 +75,8 @@ class ProductSpecs extends Component {
         description = product.description;
       }
     }
+
+    let loginToken = this.props.authentication.token;
     return (
       <div className="product-specs">
         <div className="price-specs">
@@ -83,17 +94,41 @@ class ProductSpecs extends Component {
               <span>( 184 customer reviews | 41 FAQ answered )</span>
             </div>
           </div>
-          <div className="old-new-price">
-            <div className="old-price">
-              <span>{product.price}</span>
+          <div className="price-wish">
+            <div className="old-new-price">
+              <div className="old-price">
+                <span>Rs {product.price}</span>
+              </div>
+              <div className="new-price">
+                <span className="price">
+                  Rs {product.price - (product.price * 2) / 100}
+                </span>
+                <span className="discount">
+                  (Save Rs {(product.price * 2) / 100} | {product.discountRate}
+                  %)
+                </span>
+              </div>
             </div>
-            <div className="new-price">
-              <span className="price">
-                {product.price - (product.price * 2) / 100}
-              </span>
-              <span className="discount">
-                (Save {(product.price * 2) / 100} | {product.discountRate}%)
-              </span>
+            <div className="wish-btn">
+              {loginToken ? (
+                this.props.data.hasOnWishlist ? (
+                  <img
+                    data-tip="Add to Wishlist"
+                    src="/images/heart-blue.png"
+                  />
+                ) : (
+                  <img
+                    data-tip="Add to Wishlist"
+                    src="/images/heart.png"
+                    onClick={() =>
+                      this.props.addWishListItems(product.slug)}
+                  />
+                )
+              ) : (
+                <Link href={`/login?origin=${this.props.router.asPath}`}>
+                  <img data-tip="Add to Wishlist" src="/images/heart.png" />
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -153,21 +188,17 @@ class ProductSpecs extends Component {
                   okText="Yes"
                   cancelText="No"
                 > */}
-                  <a>
-                    <Button className="btn">
-                      {/* <DeleteOutlined /> */}
-                      <span className="txt">ADDED TO CART</span>
-                    </Button>
-                  </a>
+                <a>
+                  <Button className="btn">
+                    {/* <DeleteOutlined /> */}
+                    <span className="txt">ADDED TO CART</span>
+                  </Button>
+                </a>
                 {/* </Popconfirm> */}
               </div>
             )}
           </div>
           <div className="wish-comp-btn">
-            <div className="wish-btn">
-              <img data-tip="Add to Wishlist" src="/images/heart.png" />
-              <span>Add to Wishlist</span>
-            </div>
             <div className="comp-btn">
               <img data-tip="Add to Compare" src="/images/sliders.png" />
               <span>Add to Compare</span>
