@@ -4,6 +4,7 @@ import actions from "../../../redux/actions";
 
 //includes
 import ProductListView from "../../Components/ProductListView";
+import { getDiscountedPrice } from "../../../utils/common";
 
 class CartItems extends Component {
   state = {
@@ -15,8 +16,7 @@ class CartItems extends Component {
     if (this.props.cart.getCartProducts) {
       let totalAmount = 0
       this.props.cart.getCartProducts.carts?.map(data => {
-        let discountedPrice = data.product.price - ((data.product.price * data.product.discountRate) / 100)
-        totalAmount += discountedPrice
+        totalAmount += (getDiscountedPrice(data.product.price, data.product.discountRate) * data.quantity)
       })
       this.setState({
         cardItems: this.props.cart.getCartProducts,

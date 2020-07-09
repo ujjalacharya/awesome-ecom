@@ -126,3 +126,8 @@ export const openNotification = (title, description) => {
     icon: <SmileOutlined style={{ color: "#108ee9" }} />,
   });
 };
+
+export const getDiscountedPrice = (price, discountRate) => {
+  let discountedPrice = price - ((price * discountRate) / 100)
+  return discountedPrice
+}

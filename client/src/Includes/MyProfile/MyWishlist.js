@@ -7,6 +7,7 @@ import withPrivate from "../../../utils/auth/withPrivate";
 import {
   convertDateToCurrentTz,
   openNotification,
+  getDiscountedPrice,
 } from "../../../utils/common";
 import next from "next";
 import Link from "next/link";
@@ -139,9 +140,8 @@ class MyWishlist extends Component {
     let data = [];
 
     wishlists?.map((item) => {
-      let discountedPrice =
-        item.product.price -
-        (item.product.price * item.product.discountRate) / 100;
+      let discountedPrice = getDiscountedPrice(item.product.price, item.product.discountRate);
+      
       let ele = {
         key: item._id,
         image: (
