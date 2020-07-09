@@ -7,7 +7,7 @@ import {
 
 const Stack = createStackNavigator();
 
-import ProductListScreen from "../screens/AfterGo/ProductListScreen";
+import ProductListScreen from "../screens/ProductListScreen/ProductListScreen";
 import DrawerNavigators from "./DrawerNavigators";
 import WishListScreen from "../screens/WishList";
 import SearchScreen from "../screens/SearchScreen";
