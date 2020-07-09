@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Input, Button } from "antd";
+import { Input, Button, Popconfirm } from "antd";
 import { withRouter } from "next/router";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { openNotification } from "../../../utils/common";
+import { DeleteOutlined } from "@ant-design/icons";
 
 class ProductSpecs extends Component {
   state = {
@@ -11,9 +12,12 @@ class ProductSpecs extends Component {
     showStatus: "More",
   };
 
-  componentDidUpdate(prevProps){
-    if(this.props.cart.addToCartResp !== prevProps.cart.addToCartResp && this.props.cart.addToCartResp){
-      openNotification('Success', 'Product added to cart successfully')
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
+      this.props.cart.addToCartResp
+    ) {
+      openNotification("Success", "Product added to cart successfully");
     }
   }
 
@@ -45,23 +49,27 @@ class ProductSpecs extends Component {
   };
 
   render() {
-    let { data } = this.props;
+    let {
+      data: { product },
+    } = this.props;
+
+    console.log(this.props)
 
     let description = "";
     let allDescription = "";
-    if (data.description) {
-      allDescription = data.description.split(" ");
+    if (product.description) {
+      allDescription = product.description.split(" ");
       if (this.state.showStatus === "More" && allDescription.length > 100) {
         let newRemarks = [...allDescription];
         description = newRemarks.splice(0, 95).join(" ") + "...";
       } else {
-        description = data.description;
+        description = product.description;
       }
     }
     return (
       <div className="product-specs">
         <div className="price-specs">
-          <div className="product-title">{data.name}</div>
+          <div className="product-title">{product.name}</div>
           <div className="ratings-reviews">
             <div className="ratings">
               <i className="fa fa-star-o" aria-hidden="true"></i>
@@ -77,14 +85,14 @@ class ProductSpecs extends Component {
           </div>
           <div className="old-new-price">
             <div className="old-price">
-              <span>{data.price}</span>
+              <span>{product.price}</span>
             </div>
             <div className="new-price">
               <span className="price">
-                {data.price - (data.price * 2) / 100}
+                {product.price - (product.price * 2) / 100}
               </span>
               <span className="discount">
-                (Save {(data.price * 2) / 100} | {data.discountRate}%)
+                (Save {(product.price * 2) / 100} | {product.discountRate}%)
               </span>
             </div>
           </div>
@@ -104,34 +112,56 @@ class ProductSpecs extends Component {
         </div>
         <div className="qty-cart-btn">
           <div className="qty-cart">
-            <div className="qty">
-              <span className="qty-title">Qty:</span>
-              <span className="qty-inc-dcs">
-                <i
-                  aria-hidden="true"
-                  onClick={() => this.changePdValue(-1)}
-                  className={
-                    "fa fa-minus " + (this.state.pdQty === 1 ? "disabled" : "")
-                  }
-                />
-                <Input
-                  defaultValue={this.state.pdQty}
-                  value={this.state.pdQty}
-                  onChange={(e) => {
-                    this.setState({ pdQty: e.target.value });
-                  }}
-                />
-                <i
-                  className="fa fa-plus"
-                  aria-hidden="true"
-                  onClick={() => this.changePdValue(1)}
-                />
-              </span>
-            </div>
+            {!this.props.data.hasOnCart ? (
+              <>
+                <div className="qty">
+                  <span className="qty-title">Qty:</span>
+                  <span className="qty-inc-dcs">
+                    <i
+                      aria-hidden="true"
+                      onClick={() => this.changePdValue(-1)}
+                      className={
+                        "fa fa-minus " +
+                        (this.state.pdQty === 1 ? "disabled" : "")
+                      }
+                    />
+                    <Input
+                      defaultValue={this.state.pdQty}
+                      value={this.state.pdQty}
+                      onChange={(e) => {
+                        this.setState({ pdQty: e.target.value });
+                      }}
+                    />
+                    <i
+                      className="fa fa-plus"
+                      aria-hidden="true"
+                      onClick={() => this.changePdValue(1)}
+                    />
+                  </span>
+                </div>
 
-            <Button className="primary" onClick={this.addToCart}>
-              Add to Cart
-            </Button>
+                <Button className="primary" onClick={this.addToCart}>
+                  Add to Cart
+                </Button>
+              </>
+            ) : (
+              <div className="delete-product">
+                {/* <Popconfirm
+                  title="Are you sure you want to remove this from cart?"
+                  onConfirm={() => this.props.removeCart(items._id)}
+                  // onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                > */}
+                  <a>
+                    <Button className="btn">
+                      {/* <DeleteOutlined /> */}
+                      <span className="txt">ADDED TO CART</span>
+                    </Button>
+                  </a>
+                {/* </Popconfirm> */}
+              </div>
+            )}
           </div>
           <div className="wish-comp-btn">
             <div className="wish-btn">
@@ -147,11 +177,11 @@ class ProductSpecs extends Component {
         <div className="prod-cate-specs">
           <div className="tags">
             <b>Tags:</b>{" "}
-            {data.tags.map((tag, i) => {
+            {product.tags.map((tag, i) => {
               return (
                 <span key={i}>
                   {tag}
-                  {data.tags.length !== i + 1 && ","}
+                  {product.tags.length !== i + 1 && ","}
                 </span>
               );
             })}

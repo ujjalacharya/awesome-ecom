@@ -117,24 +117,6 @@
         }
       }
     }
-    .delete-product {
-      margin-top: 15px;
-      a {
-        button {
-          color: $primary-color;
-          border-color: $primary-color;
-          @media screen and (max-width: 767px) {
-            width: 100%;
-          }
-          &:hover {
-            background: $primary-color;
-            color: $white;
-          }
-          span {
-            margin-left: 10px;
-          }
-        }
-      }
-    }
   }
 }
+

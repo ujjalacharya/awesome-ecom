@@ -1,7 +1,7 @@
 input{
     background: $light-bg;
     font-size: 12px;
-    height: 35px !important;
+    height: 32px !important;
     &:hover, .ant-input-focused, &:focus{
         border-color: #d9d9d9 !important;
         box-shadow: unset !important;
@@ -10,7 +10,7 @@ input{
 
 button{
     // width: 120px !important;
-    height: 35px !important;
+    height: 32px !important;
     border-radius: 5px !important;
     text-transform: capitalize !important;
     border: 0px;
