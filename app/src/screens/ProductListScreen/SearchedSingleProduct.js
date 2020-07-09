@@ -10,23 +10,26 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Constants from "../../constants/Constants";
 
-const SearchedSingleProduct = ({ bus }) => {
+const SearchedSingleProduct = (props) => {
   return (
     <TouchableWithoutFeedback>
       <Card
-        onPress={() => console.warn("main card")}
+        onPress={() => props.navigation.navigate("Detail")}
         style={{ marginBottom: 5 }}
       >
         <TouchableNativeFeedback>
           <Card.Content>
             <View style={{ flex: 1, flexDirection: "row", marginTop: 5 }}>
               <View style={{ flex: 1.5 }}>
-                <Image style={styles.tinyLogo} source={{ uri: bus.image }} />
+                <Image
+                  style={styles.tinyLogo}
+                  source={{ uri: props.product.image }}
+                />
               </View>
               <View style={{ flex: 2 }}>
                 <>
-                  <Title>{bus.title}</Title>
-                  <Paragraph>{bus.price}</Paragraph>
+                  <Title>{props.product.title}</Title>
+                  <Paragraph>{props.product.price}</Paragraph>
                   <Avatar.Text
                     size={24}
                     label="4/5 stars"

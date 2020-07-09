@@ -45,8 +45,8 @@ export class ProductListScreen extends Component {
               handleModalVisibility={this.handleModalVisibility}
             />
             <View style={{ flex: 5 }}>
-              {productData.map((bus, i) => (
-                <SearchedSingleProduct bus={bus} key={i} />
+              {productData.map((product, i) => (
+                <SearchedSingleProduct product={product} key={i} {...this.props}/>
               ))}
             </View>
           </ScrollView>
