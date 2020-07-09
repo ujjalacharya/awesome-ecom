@@ -68,7 +68,7 @@ const getQandA = (query) => {
       dispatch({ type: PRODUCT_QA, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: PRODUCT_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
@@ -83,7 +83,7 @@ const postQuestion = (query, body) => {
       dispatch({ type: POST_QUESTION, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: PRODUCT_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
@@ -98,7 +98,7 @@ const getProductReviews = (query) => {
       dispatch({ type: PRODUCT_REVIEWS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: PRODUCT_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }
@@ -113,7 +113,7 @@ const postReviews = (query, body) => {
       dispatch({ type: POST_PRODUCT_REVIEWS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
-        type: PRODUCT_ERROR,
+        type: GLOBAL_ERROR,
         payload: response.errorMessage,
       });
     }

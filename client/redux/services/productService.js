@@ -1,185 +1,45 @@
-import fetch from "isomorphic-unfetch";
-import cookie from 'js-cookie';
-import { getCookie } from "../../utils/cookie";
+import { getService, getTokenService, postTokenService } from "../../utils/commonService";
 
 export class ProductService {
-  async getLatestProducts() {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/latest`
-      );
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  getLatestProducts() {
+    let url = `${process.env.SERVER_BASE_URL}/api/product/latest`
+    let data = getService(url, 'GET');
+    return data;
   }
 
-  async productCategories() {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/superadmin/product-categories`
-      );
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  productCategories() {
+    let url = `${process.env.SERVER_BASE_URL}/api/superadmin/product-categories`
+    let data = getService(url, 'GET');
+    return data;
   }
 
-  async getProductDetails(slug, ctx) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/${slug}`, {
-          method: 'GET',
-          headers: {
-            'x-auth-token': getCookie('token', ctx.req)
-          }
-        }
-      );
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  getProductDetails(slug, ctx) {
+    let url = `${process.env.SERVER_BASE_URL}/api/product/${slug}`
+    let data = getTokenService(url, 'GET', ctx);
+    return data;
   }
 
   async getQandA(query) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/review-qna/qna/${query}`
-      );
-
-      const data = await resp.json();
-
-      return {
-        isSuccess: true,
-        data,
-      };
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/review-qna/qna/${query}`
+    let data = getService(url, 'GET');
+    return data;
   }
 
   async postQuestion(query, body) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/review-qna/qna/${query}`,{
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            "x-auth-token": cookie.get("token")
-          },
-          body: JSON.stringify(body)
-        }
-      );
-
-      const data = await resp.json();
-
-      return {
-        isSuccess: true,
-        data,
-      };
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/review-qna/qna/${query}`
+    let data = postTokenService(url, 'POST', body);
+    return data;
   }
 
   async getProductReviews(query) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/review-qna/review/${query}`
-      );
-
-      const data = await resp.json();
-
-      return {
-        isSuccess: true,
-        data,
-      };
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/review-qna/review/${query}`
+    let data = getService(url, 'GET');
+    return data;
   }
 
   async postReviews(query, body) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/review-qna/review/${query}`,{
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            "x-auth-token": cookie.get("token")
-          },
-          body: JSON.stringify(body)
-        }
-      );
-
-      const data = await resp.json();
-
-      return {
-        isSuccess: true,
-        data,
-      };
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/review-qna/review/${query}`
+    let data = postTokenService(url, 'POST', body);
+    return data;
   }
 }

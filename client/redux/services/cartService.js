@@ -1,4 +1,4 @@
-import { postService, getTokenService, getService } from "../../utils/commonService";
+import { getTokenService, postTokenService } from "../../utils/commonService";
 
 export class CartService {
   getCartProducts(query, ctx) {
@@ -9,7 +9,7 @@ export class CartService {
 
   addToCart(query, body) {
     let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/cart/${query}`
-    let data = postService(url, body);
+    let data = postTokenService(url, 'POST', body);
     return data;
   }
 

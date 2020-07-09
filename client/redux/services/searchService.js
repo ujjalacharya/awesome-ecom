@@ -1,104 +1,27 @@
-import fetch from "isomorphic-unfetch";
+import { getService, postService } from "../../utils/commonService";
 
 export class SearchService {
   async getSearchKeywords(query) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/suggest-keywords?keyword=${query}&limits=8`
-      );
-
-      const data = await resp.json();
-
-      return {
-        isSuccess: true,
-        data,
-      };
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/product/suggest-keywords?keyword=${query}&limits=8`
+    let data = getService(url, 'GET');
+    return data;
   }
 
   async searchProducts(query, body) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/search${query}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        }
-      );
-
-      const data = await resp.json();
-
-      return {
-        isSuccess: true,
-        data,
-      };
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/product/search${query}`
+    let data = postService(url, 'POST', body);
+    return data;
   }
 
   async getProductsByCategory(query) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/by-category${query}`
-      );
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/product/by-category${query}`
+    let data = getService(url, 'GET');
+    return data;
   }
 
   async searchFilter(query) {
-    try {
-      const resp = await fetch(
-        `${process.env.SERVER_BASE_URL}/api/product/generate-filter${query}`
-      );
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/product/generate-filter${query}`
+    let data = getService(url, 'GET');
+    return data;
   }
 }
