@@ -12,7 +12,6 @@ class ProductSpecs extends Component {
   };
 
   componentDidUpdate(prevProps){
-    console.log(this.props)
     if(this.props.cart.addToCartResp !== prevProps.cart.addToCartResp && this.props.cart.addToCartResp){
       openNotification('Success', 'Product added to cart successfully')
     }

@@ -1,128 +1,28 @@
-import fetch from "isomorphic-unfetch";
-import cookie from 'js-cookie';
+import { getService, postTokenService, getTokenService } from "../../utils/commonService";
 
 export class UserService {
   async getUserProfile(id) {
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user/${id}`);
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/user/${id}`
+    let data = getService(url, 'GET');
+    return data;
   }
 
   async addAddress(body) {
-    
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user/add-address`,{
-        method: 'POST',
-        headers:{
-          'content-type':'application/json',
-          "x-auth-token": cookie.get("token")
-        },
-        body: JSON.stringify(body)
-      });
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/user/add-address`
+    let data = postTokenService(url, 'POST', body);
+    return data;
   }
 
   async editAddress(id, body) {
-    
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user/edit-address/${id}`,{
-        method: 'PUT',
-        headers:{
-          'content-type':'application/json',
-          "x-auth-token": cookie.get("token")
-        },
-        body: JSON.stringify(body)
-      });
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/user/edit-address/${id}`
+    let data = postTokenService(url, 'PUT', body);
+    return data;
   }
 
   async toggleActiveAddress(query) {
-    
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user/toggle-address-activeness?${query}`,{
-        method: 'PATCH',
-        headers:{
-          'content-type':'application/json',
-          "x-auth-token": cookie.get("token")
-        }
-      });
-
-      const data = await resp.json();
-
-      if (resp.status >= 200 && resp.status < 300) {
-        return {
-          isSuccess: true,
-          data,
-        };
-      } else {
-        return {
-          isSuccess: false,
-          errorMessage: data.error,
-        };
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+    let url = `${process.env.SERVER_BASE_URL}/api/user/toggle-address-activeness?${query}`
+    let data = getTokenService(url, 'PATCH');
+    return data;
   }
   
 }

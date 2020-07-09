@@ -1,35 +1,10 @@
-import fetch from "isomorphic-unfetch";
+import { postService } from "../../utils/commonService";
 
 export class AuthService {
-  async loginUser(body, type) {
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/user-auth/signin`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body)
-      });
-
-      const data = await resp.json();
-      
-      if(resp.status >= 200 && resp.status < 300){
-        return {
-            isSuccess: true,
-            data,
-          };
-      }else{
-        return {
-            isSuccess: false,
-            errorMessage: data.error,
-          };    
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  async loginUser(body) {
+    let url = `${process.env.SERVER_BASE_URL}/api/user-auth/signin`
+    let data = postService(url, 'POST', body);
+    return data;
   }
   
 }
