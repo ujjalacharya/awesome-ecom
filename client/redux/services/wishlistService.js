@@ -6,4 +6,10 @@ export class WishlistService {
     let data = postTokenService(url, 'POST');
     return data;
   }
+  
+  async removeFromWishList(id) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/delete-wishlist/${id}`
+    let data = postTokenService(url, 'PATCH');
+    return data;
+  }
 }

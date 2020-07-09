@@ -115,6 +115,7 @@ class ProductSpecs extends Component {
                   <img
                     data-tip="Add to Wishlist"
                     src="/images/heart-blue.png"
+                    onClick={() => this.props.removeFromWishList(product.wishlist.id)}
                   />
                 ) : (
                   <img

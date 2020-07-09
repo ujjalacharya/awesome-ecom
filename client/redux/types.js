@@ -48,4 +48,5 @@ export const EDIT_CART_QTY = 'EDIT_CART_QTY'
 
 //wishlist
 export const ADD_WISHLIST_ITEMS = 'ADD_WISHLIST_ITEMS'
+export const REMOVE_FROM_WISHLIST = 'REMOVE_FROM_WISHLIST'
 
