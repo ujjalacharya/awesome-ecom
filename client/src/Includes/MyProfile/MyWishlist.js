@@ -21,7 +21,6 @@ class MyWishlist extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
     if (this.props.wishlist.getWishlistItems) {
       this.setState({
         allWishlistItems: this.props.wishlist.getWishlistItems,
@@ -61,12 +60,9 @@ class MyWishlist extends Component {
   }
 
   render() {
-    console.log(this.props);
     let {
       allWishlistItems: { wishlists },
     } = this.state;
-
-    console.log(this.state);
 
     const columns = [
       {

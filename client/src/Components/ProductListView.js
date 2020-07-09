@@ -65,7 +65,7 @@ class ProductListView extends Component {
   };
 
   render() {
-    console.log(this.state.listItems);
+    
     return (
       <>
         {!_.isEmpty(this.state.listItems.carts)

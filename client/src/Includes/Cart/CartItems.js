@@ -25,12 +25,8 @@ class CartItems extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    console.log(this.props, "did update");
-  }
-
   render() {
-    console.log(this.props);
+    
     return (
       <div className="cart-items">
         <div className="delivery-status">
