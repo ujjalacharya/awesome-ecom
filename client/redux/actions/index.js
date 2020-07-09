@@ -4,6 +4,7 @@ import searchActions from './searchActions';
 import userActions from './userActions';
 import otherActions from './otherActions';
 import cartActions from './cartActions';
+import wishlistActions from './wishlistActions';
 
 export default {
   ...authActions,
@@ -11,5 +12,6 @@ export default {
   ...searchActions,
   ...userActions,
   ...otherActions,
-  ...cartActions
+  ...cartActions,
+  ...wishlistActions
 };

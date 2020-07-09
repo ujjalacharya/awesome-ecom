@@ -1,10 +1,10 @@
-import { CART_PRODUCTS, GLOBAL_ERROR, ADD_TO_CART } from "../types";
+import { CART_PRODUCTS, GLOBAL_ERROR, ADD_TO_CART, REMOVE_FROM_CART, EDIT_CART_QTY } from "../types";
 import { CartService } from "../services/cartService";
 
-const getCartProducts = (query) => {
+const getCartProducts = (query, ctx) => {
   return async (dispatch) => {
     const cartService = new CartService();
-    const response = await cartService.getCartProducts(query);
+    const response = await cartService.getCartProducts(query, ctx);
     if (response.isSuccess) {
       dispatch({ type: CART_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {
@@ -31,8 +31,40 @@ const addToCart = (query, body) => {
   };
 };
 
+const removeCart = (query) => {
+  return async (dispatch) => {
+    const cartService = new CartService();
+    const response = await cartService.removeCart(query);
+    if (response.isSuccess) {
+      dispatch({ type: REMOVE_FROM_CART, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
+const editCartQty = (query) => {
+  return async (dispatch) => {
+    const cartService = new CartService();
+    const response = await cartService.editCartQty(query);
+    if (response.isSuccess) {
+      dispatch({ type: EDIT_CART_QTY, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 
 export default {
     getCartProducts,
-    addToCart
+    addToCart,
+    removeCart,
+    editCartQty
 };

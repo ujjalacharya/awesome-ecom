@@ -19,7 +19,7 @@ class Details extends Component {
     } = ctx;
 
     const data = await ctx.store.dispatch(
-      actions.getProductDetails(ctx.query.slug)
+      actions.getProductDetails(ctx.query.slug, ctx)
     );
 
     const qa = await ctx.store.dispatch(
@@ -35,7 +35,7 @@ class Details extends Component {
     // };
   }
   render() {
-    console.log(this.props)
+    console.log(this.props.products)
     return (
       <Layout title={this.props.products?.productDetails?.product?.name}>
         <div className="wrapper">
@@ -60,7 +60,7 @@ class Details extends Component {
                     <DetailSlider data={this.props.products.productDetails.product} />
                   </Col>
                   <Col lg={14} xs={24} md={18}>
-                    <ProductSpecs data={this.props.products.productDetails.product} />
+                    <ProductSpecs data={this.props.products.productDetails} />
                   </Col>
                 </Row>
               )}

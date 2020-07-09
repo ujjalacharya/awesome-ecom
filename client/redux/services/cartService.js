@@ -1,68 +1,28 @@
-import fetch from "isomorphic-unfetch";
-import cookie from 'js-cookie';
+import { getTokenService, postTokenService } from "../../utils/commonService";
 
 export class CartService {
-  async getCartProducts(query) {
-    let token = cookie.get("token")
-    console.log(token)
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}`,{
-        method: 'GET',
-        headers:{
-          "x-auth-token": cookie.get("token")
-        }
-      });
-      
-      const data = await resp.json();
-      if(resp.status >= 200 && resp.status < 300){
-        return {
-            isSuccess: true,
-            data,
-          };
-      }else{
-        return {
-            isSuccess: false,
-            errorMessage: data.error,
-          };    
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  getCartProducts(query, ctx) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}`
+    let data = getTokenService(url, 'GET', ctx);
+    return data;
   }
 
-  async addToCart(query, body) {
-    try {
-      const resp = await fetch(`${process.env.SERVER_BASE_URL}/api/cart-wishlist/cart/${query}`,{
-        method: 'POST',
-        headers:{
-          'content-type': 'application/json',
-          "x-auth-token": cookie.get("token")
-        },
-        body: JSON.stringify(body)
-      });
+  addToCart(query, body) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/cart/${query}`
+    let data = postTokenService(url, 'POST', body);
+    return data;
+  }
 
-      const data = await resp.json();
-      
-      if(resp.status >= 200 && resp.status < 300){
-        return {
-            isSuccess: true,
-            data,
-          };
-      }else{
-        return {
-            isSuccess: false,
-            errorMessage: data.error,
-          };    
-      }
-    } catch (err) {
-      return {
-        isSuccess: false,
-        errorMessage: err,
-      };
-    }
+  removeCart(id) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/delete-cart/${id}`
+    let data = getTokenService(url, 'PATCH');
+    return data;
+  }
+
+  editCartQty(query) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/edit-cart/${query}`
+    let data = getTokenService(url, 'PATCH');
+    return data;
   }
   
 }
