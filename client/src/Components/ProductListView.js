@@ -5,12 +5,24 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import actions from "../../redux/actions";
 import { openNotification } from "../../utils/common";
+import Link from "next/link";
 
 class ProductListView extends Component {
   state = {
     pdQty: 1,
     listItems: [],
   };
+
+  componentDidMount() {
+    this.props.data?.carts?.map((item, i) => {
+      this.setState({
+        ["pdQty" + i]: item.quantity,
+      });
+    });
+    this.setState({
+      listItems: this.props.data,
+    });
+  }
 
   componentDidUpdate(prevProps) {
     if (this.props.data !== prevProps.data && this.props.data.carts) {
@@ -23,6 +35,7 @@ class ProductListView extends Component {
         listItems: this.props.data,
       });
     }
+
     if (
       this.props.cart.removeFromCartResp !==
         prevProps.cart.removeFromCartResp &&
@@ -31,18 +44,28 @@ class ProductListView extends Component {
       openNotification("Success", "Removed from cart successfully");
       this.props.getCartProducts("page=1");
     }
+
+    if (
+      this.props.cart.editCartQtyResp !== prevProps.cart.editCartQtyResp &&
+      this.props.cart.editCartQtyResp
+    ) {
+      // openNotification("Success", "Removed from cart successfully");
+      this.props.getCartProducts("page=1");
+    }
   }
 
-  changePdValue = (num, i) => {
+  changePdValue = (num, i, cartId) => {
     let newPdQty = parseInt(this.state["pdQty" + i]) + num;
     if (newPdQty >= 1) {
       this.setState({
         ["pdQty" + i]: newPdQty,
       });
     }
+    this.props.editCartQty(cartId + "?quantity=" + newPdQty);
   };
 
   render() {
+    console.log(this.state.listItems);
     return (
       <>
         {!_.isEmpty(this.state.listItems.carts)
@@ -53,24 +76,38 @@ class ProductListView extends Component {
                     <div className="product-list-view">
                       <Row>
                         <Col lg={6} xs={24} key={i}>
-                          <div className="pd-img">
-                            <img
-                              src={
-                                process.env.IMAGE_BASE_URL +
-                                "/" +
-                                items.product?.images[0]?.medium
-                              }
-                              alt="helmet"
-                            />
-                          </div>
+                          <Link
+                            href="/products/[slug]"
+                            as={`/products/${items.product.slug}`}
+                          >
+                            <a>
+                              <div className="pd-img">
+                                <img
+                                  src={
+                                    process.env.IMAGE_BASE_URL +
+                                    "/" +
+                                    items.product?.images[0]?.medium
+                                  }
+                                  alt="helmet"
+                                />
+                              </div>
+                            </a>
+                          </Link>
                         </Col>
                         <Col lg={18} xs={24}>
                           <div className="pd-details">
                             <div className="name-price">
                               <div className="name">
-                                <div className="pd-name">
-                                  {items.product.name}
-                                </div>
+                                <Link
+                                  href="/products/[slug]"
+                                  as={`/products/${items.product.slug}`}
+                                >
+                                  <a>
+                                    <div className="pd-name">
+                                      {items.product.name}
+                                    </div>
+                                  </a>
+                                </Link>
                                 <div className="sold-by">
                                   Sold By: {items.product?.soldBy.shopName}
                                 </div>
@@ -107,7 +144,9 @@ class ProductListView extends Component {
                               <span className="qty-inc-dcs">
                                 <i
                                   aria-hidden="true"
-                                  onClick={() => this.changePdValue(-1, i)}
+                                  onClick={() =>
+                                    this.changePdValue(-1, i, items._id)
+                                  }
                                   className={
                                     "fa fa-minus " +
                                     (this.state.pdQty === 1 ? "disabled" : "")
@@ -125,7 +164,9 @@ class ProductListView extends Component {
                                 <i
                                   className="fa fa-plus"
                                   aria-hidden="true"
-                                  onClick={() => this.changePdValue(1, i)}
+                                  onClick={() =>
+                                    this.changePdValue(1, i, items._id)
+                                  }
                                 />
                               </span>
                             </div>

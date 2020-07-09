@@ -1,9 +1,10 @@
-import { CART_PRODUCTS, ADD_TO_CART, REMOVE_FROM_CART } from "../types";
+import { CART_PRODUCTS, ADD_TO_CART, REMOVE_FROM_CART, EDIT_CART_QTY } from "../types";
 
 const initialState = {
   getCartProducts: null,
   addToCartResp: null,
   removeFromCartResp: null,
+  editCartQtyResp: null
 };
 
 export default (state = initialState, action) => {
@@ -14,6 +15,8 @@ export default (state = initialState, action) => {
       return { ...state, addToCartResp: action.payload, hasError: false };
     case REMOVE_FROM_CART:
       return { ...state, removeFromCartResp: action.payload, hasError: false };
+    case EDIT_CART_QTY:
+      return { ...state, editCartQtyResp: action.payload, hasError: false };
     default:
       return state;
   }

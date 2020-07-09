@@ -18,5 +18,11 @@ export class CartService {
     let data = getTokenService(url, 'PATCH');
     return data;
   }
+
+  editCartQty(query) {
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/edit-cart/${query}`
+    let data = getTokenService(url, 'PATCH');
+    return data;
+  }
   
 }
