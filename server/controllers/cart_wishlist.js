@@ -38,7 +38,7 @@ exports.addCart = async (req, res) => {
 exports.getCarts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let carts = await Cart.find({ user: req.user._id })
+    let carts = await Cart.find({ user: req.user._id ,isDeleted:null })
         .populate({
             path : 'product',
             populate: {
@@ -61,7 +61,7 @@ exports.getCarts = async (req, res) => {
     // if (!carts.length) {
     //     return res.status(404).json({ error: 'Carts not found' })
     // }
-    const totalCount = await Cart.countDocuments({ user: req.user._id })
+    const totalCount = await Cart.countDocuments({ user: req.user._id ,isDeleted:null})
     res.json({ carts, totalCount })
 
 }
@@ -94,7 +94,7 @@ exports.addWishlist = async (req, res) => {
 exports.getWishlists = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let wishlists = await Wishlist.find({ user: req.user._id })
+    let wishlists = await Wishlist.find({ user: req.user._id,isDeleted:null })
         .populate({
             path: 'product',
             populate: {
@@ -117,7 +117,7 @@ exports.getWishlists = async (req, res) => {
     // if (!wishlists.length) {
     //     return res.status(404).json({ error: 'Wishlists not found' })
     // }
-    const totalCount = await Wishlist.countDocuments({ user: req.user._id })
+    const totalCount = await Wishlist.countDocuments({ user: req.user._id,isDeleted:null })
     res.json({ wishlists, totalCount })
 
 }
