@@ -161,6 +161,18 @@ exports.postQuestion = async (req, res) => {
         return res.status(404).json({ error: 'Product not found' })
     }
     let QnA = await QNA.findOne({ product: product._id })
+        .populate('user', 'name')
+        .populate('product', 'name slug')
+        .populate({
+            path: 'qna.questionby',
+            model: 'user',
+            select: 'name'
+        })
+        .populate({
+            path: 'qna.answerby',
+            model: 'admin',
+            select: 'name shopName address'
+        })
     if (!QnA) {
         let newQNA = new QNA({
             product: product._id,
@@ -194,6 +206,18 @@ exports.postAnswer = async (req, res) => {
         return res.status(401).json({ error: 'Unauthorized admin.' })
     }
     let QnA = await QNA.findOne({ product: product._id })
+        .populate('user', 'name')
+        .populate('product', 'name slug')
+        .populate({
+            path: 'qna.questionby',
+            model: 'user',
+            select: 'name'
+        })
+        .populate({
+            path: 'qna.answerby',
+            model: 'admin',
+            select: 'name shopName address'
+        })
     if (!QnA) {
         QnA = {
             qna: []
@@ -232,6 +256,18 @@ exports.deleteQNAByAdmin = async (req, res) => {
         return res.status(401).json({ error: 'Unauthorized admin.' })
     }
     let QnA = await QNA.findOne({ product: product._id })
+        .populate('user', 'name')
+        .populate('product', 'name slug')
+        .populate({
+            path: 'qna.questionby',
+            model: 'user',
+            select: 'name'
+        })
+        .populate({
+            path: 'qna.answerby',
+            model: 'admin',
+            select: 'name shopName address'
+        })
     if (!QnA) {
         QnA = {
             qna: []
@@ -258,6 +294,18 @@ exports.deleteQNAByUser = async (req, res) => {
         return res.status(404).json({ error: 'Product not found' })
     }
     let QnA = await QNA.findOne({ product: product._id })
+        .populate('user', 'name')
+        .populate('product', 'name slug')
+        .populate({
+            path: 'qna.questionby',
+            model: 'user',
+            select: 'name'
+        })
+        .populate({
+            path: 'qna.answerby',
+            model: 'admin',
+            select: 'name shopName address'
+        })
     if (!QnA) {
         QnA = {
             qna: []
@@ -290,6 +338,16 @@ exports.getQNAs = async (req, res) => {
     let QnA = await QNA.findOne({ product: product._id })
         .populate('user', 'name')
         .populate('product', 'name slug')
+        .populate({
+            path: 'qna.questionby',
+            model: 'user',
+            select:'name'
+        })
+        .populate({
+            path: 'qna.answerby',
+            model: 'admin',
+            select: 'name shopName address'
+        })
     if (!QnA) {
         QnA={
             qna:[]

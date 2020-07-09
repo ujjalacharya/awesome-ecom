@@ -53,7 +53,7 @@ exports.getProduct = async (req, res) => {
     hasBought ? hasBought = true : hasBought = false
 
     //has reviewed?
-    hasReviewed = await Review.findOne({ user: req.authUser, product: req.product._id})
+    hasReviewed = await Review.findOne({ user: req.authUser, product: req.product._id}).select('comment star user')
     if(!hasReviewed) hasReviewed = false
   }
   res.json({product:req.product,hasOnCart,hasBought,hasOnWishlist, hasReviewed});
