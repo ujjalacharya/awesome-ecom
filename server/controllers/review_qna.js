@@ -101,8 +101,7 @@ exports.getReviews = async (req, res) => {
         return res.status(404).json({ error: 'Product not found' })
     }
     const reviews = await Review.find({ product: product._id })
-        .populate('user', 'name lastname')
-        .populate('product', 'name slug')
+        .populate('user', 'name')
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
@@ -289,7 +288,7 @@ exports.getQNAs = async (req, res) => {
         return res.status(404).json({ error: 'Product not found' })
     }
     let QnA = await QNA.findOne({ product: product._id })
-        .populate('user', 'name lastname')
+        .populate('user', 'name')
         .populate('product', 'name slug')
     if (!QnA) {
         QnA={

@@ -75,6 +75,15 @@ exports.deleteCart = async (req, res) => {
     await cart.save()
     res.json(cart)
 }
+exports.editCart = async (req, res) => {
+    let cart = await Cart.findOne({ _id: req.params.cart_id, user: req.user._id,isDeleted:null })
+    if (!cart) {
+        return res.status(404).json({ error: 'Cart not found.' })
+    }
+    cart.quantity = req.query.quantity
+    await cart.save()
+    res.json(cart)
+}
 
 exports.addWishlist = async (req, res) => {
     const product = req.product
@@ -128,6 +137,16 @@ exports.deleteWishlist = async (req, res) => {
         return res.status(404).json({ error: 'Wishlist not found.' })
     }
     wishlist.isDeleted = Date.now()
+    await wishlist.save()
+    res.json(wishlist)
+}
+
+exports.editWishlist = async (req, res) => {
+    let wishlist = await Wishlist.findOne({ _id: req.params.wishlist_id, user: req.user._id, isDeleted:null })
+    if (!wishlist) {
+        return res.status(404).json({ error: 'Wishlist not found.' })
+    }
+    wishlist.quantity = req.query.quantity
     await wishlist.save()
     res.json(wishlist)
 }
