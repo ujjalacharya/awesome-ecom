@@ -26,6 +26,8 @@ class MyProfile extends Component {
     if (userInfo?._id) {
       this.props.getUserProfile(userInfo._id);
     }
+
+    this.props.getWishListItems('page=1&perPage=10')
   }
 
   componentDidUpdate(prevProps){
