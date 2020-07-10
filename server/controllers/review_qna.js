@@ -10,6 +10,7 @@ const ProductBrand = require("../models/ProductBrand")
 const ProductImages = require("../models/ProductImages")
 const Order = require("../models/Order")
 const { calculateDistance } = require("../middleware/helpers")
+const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const sharp = require("sharp")
 const shortid = require('shortid');
 const path = require("path");
@@ -128,10 +129,10 @@ exports.myReviews = async (req, res) => {
 
 
 
-// exports.averageRating = async (req, res) => {
-//     let stars = await getRatingInfo(req.product)
-//     res.json(stars)
-// }
+exports.averageRating = async (req, res) => {
+    let stars = await getRatingInfo(req.product)
+    res.json(stars)
+}
 
 exports.postQuestion = async (req, res) => {
     const product = req.product

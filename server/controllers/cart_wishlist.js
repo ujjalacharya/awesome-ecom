@@ -9,6 +9,8 @@ const Category = require("../models/Category")
 const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
 const ProductImages = require("../models/ProductImages")
+const userHas = require("../middleware/user_actions/userHas")
+const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const Order = require("../models/Order")
 const { calculateDistance } = require("../middleware/helpers")
 const sharp = require("sharp")
@@ -38,9 +40,9 @@ exports.addCart = async (req, res) => {
 exports.getCarts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let carts = await Cart.find({ user: req.user._id ,isDeleted:null })
+    let carts = await Cart.find({ user: req.user._id, isDeleted: null })
         .populate({
-            path : 'product',
+            path: 'product',
             populate: {
                 path: 'images',
                 model: 'productimages'
@@ -52,16 +54,23 @@ exports.getCarts = async (req, res) => {
             populate: {
                 path: 'soldBy',
                 model: 'admin',
-                select:'name shopName address'
+                select: 'name shopName address'
             }
         })
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    // if (!carts.length) {
-    //     return res.status(404).json({ error: 'Carts not found' })
-    // }
-    const totalCount = await Cart.countDocuments({ user: req.user._id ,isDeleted:null})
+    //user's action on each product
+    carts = carts.map(async c => {
+        //user's action on this product
+        const { hasOnWishlist } = await userHas(c.product, req.user, 'carts')
+        //ratings of this product
+        c.stars = await getRatingInfo(c.product)
+        c.hasOnWishlist = hasOnWishlist
+        return c
+    })
+    carts = await Promise.all(carts)
+    const totalCount = await Cart.countDocuments({ user: req.user._id, isDeleted: null })
     res.json({ carts, totalCount })
 
 }
@@ -76,7 +85,7 @@ exports.deleteCart = async (req, res) => {
     res.json(cart)
 }
 exports.editCart = async (req, res) => {
-    let cart = await Cart.findOne({ _id: req.params.cart_id, user: req.user._id,isDeleted:null })
+    let cart = await Cart.findOne({ _id: req.params.cart_id, user: req.user._id, isDeleted: null })
     if (!cart) {
         return res.status(404).json({ error: 'Cart not found.' })
     }
@@ -103,7 +112,7 @@ exports.addWishlist = async (req, res) => {
 exports.getWishlists = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let wishlists = await Wishlist.find({ user: req.user._id,isDeleted:null })
+    let wishlists = await Wishlist.find({ user: req.user._id, isDeleted: null })
         .populate({
             path: 'product',
             populate: {
@@ -123,10 +132,17 @@ exports.getWishlists = async (req, res) => {
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
-    // if (!wishlists.length) {
-    //     return res.status(404).json({ error: 'Wishlists not found' })
-    // }
-    const totalCount = await Wishlist.countDocuments({ user: req.user._id,isDeleted:null })
+    //user's action on each product
+    wishlists = wishlists.map(async c => {
+        //user's action on this product
+        const { hasOnCart } = await userHas(c.product, req.user, 'wishlists')
+        //ratings of this product
+        c.stars = await getRatingInfo(c.product)
+        c.hasOnCart = hasOnCart
+        return c
+    })
+    wishlists = await Promise.all(wishlists)
+    const totalCount = await Wishlist.countDocuments({ user: req.user._id, isDeleted: null })
     res.json({ wishlists, totalCount })
 
 }
@@ -142,7 +158,7 @@ exports.deleteWishlist = async (req, res) => {
 }
 
 exports.editWishlist = async (req, res) => {
-    let wishlist = await Wishlist.findOne({ _id: req.params.wishlist_id, user: req.user._id, isDeleted:null })
+    let wishlist = await Wishlist.findOne({ _id: req.params.wishlist_id, user: req.user._id, isDeleted: null })
     if (!wishlist) {
         return res.status(404).json({ error: 'Wishlist not found.' })
     }

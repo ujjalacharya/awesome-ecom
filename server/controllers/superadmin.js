@@ -6,6 +6,7 @@ const AdminBank = require("../models/AdminBank")
 const SuggestKeywords = require("../models/SuggestKeywords")
 const AdminWarehouse = require("../models/AdminWarehouse")
 const ProductBrand = require("../models/ProductBrand")
+const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const Banner = require("../models/Banner")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
@@ -581,7 +582,6 @@ exports.getProducts = async (req, res) => {
         quantity: 0
     }
 
-
     let products = await Product.find(query)
         .populate("category", "displayName slug")
         .populate("brand", "brandName slug")
@@ -591,7 +591,12 @@ exports.getProducts = async (req, res) => {
         .limit(perPage)
         .lean()
         .sort(sortFactor)
-
+    //rating on each product
+    products = products.map(async p => {
+        p.stars = await getRatingInfo(p)
+        return p
+    })
+    products = await Promise.all(products)
     let totalCount = await Product.countDocuments(query)
     res.json({products,totalCount});
 }

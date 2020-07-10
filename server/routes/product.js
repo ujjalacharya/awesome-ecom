@@ -20,12 +20,12 @@ router.patch('/delete-product/:id/:p_slug', auth, hasAuthorization, deleteProduc
 
 
 //public
-router.get('/latest',latestProducts)    
-router.get('/by-category', getProductsByCategory)//?cat_id=&cat_slug=
-//with rating chai client side mai rakhne
+router.get('/latest',checkUserSignin,latestProducts)    
+router.get('/by-category', checkUserSignin, getProductsByCategory)//?cat_id=&cat_slug=
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
-router.post('/search',searchProducts)//need to work on rating nd $option in regex
+router.post('/search',checkUserSignin,searchProducts)//need to work on rating nd $option in regex
 router.get('/suggest-keywords', suggestKeywords)//?keyword=
+
 router.post("/:id", auth, hasAuthorization, validateProduct, createProduct)
 router.put("/:id/:p_slug", auth, hasAuthorization, validateProduct, updateProduct)
 router.get('/:p_slug',checkUserSignin, getProduct)
