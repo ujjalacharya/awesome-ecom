@@ -2,6 +2,7 @@ const tintColor = '#48b5dc';
 
 export default {
   tintColor,
+  primaryGreen: "#61ce70",
   grayColor: "#66727e",
   backgroundColor: '#86909a',
   bannerColor: "#2978a0",

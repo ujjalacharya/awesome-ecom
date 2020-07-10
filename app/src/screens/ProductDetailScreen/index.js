@@ -9,7 +9,7 @@ import {
   TouchableRipple,
   Divider,
 } from "react-native-paper";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import Gallery from "react-native-image-gallery";
 
 import ProductDetailHeader from "./ProductDetailHeader";
@@ -105,6 +105,40 @@ class ProductDetailScreen extends Component {
             ))}
           </ScrollView>
         )}
+        <View
+          style={{ backgroundColor: Constants.headerTintColor, height: 50 }}
+        >
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <Button
+              style={{
+                flex: 0.45,
+                backgroundColor: "orange",
+                justifyContent: "center",
+              }}
+              labelStyle={{ color: "white" }}
+            >
+              Buy Now
+            </Button>
+            <Button
+              style={{
+                flex: 0.45,
+                backgroundColor: Constants.activeTintColor,
+                justifyContent: "center",
+              }}
+              labelStyle={{ color: "white" }}
+            >
+              Add to Cart
+            </Button>
+            <Button
+              style={{ flex: 0.1, justifyContent: "center", marginBottom: 5 }}
+              icon={({ size, color }) => (
+                <FontAwesome name="share-alt" size={20} color={color} />
+              )}
+              size={29}
+              labelStyle={{ color: Constants.primaryGreen }}
+            ></Button>
+          </View>
+        </View>
       </View>
     );
   }
