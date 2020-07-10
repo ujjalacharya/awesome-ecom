@@ -30,11 +30,11 @@ class ProductCard extends Component {
     productData: products,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState){
-    if(nextProps.data !== prevState.data && nextProps.data){
-      return{
-        productData: nextProps.data
-      }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.data && nextProps.data) {
+      return {
+        productData: nextProps.data,
+      };
     }
     return null;
   }
@@ -150,10 +150,14 @@ class ProductCard extends Component {
                 </div>
                 {!checkSkeleton && (
                   <div className="stars">
-                    <i className="fa fa-star" aria-hidden="true"></i>
-                    <i className="fa fa-star" aria-hidden="true"></i>
-                    <i className="fa fa-star" aria-hidden="true"></i>
-                    <i className="fa fa-star" aria-hidden="true"></i>
+                    {productData.stars.averageStar &&
+                      Array(productData.stars.averageStar)
+                        .fill(0)
+                        .map((num, i) => {
+                          return (
+                            <i className="fa fa-star" aria-hidden="true" key={i}></i>
+                          );
+                        })}
                   </div>
                 )}
               </div>
