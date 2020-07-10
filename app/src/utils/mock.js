@@ -102,3 +102,30 @@ export const bannerData = [
     image: require("../../assets/banner2.jpg"),
   }
 ]
+
+export const galleryImages = [
+  {
+    source: {
+      uri:
+        "https://cdn.androidbeat.com/wp-content/uploads/2019/04/redmi-note-8-pro-rear.jpg",
+    },
+  },
+  {
+    source: {
+      uri:
+        "https://static.toiimg.com/photo/msid-72253025/72253025.jpg?resizemode=4&width=400",
+    },
+  },
+  {
+    source: {
+      uri:
+        "https://i.gadgets360cdn.com/large/Redmi_Note_8_Pro_Cover_1571399278278.jpg",
+    },
+  },
+  {
+    source: {
+      uri:
+        "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201908/redmi_note_8_pro_main_image-770x433.png?L5SX8WdcWGVStj5oDsDhAR3DRrnJmiS5",
+    },
+  },
+]
