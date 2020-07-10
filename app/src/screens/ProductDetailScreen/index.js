@@ -10,6 +10,7 @@ import { galleryImages } from "../../utils/mock";
 
 import ProductDetailFooter from "./ProductDetailFooter";
 import ProductDescription from "./ProductDescription";
+import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 
 class ProductDetailScreen extends Component {
   state = {
@@ -48,22 +49,29 @@ class ProductDetailScreen extends Component {
             />
           </View>
         ) : (
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            stickyHeaderIndices={[0]}
-          >
-            <TouchableRipple
-              style={{ height: 250 }}
-              onPress={this.handleGalleryToggle}
+          <>
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              // stickyHeaderIndices={[0]}
             >
-              <ProductDetailHeader {...this.props} />
-            </TouchableRipple>
-            {[1, 2, 3, 4, 5, 6, 7].map(() => (
-              <ProductDescription />
-            ))}
-          </ScrollView>
+              <View style={{ flex: 1 }}>
+                <TouchableRipple
+                  style={{ height: 250 }}
+                  onPress={this.handleGalleryToggle}
+                >
+                  <ProductDetailHeader {...this.props} />
+                </TouchableRipple>
+                {[1, 2, 3, 4, 5, 6, 7].map(() => (
+                  <ProductDescription />
+                ))}
+              </View>
+              <View style={{ height: 250 }}>
+                <FeaturedProducts title={"Similar Products"} />
+              </View>
+            </ScrollView>
+            <ProductDetailFooter />
+          </>
         )}
-        <ProductDetailFooter />
       </View>
     );
   }

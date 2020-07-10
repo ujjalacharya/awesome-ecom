@@ -5,7 +5,6 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import Constants from "../../constants/Constants";
 
-
 export default class ProductDetailFooter extends Component {
   onShare = async () => {
     try {
@@ -50,7 +49,7 @@ export default class ProductDetailFooter extends Component {
             Add to Cart
           </Button>
           <Button
-            style={{ flex: 0.1, justifyContent: "center", marginBottom: 5 }}
+            style={{ flex: 0.1, justifyContent: "center", paddingBottom: 5 }}
             icon={({ size, color }) => (
               <FontAwesome name="share-alt" size={20} color={color} />
             )}
