@@ -29,11 +29,11 @@ const productCategories = () => {
   };
 };
 
-const getLatestProducts = () => {
+const getLatestProducts = (ctx) => {
   return async (dispatch) => {
     dispatch({type: LATEST_LOADING, payload: []})
     const productService = new ProductService();
-    const response = await productService.getLatestProducts();
+    const response = await productService.getLatestProducts(ctx);
     if (response.isSuccess) {
       dispatch({ type: LATEST_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {
