@@ -52,9 +52,8 @@ class ProductDetailScreen extends Component {
           <>
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
-              // stickyHeaderIndices={[0]}
+              stickyHeaderIndices={[0]}
             >
-              <View style={{ flex: 1 }}>
                 <TouchableRipple
                   style={{ height: 250 }}
                   onPress={this.handleGalleryToggle}
@@ -64,7 +63,6 @@ class ProductDetailScreen extends Component {
                 {[1, 2, 3, 4, 5, 6, 7].map(() => (
                   <ProductDescription />
                 ))}
-              </View>
               <View style={{ height: 250 }}>
                 <FeaturedProducts title={"Similar Products"} />
               </View>
