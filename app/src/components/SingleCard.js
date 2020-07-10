@@ -3,15 +3,17 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 
 import { Text, View, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
-import { getPhoneDetails } from "../utils/common";
 import Constants from "../constants/Constants";
 
+import { useNavigation } from "@react-navigation/native";
+
 const SingleCard = ({ product }) => {
+  const navigation = useNavigation();
   return (
     <TouchableNativeFeedback
       key={product.id}
       style={styles.cardContainer}
-      onPress={() => console.warn("Pressed")}
+      onPress={() => navigation.navigate("Detail")}
     >
       <>
         <View style={{ flex: 2 }}>

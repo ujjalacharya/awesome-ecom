@@ -8,6 +8,8 @@ const Order = require("../models/Order")
 const Whislist = require("../models/WishList")
 const ProductBrand = require("../models/ProductBrand");
 const ProductImages = require("../models/ProductImages");
+const userHas = require("../middleware/user_actions/userHas")
+const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const shortid = require("shortid");
 const sharp = require("sharp");
 const path = require("path");
@@ -29,64 +31,15 @@ exports.product = async (req, res, next) => {
   req.product = product;
   next();
 };
-
-const getRatingInfo = async product => {
-  // const product = req.product
-  if (!product.isVerified && product.isDeleted) {
-    return res.status(404).json({ error: 'Product not found' })
-  }
-  let stars = await Review.find({ product: product._id }).select('star');
-  let fiveStars = 0, fourStars = 0, threeStars = 0, twoStars = 0, oneStars = 0;
-  stars.forEach(s => {
-    if (s.star === 5) fiveStars += 1
-    if (s.star === 4) fourStars += 1
-    if (s.star === 3) threeStars += 1
-    if (s.star === 2) twoStars += 1
-    if (s.star === 1) oneStars += 1
-  })
-  let totalRatingUsers = (fiveStars + fourStars + threeStars + twoStars + oneStars)
-  let averageStar = (5 * fiveStars + 4 * fourStars + 3 * threeStars + 2 * twoStars + oneStars) / totalRatingUsers
-
-  return stars = {
-    fiveStars,
-    fourStars,
-    threeStars,
-    twoStars,
-    oneStars,
-    averageStar,
-    totalRatingUsers
-  }
-}
-
 exports.getProduct = async (req, res) => {
   if (req.product.isVerified === null && req.product.isDeleted !== null)
     return res
       .status(404)
       .json({ error: "Product is not verified or has been deleted." });
-  let hasOnCart = null
-  let hasBought = null
-  let hasOnWishlist = null
-  let hasReviewed = null
-  if (req.authUser) {
-    //has on cart?
-    hasOnCart = await Cart.findOne({user:req.authUser._id,product:req.product._id , isDeleted:null})
-    if(!hasOnCart) hasOnCart=false
-
-    // has on wishlist?
-    hasOnWishlist = await Whislist.findOne({ user: req.authUser._id, product: req.product._id ,isDeleted:null})
-    if(!hasOnWishlist) hasOnWishlist = false
-    
-    //has bought?
-    hasBought = await Order.findOne({ user: req.authUser, $or: [{ 'status.currentStatus': 'complete' }, { 'status.currentStatus': 'tobereturned', 'status.currentStatus': 'return'}]})
-    hasBought ? hasBought = true : hasBought = false
-    
-    //has reviewed?
-    hasReviewed = await Review.findOne({ user: req.authUser, product: req.product._id}).select('comment star user')
-    if(!hasReviewed) hasReviewed = false
-  }
-  
-    //product's rating..
-    let stars = await getRatingInfo(req.product)
+  //user's action on this product
+  const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser ,'product')
+  //ratings of this product
+  const stars = await getRatingInfo(req.product)
   
   res.json({product:req.product,hasOnCart,hasBought,hasOnWishlist, hasReviewed,stars});
 };
@@ -266,10 +219,12 @@ exports.getProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
-  // hasOnCart hasOnWishlisht and ratng
-    products = products.map(async p => {
-
-    })
+  //rating on each product
+  products = products.map(async p => {
+    p.stars = await getRatingInfo(p)
+    return p
+  })
+  products = await Promise.all(products)
   const totalCount = await Product.countDocuments(query);
   res.json({ products, totalCount });
 };
@@ -278,7 +233,7 @@ exports.latestProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
   let sortFactor = { createdAt: 'desc' }
-  const products = await Product.find({
+  let products = await Product.find({
     isVerified: { $ne: null },
     isDeleted: null
   })
@@ -289,13 +244,23 @@ exports.latestProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
+
     const totalCount = await Product.countDocuments({
       isVerified: { $ne: null },
       isDeleted: null,
     })  
-  // if (!products.length) {
-  //   return res.status(404).json({ error: "No products are available." });
-  // }
+    //user's action on each product
+    products = products.map(async p => {
+      //user's action on this product
+      const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
+      //ratings of this product
+      p.stars = await getRatingInfo(p)
+      p.hasOnCart = hasOnCart,
+      p.hasOnWishlist = hasOnWishlist
+      return p
+    })
+    products = await Promise.all(products)
+
   res.json({products,totalCount});
 };
 
@@ -370,7 +335,7 @@ exports.searchProducts = async (req, res) => {
     if (weights) searchingFactor.weight = { $in: weights };
     if (warranties) searchingFactor.warranty = warranties;
   }
-  const products = await Product.find(searchingFactor)
+  let products = await Product.find(searchingFactor)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -382,7 +347,19 @@ exports.searchProducts = async (req, res) => {
   //   return res.status(404).json({ error: "Products not found." });
   // }
   //need to work on rating...
+
   const totalCount = await Product.countDocuments(searchingFactor);
+  //user's action on each product
+  products = products.map(async p => {
+    //user's action on this product
+    const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
+    //ratings of this product
+    p.stars = await getRatingInfo(p)
+    p.hasOnCart = hasOnCart,
+      p.hasOnWishlist = hasOnWishlist
+    return p
+  })
+  products = await Promise.all(products)
   res.json({ products, totalCount });
 };
 
@@ -402,7 +379,7 @@ exports.getProductsByCategory = async (req, res) => {
     return res.status(404).json({ error: "Categories not found" });
   }
   categories = categories.map((c) => c._id.toString());
-  const products = await Product.find({ category: { $in: categories } })
+  let products = await Product.find({ category: { $in: categories } })
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -416,6 +393,18 @@ exports.getProductsByCategory = async (req, res) => {
   const totalCount = await Product.countDocuments({
     category: { $in: categories },
   });
+
+  //user's action on each product
+  products = products.map(async p => {
+    //user's action on this product
+    const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
+    //ratings of this product
+    p.stars = await getRatingInfo(p)
+    p.hasOnCart = hasOnCart,
+      p.hasOnWishlist = hasOnWishlist
+    return p
+  })
+  products = await Promise.all(products)
   res.json({ products, totalCount });
 };
 
@@ -465,19 +454,6 @@ exports.generateFilter = async (req, res) => {
       return [m, M];
     }
     filters.prices = minmax(min_price, max_price);
-    // let MINMAX = minmax(min_price, max_price)
-    // min_price = MINMAX[0]
-    // max_price = MINMAX[1]
-    // console.log('AFTER');
-    // console.log(min_price, max_price)
-    // let increaseFactor = (max_price - min_price) / 5
-    // console.log(increaseFactor)
-    // filters.prices = _.range(min_price, max_price, increaseFactor);
-    // for (let i = 1; i < filters.prices.length; i++) {
-    //     const element = filters.prices[i];
-
-    // }
-    // filters.prices = _.chunk(filters.prices,2)
     return filters;
   };
   if (req.query.keyword) {

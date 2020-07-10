@@ -10,6 +10,7 @@ const ProductBrand = require("../models/ProductBrand")
 const ProductImages = require("../models/ProductImages")
 const Order = require("../models/Order")
 const { calculateDistance } = require("../middleware/helpers")
+const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const sharp = require("sharp")
 const shortid = require('shortid');
 const path = require("path");
@@ -39,7 +40,7 @@ exports.postReview = async (req, res) => {
     if (!orders) {
         return res.status(403).json({ error: "You have not bought this product." })
     }
-    //check if user has already given star and comment
+    //check if user has already given star or comment
     const review = await Review.findOne({
         user: req.user._id,
         product: product._id
@@ -128,10 +129,10 @@ exports.myReviews = async (req, res) => {
 
 
 
-// exports.averageRating = async (req, res) => {
-//     let stars = await getRatingInfo(req.product)
-//     res.json(stars)
-// }
+exports.averageRating = async (req, res) => {
+    let stars = await getRatingInfo(req.product)
+    res.json(stars)
+}
 
 exports.postQuestion = async (req, res) => {
     const product = req.product
@@ -205,8 +206,10 @@ exports.postAnswer = async (req, res) => {
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
     }
-    if (QnA.qna.some(q => { if (q._id.toString() === req.body.qna_id) return q.answer })) {
-        return res.status(404).json({ error: 'Answer has given' })
+    if (req.query.type !== 'edit') {
+        if (QnA.qna.some(q => { if (q._id.toString() === req.body.qna_id) return q.answer })) {
+            return res.status(404).json({ error: 'Answer has given' })
+        }
     }
     for (let i = 0; i < QnA.qna.length; i++) {
         const targetQnA = QnA.qna[i];
