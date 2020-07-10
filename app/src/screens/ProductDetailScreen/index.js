@@ -60,9 +60,9 @@ class ProductDetailScreen extends Component {
                 >
                   <ProductDetailHeader {...this.props} />
                 </TouchableRipple>
-                {[1, 2, 3, 4, 5, 6, 7].map(() => (
+                {/* {[1, 2, 3, 4, 5, 6, 7].map(() => ( */}
                   <ProductDescription />
-                ))}
+                {/* ))} */}
               <View style={{ height: 250 }}>
                 <FeaturedProducts title={"Similar Products"} />
               </View>

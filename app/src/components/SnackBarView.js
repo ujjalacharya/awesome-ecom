@@ -12,7 +12,6 @@ const SnackbarView = ({ visible, setVisible, ...props }) => {
 
   return (
     <View style={styles.container}>
-      <Button onPress={onToggleSnackBar}>{visible ? "Hide" : "Show"}</Button>
       <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
