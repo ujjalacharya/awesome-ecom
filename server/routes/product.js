@@ -15,9 +15,7 @@ router.get("/products/:id", auth, hasAuthorization, getProducts)
 router.post("/images/:id", auth, hasAuthorization, uploadProductImages, productImages)
 router.delete("/image/:id", auth, hasAuthorization, deleteImageById)//?image_id=
 router.delete("/image/:id/:p_slug", auth, hasAuthorization, deleteImage)//?image_id=
-
 router.patch('/delete-product/:id/:p_slug', auth, hasAuthorization, deleteProduct)
-
 
 //public
 router.get('/latest',checkUserSignin,latestProducts)    

@@ -40,7 +40,7 @@ exports.postReview = async (req, res) => {
     if (!orders) {
         return res.status(403).json({ error: "You have not bought this product." })
     }
-    //check if user has already given star and comment
+    //check if user has already given star or comment
     const review = await Review.findOne({
         user: req.user._id,
         product: product._id
@@ -206,8 +206,10 @@ exports.postAnswer = async (req, res) => {
     if (!QnA.qna.some(q => q._id.toString() === req.body.qna_id)) {
         return res.status(404).json({ error: 'Invalid qna id.' })
     }
-    if (QnA.qna.some(q => { if (q._id.toString() === req.body.qna_id) return q.answer })) {
-        return res.status(404).json({ error: 'Answer has given' })
+    if (req.query.type !== 'edit') {
+        if (QnA.qna.some(q => { if (q._id.toString() === req.body.qna_id) return q.answer })) {
+            return res.status(404).json({ error: 'Answer has given' })
+        }
     }
     for (let i = 0; i < QnA.qna.length; i++) {
         const targetQnA = QnA.qna[i];
