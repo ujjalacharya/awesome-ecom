@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text } from "react-native";
+import { View, ScrollView, Share } from "react-native";
 import {
   Avatar,
   Button,
@@ -29,6 +29,26 @@ class ProductDetailScreen extends Component {
       };
     });
   };
+
+  onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: "https://www.ujjalacharya.com.np",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -112,6 +132,7 @@ class ProductDetailScreen extends Component {
               )}
               size={29}
               labelStyle={{ color: Constants.primaryGreen }}
+              onPress={this.onShare}
             ></Button>
           </View>
         </View>
