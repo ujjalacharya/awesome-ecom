@@ -1,21 +1,15 @@
 import React, { Component } from "react";
-import { View, ScrollView, Share } from "react-native";
-import {
-  Avatar,
-  Button,
-  Card,
-  Title,
-  Paragraph,
-  TouchableRipple,
-  Divider,
-} from "react-native-paper";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { View, ScrollView } from "react-native";
+import { TouchableRipple } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 import Gallery from "react-native-image-gallery";
 
 import ProductDetailHeader from "./ProductDetailHeader";
 import Constants from "../../constants/Constants";
 import { galleryImages } from "../../utils/mock";
-const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
+
+import ProductDetailFooter from "./ProductDetailFooter";
+import ProductDescription from "./ProductDescription";
 
 class ProductDetailScreen extends Component {
   state = {
@@ -28,25 +22,6 @@ class ProductDetailScreen extends Component {
         showGallery: !prevState.showGallery,
       };
     });
-  };
-
-  onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: "https://www.ujjalacharya.com.np",
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
   };
 
   render() {
@@ -84,58 +59,11 @@ class ProductDetailScreen extends Component {
               <ProductDetailHeader {...this.props} />
             </TouchableRipple>
             {[1, 2, 3, 4, 5, 6, 7].map(() => (
-              <>
-                <Card>
-                  <Card.Title
-                    title="Card Title"
-                    subtitle="Card Subtitle"
-                    left={LeftContent}
-                  />
-                  <Card.Content>
-                    <Title>Card title</Title>
-                    <Paragraph>Card content</Paragraph>
-                  </Card.Content>
-                </Card>
-                <Divider />
-              </>
+              <ProductDescription />
             ))}
           </ScrollView>
         )}
-        <View
-          style={{ backgroundColor: Constants.headerTintColor, height: 50 }}
-        >
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <Button
-              style={{
-                flex: 0.45,
-                backgroundColor: "orange",
-                justifyContent: "center",
-              }}
-              labelStyle={{ color: "white" }}
-            >
-              Buy Now
-            </Button>
-            <Button
-              style={{
-                flex: 0.45,
-                backgroundColor: Constants.activeTintColor,
-                justifyContent: "center",
-              }}
-              labelStyle={{ color: "white" }}
-            >
-              Add to Cart
-            </Button>
-            <Button
-              style={{ flex: 0.1, justifyContent: "center", marginBottom: 5 }}
-              icon={({ size, color }) => (
-                <FontAwesome name="share-alt" size={20} color={color} />
-              )}
-              size={29}
-              labelStyle={{ color: Constants.primaryGreen }}
-              onPress={this.onShare}
-            ></Button>
-          </View>
-        </View>
+        <ProductDetailFooter />
       </View>
     );
   }
