@@ -20,6 +20,36 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 // const perPage = 10;
 
+const run = async () => {
+    let orders = await Order.find({
+        'status.currentStatus': { $in: ['complete', 'return'] }
+    })
+    console.log(orders.length);
+    let newOrders = []
+    for (let i = 0; i < orders.length; i++) {
+        const order = orders[i];
+        if (!newOrders.some(o => (o.user.toString() === order.user.toString() && o.product.toString() === order.product.toString()  ))) {
+            newOrders.push(order)
+        }
+    }
+    console.log(newOrders.length);
+    orders = newOrders.map(async o => {
+        let newReview = new Review({
+            commnent: 'This product is so nice.',
+            star: _.random(1, 5),
+            user: o.user,
+            product: o.product
+        })
+        return await newReview.save()
+    })
+    orders = await Promise.all(orders)
+    console.log('********NEW REVIEWS********');
+    orders.length = 5
+    console.log(orders);
+
+
+}
+// run()
 exports.postReview = async (req, res) => {
     const product = req.product
     if (!product.isVerified && product.isDeleted) {
@@ -59,7 +89,7 @@ exports.postReview = async (req, res) => {
         star: req.body.star
     };
     newReview = new Review(newReview);
-    
+
     await newReview.save();
     res.json(newReview);
 }

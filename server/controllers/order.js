@@ -238,7 +238,7 @@ const search_orders = async (req,res,type) => {
             match: {
                 name: { $regex: keyword, $options: "i" }
             },
-            select: 'name'
+            select: 'name slug'
         })
         // .skip(perPage * page - perPage)
         // .limit(perPage)
