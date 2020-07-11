@@ -1,7 +1,16 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { Card, Paragraph, Divider, Avatar, Title } from "react-native-paper";
+import {
+  Card,
+  Paragraph,
+  Divider,
+  Avatar,
+  Title,
+  Button,
+} from "react-native-paper";
 import Constants from "../../constants/Constants";
+import { AntDesign } from "@expo/vector-icons";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const ProductDescription = () => {
   return (
@@ -9,7 +18,16 @@ const ProductDescription = () => {
       <Card>
         <View>
           <Card.Title
-            title="Rs 199"
+            title={
+              <Text
+                style={{
+                  color: Constants.primaryGreen,
+                  fontWeight: "bold",
+                }}
+              >
+                {"Rs 199"}
+              </Text>
+            }
             subtitle={
               <>
                 <Text
@@ -68,6 +86,71 @@ const ProductDescription = () => {
           <Paragraph style={{ fontWeight: "bold" }}>Color: white</Paragraph>
           <Paragraph style={{ fontWeight: "bold" }}>Warrenty: 1 year</Paragraph>
         </Card.Content>
+      </Card>
+      <Divider />
+      <Card>
+        <Card.Title title="Ratings and Reviews (4)" />
+
+        {[0, 0, 0].map(() => (
+          <Card.Content>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View
+                style={{
+                  flex: 0.7,
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontWeight: "bold" }}>{"Gyanendra Shahi"}</Text>
+              </View>
+              <View
+                style={{ flex: 0.3, flexDirection: "row", marginRight: 10 }}
+              >
+                {[0, 0].map((star) => (
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      icon={() => (
+                        <AntDesign
+                          name="star"
+                          size={15}
+                          color={Constants.primaryGreen}
+                        />
+                      )}
+                    ></Button>
+                  </View>
+                ))}
+                {[0, 0, 0].map((star) => (
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      icon={() => (
+                        <AntDesign
+                          name="staro"
+                          size={15}
+                          color={Constants.primaryGreen}
+                        />
+                      )}
+                    ></Button>
+                  </View>
+                ))}
+              </View>
+            </View>
+            <View>
+              <Text>{"Thikai xa, khassai man chai parena"}</Text>
+            </View>
+          </Card.Content>
+        ))}
+        <TouchableWithoutFeedback
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            margin: 10,
+          }}
+          onPress={() => console.warn("View all")}
+        >
+          <Text style={{ fontWeight: "bold", textDecorationLine: "underline" }}>
+            {"View All"}
+          </Text>
+        </TouchableWithoutFeedback>
       </Card>
       <Divider />
     </>
