@@ -22,7 +22,7 @@ const perPage = 10;
 exports.product = async (req, res, next) => {
   const product = await Product.findOne({ slug: req.params.p_slug })
     .populate("images", "-createdAt -updatedAt -__v")
-    .populate("soldBy", "shopName address")
+    .populate("soldBy", "shopName address holidayMode")
     .populate("brand")
     .populate("category");
   if (!product) {
@@ -349,6 +349,7 @@ exports.searchProducts = async (req, res) => {
   //need to work on rating...
 
   const totalCount = await Product.countDocuments(searchingFactor);
+
   //user's action on each product
   products = products.map(async p => {
     //user's action on this product

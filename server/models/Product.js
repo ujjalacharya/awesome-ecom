@@ -22,6 +22,10 @@ const productSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'category'
     }],
+    reviews: [{
+        type: Schema.Types.ObjectId,
+        ref: 'review'
+    }],
     soldBy: {
         type: Schema.Types.ObjectId,
         ref: 'admin'
