@@ -92,15 +92,19 @@ const ProductDescription = () => {
         <Card.Title title="Ratings and Reviews (4)" />
 
         {[0, 0, 0].map(() => (
-          <Card.Content>
+          <Card.Content style={{ marginBottom: 20 }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View
                 style={{
                   flex: 0.7,
                   justifyContent: "center",
+                  marginBottom: 10,
                 }}
               >
-                <Text style={{ fontWeight: "bold" }}>{"Gyanendra Shahi"}</Text>
+                <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                  {"Gyanendra Shahi"}
+                </Text>
+                <Text>{"2 days ago"}</Text>
               </View>
               <View
                 style={{ flex: 0.3, flexDirection: "row", marginRight: 10 }}
@@ -152,7 +156,6 @@ const ProductDescription = () => {
           </Text>
         </TouchableWithoutFeedback>
       </Card>
-      <Divider />
     </>
   );
 };
