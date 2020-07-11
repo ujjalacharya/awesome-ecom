@@ -295,3 +295,24 @@ input:checked + .slider:before {
     }
   }
 }
+
+.inputFile{
+  width: .1px;
+  height: .1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+// input.inputfile{
+//   display: none;
+// }
+input.inputfile+label{
+    width: 100%;
+    border: 1px dashed #948c8c;
+    text-align: center;
+    padding: 15px;
+    margin-bottom: 0;
+    cursor: pointer;
+}

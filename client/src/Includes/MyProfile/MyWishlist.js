@@ -1,22 +1,26 @@
 import React, { Component } from "react";
-import { Input, Row, Col, Select } from "antd";
+import { Input, Row, Col, Select, Popconfirm } from "antd";
 import { Table, Tag, Space } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import withPrivate from "../../../utils/auth/withPrivate";
-import { convertDateToCurrentTz } from "../../../utils/common";
+import {
+  convertDateToCurrentTz,
+  openNotification,
+  getDiscountedPrice,
+} from "../../../utils/common";
 import next from "next";
+import Link from "next/link";
 
 const { Search } = Input;
 // const { Option } = Select;
 
 class MyWishlist extends Component {
   state = {
-    allWishlistItems: {wishlists: [], totalCount:0},
+    allWishlistItems: { wishlists: [], totalCount: 0 },
   };
 
   componentDidMount() {
-    console.log(this.props)
     if (this.props.wishlist.getWishlistItems) {
       this.setState({
         allWishlistItems: this.props.wishlist.getWishlistItems,
@@ -24,36 +28,66 @@ class MyWishlist extends Component {
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState){
-    console.log(nextProps)
-    if (nextProps.wishlist.getWishlistItems !== prevState.allWishlistItems && nextProps.wishlist.getWishlistItems) {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      nextProps.wishlist.getWishlistItems !== prevState.allWishlistItems &&
+      nextProps.wishlist.getWishlistItems
+    ) {
       return {
         allWishlistItems: nextProps.wishlist.getWishlistItems,
-      }
+      };
     }
     return null;
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
+      this.props.cart.addToCartResp
+    ) {
+      openNotification("Success", "Product added to cart successfully");
+      this.props.getWishListItems("page=1&perPage=10");
+    }
+
+    if (
+      this.props.wishlist.removeFromWishlistResp !==
+        prevProps.wishlist.removeFromWishlistResp &&
+      this.props.wishlist.removeFromWishlistResp
+    ) {
+      openNotification("Success", "Product removed from wishlist successfully");
+      this.props.getWishListItems("page=1&perPage=10");
+    }
+  }
+
   render() {
-    console.log(this.props);
     let {
       allWishlistItems: { wishlists },
     } = this.state;
-
-    console.log(this.state)
 
     const columns = [
       {
         title: "Image",
         dataIndex: "image",
         key: "image",
-        render: (text) => <a>{text}</a>,
+        render: (text, record) => (
+          <Link href="/products/[slug]" as={`/products/${record.slug}`}>
+            <a className="item-title">
+              <span>{text}</span>
+            </a>
+          </Link>
+        ),
       },
       {
         title: "Item Name",
         dataIndex: "itemName",
         key: "itemName",
-        render: (text) => <a className="item-title"><span>{text}</span></a>,
+        render: (text, record) => (
+          <Link href="/products/[slug]" as={`/products/${record.slug}`}>
+            <a className="item-title">
+              <span>{text}</span>
+            </a>
+          </Link>
+        ),
       },
       {
         title: "Sold By",
@@ -74,12 +108,24 @@ class MyWishlist extends Component {
       {
         title: "Action",
         key: "action",
-        render: (text, record) => (
+        render: (text) => (
           <Space size="middle">
-            <a className="action-btn action-btn-delete">
-              <i className="fa fa-trash-o" aria-hidden="true"></i> Delete
-            </a>
-            <a className="action-btn action-btn-add">
+            <Popconfirm
+              title="Are you sure delete this from wishlist?"
+              onConfirm={() => this.props.removeFromWishList(text.key)}
+              // onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+              <a className="action-btn action-btn-delete">
+                <i className="fa fa-trash-o" aria-hidden="true"></i> Delete
+              </a>
+            </Popconfirm>
+
+            <a
+              className="action-btn action-btn-add"
+              onClick={() => this.props.addToCart(text.slug, { quantity: 1 })}
+            >
               <i className="fa fa-plus" aria-hidden="true"></i> Add to Cart
             </a>
           </Space>
@@ -90,7 +136,8 @@ class MyWishlist extends Component {
     let data = [];
 
     wishlists?.map((item) => {
-      let discountedPrice = item.product.price - ((item.product.price * item.product.discountRate) / 100 )
+      let discountedPrice = getDiscountedPrice(item.product.price, item.product.discountRate);
+      
       let ele = {
         key: item._id,
         image: (
@@ -102,28 +149,12 @@ class MyWishlist extends Component {
         itemName: item.product.name,
         soldBy: item.product.soldBy.shopName,
         price: discountedPrice,
-        addedOn: convertDateToCurrentTz(item.createdAt)
+        addedOn: convertDateToCurrentTz(item.createdAt),
+        slug: item.product.slug,
       };
-      data.push(ele)
+      data.push(ele);
     });
-    // const data = [
-    //   {
-    //     key: "1",
-    //     image: <img src="/images/helmet.jpg" className="table-item-img" />,
-    //     itemName: "Studds D2 Matte Double Visor Full Helmet - Black/white/grey",
-    //     soldBy: "STUDDS",
-    //     qty: "1",
-    //     price: "4000",
-    //   },
-    //   {
-    //     key: "2",
-    //     image: <img src="/images/prod-bag.jpg" className="table-item-img" />,
-    //     itemName: "Auctor Sem Argu",
-    //     soldBy: "Fashionista",
-    //     qty: "2",
-    //     price: "1500",
-    //   },
-    // ];
+
     return (
       <div className="my-wishlist">
         <h3>My Wishlist</h3>

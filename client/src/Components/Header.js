@@ -257,7 +257,7 @@ class Header extends Component {
               </div>
               <Link href="/cart">
                 <a>
-                  <div className="list-text">Bag</div>
+                  <div className="list-text">Cart</div>
                 </a>
               </Link>
             </div>

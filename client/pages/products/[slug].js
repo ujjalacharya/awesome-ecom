@@ -35,7 +35,7 @@ class Details extends Component {
     // };
   }
   render() {
-    console.log(this.props.products)
+    
     return (
       <Layout title={this.props.products?.productDetails?.product?.name}>
         <div className="wrapper">
@@ -66,7 +66,7 @@ class Details extends Component {
               )}
               <Row>
                 <Col lg={24}>
-                  <OtherDetails data = {this.props.products?.productDetails.product} />
+                  <OtherDetails data = {this.props.products?.productDetails} />
                 </Col>
               </Row>
             </div>

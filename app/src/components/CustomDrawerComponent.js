@@ -5,7 +5,7 @@ import { List, Appbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import Constants from "../constants/Constants";
 
-const CustomDrawer = () => {
+const CustomDrawer = ({ navigation }) => {
   return (
     <>
       <Appbar.Header statusBarHeight={10}>
@@ -26,19 +26,19 @@ const CustomDrawer = () => {
             title="Second Level"
             left={(props) => <List.Icon {...props} icon="apps" />}
             expanded={true}
-            onPress={() => console.warn("Pressed Accordion")}
+            onPress={() => navigation.navigate("Detail")}
           >
             <List.Item
               title="First item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
             <List.Item
               title="Second item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
             <List.Item
               title="Third item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
           </List.Accordion>
         </List.Section>
@@ -47,19 +47,19 @@ const CustomDrawer = () => {
             title="Second Level"
             left={(props) => <List.Icon {...props} icon="apps" />}
             expanded={true}
-            onPress={() => console.warn("Pressed Accordion")}
+            onPress={() => navigation.navigate("Detail")}
           >
             <List.Item
               title="First item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
             <List.Item
               title="Second item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
             <List.Item
               title="Third item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
           </List.Accordion>
         </List.Section>
@@ -68,19 +68,19 @@ const CustomDrawer = () => {
             title="Second Level"
             left={(props) => <List.Icon {...props} icon="apps" />}
             expanded={true}
-            onPress={() => console.warn("Pressed Accordion")}
+            onPress={() => navigation.navigate("Detail")}
           >
             <List.Item
               title="First item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
             <List.Item
               title="Second item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
             <List.Item
               title="Third item"
-              onPress={() => console.warn("Pressed Item")}
+              onPress={() => navigation.navigate("Detail")}
             />
           </List.Accordion>
         </List.Section>

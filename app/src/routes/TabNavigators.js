@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { BackHandler, Alert } from "react-native";
 import {
   HomeStack,
   CartStack,
@@ -12,6 +13,27 @@ import Constants from "../constants/Constants";
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigators() {
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Exit App!", "Are you sure you want to go exit KINDEEM?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() }
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

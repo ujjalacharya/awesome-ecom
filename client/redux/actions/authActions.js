@@ -18,8 +18,7 @@ const authenticate = (body, type, redirectUrl) => {
     if (response.isSuccess) {
       setCookie("token", response.data.accessToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.token });
-      console.log(window.location)
-      console.log(redirectUrl)
+      
       const redirectUrl = window.location.search
         ? window.location.search.split("=")[1]
         : "/";

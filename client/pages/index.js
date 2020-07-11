@@ -10,7 +10,7 @@ import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 
 const Index = (props) => {
-  console.log(props)
+  
   return (
     <Layout title="Home">
       <div className="wrapper">

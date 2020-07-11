@@ -8,20 +8,20 @@ import ReviewsForm from "./Includes/ReviewForm";
 const { TabPane } = Tabs;
 
 class OtherDetails extends Component {
-  callback = (key) => {
-    
-  };
+  callback = (key) => {};
 
   render() {
-    let { data } = this.props;
+    let {
+      data: { product },
+    } = this.props;
 
     let addInfo = {
-      weight: data?.weight,
-      color: data?.color,
-      size: data?.size,
-      warranty: data?.warranty
-    }
-    console.log(this.props)
+      weight: product?.weight,
+      color: product?.color,
+      size: product?.size,
+      warranty: product?.warranty,
+    };
+    console.log(this.props);
     return (
       <div className="other-details">
         <Tabs defaultActiveKey="1" onChange={this.callback}>
@@ -31,7 +31,7 @@ class OtherDetails extends Component {
           <TabPane tab="Description" key="2">
             <div className="desc-tab">
               <div className="title">Description</div>
-              {data?.description}
+              {product?.description}
             </div>
           </TabPane>
           <TabPane tab="Additional Information" key="3">
@@ -39,7 +39,7 @@ class OtherDetails extends Component {
           </TabPane>
           <TabPane tab="Reviews" key="4">
             <Reviews />
-            <ReviewsForm />
+            {!this.props.data.hasReviewed && this.props.data.hasBought && <ReviewsForm />}
           </TabPane>
         </Tabs>
       </div>

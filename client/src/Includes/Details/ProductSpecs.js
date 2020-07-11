@@ -19,14 +19,34 @@ class ProductSpecs extends Component {
       this.props.cart.addToCartResp
     ) {
       openNotification("Success", "Product added to cart successfully");
+      this.props.getProductDetails(this.props.router.query.slug);
     }
 
     if (
-      this.props.wishlist.wishlistItemsResp !== prevProps.wishlist.wishlistItemsResp &&
+      this.props.wishlist.wishlistItemsResp !==
+        prevProps.wishlist.wishlistItemsResp &&
       this.props.wishlist.wishlistItemsResp
     ) {
       openNotification("Success", "Product added to wishlist successfully");
-      this.props.getProductDetails(this.props.router.query.slug)
+      this.props.getProductDetails(this.props.router.query.slug);
+    }
+
+    if (
+      this.props.wishlist.removeFromWishlistResp !==
+        prevProps.wishlist.removeFromWishlistResp &&
+      this.props.wishlist.removeFromWishlistResp
+    ) {
+      openNotification("Success", "Product removed from wishlist successfully");
+      this.props.getProductDetails(this.props.router.query.slug);
+    }
+
+    if (
+      this.props.cart.removeFromCartResp !==
+        prevProps.cart.removeFromCartResp &&
+      this.props.cart.removeFromCartResp
+    ) {
+      openNotification("Success", "Product removed from cart successfully");
+      this.props.getProductDetails(this.props.router.query.slug);
     }
   }
 
@@ -62,8 +82,6 @@ class ProductSpecs extends Component {
       data: { product },
     } = this.props;
 
-    console.log(this.props);
-
     let description = "";
     let allDescription = "";
     if (product.description) {
@@ -83,15 +101,26 @@ class ProductSpecs extends Component {
           <div className="product-title">{product.name}</div>
           <div className="ratings-reviews">
             <div className="ratings">
-              <i className="fa fa-star-o" aria-hidden="true"></i>
-              <i className="fa fa-star-o" aria-hidden="true"></i>
-              <i className="fa fa-star-o" aria-hidden="true"></i>
-              <i className="fa fa-star-o" aria-hidden="true"></i>
-              <i className="fa fa-star-o" aria-hidden="true"></i>
-              <span>5 start ratings</span>
+              {this.props.data.stars.averageStar &&
+                Array(this.props.data.stars.averageStar)
+                  .fill(0)
+                  .map((num, i) => {
+                    return (
+                      <i className="fa fa-star" aria-hidden="true" key={i}></i>
+                    );
+                  })}
+              <span>
+                {this.props.data.stars.averageStar
+                  ? this.props.data.stars.averageStar
+                  : 'No'}{" "}
+                stars ratings
+              </span>
             </div>
             <div className="reviews">
-              <span>( 184 customer reviews | 41 FAQ answered )</span>
+              <span>
+                ( {this.props.data.stars.totalRatingUsers} customer reviews | 41
+                FAQ answered )
+              </span>
             </div>
           </div>
           <div className="price-wish">
@@ -112,22 +141,36 @@ class ProductSpecs extends Component {
             <div className="wish-btn">
               {loginToken ? (
                 this.props.data.hasOnWishlist ? (
-                  <img
-                    data-tip="Add to Wishlist"
-                    src="/images/heart-blue.png"
-                    onClick={() => this.props.removeFromWishList(product.wishlist.id)}
-                  />
+                  <Popconfirm
+                    title="Are you sure you want to remove this from wishlist?"
+                    onConfirm={() =>
+                      this.props.removeFromWishList(
+                        this.props.data.hasOnWishlist._id
+                      )
+                    }
+                    // onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <a>
+                      <img
+                        data-tip="Add to Wishlist"
+                        src="/images/heart-blue.png"
+                      />
+                    </a>
+                  </Popconfirm>
                 ) : (
                   <img
                     data-tip="Add to Wishlist"
                     src="/images/heart.png"
-                    onClick={() =>
-                      this.props.addWishListItems(product.slug)}
+                    onClick={() => this.props.addWishListItems(product.slug)}
                   />
                 )
               ) : (
                 <Link href={`/login?origin=${this.props.router.asPath}`}>
-                  <img data-tip="Add to Wishlist" src="/images/heart.png" />
+                  <a>
+                    <img data-tip="Add to Wishlist" src="/images/heart.png" />
+                  </a>
                 </Link>
               )}
             </div>
@@ -148,55 +191,91 @@ class ProductSpecs extends Component {
         </div>
         <div className="qty-cart-btn">
           <div className="qty-cart">
-            {!this.props.data.hasOnCart ? (
-              <>
-                <div className="qty">
-                  <span className="qty-title">Qty:</span>
-                  <span className="qty-inc-dcs">
-                    <i
-                      aria-hidden="true"
-                      onClick={() => this.changePdValue(-1)}
-                      className={
-                        "fa fa-minus " +
-                        (this.state.pdQty === 1 ? "disabled" : "")
-                      }
-                    />
-                    <Input
-                      defaultValue={this.state.pdQty}
-                      value={this.state.pdQty}
-                      onChange={(e) => {
-                        this.setState({ pdQty: e.target.value });
-                      }}
-                    />
-                    <i
-                      className="fa fa-plus"
-                      aria-hidden="true"
-                      onClick={() => this.changePdValue(1)}
-                    />
-                  </span>
-                </div>
+            {loginToken ? (
+              !this.props.data.hasOnCart ? (
+                <>
+                  <div className="qty">
+                    <span className="qty-title">Qty:</span>
+                    <span className="qty-inc-dcs">
+                      <i
+                        aria-hidden="true"
+                        onClick={() => this.changePdValue(-1)}
+                        className={
+                          "fa fa-minus " +
+                          (this.state.pdQty === 1 ? "disabled" : "")
+                        }
+                      />
+                      <Input
+                        defaultValue={this.state.pdQty}
+                        value={this.state.pdQty}
+                        onChange={(e) => {
+                          this.setState({ pdQty: e.target.value });
+                        }}
+                      />
+                      <i
+                        className="fa fa-plus"
+                        aria-hidden="true"
+                        onClick={() => this.changePdValue(1)}
+                      />
+                    </span>
+                  </div>
 
-                <Button className="primary" onClick={this.addToCart}>
-                  Add to Cart
-                </Button>
-              </>
-            ) : (
-              <div className="delete-product">
-                {/* <Popconfirm
-                  title="Are you sure you want to remove this from cart?"
-                  onConfirm={() => this.props.removeCart(items._id)}
-                  // onCancel={cancel}
-                  okText="Yes"
-                  cancelText="No"
-                > */}
-                <a>
-                  <Button className="btn">
-                    {/* <DeleteOutlined /> */}
-                    <span className="txt">ADDED TO CART</span>
+                  <Button className="primary" onClick={this.addToCart}>
+                    Add to Cart
                   </Button>
+                </>
+              ) : (
+                <div className="delete-product">
+                  <Popconfirm
+                    title="Are you sure you want to remove this from cart?"
+                    onConfirm={() =>
+                      this.props.removeCart(this.props.data.hasOnCart._id)
+                    }
+                    // onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <a>
+                      <Button className="btn">
+                        <DeleteOutlined />
+                        <span className="txt">REMOVE FROM CART</span>
+                      </Button>
+                    </a>
+                  </Popconfirm>
+                </div>
+              )
+            ) : (
+              <Link href={`/login?origin=${this.props.router.asPath}`}>
+                <a style={{ display: "flex", alignItems: "center" }}>
+                  <div className="qty">
+                    <span className="qty-title">Qty:</span>
+                    <span className="qty-inc-dcs">
+                      <i
+                        aria-hidden="true"
+                        // onClick={() => this.changePdValue(-1)}
+                        className={
+                          "fa fa-minus " +
+                          (this.state.pdQty === 1 ? "disabled" : "")
+                        }
+                      />
+                      <Input
+                        defaultValue={this.state.pdQty}
+                        value={this.state.pdQty}
+                        onChange={(e) => {
+                          this.setState({ pdQty: e.target.value });
+                        }}
+                      />
+                      <i
+                        className="fa fa-plus"
+                        aria-hidden="true"
+                        // onClick={() => this.changePdValue(1)}
+                      />
+                    </span>
+                  </div>
+
+                  <Button className="primary">Add to Cart</Button>
                 </a>
-                {/* </Popconfirm> */}
-              </div>
+              </Link>
             )}
           </div>
           <div className="wish-comp-btn">
