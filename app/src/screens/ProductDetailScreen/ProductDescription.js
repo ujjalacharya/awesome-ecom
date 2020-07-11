@@ -1,4 +1,5 @@
 import React from "react";
+import { Text, View } from "react-native";
 import { Card, Paragraph, Divider, Avatar, Title } from "react-native-paper";
 import Constants from "../../constants/Constants";
 
@@ -6,7 +7,30 @@ const ProductDescription = () => {
   return (
     <>
       <Card>
-        <Card.Title title="Rs 265" subtitle="5% off" />
+        <View>
+          <Card.Title
+            title="Rs 199"
+            subtitle={
+              <>
+                <Text
+                  style={{
+                    textDecorationLine: "line-through",
+                    textDecorationStyle: "solid",
+                  }}
+                >
+                  {"Rs 265"}
+                </Text>
+                <Text
+                  style={{
+                    color: "green",
+                  }}
+                >
+                  {" 6% off"}
+                </Text>
+              </>
+            }
+          />
+        </View>
         <Card.Content>
           <Paragraph>
             Redmi Note 8 Pro is a highly sought after smartphone. It has a
