@@ -20,6 +20,53 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 // const perPage = 10;
 
+const run = async () => {
+    let orders = await Order.find({
+        'status.currentStatus': { $in: ['complete', 'return'] }
+    })
+    orders = orders.map(async o => {
+        let newReview = new Review({
+            commnent: 'This product is so nice.',
+            star: _.random(1,5),
+            user:o.user,
+            product:o.product
+        })
+        return await newReview.save()
+    })
+    orders = await Promise.all(orders)
+    console.log('********NEW REVIEWS********');
+    orders.length = 20
+    console.log(orders);
+
+
+    let products = await Product.find({isDeleted:null,isVerified:{$ne:null}})
+    products = products.map(async p => {
+        let newQna = []
+        for (let i = 0; i < 20; i++) {
+            newQna.push({
+                question: 'kattiko long lasting cha?',
+                questionBy:orders[_.random(0,11)].user,
+                questionedDate:Date.now(),
+                answer:'1 year ko warranty cha.',
+                answerby:p.soldBy,
+                answeredDate: Date.now()
+            })
+            
+        }
+        let newQNA = new QNA({
+            product:p._id,
+            qna:newQna
+        })
+        return await newQNA.save()
+    })
+    products = await Promise.all(products)
+    console.log('******NEW QNAS*****');
+    console.log(products);
+}
+
+
+
+
 exports.postReview = async (req, res) => {
     const product = req.product
     if (!product.isVerified && product.isDeleted) {
