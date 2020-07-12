@@ -21,35 +21,32 @@ const task = Fawn.Task();
 // const perPage = 10;
 
 const run = async () => {
-    let orders = await Order.find({
-        'status.currentStatus': { $in: ['complete', 'return'] }
-    })
-    console.log(orders.length);
-    let newOrders = []
-    for (let i = 0; i < orders.length; i++) {
-        const order = orders[i];
-        if (!newOrders.some(o => (o.user.toString() === order.user.toString() && o.product.toString() === order.product.toString()  ))) {
-            newOrders.push(order)
+    let users = await User.find()
+    let products = await Product.find({ isDeleted: null, isVerified: { $ne: null } })
+    products = products.map(async p => {
+        let newQna = []
+        for (let i = 0; i < 20; i++) {
+            newQna.push({
+                question: 'kattiko long lasting cha?',
+                questionby: users[_.random(0, 11)]._id,
+                questionedDate: Date.now(),
+                answer: '1 year ko warranty cha.',
+                answerby: p.soldBy,
+                answeredDate: Date.now()
+            })
+
         }
-    }
-    console.log(newOrders.length);
-    orders = newOrders.map(async o => {
-        let newReview = new Review({
-            commnent: 'This product is so nice.',
-            star: _.random(1, 5),
-            user: o.user,
-            product: o.product
+        let newQNA = new QNA({
+            product: p._id,
+            qna: newQna
         })
-        return await newReview.save()
+        return await newQNA.save()
     })
-    orders = await Promise.all(orders)
-    console.log('********NEW REVIEWS********');
-    orders.length = 5
-    console.log(orders);
-
-
+    products = await Promise.all(products)
+    console.log('******NEW QNAS*****');
+    console.log(products);
 }
-// run()
+// run();
 exports.postReview = async (req, res) => {
     const product = req.product
     if (!product.isVerified && product.isDeleted) {
@@ -89,9 +86,16 @@ exports.postReview = async (req, res) => {
         star: req.body.star
     };
     newReview = new Review(newReview);
-
-    await newReview.save();
-    res.json(newReview);
+    let prdts = await Product.findById(product._id)
+    let updateProduct = prdts.toObject()
+    updateProduct.reviews.push(newReview._id)
+    const results = await task
+                    .update(prdts,updateProduct)
+                    .options({viaSave:true})
+                    .save(newReview)
+                    .run({useMongoose:true})
+    // await newReview.save();
+    res.json(results[1]);
 }
 
 exports.editReview = async (req, res) => {

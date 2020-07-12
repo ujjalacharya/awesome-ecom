@@ -335,20 +335,38 @@ exports.searchProducts = async (req, res) => {
     if (weights) searchingFactor.weight = { $in: weights };
     if (warranties) searchingFactor.warranty = warranties;
   }
-  let products = await Product.find(searchingFactor)
-    .populate("category", "displayName slug")
-    .populate("brand", "brandName slug")
-    .populate("images", "-createdAt -updatedAt -__v")
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .lean()
-    .sort(sortFactor)
-  // if (!products.length) {
-  //   return res.status(404).json({ error: "Products not found." });
-  // }
-  //need to work on rating...
 
-  const totalCount = await Product.countDocuments(searchingFactor);
+  //for rating wise filter..
+  let products
+  let totalCount
+  if (!ratings) {
+    products = await Product.find(searchingFactor)
+      .populate("category", "displayName slug")
+      .populate("brand", "brandName slug")
+      .populate("images", "-createdAt -updatedAt -_v")
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .lean()
+      .sort(sortFactor)
+    totalCount = await Product.countDocuments(searchingFactor);
+  } else {
+    products = await Product.find(searchingFactor)
+      .populate("category", "displayName slug")
+      .populate("brand", "brandName slug")
+      .populate("images", "-createdAt -updatedAt -_v")
+      .populate({
+        path: 'reviews',
+        model:'reviews',
+        // match: { star: { $gte: ratings } }
+      })
+      .lean()
+      .sort(sortFactor)
+    // products = products.filter(p=>p.reviews.)
+    totalCount = await Product.countDocuments(searchingFactor);
+  }
+  
+  //QnA.qna = _.drop(QnA.qna, perPage * page - perPage)
+  // QnA.qna = _.take(QnA.qna, perPage)
 
   //user's action on each product
   products = products.map(async p => {
