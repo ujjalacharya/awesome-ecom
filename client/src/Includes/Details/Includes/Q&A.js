@@ -121,15 +121,15 @@ class QA extends Component {
                     </div>
                   </span>
                 </div>
-                {/* <div className="ans">
+                <div className="ans">
                   <span className="q-icon a-btn">
                     A<span className="arrow-bottom"></span>
                   </span>
                   <span className="q-title">
-                    <span className="q-text">Already discounted rate</span>
-                    <div className="user">The Fashionista - 12 minutes ago</div>
+                    <span className="q-text">{qa.answer}</span>
+                    <div className="user">{qa.answerby.shopName} - {convertDateToCurrentTz(qa.answeredDate)}</div>
                   </span>
-                </div> */}
+                </div>
               </div>
             );
           })}
