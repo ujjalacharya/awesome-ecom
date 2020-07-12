@@ -1,9 +1,9 @@
 import { getService, getTokenService, postTokenService } from "../../utils/commonService";
 
 export class ProductService {
-  getLatestProducts() {
+  getLatestProducts(ctx) {
     let url = `${process.env.SERVER_BASE_URL}/api/product/latest`
-    let data = getService(url, 'GET');
+    let data = getTokenService(url, 'GET', ctx);
     return data;
   }
 
