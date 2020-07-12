@@ -13,6 +13,12 @@ const ProductDetailHeader = (props) => (
         style={styles.backButton}
         onPress={() => props.navigation.pop()}
       />
+       <Appbar.Action
+        style={[styles.heartIcon]}
+        color="orange"
+        icon="heart"
+        onPress={() => props.navigation.navigate("WishList")}
+      />
       <Avatar.Text
         size={24}
         label="12 photos"
@@ -38,6 +44,11 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     top: 0,
+  },
+  heartIcon: {
+    position: "absolute",
+    top: 0,
+    right: 0
   },
   totalPhotos: {
     position: "absolute",

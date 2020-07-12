@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 import { Text, View, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 const SingleCard = ({ product }) => {
   const navigation = useNavigation();
   return (
-    <TouchableNativeFeedback
+    <TouchableWithoutFeedback
       key={product.id}
       style={styles.cardContainer}
       onPress={() => navigation.navigate("Detail")}
@@ -29,7 +29,7 @@ const SingleCard = ({ product }) => {
         </Card>
         <View style={{ flex: 0.25 }}></View>
       </>
-    </TouchableNativeFeedback>
+    </TouchableWithoutFeedback>
   );
 };
 

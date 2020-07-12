@@ -52,20 +52,16 @@ class ProductDetailScreen extends Component {
           <>
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
-              // stickyHeaderIndices={[0]}
+              stickyHeaderIndices={[0]}
             >
-              <View style={{ flex: 1 }}>
-                <TouchableRipple
-                  style={{ height: 250 }}
-                  onPress={this.handleGalleryToggle}
-                >
-                  <ProductDetailHeader {...this.props} />
-                </TouchableRipple>
-                {[1, 2, 3, 4, 5, 6, 7].map(() => (
-                  <ProductDescription />
-                ))}
-              </View>
-              <View style={{ height: 250 }}>
+              <TouchableRipple
+                style={{ height: 200 }}
+                onPress={this.handleGalleryToggle}
+              >
+                <ProductDetailHeader {...this.props} />
+              </TouchableRipple>
+              <ProductDescription />
+              <View style={{ height: 250, marginTop: 0 }}>
                 <FeaturedProducts title={"Similar Products"} />
               </View>
             </ScrollView>

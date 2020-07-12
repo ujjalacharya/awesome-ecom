@@ -59,6 +59,7 @@ exports.postReview = async (req, res) => {
         star: req.body.star
     };
     newReview = new Review(newReview);
+    
     await newReview.save();
     res.json(newReview);
 }

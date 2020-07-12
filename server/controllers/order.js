@@ -150,8 +150,14 @@ exports.createOrder = async (req, res) => {
         return week.slice(0, lastIndex + 1).some(d => d === new Date().getDay());
 
     }
-    if (!product || product.soldBy.isBlocked || !product.soldBy.isVerified || isAdminOnHoliday(product.soldBy.holidayMode.start, product.soldBy.holidayMode.end)) {
+    if (!product) {
         return res.status(404).json({ error: "Product not found." })
+    }
+    if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
+        return res.status(403).json({ error: "Seller is not " })
+    }
+    if (isAdminOnHoliday(product.soldBy.holidayMode.start, product.soldBy.holidayMode.end)) {
+        return res.status(403).json({ error: "Seller is on holiday. Please order manually " })
     }
     if (product.quantity === 0) {
         return res.status(403).json({ error: "Product is out of the stock." })
