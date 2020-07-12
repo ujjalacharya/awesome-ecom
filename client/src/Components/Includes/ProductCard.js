@@ -8,6 +8,7 @@ import { withRouter } from "next/router";
 import QuickViewModal from "./QuickViewModal";
 import Link from "next/link";
 import actions from "../../../redux/actions";
+import { openNotification } from "../../../utils/common";
 
 const products = {
   category: [
@@ -86,61 +87,116 @@ class ProductCard extends Component {
                 </Tooltip>
               </div>
               <div className="card-items">
-                <Tooltip
-                  placement="topLeft"
-                  title="Add to Cart"
-                  arrowPointAtCenter
-                >
-                  <img src="/images/bag.png" alt="bag.jpg" />
-                </Tooltip>
+                {loginToken ? (
+                  !productData.hasOnCart ? (
+                    <Tooltip
+                      placement="topLeft"
+                      title="Add to Cart"
+                      arrowPointAtCenter
+                    >
+                      <img
+                        src="/images/bag.png"
+                        alt="bag.jpg"
+                        title="Add to Cart"
+                      />
+                    </Tooltip>
+                  ) : (
+                    <Popconfirm
+                      title="Are you sure you want to remove this from cart?"
+                      onConfirm={() =>
+                        this.props.removeCart(productData.hasOnCart._id)
+                      }
+                      // onCancel={cancel}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <a>
+                        <Tooltip
+                          placement="topLeft"
+                          title="Remove from Cart"
+                          arrowPointAtCenter
+                        >
+                          <img
+                            src="/images/bag.png"
+                            alt="bag.jpg"
+                            title="Remove from Cart"
+                          />
+                        </Tooltip>
+                      </a>
+                    </Popconfirm>
+                  )
+                ) : (
+                  <Link href={`/login?origin=${this.props.router.asPath}`}>
+                    <a style={{ display: "flex", alignItems: "center" }}>
+                      <Tooltip
+                        placement="topLeft"
+                        title="Add to Cart"
+                        arrowPointAtCenter
+                      >
+                        <img src="/images/bag.png" alt="bag.jpg" />
+                      </Tooltip>
+                    </a>
+                  </Link>
+                )}
               </div>
               <div className="card-items">
-                <Tooltip
-                  placement="topLeft"
-                  title="Add to Wishlist"
-                  arrowPointAtCenter
-                >
-                  {loginToken ? (
-                    productData.hasOnWishlist ? (
-                      <Popconfirm
-                        title="Are you sure you want to remove this from wishlist?"
-                        onConfirm={() =>
-                          this.props.removeFromWishList(
-                            productData.hasOnWishlist._id
-                          )
-                        }
-                        // onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <a>
+                {loginToken ? (
+                  productData.hasOnWishlist ? (
+                    <Popconfirm
+                      title="Are you sure you want to remove this from wishlist?"
+                      onConfirm={() =>
+                        this.props.removeFromWishList(
+                          productData.hasOnWishlist._id
+                        )
+                      }
+                      // onCancel={cancel}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <a>
+                        <Tooltip
+                          placement="topLeft"
+                          title="Remove from Wishlist"
+                          arrowPointAtCenter
+                        >
                           <img
-                            data-tip="Add to Wishlist"
+                            data-tip="Remove from Wishlist"
                             src="/images/heart-blue.png"
                           />
-                        </a>
-                      </Popconfirm>
-                    ) : (
+                        </Tooltip>
+                      </a>
+                    </Popconfirm>
+                  ) : (
+                    <Tooltip
+                      placement="topLeft"
+                      title="Add to Wishlist"
+                      arrowPointAtCenter
+                    >
                       <img
                         data-tip="Add to Wishlist"
                         src="/images/heart.png"
-                        data-tip="Add to Wishlist"
                         onClick={() =>
-                          this.props.addWishListItems(product.slug)
+                          this.props.addWishListItems(productData.slug)
                         }
                       />
-                    )
-                  ) : (
-                    <Link href={`/login`}>
-                      <a>
+                    </Tooltip>
+                  )
+                ) : (
+                  <Link href={`/login?origin=${this.props.router.asPath}`}>
+                    <a>
+                      <Tooltip
+                        placement="topLeft"
+                        title="Add to Wishlist"
+                        arrowPointAtCenter
+                      >
                         <img
                           data-tip="Add to Wishlist"
                           src="/images/heart.png"
                         />
-                      </a>
-                    </Link>
-                  )}
-                </Tooltip>
+                      </Tooltip>
+                    </a>
+                  </Link>
+                )}
               </div>
               <div className="card-items">
                 <Tooltip

@@ -14,6 +14,7 @@ class ProductSpecs extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    console.log('product specs')
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
