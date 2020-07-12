@@ -102,7 +102,7 @@ class ProductSpecs extends Component {
           <div className="ratings-reviews">
             <div className="ratings">
               {this.props.data.stars.averageStar &&
-                Array(this.props.data.stars.averageStar)
+                Array(Math.round(this.props.data.stars.averageStar))
                   .fill(0)
                   .map((num, i) => {
                     return (
@@ -111,7 +111,7 @@ class ProductSpecs extends Component {
                   })}
               <span>
                 {this.props.data.stars.averageStar
-                  ? this.props.data.stars.averageStar
+                  ? this.props.data.stars.averageStar.toFixed(1)
                   : 'No'}{" "}
                 stars ratings
               </span>

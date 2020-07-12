@@ -44,7 +44,8 @@ class ProfileDetails extends Component {
     }
 
     if (
-      this.props.user.profilePictureResp !== prevProps.user.profilePictureResp &&
+      this.props.user.profilePictureResp !==
+        prevProps.user.profilePictureResp &&
       this.props.user.profilePictureResp
     ) {
       openNotification("Success", "Profile picture uploaded successfully");
@@ -99,7 +100,6 @@ class ProfileDetails extends Component {
 
     let checkSekelton = this.state.userData.email === "" ? true : false;
 
-    console.log(this.props);
     return (
       <div className="profile-details">
         <div className="main-profile">
@@ -125,7 +125,6 @@ class ProfileDetails extends Component {
                     accept=".jpeg,.jpg,.png,.pdf"
                     multiple
                     onChange={(e) => {
-                      console.log(e.target.files[0]);
                       let formData = new FormData();
                       formData.append("photo", e.target.files[0]);
                       this.props.updateProfilePicture(formData);
