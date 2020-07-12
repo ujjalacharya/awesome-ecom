@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { Tooltip } from "antd";
+import { Popconfirm } from "antd";
+import { connect } from "react-redux";
+import { withRouter } from "next/router";
 
 //includes
 import QuickViewModal from "./QuickViewModal";
 import Link from "next/link";
-import ProductSpecs from "../../Includes/Details/ProductSpecs";
-import next from "next";
+import actions from "../../../redux/actions";
 
 const products = {
   category: [
@@ -56,6 +58,7 @@ class ProductCard extends Component {
 
     let checkSkeleton = this.state.productData.name === "" ? true : false;
 
+    let loginToken = this.props.authentication.token;
     return (
       <div className={"product-card " + (checkSkeleton && "skeleton")}>
         {this.state.showQuickView && (
@@ -70,7 +73,6 @@ class ProductCard extends Component {
           <div className="hover-items-image">
             <div className="card-hover-items">
               <div className="card-items">
-
                 <Tooltip
                   placement="topLeft"
                   title="Quick View"
@@ -98,7 +100,46 @@ class ProductCard extends Component {
                   title="Add to Wishlist"
                   arrowPointAtCenter
                 >
-                  <img src="/images/heart.png" alt="heart.jpg" />
+                  {loginToken ? (
+                    productData.hasOnWishlist ? (
+                      <Popconfirm
+                        title="Are you sure you want to remove this from wishlist?"
+                        onConfirm={() =>
+                          this.props.removeFromWishList(
+                            productData.hasOnWishlist._id
+                          )
+                        }
+                        // onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <a>
+                          <img
+                            data-tip="Add to Wishlist"
+                            src="/images/heart-blue.png"
+                          />
+                        </a>
+                      </Popconfirm>
+                    ) : (
+                      <img
+                        data-tip="Add to Wishlist"
+                        src="/images/heart.png"
+                        data-tip="Add to Wishlist"
+                        onClick={() =>
+                          this.props.addWishListItems(product.slug)
+                        }
+                      />
+                    )
+                  ) : (
+                    <Link href={`/login`}>
+                      <a>
+                        <img
+                          data-tip="Add to Wishlist"
+                          src="/images/heart.png"
+                        />
+                      </a>
+                    </Link>
+                  )}
                 </Tooltip>
               </div>
               <div className="card-items">
@@ -153,7 +194,11 @@ class ProductCard extends Component {
                         .fill(0)
                         .map((num, i) => {
                           return (
-                            <i className="fa fa-star" aria-hidden="true" key={i}></i>
+                            <i
+                              className="fa fa-star"
+                              aria-hidden="true"
+                              key={i}
+                            ></i>
                           );
                         })}
                   </div>
@@ -171,4 +216,4 @@ class ProductCard extends Component {
   }
 }
 
-export default ProductCard;
+export default connect((state) => state, actions)(withRouter(ProductCard));

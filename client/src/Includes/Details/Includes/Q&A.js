@@ -117,7 +117,7 @@ class QA extends Component {
                   <span className="q-title">
                     <span className="q-text">{qa.question}</span>
                     <div className="user">
-                      Bibek L. - {convertDateToCurrentTz(qa.questionedDate)}
+                      {qa.questionby.name} - {convertDateToCurrentTz(qa.questionedDate)}
                     </div>
                   </span>
                 </div>
