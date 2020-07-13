@@ -8,6 +8,7 @@ import {
   convertDateToCurrentTz,
   openNotification,
   getDiscountedPrice,
+  scrollToTop,
 } from "../../../utils/common";
 import next from "next";
 import Link from "next/link";
@@ -34,6 +35,7 @@ class MyWishlist extends Component {
       nextProps.wishlist.getWishlistItems !== prevState.allWishlistItems &&
       nextProps.wishlist.getWishlistItems
     ) {
+      scrollToTop();
       return {
         allWishlistItems: nextProps.wishlist.getWishlistItems,
       };
@@ -42,6 +44,7 @@ class MyWishlist extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(this.props)
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
@@ -64,18 +67,24 @@ class MyWishlist extends Component {
         userInfo: this.props.user.userProfile
       })
     }
+
+    // if(this.props.wishlist.getWishlistItems !== prevProps.wishlist.getWishlistItems && this.props.wishlist.getWishlistItems){
+    //   this.setState({
+    //     allWishlistItems: this.props.wishlist.getWishlistItems
+    //   })
+    // }
   }
 
   onChangePage = (page) => {
     console.log(page)
     this.setState({
-      currentPage: page,
+      currentPage: page.current,
     });
     // let body = {
     //   keyword: this.props.router.query.slug,
     // };
     this.props.getWishListItems(
-      `?page=${page}&perPage=10`
+      `page=${page.current}&perPage=10`
     );
   };
 
