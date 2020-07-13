@@ -23,35 +23,6 @@ const task = Fawn.Task();
 const perPage = 10;
 
 
-const run = async () => {
-    let products = await Product.find({ isDeleted: null, isVerified: { $ne: null } })
-    let users = await User.find()
-    users = users.map(async u => {
-        let carts = []
-        let wishlists = []
-        for (let i = 0; i < 20; i++) {
-            let cart = new Cart({
-                user: u._id,
-                product: products[i]._id,
-                quantity: _.random(1, 4)
-            })
-            carts.push(cart)
-            let wishlist = new Wishlist({
-                user: u._id,
-                product: products[i]._id,
-                quantity: _.random(1, 4)
-            })
-            wishlists.push(wishlist)
-        }
-        carts = carts.map(async c => await c.save())
-        carts = await Promise.all(carts)
-        wishlists = wishlists.map(async c => await c.save())
-        wishlists = await Promise.all(wishlists)
-    })
-    await Promise.all(users)
-}
-run()
-
 exports.addCart = async (req, res) => {
     const product = req.product
     if (req.query.quantity < 1) {
