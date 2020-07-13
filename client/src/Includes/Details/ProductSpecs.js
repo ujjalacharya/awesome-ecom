@@ -126,14 +126,14 @@ class ProductSpecs extends Component {
           <div className="price-wish">
             <div className="old-new-price">
               <div className="old-price">
-                <span>Rs {product.price}</span>
+                <span>Rs {product.price.$numberDecimal}</span>
               </div>
               <div className="new-price">
                 <span className="price">
-                  Rs {product.price - (product.price * 2) / 100}
+                  Rs {product.price.$numberDecimal - (product.price * 2) / 100}
                 </span>
                 <span className="discount">
-                  (Save Rs {(product.price * 2) / 100} | {product.discountRate}
+                  (Save Rs {(product.price.$numberDecimal * 2) / 100} | {product.discountRate}
                   %)
                 </span>
               </div>

@@ -16,7 +16,7 @@ class CartItems extends Component {
     if (this.props.cart.getCartProducts) {
       let totalAmount = 0
       this.props.cart.getCartProducts.carts?.map(data => {
-        totalAmount += (getDiscountedPrice(data.product.price, data.product.discountRate) * data.quantity)
+        totalAmount += (getDiscountedPrice(data.product.price.$numberDecimal, data.product.discountRate) * data.quantity)
       })
       this.setState({
         cardItems: this.props.cart.getCartProducts,

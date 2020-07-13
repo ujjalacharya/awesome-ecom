@@ -136,7 +136,7 @@ class MyWishlist extends Component {
     let data = [];
 
     wishlists?.map((item) => {
-      let discountedPrice = getDiscountedPrice(item.product.price, item.product.discountRate);
+      let discountedPrice = getDiscountedPrice(item.product.price.$numberDecimal, item.product.discountRate);
       
       let ele = {
         key: item._id,
