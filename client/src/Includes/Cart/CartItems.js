@@ -1,32 +1,74 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import actions from "../../../redux/actions";
+import { Pagination } from "antd";
 
 //includes
+import actions from "../../../redux/actions";
 import ProductListView from "../../Components/ProductListView";
-import { getDiscountedPrice } from "../../../utils/common";
+import { getDiscountedPrice, scrollToTop } from "../../../utils/common";
 
 class CartItems extends Component {
   state = {
     cardItems: [],
-    totalAmount: ''
+    totalAmount: "",
   };
 
   componentDidMount() {
     if (this.props.cart.getCartProducts) {
-      let totalAmount = 0
-      this.props.cart.getCartProducts.carts?.map(data => {
-        totalAmount += (getDiscountedPrice(data.product.price.$numberDecimal, data.product.discountRate) * data.quantity)
-      })
+      scrollToTop();
+      let totalAmount = 0;
+      this.props.cart.getCartProducts.carts?.map((data) => {
+        totalAmount +=
+          getDiscountedPrice(
+            data.product.price.$numberDecimal,
+            data.product.discountRate
+          ) * data.quantity;
+      });
       this.setState({
         cardItems: this.props.cart.getCartProducts,
-        totalAmount
+        totalAmount,
       });
     }
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.cart.getCartProducts !== prevState.cardItems) {
+      let totalAmount = 0;
+      nextProps.cart.getCartProducts.carts?.map((data) => {
+        totalAmount +=
+          getDiscountedPrice(
+            data.product.price.$numberDecimal,
+            data.product.discountRate
+          ) * data.quantity;
+      });
+      return {
+        cardItems: nextProps.cart.getCartProducts,
+        totalAmount,
+      };
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.cart.getCartProducts !== prevProps.cart.getCartProducts &&
+      this.props.cart.getCartProducts
+    ) {
+      scrollToTop();
+    }
+  }
+
+  onChangePage = (page) => {
+    this.setState({
+      currentPage: page,
+    });
+    // let body = {
+    //   keyword: this.props.router.query.slug,
+    // };
+    this.props.getCartProducts(`page=${page}`);
+  };
+
   render() {
-    
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -49,7 +91,14 @@ class CartItems extends Component {
             <div className="price">Total: Rs {this.state.totalAmount}</div>
           </div>
           <div className="items-list">
-            <ProductListView data = {this.state.cardItems} />
+            <ProductListView data={this.state.cardItems} />
+            <div className="all-pagination">
+              <Pagination
+                defaultCurrent={1}
+                total={this.state.cardItems?.totalCount}
+                onChange={this.onChangePage}
+              />
+            </div>
           </div>
         </div>
       </div>

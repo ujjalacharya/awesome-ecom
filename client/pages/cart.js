@@ -11,6 +11,7 @@ import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 
 class Cart extends Component {
+
   static async getInitialProps(ctx) {
     initialize(ctx);
 
