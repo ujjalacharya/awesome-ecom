@@ -23,7 +23,7 @@ class Login extends Component {
         email: values.email,
         password: values.password,
       };
-      console.log(this.props)
+      
       let redirectUrl = this.props.router.query.redirectUrl
       this.props.authenticate(body, "signin", redirectUrl);
     };

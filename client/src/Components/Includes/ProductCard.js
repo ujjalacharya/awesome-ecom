@@ -30,11 +30,11 @@ class ProductCard extends Component {
     productData: products,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState){
-    if(nextProps.data !== prevState.data && nextProps.data){
-      return{
-        productData: nextProps.data
-      }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.data !== prevState.data && nextProps.data) {
+      return {
+        productData: nextProps.data,
+      };
     }
     return null;
   }
@@ -55,23 +55,21 @@ class ProductCard extends Component {
     const { productData } = this.state;
 
     let checkSkeleton = this.state.productData.name === "" ? true : false;
+
     return (
       <div className={"product-card " + (checkSkeleton && "skeleton")}>
         {this.state.showQuickView && (
           <QuickViewModal
             title="Quick View Product"
             visible={this.state.showQuickView}
-            // onOk={this.handleOk}
             onCancel={this.handleCancel}
             data={productData}
           />
         )}
-        {/* <ReactTooltip place="top" type="dark" effect="float" /> */}
         <div className="product-box-shadow">
           <div className="hover-items-image">
             <div className="card-hover-items">
               <div className="card-items">
-                {/* <a > ◕‿‿◕ </a> */}
 
                 <Tooltip
                   placement="topLeft"
@@ -121,9 +119,9 @@ class ProductCard extends Component {
               <div className="image img-skeleton">
                 <img
                   src={`${process.env.SERVER_BASE_URL}/uploads/${productData.images[0].medium}`}
-                  // onError={(ev) => {
-                  //   ev.target.src = "/images/default-image.png";
-                  // }}
+                  onError={(ev) => {
+                    ev.target.src = "/images/default-image.png";
+                  }}
                   alt={productData.name}
                   className="productImg-loader"
                 />
@@ -150,10 +148,14 @@ class ProductCard extends Component {
                 </div>
                 {!checkSkeleton && (
                   <div className="stars">
-                    <i className="fa fa-star" aria-hidden="true"></i>
-                    <i className="fa fa-star" aria-hidden="true"></i>
-                    <i className="fa fa-star" aria-hidden="true"></i>
-                    <i className="fa fa-star" aria-hidden="true"></i>
+                    {productData?.stars?.averageStar &&
+                      Array(Math.round(productData.stars.averageStar))
+                        .fill(0)
+                        .map((num, i) => {
+                          return (
+                            <i className="fa fa-star" aria-hidden="true" key={i}></i>
+                          );
+                        })}
                   </div>
                 )}
               </div>

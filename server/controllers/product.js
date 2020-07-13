@@ -22,7 +22,7 @@ const perPage = 10;
 exports.product = async (req, res, next) => {
   const product = await Product.findOne({ slug: req.params.p_slug })
     .populate("images", "-createdAt -updatedAt -__v")
-    .populate("soldBy", "shopName address")
+    .populate("soldBy", "shopName address holidayMode")
     .populate("brand")
     .populate("category");
   if (!product) {
@@ -220,11 +220,11 @@ exports.getProducts = async (req, res) => {
     .lean()
     .sort(sortFactor);
   //rating on each product
-  products = products.map(async p => {
-    p.stars = await getRatingInfo(p)
-    return p
-  })
-  products = await Promise.all(products)
+  // products = products.map(async p => {
+  //   p.stars = await getRatingInfo(p)
+  //   return p
+  // })
+  // products = await Promise.all(products)
   const totalCount = await Product.countDocuments(query);
   res.json({ products, totalCount });
 };
@@ -254,7 +254,7 @@ exports.latestProducts = async (req, res) => {
       //user's action on this product
       const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
       //ratings of this product
-      p.stars = await getRatingInfo(p)
+      // p.stars = await getRatingInfo(p)
       p.hasOnCart = hasOnCart,
       p.hasOnWishlist = hasOnWishlist
       return p
@@ -322,6 +322,7 @@ exports.searchProducts = async (req, res) => {
     if (colors) searchingFactor.color = { $in: colors };
     if (weights) searchingFactor.weight = { $in: weights };
     if (warranties) searchingFactor.warranty = warranties;
+    if (ratings) searchingFactor.averageRating = { $gte: +ratings };
   } else {
     //cat_id alongwith another some factors
     searchingFactor.isVerified = { $ne: null };
@@ -334,29 +335,26 @@ exports.searchProducts = async (req, res) => {
     if (colors) searchingFactor.color = { $in: colors };
     if (weights) searchingFactor.weight = { $in: weights };
     if (warranties) searchingFactor.warranty = warranties;
+    if (ratings) searchingFactor.averageRating = { $gte: +ratings };
   }
-  let products = await Product.find(searchingFactor)
-    .populate("category", "displayName slug")
-    .populate("brand", "brandName slug")
-    .populate("images", "-createdAt -updatedAt -__v")
-    .skip(perPage * page - perPage)
-    .limit(perPage)
-    .lean()
-    .sort(sortFactor)
-  // if (!products.length) {
-  //   return res.status(404).json({ error: "Products not found." });
-  // }
-  //need to work on rating...
-
-  const totalCount = await Product.countDocuments(searchingFactor);
+  //for rating wise filter..
+    let products = await Product.find(searchingFactor)
+      .populate("category", "displayName slug")
+      .populate("brand", "brandName slug")
+      .populate("images", "-createdAt -updatedAt -_v")
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .lean()
+      .sort(sortFactor)
+  let totalCount = await Product.countDocuments(searchingFactor);
   //user's action on each product
   products = products.map(async p => {
     //user's action on this product
     const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
     //ratings of this product
-    p.stars = await getRatingInfo(p)
+    // p.stars = await getRatingInfo(p)
     p.hasOnCart = hasOnCart,
-      p.hasOnWishlist = hasOnWishlist
+    p.hasOnWishlist = hasOnWishlist
     return p
   })
   products = await Promise.all(products)
@@ -399,7 +397,7 @@ exports.getProductsByCategory = async (req, res) => {
     //user's action on this product
     const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
     //ratings of this product
-    p.stars = await getRatingInfo(p)
+    // p.stars = await getRatingInfo(p)
     p.hasOnCart = hasOnCart,
       p.hasOnWishlist = hasOnWishlist
     return p

@@ -51,7 +51,7 @@ const Index = (props) => {
 Index.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  const latestProducts = await ctx.store.dispatch(actions.getLatestProducts());
+  const latestProducts = await ctx.store.dispatch(actions.getLatestProducts(ctx));
 
   const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
 

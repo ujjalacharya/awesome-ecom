@@ -19,9 +19,8 @@ const _ = require('lodash')
 const Fawn = require("fawn");
 const task = Fawn.Task();
 // const perPage = 10;
-
 exports.postReview = async (req, res) => {
-    const product = req.product
+    let product = req.product
     if (!product.isVerified && product.isDeleted) {
         return res.status(404).json({ error: 'Product not found' })
     }
@@ -59,12 +58,22 @@ exports.postReview = async (req, res) => {
         star: req.body.star
     };
     newReview = new Review(newReview);
-    await newReview.save();
-    res.json(newReview);
+    let stars =  await getRatingInfo(product,newReview.star)
+    product = await Product.findById(product._id)
+    let updateProduct = product.toObject()
+    updateProduct.totalRatingUsers = stars.totalRatingUsers
+    updateProduct.averageRating = stars.averageStar
+    const results = await task
+                    .update(product,+updateProduct)
+                    .options({viaSave:true})
+                    .save(newReview)
+                    .run({useMongoose:true})
+    // await newReview.save();
+    res.json(results[1]);
 }
 
 exports.editReview = async (req, res) => {
-    const product = req.product
+    let product = req.product
     if (!product.isVerified && product.isDeleted) {
         return res.status(404).json({ error: 'Product not found' })
     }
@@ -72,7 +81,7 @@ exports.editReview = async (req, res) => {
         return res.status(400).json({ error: 'Rating is required.' })
     }
     if (req.body.star && (req.body.star > 5 || req.body.star < 1)) {
-        return res.status(403).json({ error: "Rating should be in range of 0 and 5" });
+        return res.status(403).json({ error: "Rating should be in range of 1 and 5" });
     }
     //ckeck if user has bought this product or not
     const orders = await Order.findOne({
@@ -88,10 +97,24 @@ exports.editReview = async (req, res) => {
     if (!review) {
         return res.status(404).json({error:'Review not found'})
     }
-    review.comment = req.body.comment
-    review.star = req.body.star
-    await review.save();
-    res.json(review);
+    let updateReview = review.toObject()
+    updateReview.comment = req.body.comment
+    updateReview.star = req.body.star
+
+    let stars = await getRatingInfo(product, +updateReview.star)
+
+    product = await Product.findById(product._id)
+    let updateProduct = product.toObject()
+    updateProduct.totalRatingUsers = stars.totalRatingUsers
+    updateProduct.averageRating = stars.averageStar
+    
+    const results = await task
+        .update(product, updateProduct)
+        .options({ viaSave: true })
+        .update(review, updateReview)
+        .options({ viaSave: true })
+        .run({ useMongoose: true })
+    res.json(results[1]);
 }
 
 exports.getReviews = async (req, res) => {
@@ -126,8 +149,6 @@ exports.myReviews = async (req, res) => {
     const totalCount = await Review.countDocuments({ user: req.user._id })
     res.json({ myReviews, totalCount });
 }
-
-
 
 exports.averageRating = async (req, res) => {
     let stars = await getRatingInfo(req.product)
