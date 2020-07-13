@@ -19,18 +19,6 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
 
-const fun = async () => {
-  let products = await Product.updateMany({$unset:{dPrice:'',averageRate:''}})
-  // products = products.map(async p => {
-  //   p.price = p.dPrice
-  //   p.averageRating = p.averageRate
-  //   return await p.save()
-  //   // return p
-  // })
-  // products = await Promise.all(products)
-  console.log(products);
-}
-// fun()
 exports.product = async (req, res, next) => {
   const product = await Product.findOne({ slug: req.params.p_slug })
     .populate("images", "-createdAt -updatedAt -__v")
