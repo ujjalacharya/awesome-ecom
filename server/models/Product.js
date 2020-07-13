@@ -22,10 +22,12 @@ const productSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'category'
     }],
-    reviews: [{
-        type: Schema.Types.ObjectId,
-        ref: 'review'
-    }],
+    averageRating:{
+        type: mongoose.Decimal128
+    },
+    totalRatingUsers:{
+        type: Number
+    },
     soldBy: {
         type: Schema.Types.ObjectId,
         ref: 'admin'
@@ -72,11 +74,17 @@ const productSchema = mongoose.Schema({
         trim: true,
         maxlength: 2000
     },
+    highlights: {
+        type: String,
+        required: true,
+        trim: true,
+        maxlength: 2000
+    },
     tags: [{
         type: String
     }],
     price: {
-        type: Number,
+        type: mongoose.Decimal128,
         required:true
     },
     discountRate: {
