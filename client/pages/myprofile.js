@@ -16,7 +16,7 @@ import { getUserInfo } from "../utils/common";
 class MyProfile extends Component {
   state = {
     currentMenu: "manage-account",
-    userInfo: {}
+    userInfo: {},
   };
 
   componentDidMount() {

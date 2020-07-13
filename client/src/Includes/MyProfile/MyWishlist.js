@@ -18,6 +18,7 @@ const { Search } = Input;
 class MyWishlist extends Component {
   state = {
     allWishlistItems: { wishlists: [], totalCount: 0 },
+    currentPage: 1
   };
 
   componentDidMount() {
@@ -57,7 +58,26 @@ class MyWishlist extends Component {
       openNotification("Success", "Product removed from wishlist successfully");
       this.props.getWishListItems("page=1&perPage=10");
     }
+    
+    if(this.props.user.userProfile !== prevProps.user.userProfile && this.props.user.userProfile){
+      this.setState({
+        userInfo: this.props.user.userProfile
+      })
+    }
   }
+
+  onChangePage = (page) => {
+    console.log(page)
+    this.setState({
+      currentPage: page,
+    });
+    // let body = {
+    //   keyword: this.props.router.query.slug,
+    // };
+    this.props.getWishListItems(
+      `?page=${page}&perPage=10`
+    );
+  };
 
   render() {
     let {
@@ -136,8 +156,11 @@ class MyWishlist extends Component {
     let data = [];
 
     wishlists?.map((item) => {
-      let discountedPrice = getDiscountedPrice(item.product.price, item.product.discountRate);
-      
+      let discountedPrice = getDiscountedPrice(
+        item.product.price,
+        item.product.discountRate
+      );
+
       let ele = {
         key: item._id,
         image: (
@@ -187,7 +210,14 @@ class MyWishlist extends Component {
           </Col>
           <Col span={6}></Col>
         </Row>
-        <Table className="orders-table" columns={columns} dataSource={data} />
+        <Table
+          className="orders-table"
+          columns={columns}
+          dataSource={data}
+          onChange={(e) => console.log(e)}
+          pagination={{ total: this.state.allWishlistItems?.totalCount }}
+          onChange={this.onChangePage}
+        />
       </div>
     );
   }
