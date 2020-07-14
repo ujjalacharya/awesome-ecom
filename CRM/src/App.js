@@ -1,20 +1,26 @@
-import React, {Component} from 'react';
-import { BrowserRouter } from "react-router-dom"; 
-import MainRouter from "./Router/MainRouter";
+import React, { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
+
+import { Provider } from "react-redux";
+import store from "./redux/store";
+// import { loadUser } from './redux/actions/auth';
+import setAuthToken from "./utils/setAuthToken";
+import MainRouter from "./router/MainRouter";
 import "./App.css";
 
+const App = () => {
+  useEffect(() => {
+    setAuthToken(localStorage.token);
+    // store.dispatch(loadUser());
+  }, []);
 
-class App extends Component {
-  componentDidMount() {
-  }
-
-  render() {
-    return (
+  return (
+    <Provider store={store}>
       <BrowserRouter>
         <MainRouter />
       </BrowserRouter>
-    );
-  }
-}
+    </Provider>
+  );
+};
 
 export default App;
