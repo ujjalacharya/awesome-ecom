@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import SigninForm from "./SigninForm";
-import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -20,7 +19,7 @@ const Login = (props) => {
     loading: false,
   });
 
-  const { email, password, loading, error } = state;
+  const { loading, error } = state;
 
   const handleChange = (event) => {
     setState({
