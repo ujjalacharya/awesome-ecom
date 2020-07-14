@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, ScrollView } from "react-native";
-import { TouchableRipple } from "react-native-paper";
+import { TouchableRipple, Divider } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import Gallery from "react-native-image-gallery";
 
@@ -52,10 +52,10 @@ class ProductDetailScreen extends Component {
           <>
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
-              stickyHeaderIndices={[0]}
+              // stickyHeaderIndices={[0]}
             >
               <TouchableRipple
-                style={{ height: 200 }}
+                style={{ height: 250 }}
                 onPress={this.handleGalleryToggle}
               >
                 <ProductDetailHeader {...this.props} />

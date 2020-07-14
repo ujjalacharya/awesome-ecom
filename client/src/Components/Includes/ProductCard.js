@@ -161,7 +161,7 @@ class ProductCard extends Component {
               </div>
               <div className="prod-name medium-line">{productData.name}</div>
               <div className="prod-price large-line">
-                {!checkSkeleton && "Rs"} {productData.price}
+                {!checkSkeleton && "Rs"} {productData.price.$numberDecimal}
               </div>
             </div>
           </Link>

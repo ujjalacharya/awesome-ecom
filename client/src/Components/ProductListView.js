@@ -116,17 +116,17 @@ class ProductListView extends Component {
                                 {items.product?.discountRate === 0 ? (
                                   <div className="new-price">
                                     {" "}
-                                    Rs {items.product?.price}
+                                    Rs {items.product?.price.$numberDecimal}
                                   </div>
                                 ) : (
                                   <>
                                     <div className="new-price">
                                       <span className="old-price">
-                                        Rs {items.product?.price}
+                                        Rs {items.product?.price.$numberDecimal}
                                       </span>
                                       Rs{" "}
-                                      {items.product?.price -
-                                        (items.product?.price *
+                                      {items.product?.price.$numberDecimal -
+                                        (items.product?.price.$numberDecimal *
                                           items.product?.discountRate) /
                                           100}{" "}
                                     </div>
