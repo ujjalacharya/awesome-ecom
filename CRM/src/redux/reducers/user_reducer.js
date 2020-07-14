@@ -3,10 +3,11 @@ import { SIGN_IN, SIGN_OUT } from "../types";
 export default function (state={auth: {isAuth: false}}, action) {
   switch (action.type) {
     case SIGN_IN:
+      localStorage.setItem("token", "dummy_token")
       return {
         ...state,
         auth: {
-          token: "dummy_token",
+          token: localStorage.getItem("token"),
           isAuth: true,
         },
       };

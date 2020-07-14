@@ -1,26 +1,26 @@
 import React, { useEffect } from "react";
-import { BrowserRouter } from "react-router-dom";
 
-import { Provider } from "react-redux";
-import store from "./redux/store";
+import { connect } from "react-redux";
+
 // import { loadUser } from './redux/actions/auth';
 import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
 import "./App.css";
+import Signin from "./components/pages/Signin";
 
-const App = () => {
+const App = (props) => {
   useEffect(() => {
     setAuthToken(localStorage.token);
     // store.dispatch(loadUser());
   }, []);
 
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <MainRouter />
-      </BrowserRouter>
-    </Provider>
-  );
+  return <>{!props.isAuthenticated ? <Signin /> : <MainRouter />}</>;
 };
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.User.auth.isAuth,
+  };
+};
+
+export default connect(mapStateToProps)(App);

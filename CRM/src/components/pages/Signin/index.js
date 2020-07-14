@@ -1,46 +1,41 @@
 import React, { useState } from "react";
 import SigninForm from "./SigninForm";
 import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import { signIn } from "../../../redux/actions/user_actions";
+
 // import {
 //   signIn,
 //   authenticate,
 //   isAuthenticated
 // } from "../../../Utils/Requests/Auth";
 
-const Login = () => {
+const Login = (props) => {
   const [state, setState] = useState({
     email: "john@hotmail.com",
     password: "qwerty12345",
     error: "",
-    loading: false
+    loading: false,
   });
 
   const { email, password, loading, error } = state;
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setState({
       ...state,
       error: false,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
-  // const handleSubmit = async event => {
-  //   event.preventDefault();
-  //   setState({ ...state, error: false, loading: true });
-  //   const data = await signIn({ email, password }).catch(err => {
-  //     setState({ ...state, error: err.response.data.error });
-  //   });
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setState({ ...state, error: false, loading: true });
 
-  //   console.log(data);
-  //   if (data && data.status === 200) {
-  //     authenticate(data, () => {
-  //       if (isAuthenticated()) {
-  //         setState({ ...state });
-  //       }
-  //     });
-  //   }
-  // };
+    props.signIn("sup");
+  };
 
   const showError = () => <div className="alert alert-danger">{error}</div>;
 
@@ -56,7 +51,7 @@ const Login = () => {
       {error && showError()}
       {!loading && (
         <SigninForm
-          handleSubmit={()=>{}}
+          handleSubmit={handleSubmit}
           handleChange={handleChange}
           state={state}
         />
@@ -65,4 +60,14 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.User.auth.isAuth,
+  };
+};
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ signIn }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

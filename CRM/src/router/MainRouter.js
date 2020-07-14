@@ -1,28 +1,22 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+
 import Home from "../components/pages/Home";
 import { connect } from "react-redux";
-import { signIn } from "../redux/actions/user_actions";
-import Signin from "../components/pages/Signin";
 
 const MainRouter = (props) => {
-  if (props.isAuthenticated) {
-    return (
+  return (
+    <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Home} />
       </Switch>
-    );
-  } else {
-    return (
-      <Switch>
-        <Route path="/" exact component={Signin} />
-      </Switch>
-    );
-  }
+    </BrowserRouter>
+  );
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.User.auth.isAuth,
+  isAuthenticated: state.User,
 });
 
-export default connect(mapStateToProps, { signIn })(MainRouter);
+export default connect(mapStateToProps)(MainRouter);
