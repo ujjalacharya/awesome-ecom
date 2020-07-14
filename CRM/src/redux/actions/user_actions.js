@@ -43,6 +43,8 @@ export function signIn(data) {
   //     return false
   // });
 
+  localStorage.setItem("token", "dummy_token");
+
   return {
     type: SIGN_IN,
     payload: data,

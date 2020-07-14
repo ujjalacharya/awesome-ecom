@@ -1,15 +1,18 @@
 import { SIGN_IN, SIGN_OUT } from "../types";
 
-export default function (state={auth: {isAuth: false}}, action) {
+const localSt = localStorage.getItem("token");
+
+const initialState = localSt
+  ? { isAuth: true, token: localSt }
+  : { isAuth: false };
+
+export default function (state = initialState, action) {
   switch (action.type) {
     case SIGN_IN:
-      localStorage.setItem("token", "dummy_token")
       return {
         ...state,
-        auth: {
-          token: localStorage.getItem("token"),
-          isAuth: true,
-        },
+        token: "dummy_token",
+        isAuth: true,
       };
     case SIGN_OUT:
       return {
