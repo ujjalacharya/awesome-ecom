@@ -58,9 +58,16 @@ exports.getCarts = async (req, res) => {
                 select: 'name shopName address'
             }
         })
-        .skip(perPage * page - perPage)
-        .limit(perPage)
         .lean()
+    const totalCount = carts.length
+    let totalAmount
+    carts.forEach(c=>{
+        // console.log(JSON.parse(c.product.price.$numberDecimal));
+        totalAmount += c.product.price.$numberDecimal
+    })
+    
+    carts = _.drop(carts, perPage * page - perPage)
+    carts = _.take(carts, perPage)
     //user's action on each product
     carts = carts.map(async c => {
         //user's action on this product
@@ -71,8 +78,7 @@ exports.getCarts = async (req, res) => {
         return c
     })
     carts = await Promise.all(carts)
-    const totalCount = await Cart.countDocuments({ user: req.user._id, isDeleted: null })
-    res.json({ carts, totalCount })
+    res.json({ carts, totalCount ,totalAmount})
 
 }
 
@@ -166,4 +172,46 @@ exports.editWishlist = async (req, res) => {
     wishlist.quantity = req.query.quantity
     await wishlist.save()
     res.json(wishlist)
+}
+
+exports.searchCarts = async (req, res) => {
+    const page = +req.query.page || 1;
+    const perPage = +req.query.perPage || 10;
+    const { keyword = ''} = req.query
+    let carts = await Cart.find({ user: req.user._id })
+        .populate({
+            path: 'product',
+            match: {
+                name: { $regex: keyword, $options: "i" }
+            },
+            select: 'name slug'
+        })
+        .lean()
+
+    carts = carts.filter(c => c.product !== null)
+    let totalCount = carts.length
+    carts = _.drop(carts, perPage * page - perPage)
+    carts = _.take(carts, perPage)
+    return res.json({ carts, totalCount });
+}
+
+exports.searchWishlists = async (req, res) => {
+    const page = +req.query.page || 1;
+    const perPage = +req.query.perPage || 10;
+    const { keyword = '' } = req.query
+    let wishlists = await Wishlist.find({ user: req.user._id })
+        .populate({
+            path: 'product',
+            match: {
+                name: { $regex: keyword, $options: "i" }
+            },
+            select: 'name slug'
+        })
+        .lean()
+
+    wishlists = wishlists.filter(c => c.product !== null)
+    let totalCount = wishlists.length
+    wishlists = _.drop(wishlists, perPage * page - perPage)
+    wishlists = _.take(wishlists, perPage)
+    return res.json({ wishlists, totalCount });
 }
