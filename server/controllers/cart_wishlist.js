@@ -28,6 +28,10 @@ exports.addCart = async (req, res) => {
     if (req.query.quantity < 1) {
         return res.status(403).json({ error: 'Quantity is required' })
     }
+    let cart = await Cart.findOne({product:product._id})
+    if (cart) {
+        return res.status(403).json({error:'Cart already exist.'})
+    }
     let newCart = {
         user: req.user._id,
         product: product._id,
@@ -60,10 +64,9 @@ exports.getCarts = async (req, res) => {
         })
         .lean()
     const totalCount = carts.length
-    let totalAmount
+    let totalAmount = 0
     carts.forEach(c=>{
-        // console.log(JSON.parse(c.product.price.$numberDecimal));
-        totalAmount += c.product.price.$numberDecimal
+        totalAmount += parseFloat(c.product.price)
     })
     
     carts = _.drop(carts, perPage * page - perPage)
@@ -105,6 +108,10 @@ exports.addWishlist = async (req, res) => {
     const product = req.product
     if (req.query.quantity < 1) {
         return res.status(403).json({ error: 'Quantity is required' })
+    }
+    let wishlist = await Wishlist.findOne({ product: product._id })
+    if (wishlist) {
+        return res.status(403).json({ error: 'Wishlist already exist.' })
     }
     let newWishlist = {
         user: req.user._id,
