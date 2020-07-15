@@ -23,7 +23,7 @@ class Details extends Component {
     );
 
     const qa = await ctx.store.dispatch(
-      actions.getQandA(ctx.query.slug+"?page=1&perPage=10")
+      actions.getQandA(ctx.query.slug+"?page=1")
     );
 
     const productReview = await ctx.store.dispatch(

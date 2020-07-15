@@ -6,6 +6,7 @@ import Link from "next/link";
 import { withRouter } from "next/router";
 import _ from "lodash";
 import { Form, Input, Button } from "antd";
+import { Pagination } from "antd";
 
 const layout = {
   labelCol: { span: 8 },
@@ -20,10 +21,10 @@ class QA extends Component {
   state = {
     token: "",
     QAdetails: [],
+    currentPage: 1
   };
 
   componentDidMount() {
-    
     if (this.props.authentication?.token) {
       this.setState({
         token: this.props.authentication.token,
@@ -38,7 +39,6 @@ class QA extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    
     if (
       this.props.products.productQA !== prevProps.products.productQA &&
       this.props.products.productQA
@@ -51,20 +51,29 @@ class QA extends Component {
       this.props.products.postQnsResp !== prevProps.products.postQnsResp &&
       this.props.products.postQnsResp
     ) {
-      this.props.getQandA(this.props.router.query.slug + "?page=1&perPage=10");
+      this.props.getQandA(this.props.router.query.slug + "?page=1");
     }
   }
 
+  onChangePage = (page) => {
+    this.setState({
+      currentPage: page,
+    });
+    this.props.getQandA(`${this.props.router.query.slug}?page=${page}`);
+  };
+
   onFinish = (values) => {
-    this.props.postQuestion(this.props.router.query.slug, values)
+    this.props.postQuestion(this.props.router.query.slug, values);
     this.formRef.current.resetFields();
   };
 
   render() {
-    
     return (
       <div className="q-a-tab">
-        <h3>Questions about this product ({this.state.QAdetails?.QnA?.qna?.length})</h3>
+        <h3>
+          Questions about this product ({this.state.QAdetails?.QnA?.qna?.length}
+          )
+        </h3>
         {!this.state.token ? (
           <div className="not-logged-in">
             <Link href={`/login?origin=${this.props.router.asPath}`}>
@@ -117,7 +126,8 @@ class QA extends Component {
                   <span className="q-title">
                     <span className="q-text">{qa.question}</span>
                     <div className="user">
-                      {qa.questionby.name} - {convertDateToCurrentTz(qa.questionedDate)}
+                      {qa.questionby.name} -{" "}
+                      {convertDateToCurrentTz(qa.questionedDate)}
                     </div>
                   </span>
                 </div>
@@ -127,7 +137,10 @@ class QA extends Component {
                   </span>
                   <span className="q-title">
                     <span className="q-text">{qa.answer}</span>
-                    <div className="user">{qa.answerby.shopName} - {convertDateToCurrentTz(qa.answeredDate)}</div>
+                    <div className="user">
+                      {qa.answerby.shopName} -{" "}
+                      {convertDateToCurrentTz(qa.answeredDate)}
+                    </div>
                   </span>
                 </div>
               </div>
@@ -137,69 +150,13 @@ class QA extends Component {
           {_.isEmpty(this.state.QAdetails) && (
             <div>No questions. Ask the seller now about the products.</div>
           )}
-          {/* <div className="qns">
-              <span className="q-icon">
-                Q<span className="arrow-bottom"></span>
-              </span>
-              <span className="q-title">
-                <span className="q-text">discount xaina??</span>
-                <div className="user">Bibek L. - 37 minutes ago</div>
-              </span>
-            </div>
-            <div className="ans">
-              <span className="q-icon a-btn">
-                A<span className="arrow-bottom"></span>
-              </span>
-              <span className="q-title">
-                <span className="q-text">Already discounted rate</span>
-                <div className="user">The Fashionista - 12 minutes ago</div>
-              </span>
-            </div>
 
-            <div className="qns">
-              <span className="q-icon">
-                Q<span className="arrow-bottom"></span>
-              </span>
-              <span className="q-title">
-                <span className="q-text">comes with charger?</span>
-                <div className="user">Jayesh R. - 28 Oct 2019</div>
-              </span>
-            </div>
-            <div className="ans">
-              <span className="q-icon a-btn">
-                A<span className="arrow-bottom"></span>
-              </span>
-              <span className="q-title">
-                <span className="q-text">
-                  Dear customer,you can charge it with your mobile charger
-                </span>
-                <div className="user">
-                  Titan Official - answered within 2 days
-                </div>
-              </span>
-            </div>
-
-            <div className="qns">
-              <span className="q-icon">
-                Q<span className="arrow-bottom"></span>
-              </span>
-              <span className="q-title">
-                <span className="q-text">can it be returned??</span>
-                <div className="user">Pancha R. - 13 Nov 2019</div>
-              </span>
-            </div>
-            <div className="ans">
-              <span className="q-icon a-btn">
-                A<span className="arrow-bottom"></span>
-              </span>
-              <span className="q-title">
-                <span className="q-text">Why sir didn't you liked it</span>
-                <div className="user">
-                  Titan Official - answered within 5 minutes
-                </div>
-              </span>
-            </div> */}
-          {/* </div> */}
+          <Pagination
+            pageSize={5}
+            current = {this.state.currentPage}
+            total={this.state.QAdetails?.totalCount}
+            onChange={this.onChangePage}
+          />
         </div>
       </div>
     );
