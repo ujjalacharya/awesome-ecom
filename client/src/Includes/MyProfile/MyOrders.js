@@ -1,11 +1,27 @@
 import React, { Component } from "react";
 import { Input, Row, Col, Select } from "antd";
 import { Table, Tag, Space } from "antd";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
+import { withRouter } from "next/router";
 
 const { Search } = Input;
 const { Option } = Select;
 
 class MyOrders extends Component {
+  state = {
+    myOrders: []
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    if(nextProps.order.getOrders !== prevState.myOrders){
+      return{
+        myOrders: nextProps.order.getOrders
+      }
+    }
+    return null;
+  }
+
   onChange = (value) => {
     
   }
@@ -13,6 +29,11 @@ class MyOrders extends Component {
     
   }
   render() {
+    console.log(this.props)
+    console.log(this.state)
+
+    let { myOrders } = this.state
+
     const columns = [
       {
         title: "Image",
@@ -85,38 +106,33 @@ class MyOrders extends Component {
     //   },
     ];
 
-    const data = [
-      {
-        key: "1",
+    let data = [];
+
+    myOrders?.orders.map(order => {
+      let ele = {
+        key: order._id,
         image: <img src="/images/helmet.jpg" className="table-item-img" />,
-        itemName: "Studds D2 Matte Double Visor Full Helmet - Black/white/grey",
-        status: ["purchased"],
+        itemName: order.product.name,
+        status: [order.status.currentStatus],
         soldBy: "STUDDS",
-        qty: "1",
+        qty: order.quantity,
         price: "4000",
-      },
-      {
-        key: "2",
-        image: <img src="/images/prod-bag.jpg" className="table-item-img" />,
-        itemName: "Auctor Sem Argu",
-        status: ["cancelled"],
-        soldBy: "Fashionista",
-        qty: "2",
-        price: "1500",
-      },
-    ];
+      }
+      data.push(ele)
+    })
+
     return (
       <div className="my-orders">
         <h3>My Orders</h3>
         <Row>
-          <Col span={8}>
+          <Col lg={10} >
             <Search
               placeholder="input search text"
               onSearch={(value) => console.log(value)}
               style={{ width: 400 }}
             />
           </Col>
-          <Col span={8}>
+          <Col lg={8}>
             <Select
               showSearch
               style={{ width: 200 }}
@@ -143,4 +159,4 @@ class MyOrders extends Component {
   }
 }
 
-export default MyOrders;
+export default connect((state) => state, actions)(withRouter(MyOrders));

@@ -8,6 +8,7 @@ import globalErrorReducer from './globalErrorReducer';
 import otherReducer from './otherReducer';
 import cartReducer from './cartReducer';
 import wishlistReducer from './wishlistReducer';
+import orderReducer from './orderReducer';
 
 const rootReducer = combineReducers({
   authentication: authReducer,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   globalError: globalErrorReducer,
   other: otherReducer,
   cart: cartReducer,
-  wishlist: wishlistReducer
+  wishlist: wishlistReducer,
+  order: orderReducer
 });
 
 export default rootReducer;
