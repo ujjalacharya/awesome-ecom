@@ -4,7 +4,7 @@ const {auth:userAuth} = require("../controllers/user_auth")
 const {auth:adminAuth, hasAuthorization} = require("../controllers/admin_auth")
 const {auth:dispatcherAuth} = require("../controllers/dispatcher_auth")
 const {profile} = require("../controllers/admin")
-const { order, createOrder, calculateShippingCharge, toggleOrderApproval, orderCancelByAdmin, orderCancelByUser, toggleDispatchOrder, userOrders, userOrder, adminOrders, adminOrder, dispatcherOrders, toggleCompleteOrder, returnOrder, dispatcherOrder, toggletobeReturnOrder,searchOrdersByUser,searchOrdersByAdmin} = require("../controllers/order")
+const { order, createOrder, calculateShippingCharge, toggleOrderApproval, orderCancelByAdmin, orderCancelByUser, toggleDispatchOrder, userOrders, userOrder, adminOrders, adminOrder, dispatcherOrders, toggleCompleteOrder, returnOrder, dispatcherOrder, toggletobeReturnOrder,searchOrdersByUser,searchOrdersByAdmin, getOrderStatus} = require("../controllers/order")
 
 const router = express.Router();
 
@@ -15,6 +15,8 @@ router.patch('/cancel-order/:order_id', userAuth,orderCancelByUser)
 router.get('/orders', userAuth, userOrders)
 router.get('/search-orders',userAuth,searchOrdersByUser)
 router.get('/user-order/:order_id',userAuth,userOrder)//get order by user
+router.get('/get-order-status', getOrderStatus)//get order by user
+
 
 // admin's..
 router.patch('/toggle-order-approval/:id/:order_id', adminAuth,hasAuthorization,toggleOrderApproval)//active/approve
