@@ -15,7 +15,7 @@ router.patch('/cancel-order/:order_id', userAuth,orderCancelByUser)
 router.get('/orders', userAuth, userOrders)
 router.get('/search-orders',userAuth,searchOrdersByUser)
 router.get('/user-order/:order_id',userAuth,userOrder)//get order by user
-router.get('/get-order-status', getOrderStatus)//get order by user
+router.get('/get-order-status',userAuth, getOrderStatus)//get order by user
 
 
 // admin's..
