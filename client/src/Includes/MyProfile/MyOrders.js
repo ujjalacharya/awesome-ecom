@@ -71,12 +71,13 @@ class MyOrders extends Component {
   };
 
   onChangePage = (page) => {
-    this.setState({
-      currentPage: page.current,
-    });
+    this.setState(
+      {
+        currentPage: page.current,
+      },
+      () => this.initialRequest()
+    );
     scrollToTop();
-
-    this.initialRequest();
   };
 
   onStatusChange = (status) => {
