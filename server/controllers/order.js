@@ -215,23 +215,8 @@ exports.createOrder = async (req, res) => {
         .run({ useMongoose: true })
     res.json({ order: results[0], payment: results[1] })
 }
-const search_orders = async (req,res,type) => {
-    const page = +req.query.page || 1;
-    const perPage = +req.query.perPage || 10;
-    const { keyword = '', status } = req.query
+const search_orders = async (page, perPage, keyword='', query,res) => {
     let sortFactor = { createdAt: 'desc' };
-
-    let query
-    type === 'user' ? query = { user: req.user._id } : query = { soldBy: req.profile._id }
-
-    if (status &&
-        (status === 'active' || status === 'cancel' || status === 'return' ||
-            status === 'complete' || status === 'tobereturned' || status === 'approve' ||
-            status === 'dispatch')
-    ) query = {
-        ...query,
-        'status.currentStatus': status
-    }
     let orders = await Order.find(query)
         .populate({
             path: 'product',
@@ -240,29 +225,20 @@ const search_orders = async (req,res,type) => {
             },
             select: 'name slug'
         })
-        // .skip(perPage * page - perPage)
-        // .limit(perPage)
         .lean()
         .sort(sortFactor)
-    // console.log(orders);
     orders = orders.filter(o => o.product !== null)
     let totalCount = orders.length
     orders = _.drop(orders, perPage * page - perPage)
     orders = _.take(orders, perPage)
-    res.json({ orders, totalCount });
-}
-exports.searchOrdersByUser = async(req,res) => {
-   await search_orders(req,res,'user')
-}
-
-exports.searchOrdersByAdmin = async (req, res) => {
-    await search_orders(req, res, 'admin')
+    return res.json({ orders, totalCount });
 }
 
 exports.userOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     const status = req.query.status
+    const keyword = req.query.keyword
     let query = {user:req.user._id}
     if (status &&
         (status === 'active' || status === 'cancel' || status === 'return' ||
@@ -272,6 +248,7 @@ exports.userOrders = async (req, res) => {
         ...query,
         'status.currentStatus': status
     }
+    if (keyword) return await search_orders(page,perPage,keyword,query,res)
     let orders = await Order.find(query )
         .populate('product', 'name slug')
         .skip(perPage * page - perPage)
@@ -289,13 +266,15 @@ exports.adminOrders = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
     const status = req.query.status
+    const keyword = req.query.keyword
     let query = { soldBy: req.profile._id }
     if (
         status &&
         (status === 'tobereturned' ||status === 'dispatch' ||status === 'approve' ||status === 'active' || status === 'cancel' || status === 'return' || status === 'complete')) query = {
         ...query,
         'status.currentStatus': status
-    }
+        }
+    if (keyword) return await search_orders(page, perPage, keyword, query, res)
     let orders = await Order.find(query)
         .select('product quantity status')
         .populate('product', 'name slug')
