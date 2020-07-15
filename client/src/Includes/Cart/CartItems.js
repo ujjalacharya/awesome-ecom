@@ -95,8 +95,10 @@ class CartItems extends Component {
             <div className="all-pagination">
               <Pagination
                 defaultCurrent={1}
+                pageSize = {5}
                 total={this.state.cardItems?.totalCount}
                 onChange={this.onChangePage}
+                showLessItems = {true}
               />
             </div>
           </div>

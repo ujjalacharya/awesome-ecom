@@ -156,6 +156,7 @@ class QA extends Component {
             current = {this.state.currentPage}
             total={this.state.QAdetails?.totalCount}
             onChange={this.onChangePage}
+            showLessItems = {true}
           />
         </div>
       </div>
