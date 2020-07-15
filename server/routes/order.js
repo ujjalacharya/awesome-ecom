@@ -4,7 +4,7 @@ const {auth:userAuth} = require("../controllers/user_auth")
 const {auth:adminAuth, hasAuthorization} = require("../controllers/admin_auth")
 const {auth:dispatcherAuth} = require("../controllers/dispatcher_auth")
 const {profile} = require("../controllers/admin")
-const { order, createOrder, calculateShippingCharge, toggleOrderApproval, orderCancelByAdmin, orderCancelByUser, toggleDispatchOrder, userOrders, userOrder, adminOrders, adminOrder, dispatcherOrders, toggleCompleteOrder, returnOrder, dispatcherOrder, toggletobeReturnOrder,searchOrdersByUser,searchOrdersByAdmin} = require("../controllers/order")
+const { order, createOrder, calculateShippingCharge, toggleOrderApproval, orderCancelByAdmin, orderCancelByUser, toggleDispatchOrder, userOrders, userOrder, adminOrders, adminOrder, dispatcherOrders, toggleCompleteOrder, returnOrder, dispatcherOrder, toggletobeReturnOrder} = require("../controllers/order")
 
 const router = express.Router();
 
@@ -13,7 +13,6 @@ router.get('/shipping-charge',userAuth,calculateShippingCharge)
 router.post('/create-order',userAuth,createOrder)
 router.patch('/cancel-order/:order_id', userAuth,orderCancelByUser)
 router.get('/orders', userAuth, userOrders)
-router.get('/search-orders',userAuth,searchOrdersByUser)
 router.get('/user-order/:order_id',userAuth,userOrder)//get order by user
 
 // admin's..
@@ -22,7 +21,6 @@ router.patch('/cancel-order/:id/:order_id',adminAuth,hasAuthorization,orderCance
 router.patch('/toggle-order-to-get-return/:id/:order_id', adminAuth, hasAuthorization, toggletobeReturnOrder)//comlete/tobereturn
 router.get('/orders/:id', adminAuth, hasAuthorization, adminOrders)
 router.get('/admin-order/:id/:order_id',adminAuth,hasAuthorization,adminOrder)//get order by admin
-router.get('/search-admin-orders/:id', adminAuth, hasAuthorization, searchOrdersByAdmin)
 
 // dispatcher's..
 router.patch('/toggle-dispatch-order/:order_id',dispatcherAuth,toggleDispatchOrder)//approve/dispatch
