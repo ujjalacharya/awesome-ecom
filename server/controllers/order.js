@@ -16,6 +16,7 @@ const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
 const Fawn = require("fawn");
+const { allOrderStatus } = require("../middleware/common");
 const task = Fawn.Task();
 const perPage = 10;
 
@@ -190,11 +191,9 @@ exports.createOrder = async (req, res) => {
     return res.status(403).json({ error: "Product is out of the stock." });
   }
   if (product.quantity < quantity) {
-    return res
-      .status(403)
-      .json({
-        error: `There are only ${product.quantity} products available.`,
-      });
+    return res.status(403).json({
+      error: `There are only ${product.quantity} products available.`,
+    });
   }
   // new order
   const newOrder = new Order();
@@ -383,11 +382,9 @@ exports.toggleOrderApproval = async (req, res) => {
     order.status.currentStatus !== "active" &&
     order.status.currentStatus !== "approve"
   ) {
-    return res
-      .status(403)
-      .json({
-        error: `This order cannot be approve or activate. Order current status is ${order.status.currentStatus}`,
-      });
+    return res.status(403).json({
+      error: `This order cannot be approve or activate. Order current status is ${order.status.currentStatus}`,
+    });
   }
   if (order.status.currentStatus === "active") {
     order.status.currentStatus = "approve";
@@ -414,11 +411,9 @@ exports.orderCancelByAdmin = async (req, res) => {
     order.status.currentStatus === "complete" ||
     order.status.currentStatus === "return"
   ) {
-    return res
-      .status(403)
-      .json({
-        error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
-      });
+    return res.status(403).json({
+      error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
+    });
   }
   if (order.status.currentStatus === "cancel") {
     return res.status(403).json({ error: "Order has already been cancelled." });
@@ -453,11 +448,9 @@ exports.orderCancelByUser = async (req, res) => {
     order.status.currentStatus === "complete" ||
     order.status.currentStatus === "return"
   ) {
-    return res
-      .status(403)
-      .json({
-        error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
-      });
+    return res.status(403).json({
+      error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
+    });
   }
   if (order.status.currentStatus === "cancel") {
     return res.status(403).json({ error: "Order has already been cancelled." });
@@ -491,11 +484,9 @@ exports.toggleDispatchOrder = async (req, res) => {
     order.status.currentStatus !== "approve" &&
     order.status.currentStatus !== "dispatch"
   ) {
-    return res
-      .status(403)
-      .json({
-        error: `This order cannot be dispatched or rollback to approve state. Order current status is ${order.status.currentStatus}`,
-      });
+    return res.status(403).json({
+      error: `This order cannot be dispatched or rollback to approve state. Order current status is ${order.status.currentStatus}`,
+    });
   }
   if (order.status.currentStatus === "approve") {
     order.status.currentStatus = "dispatch";
@@ -548,11 +539,9 @@ exports.toggleCompleteOrder = async (req, res) => {
     order.status.currentStatus !== "complete" &&
     order.status.currentStatus !== "dispatch"
   ) {
-    return res
-      .status(403)
-      .json({
-        error: `This order cannot be completed or rollback to dispatch state. Order current status is ${order.status.currentStatus}`,
-      });
+    return res.status(403).json({
+      error: `This order cannot be completed or rollback to dispatch state. Order current status is ${order.status.currentStatus}`,
+    });
   }
   if (order.status.currentStatus === "dispatch") {
     order.status.currentStatus = "complete";
@@ -573,11 +562,9 @@ exports.toggleCompleteOrder = async (req, res) => {
 exports.returnOrder = async (req, res) => {
   let order = req.order;
   if (order.status.currentStatus !== "tobereturn") {
-    return res
-      .status(403)
-      .json({
-        error: `This order cannot be returned. Order current status is ${order.status.currentStatus}`,
-      });
+    return res.status(403).json({
+      error: `This order cannot be returned. Order current status is ${order.status.currentStatus}`,
+    });
   }
   const newRemark = new Remark({ comment: req.body.remark });
 
@@ -605,11 +592,9 @@ exports.toggletobeReturnOrder = async (req, res) => {
     order.status.currentStatus !== "complete" &&
     order.status.currentStatus !== "tobereturn"
   ) {
-    return res
-      .status(403)
-      .json({
-        error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}`,
-      });
+    return res.status(403).json({
+      error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}`,
+    });
   }
   let updateOrder = order.toObject();
   let payment = await Payment.findById(order.payment._id);
@@ -641,4 +626,8 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .run({ useMongoose: true });
     return res.json(results);
   }
+};
+
+exports.getOrderStatus = async (req, res) => {
+  res.json(allOrderStatus);
 };

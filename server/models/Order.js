@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { allOrderStatus } = require("../middleware/common");
+
 const Schema = mongoose.Schema
 const pointSchema = new mongoose.Schema({
     type: {
@@ -34,7 +36,7 @@ const orderSchema = new mongoose.Schema({
     status: {
         currentStatus: {
             type: String,
-            enum: ["active","approve","dispatch","cancel","complete","tobereturned","return"]
+            enum: allOrderStatus
         },
         activeDate: {
             type: Date,
