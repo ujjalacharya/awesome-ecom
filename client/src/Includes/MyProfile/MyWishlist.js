@@ -8,6 +8,7 @@ import {
   convertDateToCurrentTz,
   openNotification,
   getDiscountedPrice,
+  scrollToTop,
 } from "../../../utils/common";
 import next from "next";
 import Link from "next/link";
@@ -18,6 +19,7 @@ const { Search } = Input;
 class MyWishlist extends Component {
   state = {
     allWishlistItems: { wishlists: [], totalCount: 0 },
+    currentPage: 1
   };
 
   componentDidMount() {
@@ -33,6 +35,7 @@ class MyWishlist extends Component {
       nextProps.wishlist.getWishlistItems !== prevState.allWishlistItems &&
       nextProps.wishlist.getWishlistItems
     ) {
+      scrollToTop();
       return {
         allWishlistItems: nextProps.wishlist.getWishlistItems,
       };
@@ -41,6 +44,7 @@ class MyWishlist extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(this.props)
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
@@ -57,7 +61,32 @@ class MyWishlist extends Component {
       openNotification("Success", "Product removed from wishlist successfully");
       this.props.getWishListItems("page=1&perPage=10");
     }
+    
+    if(this.props.user.userProfile !== prevProps.user.userProfile && this.props.user.userProfile){
+      this.setState({
+        userInfo: this.props.user.userProfile
+      })
+    }
+
+    // if(this.props.wishlist.getWishlistItems !== prevProps.wishlist.getWishlistItems && this.props.wishlist.getWishlistItems){
+    //   this.setState({
+    //     allWishlistItems: this.props.wishlist.getWishlistItems
+    //   })
+    // }
   }
+
+  onChangePage = (page) => {
+    console.log(page)
+    this.setState({
+      currentPage: page.current,
+    });
+    // let body = {
+    //   keyword: this.props.router.query.slug,
+    // };
+    this.props.getWishListItems(
+      `page=${page.current}&perPage=10`
+    );
+  };
 
   render() {
     let {
@@ -136,8 +165,11 @@ class MyWishlist extends Component {
     let data = [];
 
     wishlists?.map((item) => {
-      let discountedPrice = getDiscountedPrice(item.product.price.$numberDecimal, item.product.discountRate);
-      
+      let discountedPrice = getDiscountedPrice(
+        item.product.price,
+        item.product.discountRate
+      );
+
       let ele = {
         key: item._id,
         image: (
@@ -187,7 +219,13 @@ class MyWishlist extends Component {
           </Col>
           <Col span={6}></Col>
         </Row>
-        <Table className="orders-table" columns={columns} dataSource={data} />
+        <Table
+          className="orders-table"
+          columns={columns}
+          dataSource={data}
+          pagination={{ total: this.state.allWishlistItems?.totalCount }}
+          onChange={this.onChangePage}
+        />
       </div>
     );
   }

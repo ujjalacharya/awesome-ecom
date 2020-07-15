@@ -1,32 +1,56 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import actions from "../../../redux/actions";
+import { Pagination } from "antd";
 
 //includes
+import actions from "../../../redux/actions";
 import ProductListView from "../../Components/ProductListView";
-import { getDiscountedPrice } from "../../../utils/common";
+import { getDiscountedPrice, scrollToTop } from "../../../utils/common";
 
 class CartItems extends Component {
   state = {
     cardItems: [],
-    totalAmount: ''
   };
 
   componentDidMount() {
     if (this.props.cart.getCartProducts) {
-      let totalAmount = 0
-      this.props.cart.getCartProducts.carts?.map(data => {
-        totalAmount += (getDiscountedPrice(data.product.price.$numberDecimal, data.product.discountRate) * data.quantity)
-      })
+      scrollToTop();
       this.setState({
-        cardItems: this.props.cart.getCartProducts,
-        totalAmount
+        cardItems: this.props.cart.getCartProducts
       });
     }
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.cart.getCartProducts !== prevState.cardItems) {
+      return {
+        cardItems: nextProps.cart.getCartProducts,
+      };
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.cart.getCartProducts !== prevProps.cart.getCartProducts &&
+      this.props.cart.getCartProducts
+    ) {
+      scrollToTop();
+    }
+  }
+
+  onChangePage = (page) => {
+    this.setState({
+      currentPage: page,
+    });
+    // let body = {
+    //   keyword: this.props.router.query.slug,
+    // };
+    this.props.getCartProducts(`page=${page}`);
+  };
+
   render() {
-    
+    console.log(this.state)
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -46,10 +70,19 @@ class CartItems extends Component {
         <div className="bag-items">
           <div className="title">
             <h4>My Cart ({this.state.cardItems?.totalCount} Items)</h4>
-            <div className="price">Total: Rs {this.state.totalAmount}</div>
+            <div className="price">Total: Rs {this.state.cardItems?.totalAmount?.toFixed(2)}</div>
           </div>
           <div className="items-list">
-            <ProductListView data = {this.state.cardItems} />
+            <ProductListView data={this.state.cardItems} getCheckoutItems={this.props.getCheckoutItems} />
+            <div className="all-pagination">
+              <Pagination
+                defaultCurrent={1}
+                pageSize = {5}
+                total={this.state.cardItems?.totalCount}
+                onChange={this.onChangePage}
+                showLessItems = {true}
+              />
+            </div>
           </div>
         </div>
       </div>

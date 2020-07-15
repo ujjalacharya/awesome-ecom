@@ -20,7 +20,7 @@ export class ProductService {
   }
 
   async getQandA(query) {
-    let url = `${process.env.SERVER_BASE_URL}/api/review-qna/qna/${query}`
+    let url = `${process.env.SERVER_BASE_URL}/api/review-qna/qna/${query}&perPage=5`
     let data = getService(url, 'GET');
     return data;
   }

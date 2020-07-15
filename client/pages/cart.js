@@ -11,6 +11,10 @@ import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 
 class Cart extends Component {
+  state = {
+    checkoutItems : []
+  }
+
   static async getInitialProps(ctx) {
     initialize(ctx);
 
@@ -21,10 +25,12 @@ class Cart extends Component {
     const productReview = await ctx.store.dispatch(
       actions.getCartProducts("page=1", ctx)
     );
+  }
 
-    // return {
-    //   data,
-    // };
+  getCheckoutItems = (items) => {
+    this.setState({
+      checkoutItems: items
+    })
   }
 
   render() {
@@ -35,10 +41,10 @@ class Cart extends Component {
             <Row>
               <Col md={0} xs={0}></Col>
               <Col md={16} xs={24}>
-                <CartItems />
+                <CartItems getCheckoutItems={this.getCheckoutItems} />
               </Col>
               <Col md={8} xs={24}>
-                <OrderSummary orderTxt="PROCCED TO CHECKOUT" />
+                <OrderSummary orderTxt="PROCCED TO CHECKOUT" checkoutItems={this.state.checkoutItems} />
               </Col>
               <Col md={0} xs={0}></Col>
             </Row>

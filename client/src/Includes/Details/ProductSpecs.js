@@ -14,6 +14,7 @@ class ProductSpecs extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    console.log('product specs')
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
@@ -130,7 +131,7 @@ class ProductSpecs extends Component {
               </div>
               <div className="new-price">
                 <span className="price">
-                  Rs {product.price.$numberDecimal - (product.price * 2) / 100}
+                  Rs {product.price.$numberDecimal - (product.price.$numberDecimal * 2) / 100}
                 </span>
                 <span className="discount">
                   (Save Rs {(product.price.$numberDecimal * 2) / 100} | {product.discountRate}

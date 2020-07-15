@@ -16,7 +16,7 @@ import { getUserInfo } from "../utils/common";
 class MyProfile extends Component {
   state = {
     currentMenu: "manage-account",
-    userInfo: {}
+    userInfo: {},
   };
 
   componentDidMount() {
@@ -28,6 +28,10 @@ class MyProfile extends Component {
     }
 
     this.props.getWishListItems('page=1&perPage=10')
+
+    this.props.getOrders(`page=1`)
+
+    this.props.getOrdersStatuses()
   }
 
   componentDidUpdate(prevProps){

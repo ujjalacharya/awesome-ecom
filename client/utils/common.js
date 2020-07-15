@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import * as moment from "moment-timezone";
 import { notification } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
+import $ from 'jquery'
 
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];
@@ -128,6 +129,20 @@ export const openNotification = (title, description) => {
 };
 
 export const getDiscountedPrice = (price, discountRate) => {
-  let discountedPrice = price - ((price * discountRate) / 100)
+  let discountedPrice = parseInt(price) - ((parseInt(price) * discountRate) / 100)
   return discountedPrice
+}
+
+export function scrollToTop(){
+  $.fn.scrollView = function() {
+    return this.each(function() {
+      $("html, body").animate(
+        {
+          scrollTop: $(this).offset().top,
+        },
+        1000
+      );
+    });
+  };
+  $("html").scrollView();
 }

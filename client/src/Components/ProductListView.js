@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Input, Button, Popconfirm } from "antd";
+import { Row, Col, Input, Button, Popconfirm, Checkbox } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import _ from "lodash";
@@ -11,6 +11,7 @@ class ProductListView extends Component {
   state = {
     pdQty: 1,
     listItems: [],
+    checkoutItems: [],
   };
 
   componentDidMount() {
@@ -64,141 +65,168 @@ class ProductListView extends Component {
     this.props.editCartQty(cartId + "?quantity=" + newPdQty);
   };
 
-  render() {
+  onCheckItems = (e) => {
+    let itemValue = e.target.value;
+
+    let checkoutItems = this.state.checkoutItems;
+
+    let newCheckoutItems = [];
+
+    if (checkoutItems.length > 0) {
+
+      let itemsInserted = false;
+      checkoutItems.map((itemCheck) => {
+        if (itemValue.productId !== itemCheck.productId) {
+          newCheckoutItems.push(itemCheck);
+        } else {
+          itemsInserted = true;
+        }
+      });
+
+      if (!itemsInserted) {
+        newCheckoutItems.push(e.target.value);
+      }
+
+    } else {
+      newCheckoutItems.push(e.target.value);
+    }
     
+    this.setState({
+      checkoutItems: newCheckoutItems,
+    });
+
+    this.props.getCheckoutItems(newCheckoutItems)
+  };
+
+  render() {
     return (
       <>
-        {!_.isEmpty(this.state.listItems.carts)
-          ? this.state.listItems.carts.map((items, i) => {
-              return (
-                <>
-                  {!items.isDeleted && (
-                    <div className="product-list-view">
-                      <Row>
-                        <Col lg={6} xs={24} key={i}>
-                          <Link
-                            href="/products/[slug]"
-                            as={`/products/${items.product.slug}`}
-                          >
-                            <a>
-                              <div className="pd-img">
-                                <img
-                                  src={
-                                    process.env.IMAGE_BASE_URL +
-                                    "/" +
-                                    items.product?.images[0]?.medium
-                                  }
-                                  alt="helmet"
-                                />
-                              </div>
-                            </a>
-                          </Link>
-                        </Col>
-                        <Col lg={18} xs={24}>
-                          <div className="pd-details">
-                            <div className="name-price">
-                              <div className="name">
-                                <Link
-                                  href="/products/[slug]"
-                                  as={`/products/${items.product.slug}`}
-                                >
-                                  <a>
-                                    <div className="pd-name">
-                                      {items.product.name}
-                                    </div>
-                                  </a>
-                                </Link>
-                                <div className="sold-by">
-                                  Sold By: {items.product?.soldBy.shopName}
-                                </div>
-                              </div>
-                              <div className="price">
-                                {items.product?.discountRate === 0 ? (
-                                  <div className="new-price">
-                                    {" "}
-                                    Rs {items.product?.price.$numberDecimal}
-                                  </div>
-                                ) : (
-                                  <>
-                                    <div className="new-price">
-                                      <span className="old-price">
-                                        Rs {items.product?.price.$numberDecimal}
-                                      </span>
-                                      Rs{" "}
-                                      {items.product?.price.$numberDecimal -
-                                        (items.product?.price.$numberDecimal *
-                                          items.product?.discountRate) /
-                                          100}{" "}
-                                    </div>
-                                    <div className="price-disc">
-                                      <span className="disc">
-                                        {items.product?.discountRate}% OFF
-                                      </span>
-                                    </div>
-                                  </>
-                                )}
-                              </div>
+        {this.state.listItems?.carts?.map((items, i) => {
+          let itemsValues = {
+            price: items.product.price.$numberDecimal,
+            productId: items.product._id,
+            discountRate: items.product.discountRate
+          };
+          return (
+            <div className="product-list-view">
+              <Row>
+                <Col lg={2}>
+                  <Checkbox
+                    value={itemsValues}
+                    onChange={this.onCheckItems}
+                  ></Checkbox>
+                </Col>
+                <Col lg={6} xs={24} key={i}>
+                  <Link
+                    href="/products/[slug]"
+                    as={`/products/${items.product.slug}`}
+                  >
+                    <a>
+                      <div className="pd-img">
+                        <img
+                          src={
+                            process.env.IMAGE_BASE_URL +
+                            "/" +
+                            items.product?.images[0]?.medium
+                          }
+                          alt="helmet"
+                        />
+                      </div>
+                    </a>
+                  </Link>
+                </Col>
+                <Col lg={16} xs={24}>
+                  <div className="pd-details">
+                    <div className="name-price">
+                      <div className="name">
+                        <Link
+                          href="/products/[slug]"
+                          as={`/products/${items.product.slug}`}
+                        >
+                          <a>
+                            <div className="pd-name">{items.product.name}</div>
+                          </a>
+                        </Link>
+                        <div className="sold-by">
+                          Sold By: {items.product?.soldBy.shopName}
+                        </div>
+                      </div>
+                      <div className="price">
+                        {items.product?.discountRate === 0 ? (
+                          <div className="new-price">
+                            {" "}
+                            Rs {items.product?.price.$numberDecimal}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="new-price">
+                              <span className="old-price">
+                                Rs {items.product?.price.$numberDecimal}
+                              </span>
+                              Rs{" "}
+                              {items.product?.price.$numberDecimal -
+                                (items.product?.price.$numberDecimal *
+                                  items.product?.discountRate) /
+                                  100}{" "}
                             </div>
-                            <div className="qty">
-                              <span className="qty-title">Qty:</span>
-                              <span className="qty-inc-dcs">
-                                <i
-                                  aria-hidden="true"
-                                  onClick={() =>
-                                    this.changePdValue(-1, i, items._id)
-                                  }
-                                  className={
-                                    "fa fa-minus " +
-                                    (this.state.pdQty === 1 ? "disabled" : "")
-                                  }
-                                />
-                                <Input
-                                  defaultValue={this.state.pdQty}
-                                  value={this.state["pdQty" + i]}
-                                  onChange={(e) => {
-                                    this.setState({
-                                      ["pdQty" + i]: e.target.value,
-                                    });
-                                  }}
-                                />
-                                <i
-                                  className="fa fa-plus"
-                                  aria-hidden="true"
-                                  onClick={() =>
-                                    this.changePdValue(1, i, items._id)
-                                  }
-                                />
+                            <div className="price-disc">
+                              <span className="disc">
+                                {items.product?.discountRate}% OFF
                               </span>
                             </div>
-                            <div className="delete-product">
-                              <Popconfirm
-                                title="Are you sure you want to remove this from cart?"
-                                onConfirm={() =>
-                                  this.props.removeCart(items._id)
-                                }
-                                // onCancel={cancel}
-                                okText="Yes"
-                                cancelText="No"
-                              >
-                                <a>
-                                  <Button className="btn">
-                                    <DeleteOutlined />
-                                    <span className="txt">
-                                      REMOVE FROM CART
-                                    </span>
-                                  </Button>
-                                </a>
-                              </Popconfirm>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
+                          </>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </>
-              );
-            })
-          : ""}
+                    <div className="qty">
+                      <span className="qty-title">Qty:</span>
+                      <span className="qty-inc-dcs">
+                        <i
+                          aria-hidden="true"
+                          onClick={() => this.changePdValue(-1, i, items._id)}
+                          className={
+                            "fa fa-minus " +
+                            (this.state.pdQty === 1 ? "disabled" : "")
+                          }
+                        />
+                        <Input
+                          defaultValue={this.state.pdQty}
+                          value={this.state["pdQty" + i]}
+                          onChange={(e) => {
+                            this.setState({
+                              ["pdQty" + i]: e.target.value,
+                            });
+                          }}
+                        />
+                        <i
+                          className="fa fa-plus"
+                          aria-hidden="true"
+                          onClick={() => this.changePdValue(1, i, items._id)}
+                        />
+                      </span>
+                    </div>
+                    <div className="delete-product">
+                      <Popconfirm
+                        title="Are you sure you want to remove this from cart?"
+                        onConfirm={() => this.props.removeCart(items._id)}
+                        // onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <a>
+                          <Button className="btn">
+                            <DeleteOutlined />
+                            <span className="txt">REMOVE FROM CART</span>
+                          </Button>
+                        </a>
+                      </Popconfirm>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          );
+        })}
       </>
     );
   }

@@ -21,7 +21,7 @@ class OtherDetails extends Component {
       size: product?.size,
       warranty: product?.warranty,
     };
-    console.log(this.props);
+    
     return (
       <div className="other-details">
         <Tabs defaultActiveKey="1" onChange={this.callback}>
