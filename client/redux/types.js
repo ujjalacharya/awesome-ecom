@@ -54,4 +54,5 @@ export const GET_WISHLIST_ITEMS = 'GET_WISHLIST_ITEMS'
 
 //orders
 export const GET_ORDERS = 'GET_ORDERS'
+export const GET_ORDERS_STATUSES = 'GET_ORDERS_STATUSES'
 

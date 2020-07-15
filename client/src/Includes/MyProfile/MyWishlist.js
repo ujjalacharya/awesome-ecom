@@ -223,7 +223,6 @@ class MyWishlist extends Component {
           className="orders-table"
           columns={columns}
           dataSource={data}
-          onChange={(e) => console.log(e)}
           pagination={{ total: this.state.allWishlistItems?.totalCount }}
           onChange={this.onChangePage}
         />

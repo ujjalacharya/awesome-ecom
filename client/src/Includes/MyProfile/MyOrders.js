@@ -4,35 +4,87 @@ import { Table, Tag, Space } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
+import Link from "next/link";
+import _ from "lodash";
+import { scrollToTop } from "../../../utils/common";
 
 const { Search } = Input;
 const { Option } = Select;
 
 class MyOrders extends Component {
   state = {
-    myOrders: []
-  }
+    myOrders: [],
+    orderStatuses: [],
+    currentStatus: "",
+    appendUrl: "page=1",
+    currentPage: 1,
+    searchKeyword: "",
+  };
 
-  static getDerivedStateFromProps(nextProps, prevState){
-    if(nextProps.order.getOrders !== prevState.myOrders){
-      return{
-        myOrders: nextProps.order.getOrders
-      }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let orders = prevState.myOrders;
+    let orderStatuses = prevState.orderStatuses;
+
+    if (nextProps.order.getOrders !== prevState.myOrders) {
+      orders = nextProps.order.getOrders;
     }
-    return null;
+    if (nextProps.order.getOrdersStatus !== prevState.orderStatuses) {
+      orderStatuses = nextProps.order.getOrdersStatus;
+    }
+
+    return {
+      myOrders: orders,
+      orderStatuses,
+    };
+    // return null;
   }
 
-  onChange = (value) => {
-    
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.order.getOrders !== prevProps.order.getOrders &&
+      this.props.getOrders
+    ) {
+      this.setState({
+        myOrders: this.props.order.getOrders,
+      });
+    }
   }
-  onSearch = (val) => {
-    
-  }
+
+  getSearch = (val) => {
+    this.setState({ searchKeyword: val }, () => this.initialRequest());
+  };
+
+  initialRequest = () => {
+    let appendUrl = "";
+
+    appendUrl = this.state.currentStatus
+      ? `status=${this.state.currentStatus}`
+      : "";
+
+    appendUrl = appendUrl + `&page=${this.state.currentPage}`;
+
+    appendUrl =
+      appendUrl +
+      (this.state.searchKeyword ? `&search=${this.state.searchKeyword}` : "");
+
+    this.props.getOrders(appendUrl);
+  };
+
+  onChangePage = (page) => {
+    this.setState({
+      currentPage: page.current,
+    });
+    scrollToTop();
+
+    this.initialRequest();
+  };
+
+  onStatusChange = (status) => {
+    this.setState({ currentStatus: status }, () => this.initialRequest());
+  };
+
   render() {
-    console.log(this.props)
-    console.log(this.state)
-
-    let { myOrders } = this.state
+    let { myOrders } = this.state;
 
     const columns = [
       {
@@ -45,22 +97,28 @@ class MyOrders extends Component {
         title: "Item Name",
         dataIndex: "itemName",
         key: "itemName",
-        render: (text) => <a>{text}</a>,
+        render: (text, record) => (
+          <Link href="/products/[slug]" as={`/products/${record.slug}`}>
+            <a className="item-title">
+              <span>{text}</span>
+            </a>
+          </Link>
+        ),
       },
       {
-        title: 'Status',
-        key: 'status',
-        dataIndex: 'status',
-        render: tags => (
+        title: "Status",
+        key: "status",
+        dataIndex: "status",
+        render: (tags) => (
           <>
-            {tags.map(tag => {
-              let color = 'green';
-              if (tag === 'purchased') {
-                color = 'green';
-              }else if(tag === 'cancelled'){
-                  color = 'blue'
-              }else{
-                  color='red'
+            {tags.map((tag) => {
+              let color = "";
+              if (tag === "approve" || tag === "complete") {
+                color = "green";
+              } else if (tag === "cancelled") {
+                color = "red";
+              } else if (tag === "dispatch" || tag === "active") {
+                color = "blue";
               }
               return (
                 <Tag color={color} key={tag}>
@@ -71,12 +129,7 @@ class MyOrders extends Component {
           </>
         ),
       },
-      {
-        title: "Sold By",
-        dataIndex: "soldBy",
-        key: "soldBy",
-        render: (text) => <a>{text}</a>,
-      },
+
       {
         title: "Qty",
         dataIndex: "qty",
@@ -87,48 +140,62 @@ class MyOrders extends Component {
         dataIndex: "price",
         key: "price",
       },
-    //   {
-    //     title: "Action",
-    //     key: "action",
-    //     render: (text, record) => (
-    //       <Space size="middle">
-    //         <a
-    //           onClick={() =>
-    //             this.setState({
-    //               show: "form",
-    //             })
-    //           }
-    //         >
-    //           Edit
-    //         </a>
-    //       </Space>
-    //     ),
-    //   },
+      {
+        title: "Sold By",
+        dataIndex: "soldBy",
+        key: "soldBy",
+        render: (text) => <a>{text}</a>,
+      },
+      //   {
+      //     title: "Action",
+      //     key: "action",
+      //     render: (text, record) => (
+      //       <Space size="middle">
+      //         <a
+      //           onClick={() =>
+      //             this.setState({
+      //               show: "form",
+      //             })
+      //           }
+      //         >
+      //           Edit
+      //         </a>
+      //       </Space>
+      //     ),
+      //   },
     ];
 
     let data = [];
 
-    myOrders?.orders.map(order => {
+    myOrders?.orders.map((order) => {
       let ele = {
         key: order._id,
-        image: <img src="/images/helmet.jpg" className="table-item-img" />,
+        image: (
+          <img
+            src={
+              process.env.IMAGE_BASE_URL + "/" + order.product.images[0].medium
+            }
+            className="table-item-img"
+          />
+        ),
         itemName: order.product.name,
         status: [order.status.currentStatus],
-        soldBy: "STUDDS",
+        soldBy: order.soldBy.shopName,
         qty: order.quantity,
-        price: "4000",
-      }
-      data.push(ele)
-    })
+        price: order.product.price.$numberDecimal,
+        slug: order.product.slug,
+      };
+      data.push(ele);
+    });
 
     return (
       <div className="my-orders">
         <h3>My Orders</h3>
         <Row>
-          <Col lg={10} >
+          <Col lg={10}>
             <Search
               placeholder="input search text"
-              onSearch={(value) => console.log(value)}
+              onSearch={(value) => this.getSearch(value)}
               style={{ width: 400 }}
             />
           </Col>
@@ -139,21 +206,31 @@ class MyOrders extends Component {
               placeholder="Select a status"
               defaultValue="All"
               optionFilterProp="children"
-              onChange={this.onChange}
-              onSearch={this.onSearch}
+              onChange={(status) => this.onStatusChange(status)}
               filterOption={(input, option) =>
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Option value="">All</Option>
-              <Option value="toPay">To Pay</Option>
-              <Option value="toShip">To Ship</Option>
-              <Option value="toReceive">To Receive</Option>
+              {this.state.orderStatuses?.map((status, i) => {
+                return (
+                  <Option value={status} key={i}>
+                    {status === "tobereturned"
+                      ? "To Be Returned"
+                      : _.capitalize(status)}
+                  </Option>
+                );
+              })}
             </Select>
           </Col>
           <Col span={6}></Col>
         </Row>
-        <Table className="orders-table" columns={columns} dataSource={data} />
+        <Table
+          className="orders-table"
+          columns={columns}
+          dataSource={data}
+          pagination={{ total: this.state.myOrders?.totalCount }}
+          onChange={this.onChangePage}
+        />
       </div>
     );
   }
