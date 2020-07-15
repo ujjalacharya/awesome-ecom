@@ -8,6 +8,7 @@ import {
 
 class OrderSummary extends Component {
   render() {
+    console.log(this.props)
     return (
       <div className="order-shipping">
         <div className={"shipping-details " + this.props.showShippingAddress}>

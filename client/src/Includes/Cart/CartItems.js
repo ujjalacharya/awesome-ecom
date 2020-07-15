@@ -10,40 +10,21 @@ import { getDiscountedPrice, scrollToTop } from "../../../utils/common";
 class CartItems extends Component {
   state = {
     cardItems: [],
-    totalAmount: "",
   };
 
   componentDidMount() {
     if (this.props.cart.getCartProducts) {
       scrollToTop();
-      let totalAmount = 0;
-      this.props.cart.getCartProducts.carts?.map((data) => {
-        totalAmount +=
-          getDiscountedPrice(
-            data.product.price.$numberDecimal,
-            data.product.discountRate
-          ) * data.quantity;
-      });
       this.setState({
-        cardItems: this.props.cart.getCartProducts,
-        totalAmount,
+        cardItems: this.props.cart.getCartProducts
       });
     }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.cart.getCartProducts !== prevState.cardItems) {
-      let totalAmount = 0;
-      nextProps.cart.getCartProducts.carts?.map((data) => {
-        totalAmount +=
-          getDiscountedPrice(
-            data.product.price.$numberDecimal,
-            data.product.discountRate
-          ) * data.quantity;
-      });
       return {
         cardItems: nextProps.cart.getCartProducts,
-        totalAmount,
       };
     }
     return null;
@@ -69,6 +50,7 @@ class CartItems extends Component {
   };
 
   render() {
+    console.log(this.state)
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -88,10 +70,10 @@ class CartItems extends Component {
         <div className="bag-items">
           <div className="title">
             <h4>My Cart ({this.state.cardItems?.totalCount} Items)</h4>
-            <div className="price">Total: Rs {this.state.totalAmount}</div>
+            <div className="price">Total: Rs {this.state.cardItems?.totalAmount?.toFixed(2)}</div>
           </div>
           <div className="items-list">
-            <ProductListView data={this.state.cardItems} />
+            <ProductListView data={this.state.cardItems} getCheckoutItems={this.props.getCheckoutItems} />
             <div className="all-pagination">
               <Pagination
                 defaultCurrent={1}
