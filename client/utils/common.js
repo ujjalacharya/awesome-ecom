@@ -129,7 +129,7 @@ export const openNotification = (title, description) => {
 };
 
 export const getDiscountedPrice = (price, discountRate) => {
-  let discountedPrice = price - ((price * discountRate) / 100)
+  let discountedPrice = parseInt(price) - ((parseInt(price) * discountRate) / 100)
   return discountedPrice
 }
 

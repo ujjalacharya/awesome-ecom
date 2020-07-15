@@ -105,6 +105,7 @@ class ProductListView extends Component {
           let itemsValues = {
             price: items.product.price.$numberDecimal,
             productId: items.product._id,
+            discountRate: items.product.discountRate
           };
           return (
             <div className="product-list-view">
