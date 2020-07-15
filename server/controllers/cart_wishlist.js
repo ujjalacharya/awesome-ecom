@@ -22,7 +22,6 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 const perPage = 10;
 
-
 exports.addCart = async (req, res) => {
     const product = req.product
     if (req.query.quantity < 1) {
