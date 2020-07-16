@@ -213,7 +213,7 @@ class MyOrders extends Component {
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              {/* {this.state.orderStatuses?.map((status, i) => {
+              {this.state.orderStatuses?.map((status, i) => {
                 return (
                   <Option value={status} key={i}>
                     {status === "tobereturned"
@@ -221,7 +221,7 @@ class MyOrders extends Component {
                       : _.capitalize(status)}
                   </Option>
                 );
-              })} */}
+              })}
             </Select>
           </Col>
           <Col span={6}></Col>

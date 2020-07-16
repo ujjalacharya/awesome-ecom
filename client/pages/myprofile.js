@@ -31,7 +31,7 @@ class MyProfile extends Component {
 
     this.props.getOrders(`page=1`)
 
-    // this.props.getOrdersStatuses()
+    this.props.getOrdersStatuses()
   }
 
   componentDidUpdate(prevProps){
