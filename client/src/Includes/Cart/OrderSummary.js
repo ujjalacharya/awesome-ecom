@@ -11,11 +11,36 @@ import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
+import initialize from "../../../utils/initialize";
 
 class OrderSummary extends Component {
+  state = {
+    userData: [],
+    activeLocation: {},
+  };
+  componentDidMount() {
+    console.log(this.props);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.userData !== prevState.userData) {
+      let activeLocation = {};
+      nextProps.userData.location.map((loc) => {
+        if (loc.isActive) {
+          activeLocation = loc;
+        }
+      });
+      return {
+        userData: nextProps.userData,
+        activeLocation,
+      };
+    }
+    return null;
+  }
 
   render() {
-    
+    let { activeLocation, userData } = this.state;
+
     let totalCheckoutItems = 0;
     this.props.checkoutItems?.map((items) => {
       totalCheckoutItems += getDiscountedPrice(
@@ -25,7 +50,7 @@ class OrderSummary extends Component {
     });
 
     let deliveryCharges = 0;
-
+    console.log(this.state);
     return (
       <div className="order-shipping">
         <div className={"shipping-details " + this.props.showShippingAddress}>
@@ -35,10 +60,10 @@ class OrderSummary extends Component {
               <div className="name-add">
                 <EnvironmentOutlined />
                 <div className="name">
-                  <div>Utsav Shrestha</div>
+                  <div>{userData?.name}</div>
                   <div className="address">
-                    New baneshwor test, <br />
-                    Banepa City Area, Banepa, Bagmati
+                    {activeLocation?.area}, {activeLocation?.address}, <br />
+                    {activeLocation?.city}, {activeLocation?.region}
                   </div>
                 </div>
               </div>
@@ -49,19 +74,19 @@ class OrderSummary extends Component {
             <div className="ti">
               <div className="name-add">
                 <PhoneOutlined />
-                <div className="name">9854214523</div>
+                <div className="name">{activeLocation?.phoneno}</div>
               </div>
             </div>
-            <div className="pr edit">EDIT</div>
+            {/* <div className="pr edit">EDIT</div> */}
           </div>
           <div className="ti-pr">
             <div className="ti">
               <div className="name-add">
                 <MailOutlined />
-                <div className="name">utsavstha@gmail.com</div>
+                <div className="name">{userData?.email}</div>
               </div>
             </div>
-            <div className="pr edit">EDIT</div>
+            {/* <div className="pr edit">EDIT</div> */}
           </div>
         </div>
         <div className="order-summary">
@@ -98,7 +123,15 @@ class OrderSummary extends Component {
                 </div>
               </div>
             </div>
-            <div className="order-procced">
+            <div
+              className="order-procced"
+              onClick={() =>
+                this.props.saveCheckoutItems({
+                  carts: this.props.checkoutItems,
+                  totalCount: this.props.checkoutItems.length,
+                })
+              }
+            >
               <Link href="/checkout">
                 <a>
                   <Button
@@ -119,4 +152,10 @@ class OrderSummary extends Component {
   }
 }
 
-export default connect((state) => state, actions)(withRouter(OrderSummary));
+const mapDispatchToProps = (dispatch) => ({
+  saveCheckoutItems: (checkoutItems) => {
+    dispatch({ type: STORE_CHECKOUT_ITEMS, payload: checkoutItems });
+  },
+});
+
+export default connect(null, mapDispatchToProps)(withRouter(OrderSummary));

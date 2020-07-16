@@ -11,7 +11,7 @@ const initialState = {
   addToCartResp: null,
   removeFromCartResp: null,
   editCartQtyResp: null,
-  checkoutItems: null
+  checkoutItems: null,
 };
 
 export default (state = initialState, action) => {
@@ -24,6 +24,8 @@ export default (state = initialState, action) => {
       return { ...state, removeFromCartResp: action.payload, hasError: false };
     case EDIT_CART_QTY:
       return { ...state, editCartQtyResp: action.payload, hasError: false };
+    case STORE_CHECKOUT_ITEMS:
+      return { ...state, checkoutItems: action.payload, hasError: false };
     default:
       return state;
   }
