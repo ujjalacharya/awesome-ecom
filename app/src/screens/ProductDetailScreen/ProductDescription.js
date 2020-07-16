@@ -2,8 +2,9 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Card, Paragraph, Divider, Avatar } from "react-native-paper";
 import Constants from "../../constants/Constants";
-import ConcideRating from "./ConcideRating";
+import ConcideRating from "./ConciseRating";
 import HighlightedInfo from "./HighlightedInfo";
+import ConciseQnA from "./ConciseQnA";
 
 const ProductDescription = () => {
   return (
@@ -84,6 +85,8 @@ const ProductDescription = () => {
       <HighlightedInfo />
       <Divider />
       <ConcideRating />
+      <Divider />
+      <ConciseQnA />
       <Divider />
     </>
   );
