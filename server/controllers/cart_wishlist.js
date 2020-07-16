@@ -27,7 +27,7 @@ exports.addCart = async (req, res) => {
     if (req.query.quantity < 1) {
         return res.status(403).json({ error: 'Quantity is required' })
     }
-    let cart = await Cart.findOne({product:product._id})
+    let cart = await Cart.findOne({ product: product._id, isDeleted: null})
     if (cart) {
         return res.status(403).json({error:'Cart already exist.'})
     }
@@ -41,28 +41,57 @@ exports.addCart = async (req, res) => {
     res.json(newCart);
 }
 
+const searchCarts = async (keyword = '', id, populateImages,populateSoldBy) => {
+    let carts = await Cart.find({ user: id })
+        .populate(populateImages)
+        .populate({
+            path: 'product',
+            match: {
+                name: { $regex: keyword, $options: "i" }
+            },
+            select: 'name slug images soldBy discountRate price quantity',
+            populate: populateSoldBy
+        })
+        .lean()
+
+    carts = carts.filter(c => c.product !== null)
+    let totalCount = carts.length
+    // carts = _.drop(carts, perPage * page - perPage)
+    // carts = _.take(carts, perPage)
+    return ({carts,totalCount})
+}
+
 exports.getCarts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let carts = await Cart.find({ user: req.user._id, isDeleted: null })
-        .populate({
-            path: 'product',
-            populate: {
-                path: 'images',
-                model: 'productimages'
-            }
-        })
+    const keyword = req.query.keyword
+    const populateImages = {
+        path: 'product',
+        populate: {
+            path: 'images',
+            model: 'productimages'
+        }
+    }
+    const populateSoldBy = {
+        path: 'soldBy',
+        model: 'admin',
+        select: 'name shopName address'
+    }
+    let searchedCarts 
+    let manualCarts
+    if (keyword) searchedCarts = await searchCarts(keyword, req.user._id,populateImages,populateSoldBy)
+    if(!keyword) {
+        manualCarts = await Cart.find({ user: req.user._id, isDeleted: null })
+        .populate(populateImages)
         .populate({
             path: 'product',
             select: 'name slug images soldBy discountRate price quantity',
-            populate: {
-                path: 'soldBy',
-                model: 'admin',
-                select: 'name shopName address'
-            }
+            populate: populateSoldBy
         })
         .lean()
-    const totalCount = carts.length
+    }
+    const totalCount = (manualCarts && manualCarts.length) || (searchedCarts && searchedCarts.totalCount)
+    let carts = manualCarts || searchedCarts.carts
     let totalAmount = 0
     carts.forEach(c=>{
         totalAmount += parseFloat(c.product.price)
@@ -83,6 +112,7 @@ exports.getCarts = async (req, res) => {
     res.json({ carts, totalCount ,totalAmount})
 
 }
+
 
 exports.deleteCart = async (req, res) => {
     let cart = await Cart.findOne({ _id: req.params.cart_id, user: req.user._id })
@@ -108,7 +138,7 @@ exports.addWishlist = async (req, res) => {
     if (req.query.quantity < 1) {
         return res.status(403).json({ error: 'Quantity is required' })
     }
-    let wishlist = await Wishlist.findOne({ product: product._id })
+    let wishlist = await Wishlist.findOne({ product: product._id ,isDeleted:null})
     if (wishlist) {
         return res.status(403).json({ error: 'Wishlist already exist.' })
     }
@@ -122,41 +152,112 @@ exports.addWishlist = async (req, res) => {
     res.json(newWishlist);
 }
 
+// exports.getWishlists = async (req, res) => {
+//     const page = +req.query.page || 1
+//     const perPage = +req.query.perPage || 10;
+//     let wishlists = await Wishlist.find({ user: req.user._id, isDeleted: null })
+//         .populate({
+//             path: 'product',
+//             populate: {
+//                 path: 'images',
+//                 model: 'productimages'
+//             }
+//         })
+//         .populate({
+//             path: 'product',
+//             select: 'name slug images soldBy discountRate price quantity',
+//             populate: {
+//                 path: 'soldBy',
+//                 model: 'admin',
+//                 select: 'name shopName address'
+//             }
+//         })
+//         .skip(perPage * page - perPage)
+//         .limit(perPage)
+//         .lean()
+//     //user's action on each product
+//     wishlists = wishlists.map(async c => {
+//         //user's action on this product
+//         const { hasOnCart } = await userHas(c.product, req.user, 'wishlists')
+//         //ratings of this product
+//         c.stars = await getRatingInfo(c.product)
+//         c.hasOnCart = hasOnCart
+//         return c
+//     })
+//     wishlists = await Promise.all(wishlists)
+//     const totalCount = await Wishlist.countDocuments({ user: req.user._id, isDeleted: null })
+//     res.json({ wishlists, totalCount })
+
+// }
+const searchWishlists = async (keyword = '', id, populateImages, populateSoldBy) => {
+    let wishlists = await Wishlist.find({ user: id })
+        .populate(populateImages)
+        .populate({
+            path: 'product',
+            match: {
+                name: { $regex: keyword, $options: "i" }
+            },
+            select: 'name slug images soldBy discountRate price quantity',
+            populate: populateSoldBy
+        })
+        .lean()
+
+    wishlists = wishlists.filter(c => c.product !== null)
+    let totalCount = wishlists.length
+    // wishlists = _.drop(wishlists, perPage * page - perPage)
+    // wishlists = _.take(wishlists, perPage)
+    return ({ wishlists, totalCount })
+}
+
 exports.getWishlists = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    let wishlists = await Wishlist.find({ user: req.user._id, isDeleted: null })
-        .populate({
-            path: 'product',
-            populate: {
-                path: 'images',
-                model: 'productimages'
-            }
-        })
-        .populate({
-            path: 'product',
-            select: 'name slug images soldBy discountRate price quantity',
-            populate: {
-                path: 'soldBy',
-                model: 'admin',
-                select: 'name shopName address'
-            }
-        })
-        .skip(perPage * page - perPage)
-        .limit(perPage)
-        .lean()
+    const keyword = req.query.keyword
+    const populateImages = {
+        path: 'product',
+        populate: {
+            path: 'images',
+            model: 'productimages'
+        }
+    }
+    const populateSoldBy = {
+        path: 'soldBy',
+        model: 'admin',
+        select: 'name shopName address'
+    }
+    let searchedWishlists
+    let manualWishlists
+    if (keyword) searchedWishlists = await searchWishlists(keyword, req.user._id, populateImages, populateSoldBy)
+    if (!keyword) {
+        manualWishlists = await Wishlist.find({ user: req.user._id, isDeleted: null })
+            .populate(populateImages)
+            .populate({
+                path: 'product',
+                select: 'name slug images soldBy discountRate price quantity',
+                populate: populateSoldBy
+            })
+            .lean()
+    }
+    const totalCount = (manualWishlists && manualWishlists.length) || (searchedWishlists && searchedWishlists.totalCount)
+    let wishlists = manualWishlists || searchedWishlists.wishlists
+    let totalAmount = 0
+    wishlists.forEach(c => {
+        totalAmount += parseFloat(c.product.price)
+    })
+
+    wishlists = _.drop(wishlists, perPage * page - perPage)
+    wishlists = _.take(wishlists, perPage)
     //user's action on each product
     wishlists = wishlists.map(async c => {
         //user's action on this product
-        const { hasOnCart } = await userHas(c.product, req.user, 'wishlists')
+        const { hasOnWishlist } = await userHas(c.product, req.user, 'wishlists')
         //ratings of this product
         c.stars = await getRatingInfo(c.product)
-        c.hasOnCart = hasOnCart
+        c.hasOnWishlist = hasOnWishlist
         return c
     })
     wishlists = await Promise.all(wishlists)
-    const totalCount = await Wishlist.countDocuments({ user: req.user._id, isDeleted: null })
-    res.json({ wishlists, totalCount })
+    res.json({ wishlists, totalCount, totalAmount })
 
 }
 
@@ -180,44 +281,25 @@ exports.editWishlist = async (req, res) => {
     res.json(wishlist)
 }
 
-exports.searchCarts = async (req, res) => {
-    const page = +req.query.page || 1;
-    const perPage = +req.query.perPage || 10;
-    const { keyword = ''} = req.query
-    let carts = await Cart.find({ user: req.user._id })
-        .populate({
-            path: 'product',
-            match: {
-                name: { $regex: keyword, $options: "i" }
-            },
-            select: 'name slug'
-        })
-        .lean()
 
-    carts = carts.filter(c => c.product !== null)
-    let totalCount = carts.length
-    carts = _.drop(carts, perPage * page - perPage)
-    carts = _.take(carts, perPage)
-    return res.json({ carts, totalCount });
-}
 
-exports.searchWishlists = async (req, res) => {
-    const page = +req.query.page || 1;
-    const perPage = +req.query.perPage || 10;
-    const { keyword = '' } = req.query
-    let wishlists = await Wishlist.find({ user: req.user._id })
-        .populate({
-            path: 'product',
-            match: {
-                name: { $regex: keyword, $options: "i" }
-            },
-            select: 'name slug'
-        })
-        .lean()
+// exports.searchWishlists = async (req, res) => {
+//     const page = +req.query.page || 1;
+//     const perPage = +req.query.perPage || 10;
+//     const { keyword = '' } = req.query
+//     let wishlists = await Wishlist.find({ user: req.user._id })
+//         .populate({
+//             path: 'product',
+//             match: {
+//                 name: { $regex: keyword, $options: "i" }
+//             },
+//             select: 'name slug'
+//         })
+//         .lean()
 
-    wishlists = wishlists.filter(c => c.product !== null)
-    let totalCount = wishlists.length
-    wishlists = _.drop(wishlists, perPage * page - perPage)
-    wishlists = _.take(wishlists, perPage)
-    return res.json({ wishlists, totalCount });
-}
+//     wishlists = wishlists.filter(c => c.product !== null)
+//     let totalCount = wishlists.length
+//     wishlists = _.drop(wishlists, perPage * page - perPage)
+//     wishlists = _.take(wishlists, perPage)
+//     return res.json({ wishlists, totalCount });
+// }

@@ -39,13 +39,13 @@ exports.getProduct = async (req, res) => {
   //user's action on this product
   const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser ,'product')
   //ratings of this product
-  req.product.stars = await getRatingInfo(req.product)
-  req.product.hasOnCart = hasOnCart
-  req.product.hasBought = hasBought
-  req.product.hasOnWishlist = hasOnWishlist
-  req.product.hasReviewed = hasReviewed
-  
-  res.json({product:req.product});
+  const product = req.product.toObject()
+  product.stars = await getRatingInfo(req.product)
+  product.hasOnCart = hasOnCart
+  product.hasBought = hasBought
+  product.hasOnWishlist = hasOnWishlist
+  product.hasReviewed = hasReviewed
+  res.json({product});
 };
 
 exports.createProduct = async (req, res) => {
