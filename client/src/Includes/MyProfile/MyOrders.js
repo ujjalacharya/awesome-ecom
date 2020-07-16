@@ -57,15 +57,16 @@ class MyOrders extends Component {
   initialRequest = () => {
     let appendUrl = "";
 
-    appendUrl = this.state.currentStatus
-      ? `status=${this.state.currentStatus}`
-      : "";
+    appendUrl = `page=${this.state.currentPage}`;
+    
+    appendUrl = appendUrl + (this.state.currentStatus
+      ? `&status=${this.state.currentStatus}`
+      : "");
 
-    appendUrl = appendUrl + `&page=${this.state.currentPage}`;
 
     appendUrl =
       appendUrl +
-      (this.state.searchKeyword ? `&search=${this.state.searchKeyword}` : "");
+      (this.state.searchKeyword ? `&keyword=${this.state.searchKeyword}` : "");
 
     this.props.getOrders(appendUrl);
   };
@@ -212,7 +213,7 @@ class MyOrders extends Component {
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              {this.state.orderStatuses?.map((status, i) => {
+              {/* {this.state.orderStatuses?.map((status, i) => {
                 return (
                   <Option value={status} key={i}>
                     {status === "tobereturned"
@@ -220,7 +221,7 @@ class MyOrders extends Component {
                       : _.capitalize(status)}
                   </Option>
                 );
-              })}
+              })} */}
             </Select>
           </Col>
           <Col span={6}></Col>

@@ -4,14 +4,12 @@ import { Row, Col } from "antd";
 //includes
 import OrderSummary from "../src/Includes/Cart/OrderSummary";
 import CartItems from "../src/Includes/Cart/CartItems";
-import Header from "../src/Components/Header";
-import Footer from "../src/Components/Footer";
+import Layout from "../src/Components/Layout";
 
 class Checkout extends Component {
   render() {
     return (
-      <>
-        <Header />
+      <Layout title="checkout">
         <section className="checkout">
           <div className="container">
             <Row>
@@ -29,8 +27,7 @@ class Checkout extends Component {
             </Row>
           </div>
         </section>
-        <Footer />
-      </>
+      </Layout>
     );
   }
 }

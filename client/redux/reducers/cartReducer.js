@@ -1,10 +1,17 @@
-import { CART_PRODUCTS, ADD_TO_CART, REMOVE_FROM_CART, EDIT_CART_QTY } from "../types";
+import {
+  CART_PRODUCTS,
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  EDIT_CART_QTY,
+  STORE_CHECKOUT_ITEMS,
+} from "../types";
 
 const initialState = {
   getCartProducts: null,
   addToCartResp: null,
   removeFromCartResp: null,
-  editCartQtyResp: null
+  editCartQtyResp: null,
+  checkoutItems: null
 };
 
 export default (state = initialState, action) => {

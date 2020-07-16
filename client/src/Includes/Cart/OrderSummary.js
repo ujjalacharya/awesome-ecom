@@ -6,12 +6,22 @@ import {
   MailOutlined,
 } from "@ant-design/icons";
 import { getDiscountedPrice } from "../../../utils/common";
+import Link from "next/link";
+import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
+import { withRouter } from "next/router";
 
 class OrderSummary extends Component {
+
   render() {
+    
     let totalCheckoutItems = 0;
     this.props.checkoutItems?.map((items) => {
-      totalCheckoutItems += getDiscountedPrice(items.price, items.discountRate);
+      totalCheckoutItems += getDiscountedPrice(
+        items.product.price.$numberDecimal,
+        items.product.discountRate
+      );
     });
 
     let deliveryCharges = 0;
@@ -89,14 +99,18 @@ class OrderSummary extends Component {
               </div>
             </div>
             <div className="order-procced">
-              <Button
-                className={"btn " + this.props.diableOrderBtn}
-                disabled={
-                  this.props.diableOrderBtn === "disableBtn" ? true : false
-                }
-              >
-                {this.props.orderTxt}
-              </Button>
+              <Link href="/checkout">
+                <a>
+                  <Button
+                    className={"btn " + this.props.diableOrderBtn}
+                    disabled={
+                      this.props.diableOrderBtn === "disableBtn" ? true : false
+                    }
+                  >
+                    {this.props.orderTxt}
+                  </Button>
+                </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -105,4 +119,4 @@ class OrderSummary extends Component {
   }
 }
 
-export default OrderSummary;
+export default connect((state) => state, actions)(withRouter(OrderSummary));
