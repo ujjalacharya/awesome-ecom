@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { Card, Paragraph, Divider, Avatar } from "react-native-paper";
 import Constants from "../../constants/Constants";
 import ConcideRating from "./ConcideRating";
+import HighlightedInfo from "./HighlightedInfo";
 
 const ProductDescription = () => {
   return (
@@ -80,7 +81,8 @@ const ProductDescription = () => {
         </Card.Content>
       </Card>
       <Divider />
-
+      <HighlightedInfo />
+      <Divider />
       <ConcideRating />
       <Divider />
     </>
