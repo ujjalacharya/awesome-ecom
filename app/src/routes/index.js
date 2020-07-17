@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -13,6 +13,7 @@ import WishListScreen from "../screens/WishList";
 import SearchScreen from "../screens/SearchScreen";
 import CartStackScreen from "../screens/CartStackScreen";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
+import QnAStack from "./StackNavigators/QnAStack";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
         <Stack.Screen name="WishList" component={WishListScreen} />
         <Stack.Screen name="CartStack" component={CartStackScreen} />
         <Stack.Screen name="Detail" component={ProductDetailScreen} />
+        <Stack.Screen name="QnA" component={QnAStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );

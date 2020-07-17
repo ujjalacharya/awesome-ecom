@@ -5,8 +5,10 @@ import Constants from "../../constants/Constants";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-class ConciseQnA extends React.Component {
-  render() {
+import { useNavigation } from '@react-navigation/native';
+
+const ConciseQnA = () => {
+  const navigation = useNavigation();
     return (
       <Card>
         <Card.Title title="Q & A (7)" subtitle="View All" />
@@ -78,7 +80,7 @@ class ConciseQnA extends React.Component {
             alignItems: "center",
             marginBottom: 10,
           }}
-          onPress={() => console.warn("View all")}
+          onPress={() => navigation.navigate("QnA")}
         >
           <Text style={{ fontWeight: "bold", textDecorationLine: "underline" }}>
             {"Ask Question"}
@@ -86,7 +88,6 @@ class ConciseQnA extends React.Component {
         </TouchableWithoutFeedback>
       </Card>
     );
-  }
 }
 
 export default ConciseQnA;

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import YT from "react-native-youtube-iframe";
 import { Card } from "react-native-paper";
+import { getPhoneDetails } from "../../utils/common";
 
 const YoutubePlayer = () => {
   const playerRef = useRef(null);
@@ -11,7 +12,7 @@ const YoutubePlayer = () => {
       <YT
         ref={playerRef}
         height={250}
-        width={400}
+        width={getPhoneDetails().width}
         videoId={"Ct6BUPvE2sM"}
         play={playing}
         onChangeState={(event) => console.log(event)}
