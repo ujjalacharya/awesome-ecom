@@ -5,18 +5,18 @@ import { headerOptions } from "../../utils/common";
 
 const Stack = createStackNavigator();
 
-const QnAStack = () => {
+const QnAStack = (data) => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="QnA"
-        component={QnA}
-        options={headerOptions("QnA")}
-      />
+      <Stack.Screen name="QnA">{(props) => <QnA {...props} data={data}/>}</Stack.Screen>
+      {/* component={QnA} */}
+      {/* options={headerOptions("QnA")} */}
+      {/* props={props} */}
+      {/* /> */}
     </Stack.Navigator>
   );
 };
