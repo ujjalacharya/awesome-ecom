@@ -66,11 +66,16 @@
       font-size: 13px;
       .cate {
         color: $light-text-color;
+        max-width: 145px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .stars {
         i {
           color: $tertiary-color;
           padding-left: 5px;
+          font-size: 11px;
         }
       }
     }

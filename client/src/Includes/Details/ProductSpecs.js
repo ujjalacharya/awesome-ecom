@@ -14,7 +14,6 @@ class ProductSpecs extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    console.log('product specs')
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
@@ -82,10 +81,11 @@ class ProductSpecs extends Component {
     let {
       data: { product },
     } = this.props;
+    console.log(product)
 
     let description = "";
     let allDescription = "";
-    if (product.description) {
+    if (product?.description) {
       allDescription = product.description.split(" ");
       if (this.state.showStatus === "More" && allDescription.length > 100) {
         let newRemarks = [...allDescription];

@@ -19,7 +19,7 @@ class QuickViewModal extends Component {
             <DetailSlider data={this.props.data} />
           </Col>
           <Col lg={14} xs={24} md={18}>
-            <ProductSpecs data={this.props.data} />
+            <ProductSpecs data={{product: this.props.data}} />
           </Col>
         </Row>
       </Modal>

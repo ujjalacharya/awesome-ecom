@@ -60,6 +60,7 @@ class ProductCard extends Component {
     let checkSkeleton = this.state.productData.name === "" ? true : false;
 
     let loginToken = this.props.authentication.token;
+
     return (
       <div className={"product-card " + (checkSkeleton && "skeleton")}>
         {this.state.showQuickView && (

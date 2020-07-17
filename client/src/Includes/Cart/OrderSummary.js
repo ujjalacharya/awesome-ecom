@@ -12,18 +12,18 @@ import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
 import initialize from "../../../utils/initialize";
+import EditAddressModal from "../../Components/EditAddressModal";
 
 class OrderSummary extends Component {
   state = {
     userData: [],
     activeLocation: {},
+    showEditAddressModal: false
   };
-  componentDidMount() {
-    console.log(this.props);
-  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.userData !== prevState.userData) {
+    console.log(nextProps)
+    if (nextProps.userData !== prevState.userData && nextProps.userData) {
       let activeLocation = {};
       nextProps.userData.location.map((loc) => {
         if (loc.isActive) {
@@ -38,6 +38,12 @@ class OrderSummary extends Component {
     return null;
   }
 
+  handleCancel = (e) => {
+    this.setState({
+      showEditAddressModal: false,
+    });
+  };
+
   render() {
     let { activeLocation, userData } = this.state;
 
@@ -50,9 +56,15 @@ class OrderSummary extends Component {
     });
 
     let deliveryCharges = 0;
-    console.log(this.state);
+    console.log(this.state)
     return (
       <div className="order-shipping">
+        <EditAddressModal
+          title="Quick View Product"
+          visible={this.state.showEditAddressModal}
+          onCancel={this.handleCancel}
+          data={userData}
+        />
         <div className={"shipping-details " + this.props.showShippingAddress}>
           <div className="os-title">Shipping & Billing</div>
           <div className="ti-pr">
@@ -68,7 +80,7 @@ class OrderSummary extends Component {
                 </div>
               </div>
             </div>
-            <div className="pr edit">EDIT</div>
+            <div className="pr edit" onClick={() => this.setState({showEditAddressModal: true})}>EDIT</div>
           </div>
           <div className="ti-pr">
             <div className="ti">
