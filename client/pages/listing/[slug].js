@@ -21,7 +21,7 @@ class Listing extends Component {
       data = await ctx.store.dispatch(actions.getLatestProducts());
     }
 
-    const allBrands = await ctx.store.dispatch(actions.getProductBrands());
+    // const allBrands = await ctx.store.dispatch(actions.getProductBrands());
 
     return {
       data,

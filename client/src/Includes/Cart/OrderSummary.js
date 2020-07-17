@@ -18,11 +18,11 @@ class OrderSummary extends Component {
   state = {
     userData: [],
     activeLocation: {},
-    showEditAddressModal: false
+    showEditAddressModal: false,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    console.log(nextProps)
+    console.log(nextProps);
     if (nextProps.userData !== prevState.userData && nextProps.userData) {
       let activeLocation = {};
       nextProps.userData.location.map((loc) => {
@@ -48,15 +48,19 @@ class OrderSummary extends Component {
     let { activeLocation, userData } = this.state;
 
     let totalCheckoutItems = 0;
-    this.props.checkoutItems?.map((items) => {
-      totalCheckoutItems += getDiscountedPrice(
-        items.product.price.$numberDecimal,
-        items.product.discountRate
-      );
-    });
+    if (!this.props.checkoutItems.totalAmount) {
+      this.props.checkoutItems?.map((items) => {
+        totalCheckoutItems += getDiscountedPrice(
+          items.product.price.$numberDecimal,
+          items.product.discountRate
+        );
+      });
+    } else {
+      totalCheckoutItems = this.props.checkoutItems.totalAmount;
+    }
 
     let deliveryCharges = 0;
-    console.log(this.state)
+    console.log(this.state);
     return (
       <div className="order-shipping">
         <EditAddressModal
@@ -80,7 +84,12 @@ class OrderSummary extends Component {
                 </div>
               </div>
             </div>
-            <div className="pr edit" onClick={() => this.setState({showEditAddressModal: true})}>EDIT</div>
+            <div
+              className="pr edit"
+              onClick={() => this.setState({ showEditAddressModal: true })}
+            >
+              EDIT
+            </div>
           </div>
           <div className="ti-pr">
             <div className="ti">
@@ -110,10 +119,10 @@ class OrderSummary extends Component {
                 <div className="ti">Cart Total</div>
                 <div className="pr">Rs {totalCheckoutItems}</div>
               </div>
-              <div className="ti-pr">
+              {/* <div className="ti-pr">
                 <div className="ti">Cart Discount</div>
                 <div className="pr">- 0</div>
-              </div>
+              </div> */}
               {/* <div className="ti-pr">
                 <div className="ti">Tax</div>
                 <div className="pr">$4</div>
@@ -141,21 +150,35 @@ class OrderSummary extends Component {
                 this.props.saveCheckoutItems({
                   carts: this.props.checkoutItems,
                   totalCount: this.props.checkoutItems.length,
+                  totalAmount: totalCheckoutItems,
                 })
               }
             >
-              <Link href="/checkout">
-                <a>
-                  <Button
-                    className={"btn " + this.props.diableOrderBtn}
-                    disabled={
-                      this.props.diableOrderBtn === "disableBtn" ? true : false
-                    }
-                  >
-                    {this.props.orderTxt}
-                  </Button>
-                </a>
-              </Link>
+              {this.props.orderTxt === "PLACE ORDER" ? (
+                <Button
+                  className={"btn " + this.props.diableOrderBtn}
+                  disabled={
+                    this.props.diableOrderBtn === "disableBtn" ? true : false
+                  }
+                >
+                  {this.props.orderTxt}
+                </Button>
+              ) : (
+                <Link href="/checkout">
+                  <a>
+                    <Button
+                      className={"btn " + this.props.diableOrderBtn}
+                      disabled={
+                        this.props.diableOrderBtn === "disableBtn"
+                          ? true
+                          : false
+                      }
+                    >
+                      {this.props.orderTxt}
+                    </Button>
+                  </a>
+                </Link>
+              )}
             </div>
           </div>
         </div>

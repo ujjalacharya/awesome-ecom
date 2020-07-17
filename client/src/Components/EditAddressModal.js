@@ -4,26 +4,64 @@ import _ from "lodash";
 
 // includes
 import AddressForm from "../Includes/MyProfile/Includes/AddressForm";
+import { connect } from "react-redux";
+import actions from "../../redux/actions";
+import { openNotification } from "../../utils/common";
 
 class EditAddressModal extends Component {
   state = {
+    show: "table",
     userData: [],
     allAddress: [],
+    editAddressData: [],
+    showAddNewForm: "addTable",
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-      console.log(nextProps)
-    if (
-      nextProps.data !== prevState.userData &&
-      nextProps.data
-    ) {
-      return{
+    console.log(nextProps);
+    if (nextProps.data !== prevState.userData && nextProps.data) {
+      return {
         userData: nextProps.data,
         allAddress: nextProps.data.location,
-      }
+      };
     }
     return null;
   }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.user.userProfile !== prevProps.user.userProfile &&
+      this.props.user.userProfile
+    ) {
+      this.setState({
+        userData: this.props.user.userProfile,
+        allAddress: this.props.user.userProfile.location,
+      });
+    }
+    if (
+      this.props.user.toggleActiveAddResp !==
+        prevProps.user.toggleActiveAddResp &&
+      this.props.user.toggleActiveAddResp
+    ) {
+      openNotification("Success", "Active address changed successfully");
+      this.props.getUserProfile(this.state.userData._id);
+      this.props.onCancel()
+    }
+  }
+
+  changeShow = (show, userId) => {
+    this.setState({
+      show,
+      showAddNewForm: "addTable",
+    });
+    if (userId) {
+      this.props.getUserProfile(userId);
+    }
+  };
+
+  toggleAddress = (label) => {
+    this.props.toggleActiveAddress(`label=${label}`);
+  };
 
   render() {
     const columns = [
@@ -95,7 +133,7 @@ class EditAddressModal extends Component {
     ];
 
     let data = [];
-    if (this.state.allAddress.length > 0) {
+    if (this.state.allAddress?.length > 0) {
       this.state.allAddress.map((address, i) => {
         let ele = {
           key: address._id,
@@ -177,4 +215,4 @@ class EditAddressModal extends Component {
   }
 }
 
-export default EditAddressModal;
+export default connect((state) => state, actions)(EditAddressModal);

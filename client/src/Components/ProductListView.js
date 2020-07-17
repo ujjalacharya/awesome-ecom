@@ -110,6 +110,7 @@ class ProductListView extends Component {
                   <Checkbox
                     value={items}
                     onChange={this.onCheckItems}
+                    className={this.props.showCheckbox}
                   ></Checkbox>
                 </Col>
                 <Col lg={6} xs={24} key={i}>

@@ -72,7 +72,7 @@ class CartItems extends Component {
             <div className="price">Total: Rs {this.state.cardItems?.totalAmount?.toFixed(2)}</div>
           </div>
           <div className="items-list">
-            <ProductListView data={this.state.cardItems} getCheckoutItems={this.props.getCheckoutItems} />
+            <ProductListView data={this.state.cardItems} getCheckoutItems={this.props.getCheckoutItems} showCheckbox={this.props.showCheckbox} />
             <div className="all-pagination">
               <Pagination
                 defaultCurrent={1}

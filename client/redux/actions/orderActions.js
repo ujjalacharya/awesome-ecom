@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES } from "../types";
+import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER } from "../types";
 import { OrderService } from "../services/orderService";
 
 const getOrders = (query) => {
@@ -31,7 +31,23 @@ const getOrdersStatuses = () => {
   };
 };
 
+const placeOrder = (body) => {
+  return async (dispatch) => {
+    const orderService = new OrderService();
+    const response = await orderService.placeOrder(body);
+    if (response.isSuccess) {
+      dispatch({ type: PLACE_ORDER, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 export default {
   getOrders,
-  getOrdersStatuses
+  getOrdersStatuses,
+  placeOrder
 };

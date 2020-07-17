@@ -34,7 +34,7 @@ class CheckoutCart extends Component {
   }
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
       <Layout title="Cart">
         <section className="checkout">
@@ -42,13 +42,25 @@ class CheckoutCart extends Component {
             <Row>
               {/* <Col span={1}></Col> */}
               <Col md={16} xs={24}>
-                <CartItems cartData={this.props.cart.checkoutItems? this.props.cart.checkoutItems : this.props.cart.getCartProducts} />
+                <CartItems
+                  cartData={
+                    this.props.cart.checkoutItems
+                      ? this.props.cart.checkoutItems
+                      : this.props.cart.getCartProducts
+                  }
+                  showCheckbox = "noCheckbox"
+                />
               </Col>
               <Col md={8} xs={24}>
                 <OrderSummary
                   orderTxt="PLACE ORDER"
                   showShippingAddress="showDisplay"
                   userData={this.props.user.userProfile}
+                  checkoutItems={
+                    this.props.cart.checkoutItems
+                      ? this.props.cart.checkoutItems
+                      : this.props.cart.getCartProducts
+                  }
                 />
               </Col>
               {/* <Col span={1}></Col> */}

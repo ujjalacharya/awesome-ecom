@@ -1,4 +1,4 @@
-import { getTokenService } from "../../utils/commonService";
+import { getTokenService, postTokenService } from "../../utils/commonService";
 
 export class OrderService {
   getOrders(query) {
@@ -10,6 +10,12 @@ export class OrderService {
   getOrdersStatuses() {
     let url = `${process.env.SERVER_BASE_URL}/api/order/get-order-status`;
     let data = getTokenService(url, "GET");
+    return data;
+  }
+
+  placeOrder(body) {
+    let url = `${process.env.SERVER_BASE_URL}/api/order/create-order`;
+    let data = postTokenService(url, "POST", body);
     return data;
   }
 }
