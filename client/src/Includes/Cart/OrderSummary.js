@@ -44,6 +44,15 @@ class OrderSummary extends Component {
     });
   };
 
+  placeOrderItems = () => {
+    let { items } = this.props.checkoutItems[0]
+    console.log(items)
+    // let body = {
+    //   p_slug: items.product.slug,
+    //   quantity
+    // }
+  }
+
   render() {
     let { activeLocation, userData } = this.state;
 
@@ -158,8 +167,9 @@ class OrderSummary extends Component {
                 <Button
                   className={"btn " + this.props.diableOrderBtn}
                   disabled={
-                    this.props.diableOrderBtn === "disableBtn" ? true : false
+                    this.props.checkoutItems.carts.totalCount > 1 ? true : false
                   }
+                  onClick = {this.placeOrderItems}
                 >
                   {this.props.orderTxt}
                 </Button>
