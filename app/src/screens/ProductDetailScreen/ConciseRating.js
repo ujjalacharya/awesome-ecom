@@ -11,8 +11,8 @@ class ConcideRating extends React.Component {
       <Card>
         <Card.Title title="Ratings and Reviews (4)" subtitle="View All" />
 
-        {[0, 0, 0].map(() => (
-          <Card.Content style={{ marginBottom: 20 }}>
+        {[0, 0, 0].map((data, i) => (
+          <Card.Content style={{ marginBottom: 20 }} key={i}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View
                 style={{
@@ -29,8 +29,8 @@ class ConcideRating extends React.Component {
               <View
                 style={{ flex: 0.3, flexDirection: "row", marginRight: 10 }}
               >
-                {[0, 0].map((star) => (
-                  <View style={{ flex: 1 }}>
+                {[0, 0].map((star, i) => (
+                  <View style={{ flex: 1 }} key={i}>
                     <Button
                       icon={() => (
                         <AntDesign
@@ -42,8 +42,8 @@ class ConcideRating extends React.Component {
                     ></Button>
                   </View>
                 ))}
-                {[0, 0, 0].map((star) => (
-                  <View style={{ flex: 1 }}>
+                {[0, 0, 0].map((star, i) => (
+                  <View style={{ flex: 1 }} key={i}>
                     <Button
                       icon={() => (
                         <AntDesign

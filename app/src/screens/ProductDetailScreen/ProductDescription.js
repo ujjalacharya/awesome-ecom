@@ -5,6 +5,7 @@ import Constants from "../../constants/Constants";
 import ConcideRating from "./ConciseRating";
 import HighlightedInfo from "./HighlightedInfo";
 import ConciseQnA from "./ConciseQnA";
+import YoutubePlayer from "./YoutubePlayer";
 
 const ProductDescription = () => {
   return (
@@ -83,6 +84,8 @@ const ProductDescription = () => {
       </Card>
       <Divider />
       <HighlightedInfo />
+      <Divider />
+      <YoutubePlayer />
       <Divider />
       <ConcideRating />
       <Divider />
