@@ -9,7 +9,6 @@ const Whislist = require("../models/WishList")
 const ProductBrand = require("../models/ProductBrand");
 const ProductImages = require("../models/ProductImages");
 const userHas = require("../middleware/user_actions/userHas")
-const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const shortid = require("shortid");
 const sharp = require("sharp");
 const path = require("path");
@@ -47,6 +46,7 @@ exports.getProduct = async (req, res) => {
   product.hasReviewed = hasReviewed
   res.json({product});
 };
+
 
 exports.createProduct = async (req, res) => {
   if (!req.profile.isVerified)
@@ -341,7 +341,6 @@ exports.searchProducts = async (req, res) => {
     if (warranties) searchingFactor.warranty = warranties;
     if (ratings) searchingFactor.averageRating = { $gte: +ratings };
   }
-  //for rating wise filter..
     let products = await Product.find(searchingFactor)
       .populate("category", "displayName slug")
       .populate("brand", "brandName slug")

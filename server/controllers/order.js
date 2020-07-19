@@ -114,6 +114,10 @@ exports.calculateShippingCharge = async (req, res) => {
       .status(404)
       .json({ error: "Cannot found shipping address of the user." });
   }
+  //calculate no of different admins of all products
+  let products = await Product.find({slug:req.body.products}).populate('soldBy','shopName')
+  let noOfAdmins = products.map(p=>p.soldBy.shopName)
+  noOfAdmins = [... new Set(noOfAdmins)].length || 1
   if (shippingAddress.geolocation !== undefined) {
     const shippingRate = superadmin.shippingRate;
     const systemGeoCoordinates = superadmin.geolocation.coordinates;
@@ -124,7 +128,7 @@ exports.calculateShippingCharge = async (req, res) => {
       userGeoCoordinates[0],
       userGeoCoordinates[1]
     );
-    let shippingCharge = distance * shippingRate;
+    let shippingCharge = distance * shippingRate * noOfAdmins;
     shippingCharge = Math.round(shippingCharge);
     if (shippingCharge < 10) {
       return res.json(0);

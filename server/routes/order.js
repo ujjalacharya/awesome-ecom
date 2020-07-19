@@ -9,7 +9,7 @@ const { order, createOrder, calculateShippingCharge, toggleOrderApproval, orderC
 const router = express.Router();
 
 //user's..
-router.get('/shipping-charge',userAuth,calculateShippingCharge)
+router.post('/shipping-charge',userAuth,calculateShippingCharge)
 router.post('/create-order',userAuth,createOrder)
 router.patch('/cancel-order/:order_id', userAuth,orderCancelByUser)
 router.get('/orders', userAuth, userOrders)
