@@ -17,11 +17,11 @@ const orderSchema = new mongoose.Schema({
         ref: "user",
         required: true
     },
-    product: {
+    product: [{
         type: Schema.Types.ObjectId,
         ref: "product",
         required: true
-    },
+    }],
     payment: {
         type: Schema.Types.ObjectId,
         ref: "payment",

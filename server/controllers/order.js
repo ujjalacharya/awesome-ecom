@@ -20,6 +20,15 @@ const { allOrderStatus } = require("../middleware/common");
 const task = Fawn.Task();
 const perPage = 10;
 
+const run = async () => {
+  let orders = await Order.find()
+  orders = orders.map(async o =>await o.save())
+  orders = await Promise.all(orders)
+  console.log(orders);
+}
+
+
+
 exports.order = async (req, res, next) => {
   const order = await Order.findById(req.params.order_id)
     .populate("user", "-password -salt -resetPasswordLink -emailVerifyLink")
