@@ -13,18 +13,18 @@ class CartItems extends Component {
   };
 
   componentDidMount() {
-    if (this.props.cart.getCartProducts) {
+    if (this.props.cartData) {
       scrollToTop();
       this.setState({
-        cardItems: this.props.cart.getCartProducts
+        cardItems: this.props.cartData
       });
     }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.cart.getCartProducts !== prevState.cardItems) {
+    if (nextProps.cartData !== prevState.cardItems) {
       return {
-        cardItems: nextProps.cart.getCartProducts,
+        cardItems: nextProps.cartData,
       };
     }
     return null;
@@ -50,7 +50,6 @@ class CartItems extends Component {
   };
 
   render() {
-    console.log(this.state)
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -73,7 +72,7 @@ class CartItems extends Component {
             <div className="price">Total: Rs {this.state.cardItems?.totalAmount?.toFixed(2)}</div>
           </div>
           <div className="items-list">
-            <ProductListView data={this.state.cardItems} getCheckoutItems={this.props.getCheckoutItems} />
+            <ProductListView data={this.state.cardItems} getCheckoutItems={this.props.getCheckoutItems} showCheckbox={this.props.showCheckbox} />
             <div className="all-pagination">
               <Pagination
                 defaultCurrent={1}

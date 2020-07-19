@@ -41,7 +41,7 @@ class Cart extends Component {
             <Row>
               <Col md={0} xs={0}></Col>
               <Col md={16} xs={24}>
-                <CartItems getCheckoutItems={this.getCheckoutItems} />
+                <CartItems getCheckoutItems={this.getCheckoutItems} cartData={this.props.cart.getCartProducts} />
               </Col>
               <Col md={8} xs={24}>
                 <OrderSummary orderTxt="PROCCED TO CHECKOUT" checkoutItems={this.state.checkoutItems} />

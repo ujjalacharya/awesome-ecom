@@ -76,7 +76,7 @@ class ProductListView extends Component {
 
       let itemsInserted = false;
       checkoutItems.map((itemCheck) => {
-        if (itemValue.productId !== itemCheck.productId) {
+        if (itemValue.product._id !== itemCheck.product._id) {
           newCheckoutItems.push(itemCheck);
         } else {
           itemsInserted = true;
@@ -102,18 +102,15 @@ class ProductListView extends Component {
     return (
       <>
         {this.state.listItems?.carts?.map((items, i) => {
-          let itemsValues = {
-            price: items.product.price.$numberDecimal,
-            productId: items.product._id,
-            discountRate: items.product.discountRate
-          };
+          
           return (
             <div className="product-list-view">
               <Row>
                 <Col lg={2}>
                   <Checkbox
-                    value={itemsValues}
+                    value={items}
                     onChange={this.onCheckItems}
+                    className={this.props.showCheckbox}
                   ></Checkbox>
                 </Col>
                 <Col lg={6} xs={24} key={i}>

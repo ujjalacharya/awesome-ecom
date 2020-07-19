@@ -6,18 +6,78 @@ import {
   MailOutlined,
 } from "@ant-design/icons";
 import { getDiscountedPrice } from "../../../utils/common";
+import Link from "next/link";
+import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
+import { withRouter } from "next/router";
+import initialize from "../../../utils/initialize";
+import EditAddressModal from "../../Components/EditAddressModal";
 
 class OrderSummary extends Component {
-  render() {
-    let totalCheckoutItems = 0;
-    this.props.checkoutItems?.map((items) => {
-      totalCheckoutItems += getDiscountedPrice(items.price, items.discountRate);
+  state = {
+    userData: [],
+    activeLocation: {},
+    showEditAddressModal: false,
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log(nextProps);
+    if (nextProps.userData !== prevState.userData && nextProps.userData) {
+      let activeLocation = {};
+      nextProps.userData.location.map((loc) => {
+        if (loc.isActive) {
+          activeLocation = loc;
+        }
+      });
+      return {
+        userData: nextProps.userData,
+        activeLocation,
+      };
+    }
+    return null;
+  }
+
+  handleCancel = (e) => {
+    this.setState({
+      showEditAddressModal: false,
     });
+  };
+
+  placeOrderItems = () => {
+    let { items } = this.props.checkoutItems[0]
+    console.log(items)
+    // let body = {
+    //   p_slug: items.product.slug,
+    //   quantity
+    // }
+  }
+
+  render() {
+    let { activeLocation, userData } = this.state;
+
+    let totalCheckoutItems = 0;
+    if (!this.props.checkoutItems.totalAmount) {
+      this.props.checkoutItems?.map((items) => {
+        totalCheckoutItems += getDiscountedPrice(
+          items.product.price.$numberDecimal,
+          items.product.discountRate
+        );
+      });
+    } else {
+      totalCheckoutItems = this.props.checkoutItems.totalAmount;
+    }
 
     let deliveryCharges = 0;
-
+    console.log(this.state);
     return (
       <div className="order-shipping">
+        <EditAddressModal
+          title="Quick View Product"
+          visible={this.state.showEditAddressModal}
+          onCancel={this.handleCancel}
+          data={userData}
+        />
         <div className={"shipping-details " + this.props.showShippingAddress}>
           <div className="os-title">Shipping & Billing</div>
           <div className="ti-pr">
@@ -25,33 +85,38 @@ class OrderSummary extends Component {
               <div className="name-add">
                 <EnvironmentOutlined />
                 <div className="name">
-                  <div>Utsav Shrestha</div>
+                  <div>{userData?.name}</div>
                   <div className="address">
-                    New baneshwor test, <br />
-                    Banepa City Area, Banepa, Bagmati
+                    {activeLocation?.area}, {activeLocation?.address}, <br />
+                    {activeLocation?.city}, {activeLocation?.region}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="pr edit">EDIT</div>
+            <div
+              className="pr edit"
+              onClick={() => this.setState({ showEditAddressModal: true })}
+            >
+              EDIT
+            </div>
           </div>
           <div className="ti-pr">
             <div className="ti">
               <div className="name-add">
                 <PhoneOutlined />
-                <div className="name">9854214523</div>
+                <div className="name">{activeLocation?.phoneno}</div>
               </div>
             </div>
-            <div className="pr edit">EDIT</div>
+            {/* <div className="pr edit">EDIT</div> */}
           </div>
           <div className="ti-pr">
             <div className="ti">
               <div className="name-add">
                 <MailOutlined />
-                <div className="name">utsavstha@gmail.com</div>
+                <div className="name">{userData?.email}</div>
               </div>
             </div>
-            <div className="pr edit">EDIT</div>
+            {/* <div className="pr edit">EDIT</div> */}
           </div>
         </div>
         <div className="order-summary">
@@ -63,10 +128,10 @@ class OrderSummary extends Component {
                 <div className="ti">Cart Total</div>
                 <div className="pr">Rs {totalCheckoutItems}</div>
               </div>
-              <div className="ti-pr">
+              {/* <div className="ti-pr">
                 <div className="ti">Cart Discount</div>
                 <div className="pr">- 0</div>
-              </div>
+              </div> */}
               {/* <div className="ti-pr">
                 <div className="ti">Tax</div>
                 <div className="pr">$4</div>
@@ -88,15 +153,42 @@ class OrderSummary extends Component {
                 </div>
               </div>
             </div>
-            <div className="order-procced">
-              <Button
-                className={"btn " + this.props.diableOrderBtn}
-                disabled={
-                  this.props.diableOrderBtn === "disableBtn" ? true : false
-                }
-              >
-                {this.props.orderTxt}
-              </Button>
+            <div
+              className="order-procced"
+              onClick={() =>
+                this.props.saveCheckoutItems({
+                  carts: this.props.checkoutItems,
+                  totalCount: this.props.checkoutItems.length,
+                  totalAmount: totalCheckoutItems,
+                })
+              }
+            >
+              {this.props.orderTxt === "PLACE ORDER" ? (
+                <Button
+                  className={"btn " + this.props.diableOrderBtn}
+                  disabled={
+                    this.props.checkoutItems.carts.totalCount > 1 ? true : false
+                  }
+                  onClick = {this.placeOrderItems}
+                >
+                  {this.props.orderTxt}
+                </Button>
+              ) : (
+                <Link href="/checkout">
+                  <a>
+                    <Button
+                      className={"btn " + this.props.diableOrderBtn}
+                      disabled={
+                        this.props.diableOrderBtn === "disableBtn"
+                          ? true
+                          : false
+                      }
+                    >
+                      {this.props.orderTxt}
+                    </Button>
+                  </a>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -105,4 +197,10 @@ class OrderSummary extends Component {
   }
 }
 
-export default OrderSummary;
+const mapDispatchToProps = (dispatch) => ({
+  saveCheckoutItems: (checkoutItems) => {
+    dispatch({ type: STORE_CHECKOUT_ITEMS, payload: checkoutItems });
+  },
+});
+
+export default connect(null, mapDispatchToProps)(withRouter(OrderSummary));

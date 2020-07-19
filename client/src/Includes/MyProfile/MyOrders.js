@@ -57,15 +57,16 @@ class MyOrders extends Component {
   initialRequest = () => {
     let appendUrl = "";
 
-    appendUrl = this.state.currentStatus
-      ? `status=${this.state.currentStatus}`
-      : "";
+    appendUrl = `page=${this.state.currentPage}`;
+    
+    appendUrl = appendUrl + (this.state.currentStatus
+      ? `&status=${this.state.currentStatus}`
+      : "");
 
-    appendUrl = appendUrl + `&page=${this.state.currentPage}`;
 
     appendUrl =
       appendUrl +
-      (this.state.searchKeyword ? `&search=${this.state.searchKeyword}` : "");
+      (this.state.searchKeyword ? `&keyword=${this.state.searchKeyword}` : "");
 
     this.props.getOrders(appendUrl);
   };

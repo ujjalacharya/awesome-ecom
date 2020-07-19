@@ -2,7 +2,10 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Card, Paragraph, Divider, Avatar } from "react-native-paper";
 import Constants from "../../constants/Constants";
-import ConcideRating from "./ConcideRating";
+import ConcideRating from "./ConciseRating";
+import HighlightedInfo from "./HighlightedInfo";
+import ConciseQnA from "./ConciseQnA";
+import YoutubePlayer from "./YoutubePlayer";
 
 const ProductDescription = () => {
   return (
@@ -80,8 +83,13 @@ const ProductDescription = () => {
         </Card.Content>
       </Card>
       <Divider />
-
+      <HighlightedInfo />
+      <Divider />
+      <YoutubePlayer />
+      <Divider />
       <ConcideRating />
+      <Divider />
+      <ConciseQnA />
       <Divider />
     </>
   );

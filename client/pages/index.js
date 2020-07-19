@@ -53,13 +53,13 @@ Index.getInitialProps = async (ctx) => {
 
   const latestProducts = await ctx.store.dispatch(actions.getLatestProducts(ctx));
 
-  const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
+  // const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
 
   const bannerImages = await ctx.store.dispatch(actions.getBannerImages());
 
   return {
     latestProducts,
-    orders
+    // orders
   };
 };
 

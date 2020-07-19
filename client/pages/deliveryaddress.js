@@ -4,14 +4,12 @@ import { Row, Col } from "antd";
 //includes
 import AddressForm from "../src/Includes/DeliveryAddress/AddressForm";
 import OrderSummary from "../src/Includes/Cart/OrderSummary";
-import Header from "../src/Components/Header";
-import Footer from "../src/Components/Footer";
+import Layout from "../src/Components/Layout";
 
 class DeliveryAddress extends Component {
   render() {
     return (
-      <>
-        <Header />
+      <Layout title="Address">
         <section className="delivery-address">
           <div className="container">
             <Row>
@@ -29,8 +27,7 @@ class DeliveryAddress extends Component {
             </Row>
           </div>
         </section>
-        <Footer />
-      </>
+      </Layout>
     );
   }
 }

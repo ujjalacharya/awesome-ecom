@@ -44,7 +44,6 @@ class MyWishlist extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props)
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
@@ -76,7 +75,6 @@ class MyWishlist extends Component {
   }
 
   onChangePage = (page) => {
-    console.log(page)
     this.setState({
       currentPage: page.current,
     });

@@ -7,7 +7,7 @@ import ReactImageMagnify from "react-image-magnify";
 class DetailSlider extends Component {
   state = {
     imageUrl:
-      `${process.env.SERVER_BASE_URL}/uploads/${this.props.data.images[0].large}`,
+      `${process.env.SERVER_BASE_URL}/uploads/${this.props.data?.images[0]?.large}`,
   };
 
   changeImage = (url) => {

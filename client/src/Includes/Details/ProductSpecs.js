@@ -14,7 +14,6 @@ class ProductSpecs extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    console.log('product specs')
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
@@ -82,10 +81,11 @@ class ProductSpecs extends Component {
     let {
       data: { product },
     } = this.props;
+    console.log(product)
 
     let description = "";
     let allDescription = "";
-    if (product.description) {
+    if (product?.description) {
       allDescription = product.description.split(" ");
       if (this.state.showStatus === "More" && allDescription.length > 100) {
         let newRemarks = [...allDescription];
@@ -102,8 +102,8 @@ class ProductSpecs extends Component {
           <div className="product-title">{product.name}</div>
           <div className="ratings-reviews">
             <div className="ratings">
-              {this.props.data.stars.averageStar &&
-                Array(Math.round(this.props.data.stars.averageStar))
+              {product.averageRating?.$numberDecimal &&
+                Array(Math.round(product.averageRating.$numberDecimal))
                   .fill(0)
                   .map((num, i) => {
                     return (
@@ -111,15 +111,15 @@ class ProductSpecs extends Component {
                     );
                   })}
               <span>
-                {this.props.data.stars.averageStar
-                  ? this.props.data.stars.averageStar.toFixed(1)
+                {product.averageRating?.$numberDecimal
+                  ? parseFloat(product.averageRating.$numberDecimal).toFixed(1)
                   : 'No'}{" "}
                 stars ratings
               </span>
             </div>
             <div className="reviews">
               <span>
-                ( {this.props.data.stars.totalRatingUsers} customer reviews | 41
+                ( {product.totalRatingUsers} customer reviews | 41
                 FAQ answered )
               </span>
             </div>

@@ -8,6 +8,8 @@ import { Appbar } from "react-native-paper";
 import { signOut } from "../store/actions/user_actions";
 import Constants from "../constants/Constants";
 
+import WebView from "react-native-webview";
+
 class ProfileScreen extends Component {
   handleLogout = async () => {
     this.props.signOut();
@@ -15,13 +17,17 @@ class ProfileScreen extends Component {
 
   render() {
     return (
-      <View>
+      <>
         <Appbar.Header statusBarHeight={0}>
           <Appbar.Content title="Profile" color={Constants.headerTintColor} />
         </Appbar.Header>
-        <Text> Profile Screen </Text>
-        <Button title="Logout" onPress={this.handleLogout} />
-      </View>
+        <WebView
+          source={{
+            uri: "https://google.com",
+          }}
+          // style={{ marginTop: 20 }}
+        />
+      </>
     );
   }
 }
