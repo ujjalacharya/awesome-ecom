@@ -49,7 +49,7 @@ const QnA = ({data}) => {
               multiline={true}
               value={text}
               onChangeText={(text) => setText(text)}
-              // style={{ padding: 10 }}
+              style={{ padding: 10 }}
               autoFocus={askQuestion ? true : false}
             />
           </View>

@@ -46,7 +46,12 @@ export class ProductListScreen extends Component {
             />
             <View style={{ flex: 5 }}>
               {productData.map((product, i) => (
-                <SearchedSingleProduct product={product} key={i} {...this.props}/>
+                <SearchedSingleProduct
+                  product={product}
+                  key={i}
+                  type="searched"
+                  {...this.props}
+                />
               ))}
             </View>
           </ScrollView>

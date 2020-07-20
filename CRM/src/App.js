@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 // import { loadUser } from './redux/actions/auth';
 import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
-import "./App.css";
+import "./App.scss";
 import Signin from "./components/pages/Signin";
 
 const App = (props) => {
