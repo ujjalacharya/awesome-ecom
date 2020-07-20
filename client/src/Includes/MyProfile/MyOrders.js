@@ -175,17 +175,17 @@ class MyOrders extends Component {
         image: (
           <img
             src={
-              process.env.IMAGE_BASE_URL + "/" + order?.product[0].images[0].medium
+              process.env.IMAGE_BASE_URL + "/" + order.product.images[0].medium
             }
             className="table-item-img"
           />
         ),
-        itemName: order.product[0].name,
+        itemName: order.product.name,
         status: [order.status.currentStatus],
         soldBy: order.soldBy.shopName,
         qty: order.quantity,
-        price: order.product[0].price.$numberDecimal,
-        slug: order.product[0].slug,
+        price: order.product.price.$numberDecimal,
+        slug: order.product.slug,
       };
       data.push(ele);
     });
