@@ -418,8 +418,8 @@ exports.orderCancelByAdmin = async (req, res) => {
     return res.status(401).json({ error: "Unauthorized Admin" });
   }
   if (
-    order.status.currentStatus === "complete" ||
-    order.status.currentStatus === "return"
+    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "approve"
   ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
@@ -455,8 +455,8 @@ exports.orderCancelByUser = async (req, res) => {
     return res.status(401).json({ error: "Unauthorized User" });
   }
   if (
-    order.status.currentStatus === "complete" ||
-    order.status.currentStatus === "return"
+    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "approve"
   ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
