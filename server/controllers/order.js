@@ -118,7 +118,7 @@ exports.calculateShippingCharge = async (req, res) => {
     slug: req.body.p_slugs, isVerified: { $ne: null },
     isDeleted: null,}).populate('soldBy','shopName')
   if (products.length !== req.body.p_slugs.length) {
-    return res.status(403).json({error:'Products not found.'})
+    return res.status(404).json({error:'Products not found.'})
   }
 
   let noOfAdmins = products.map(p=>p.soldBy.shopName)
@@ -149,30 +149,26 @@ exports.calculateShippingCharge = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-  const {
-    region,
-    area,
-    city,
-    address,
-    phoneno,
-    lat,
-    long,
-    p_slug,
-    quantity,
-    shippingCharge,
-    method,
-    productAttributes,
-  } = req.body;
+  const {products,shipto,shippingCharge,orderID,method} = req.body;
   //vaidate address
-  if (!region || !area || !city || !address || !phoneno) {
+  if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) {
     return res.status(403).json({ error: "Address fields are required." });
   }
-  //validate product
-  const product = await Product.findOne({
-    slug: p_slug,
+  //validate products
+  let p_slugs = products.map(p=>p.p_slug)
+  let Products = await Product.find({
+    slug: p_slugs, 
     isVerified: { $ne: null },
     isDeleted: null,
   }).populate("soldBy", "isBlocked isVerified holidayMode");
+
+
+  if (Products.length !== p_slugs.length) {
+    return res.status(404).json({ error: 'Products not found.' })
+  }
+
+  //validate each product
+  let error
   const isAdminOnHoliday = (first, last) => {
     let week = [0, 1, 2, 3, 4, 5, 6];
     let firstIndex = week.indexOf(first);
@@ -181,82 +177,98 @@ exports.createOrder = async (req, res) => {
     //Cut from first day to last day nd check with today day
     return week.slice(0, lastIndex + 1).some((d) => d === new Date().getDay());
   };
-  if (!product) {
-    return res.status(404).json({ error: "Product not found." });
+  for (let i = 0; i < Products.length; i++) {
+    const product = Products[i];
+    if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
+      error = `Seller not available of product ${product.name} `
+      break;
+    }
+    if (
+      isAdminOnHoliday(
+        product.soldBy.holidayMode.start,
+        product.soldBy.holidayMode.end
+      )
+    ) {
+      error = `Seller is on holiday of product ${product.name}. Please order manually ` 
+      break;
+    }
+    if (product.quantity === 0) {
+      error = `Product ${product.name} is out of the stock.`
+      break;
+    }
+
+    if (product.quantity < products.find(p => p.p_slug === product.slug).quantity) {
+      error = `There are only ${product.quantity} quantity of product ${product.name} available.`
+      break;
+    }
+    
   }
-  if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
-    return res.status(403).json({ error: "Seller not found." });
+  if (error) {
+    return res.status(403).json({error})
   }
-  if (
-    isAdminOnHoliday(
-      product.soldBy.holidayMode.start,
-      product.soldBy.holidayMode.end
-    )
-  ) {
-    return res
-      .status(403)
-      .json({ error: "Seller is on holiday. Please order manually " });
-  }
-  if (product.quantity === 0) {
-    return res.status(403).json({ error: "Product is out of the stock." });
-  }
-  if (product.quantity < quantity) {
-    return res.status(403).json({
-      error: `There are only ${product.quantity} products available.`,
-    });
-  }
-  // new order
-  const newOrder = new Order();
-  newOrder.user = req.user._id;
-  newOrder.product = product._id;
-  newOrder.soldBy = product.soldBy;
-  newOrder.quantity = quantity;
-  newOrder.productAttributes = productAttributes;
-  newOrder.shipto = {
-    region: region,
-    city: city,
-    area: area,
-    address: address,
-    phoneno: phoneno,
-  };
-  if (lat && long) {
-    let geolocation = {
-      type: "Point",
-      coordinates: [long, lat],
+
+  //create orders
+  Products = products.map(async product =>{
+    // new order
+    let thisProduct = Products.find(p => p.slug === product.p_slug)
+    const newOrder = new Order();
+    newOrder.orderID = orderID;
+    newOrder.user = req.user._id;
+    newOrder.product = thisProduct._id;
+    newOrder.soldBy = thisProduct.soldBy;
+    newOrder.quantity = product.quantity;
+    newOrder.productAttributes = product.productAttributes;
+    newOrder.shipto = {
+      region: shipto.region,
+      city: shipto.city,
+      area: shipto.area,
+      address: shipto.address,
+      phoneno: shipto.phoneno,
     };
-    newOrder.shipto.geolocation = geolocation;
-  }
-  const status = {
-    currentStatus: "active",
-    activeDate: Date.now(),
-  };
-  newOrder.status = status;
+    if (shipto.lat && shipto.long) {
+      let geolocation = {
+        type: "Point",
+        coordinates: [shipto.long, shipto.lat],
+      };
+      newOrder.shipto.geolocation = geolocation;
+    }
+    const status = {
+      currentStatus: "active",
+      activeDate: Date.now(),
+    };
+    newOrder.status = status;
+  
+    // new payment
+    const newPayent = new Payment({
+      user: req.user._id,
+      order: newOrder._id,
+      method: method,
+      shippingCharge: shippingCharge,
+      transactionCode: orderID,
+      amount: Math.round(
+        (thisProduct.price - thisProduct.price * (thisProduct.discountRate / 100)) *
+          newOrder.quantity
+      ),
+      from: req.user.phone,
+    });
+    newOrder.payment = newPayent._id;
+  
+    // update thisProduct
+    const updateProduct = thisProduct.toObject();
+    updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
+    const results = await task
+      .save(newOrder)
+      .save(newPayent)
+      .update(thisProduct, updateProduct)
+      .options({ viaSave: true })
+      .run({ useMongoose: true });
+    //  console.log(newOrder,newPayent,updateProduct);
+    return { order: results[0], payment: results[1] }
+  })
 
-  // new payment
-  const newPayent = new Payment({
-    user: req.user._id,
-    order: newOrder._id,
-    method: method,
-    shippingCharge: shippingCharge,
-    transactionCode: shortid.generate(),
-    amount: Math.round(
-      (product.price - product.price * (product.discountRate / 100)) *
-        newOrder.quantity
-    ),
-    from: req.user.phone,
-  });
-  newOrder.payment = newPayent._id;
+  Products = await Promise.all(Products)
 
-  // update product
-  const updateProduct = product.toObject();
-  updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
-  const results = await task
-    .save(newOrder)
-    .save(newPayent)
-    .update(product, updateProduct)
-    .options({ viaSave: true })
-    .run({ useMongoose: true });
-  res.json({ order: results[0], payment: results[1] });
+  res.json(Products);
 };
 
 const search_orders = async (page, perPage, keyword = '', query, res, type) => {
@@ -264,7 +276,6 @@ const search_orders = async (page, perPage, keyword = '', query, res, type) => {
         path: `${type}`,
         select: type==='user'? 'name': 'shopName'
     }
-    console.log(populateUser);
     let sortFactor = { createdAt: 'desc' };
     let orders = await Order.find(query)
         .populate({
@@ -407,8 +418,8 @@ exports.orderCancelByAdmin = async (req, res) => {
     return res.status(401).json({ error: "Unauthorized Admin" });
   }
   if (
-    order.status.currentStatus === "complete" ||
-    order.status.currentStatus === "return"
+    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "approve"
   ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
@@ -444,8 +455,8 @@ exports.orderCancelByUser = async (req, res) => {
     return res.status(401).json({ error: "Unauthorized User" });
   }
   if (
-    order.status.currentStatus === "complete" ||
-    order.status.currentStatus === "return"
+    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "approve"
   ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
@@ -630,3 +641,31 @@ exports.toggletobeReturnOrder = async (req, res) => {
 exports.getOrderStatus = async (req, res) => {
   res.json(allOrderStatus);
 };
+
+exports.editOrderQuantity = async (req,res) => {
+  let order = req.order
+  if (order.status.currentStatus !== 'active') {
+    return res.status(403).json({error:'User cannot update quantity.'})
+  }
+  let updateOrder = order.toObject();
+  let payment = await Payment.findById(order.payment._id);
+  let updatePayment = payment.toObject();
+  let product = await Product.findById(order.product._id)
+  let updateProduct = product.toObject()
+  updateOrder.quantity = req.query.quantity
+  updateProduct.quantity = updateProduct.quantity + order.quantity - updateOrder.quantity
+  updatePayment.amount = Math.round(
+    (product.price - product.price * (product.discountRate / 100)) * updateOrder.quantity
+  )
+  let results = await task
+    .update(payment, updatePayment)
+    .options({ viaSave: true })
+    .update(order, updateOrder)
+    .options({ viaSave: true })
+    .update(product, updateProduct)
+    .options({ viaSave: true })
+    .run({ useMongoose: true });
+  
+  res.json({order:results[1],payment:results[0]});
+
+}

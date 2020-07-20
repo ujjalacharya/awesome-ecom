@@ -440,7 +440,7 @@ exports.generateFilter = async (req, res) => {
         if (!filters.weights.includes(weight)) filters.weights.push(weight);
       });
     });
-    //makeing price range =>[[min,max],[min1,max1]]
+    //making price range =>[[min,max],[min1,max1]]
     let min_price = Math.min(...filters.prices);
     let max_price = Math.max(...filters.prices);
     //make min max price to multiple of 100
