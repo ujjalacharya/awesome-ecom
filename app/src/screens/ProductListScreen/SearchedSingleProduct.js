@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import {
+  Avatar,
+  Button,
+  Card,
+  Title,
+  Paragraph,
+  Colors,
+} from "react-native-paper";
 import { View, Image, StyleSheet, Alert, Text } from "react-native";
 
 import {
@@ -11,12 +18,13 @@ import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../constants/Constants";
 
 const SearchedSingleProduct = (props) => {
+  console.log(props);
   const renderActionButtonComponent = (type) => {
     switch (type) {
       case "searched":
         return (
           <View style={styles.rowFlex}>
-            <Button onPress={() => console.warn("Wifi")}>
+            <Button onPress={() => console.warn("Wifi")} style={{ flex: 0.6 }}>
               <Text style={{ color: "black" }}>{"Add to Wishlist "}</Text>
               <AntDesign
                 name="heart"
@@ -24,12 +32,35 @@ const SearchedSingleProduct = (props) => {
                 color="black"
               />
             </Button>
-            <Button>
+            <Button style={{ flex: 0.4 }}>
               <Text style={{ color: "black" }}>{"Add to Cart "}</Text>
               <AntDesign
                 name="shoppingcart"
                 size={Constants.normalScreenDescriptionSize}
                 color="black"
+              />
+            </Button>
+          </View>
+        );
+      case "wishlist":
+        return (
+          <View style={styles.rowFlex}>
+            <Button onPress={() => console.warn("Wifi")} style={{ flex: 1 }}>
+              <Text style={{ color: "red" }}>{"Remove "}</Text>
+              <AntDesign
+                name="delete"
+                size={Constants.normalScreenDescriptionSize}
+                color="red"
+              />
+            </Button>
+            <Button style={{ flex: 1 }}>
+              <Text style={{ color: Constants.tintColor }}>
+                {"Add to Cart "}
+              </Text>
+              <AntDesign
+                name="shoppingcart"
+                size={Constants.normalScreenDescriptionSize}
+                color={Constants.tintColor}
               />
             </Button>
           </View>
