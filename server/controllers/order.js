@@ -20,15 +20,6 @@ const { allOrderStatus } = require("../middleware/common");
 const task = Fawn.Task();
 const perPage = 10;
 
-const run = async () => {
-  let orders = await Order.find()
-  orders = orders.map(async o =>await o.save())
-  orders = await Promise.all(orders)
-  console.log(orders);
-}
-
-
-
 exports.order = async (req, res, next) => {
   const order = await Order.findById(req.params.order_id)
     .populate("user", "-password -salt -resetPasswordLink -emailVerifyLink")
@@ -39,8 +30,7 @@ exports.order = async (req, res, next) => {
     )
     .populate({
       path: "soldBy",
-      select:
-        "name shopName address isVerified isBlocked holidayMode photo email",
+      select:"name shopName address isVerified isBlocked holidayMode photo email",
       populate: {
         path: "adminWareHouse",
         model: "adminwarehouse",
@@ -124,9 +114,16 @@ exports.calculateShippingCharge = async (req, res) => {
       .json({ error: "Cannot found shipping address of the user." });
   }
   //calculate no of different admins of all products
-  let products = await Product.find({slug:req.body.products}).populate('soldBy','shopName')
+  let products = await Product.find({
+    slug: req.body.p_slugs, isVerified: { $ne: null },
+    isDeleted: null,}).populate('soldBy','shopName')
+  if (products.length !== req.body.p_slugs.length) {
+    return res.status(403).json({error:'Products not found.'})
+  }
+
   let noOfAdmins = products.map(p=>p.soldBy.shopName)
   noOfAdmins = [... new Set(noOfAdmins)].length || 1
+  
   if (shippingAddress.geolocation !== undefined) {
     const shippingRate = superadmin.shippingRate;
     const systemGeoCoordinates = superadmin.geolocation.coordinates;
@@ -188,7 +185,7 @@ exports.createOrder = async (req, res) => {
     return res.status(404).json({ error: "Product not found." });
   }
   if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
-    return res.status(403).json({ error: "Seller is not " });
+    return res.status(403).json({ error: "Seller not found." });
   }
   if (
     isAdminOnHoliday(
