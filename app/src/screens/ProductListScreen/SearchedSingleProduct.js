@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import {
+  Avatar,
+  Button,
+  Card,
+  Title,
+  Paragraph,
+  Colors,
+} from "react-native-paper";
 import { View, Image, StyleSheet, Alert, Text } from "react-native";
 
 import {
@@ -11,6 +18,57 @@ import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../constants/Constants";
 
 const SearchedSingleProduct = (props) => {
+  const renderActionButtonComponent = (type, product) => {
+    switch (type) {
+      case "searched":
+        return (
+          <View style={styles.rowFlex}>
+            <Button onPress={() => console.warn("Wifi")} style={{ flex: 0.6 }}>
+              <Text style={{ color: "black" }}>{"Add to Wishlist "}</Text>
+              <AntDesign
+                name="heart"
+                size={Constants.normalScreenDescriptionSize}
+                color="black"
+              />
+            </Button>
+            <Button style={{ flex: 0.4 }}>
+              <Text style={{ color: "black" }}>{"Add to Cart "}</Text>
+              <AntDesign
+                name="shoppingcart"
+                size={Constants.normalScreenDescriptionSize}
+                color="black"
+              />
+            </Button>
+          </View>
+        );
+      case "wishlist":
+        return (
+          <View style={styles.rowFlex}>
+            <Button onPress={() => console.warn("Wifi")} style={{ flex: 1 }}>
+              <Text style={{ color: "red" }}>{"Remove "}</Text>
+              <AntDesign
+                name="delete"
+                size={Constants.normalScreenDescriptionSize}
+                color="red"
+              />
+            </Button>
+            <Button onPress={()=>props.setVisible(product)} style={{ flex: 1 }}>
+              <Text style={{ color: Constants.tintColor }}>
+                {"Add to Cart "}
+              </Text>
+              <AntDesign
+                name="shoppingcart"
+                size={Constants.normalScreenDescriptionSize}
+                color={Constants.tintColor}
+              />
+            </Button>
+          </View>
+        );
+      default:
+        <View style={styles.rowFlex}></View>;
+    }
+  };
+
   return (
     <TouchableWithoutFeedback>
       <Card
@@ -49,24 +107,7 @@ const SearchedSingleProduct = (props) => {
             marginTop: 5,
           }}
         >
-          <View style={styles.rowFlex}>
-            <Button onPress={() => console.warn("Wifi")}>
-              <Text style={{ color: "black" }}>{"Add to Wishlist "}</Text>
-              <AntDesign
-                name="heart"
-                size={Constants.normalScreenDescriptionSize}
-                color="black"
-              />
-            </Button>
-            <Button>
-              <Text style={{ color: "black" }}>{"Add to Cart "}</Text>
-              <AntDesign
-                name="shoppingcart"
-                size={Constants.normalScreenDescriptionSize}
-                color="black"
-              />
-            </Button>
-          </View>
+          {renderActionButtonComponent(props.type, props.product)}
         </Card.Actions>
       </Card>
     </TouchableWithoutFeedback>
