@@ -641,3 +641,31 @@ exports.toggletobeReturnOrder = async (req, res) => {
 exports.getOrderStatus = async (req, res) => {
   res.json(allOrderStatus);
 };
+
+exports.editOrderQuantity = async (req,res) => {
+  let order = req.order
+  if (order.status.currentStatus !== 'active') {
+    return res.status(403).json({error:'User cannot update quantity.'})
+  }
+  let updateOrder = order.toObject();
+  let payment = await Payment.findById(order.payment._id);
+  let updatePayment = payment.toObject();
+  let product = await Product.findById(order.product._id)
+  let updateProduct = product.toObject()
+  updateOrder.quantity = req.query.quantity
+  updateProduct.quantity = updateProduct.quantity + order.quantity - updateOrder.quantity
+  updatePayment.amount = Math.round(
+    (product.price - product.price * (product.discountRate / 100)) * updateOrder.quantity
+  )
+  let results = await task
+    .update(payment, updatePayment)
+    .options({ viaSave: true })
+    .update(order, updateOrder)
+    .options({ viaSave: true })
+    .update(product, updateProduct)
+    .options({ viaSave: true })
+    .run({ useMongoose: true });
+  
+  res.json({order:results[1],payment:results[0]});
+
+}

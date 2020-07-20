@@ -27,8 +27,7 @@ const paymentSchema = new mongoose.Schema({
     },
     transactionCode: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     from:{
         type:Number,
