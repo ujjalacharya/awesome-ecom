@@ -18,8 +18,7 @@ import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../constants/Constants";
 
 const SearchedSingleProduct = (props) => {
-  console.log(props);
-  const renderActionButtonComponent = (type) => {
+  const renderActionButtonComponent = (type, product) => {
     switch (type) {
       case "searched":
         return (
@@ -53,7 +52,7 @@ const SearchedSingleProduct = (props) => {
                 color="red"
               />
             </Button>
-            <Button style={{ flex: 1 }}>
+            <Button onPress={()=>props.setVisible(product)} style={{ flex: 1 }}>
               <Text style={{ color: Constants.tintColor }}>
                 {"Add to Cart "}
               </Text>
@@ -108,7 +107,7 @@ const SearchedSingleProduct = (props) => {
             marginTop: 5,
           }}
         >
-          {renderActionButtonComponent(props.type)}
+          {renderActionButtonComponent(props.type, props.product)}
         </Card.Actions>
       </Card>
     </TouchableWithoutFeedback>
