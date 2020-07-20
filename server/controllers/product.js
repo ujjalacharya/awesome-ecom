@@ -9,6 +9,7 @@ const Whislist = require("../models/WishList")
 const ProductBrand = require("../models/ProductBrand");
 const ProductImages = require("../models/ProductImages");
 const userHas = require("../middleware/user_actions/userHas")
+const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const shortid = require("shortid");
 const sharp = require("sharp");
 const path = require("path");
