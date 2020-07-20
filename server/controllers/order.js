@@ -137,8 +137,9 @@ exports.calculateShippingCharge = async (req, res) => {
     let shippingCharge = distance * shippingRate * noOfAdmins;
     shippingCharge = Math.round(shippingCharge);
     if (shippingCharge < 10) {
-      return res.json(0);
+      return res.json(10);
     }
+    if( shippingCharge > 80) return res.json(80) 
     let rem = shippingCharge % 10;
     if (rem < 3) return res.json(shippingCharge - rem);
     if (rem < 7) return res.json(shippingCharge - rem + 5);

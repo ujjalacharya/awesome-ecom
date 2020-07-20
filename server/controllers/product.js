@@ -235,9 +235,13 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.latestProducts = async (req, res) => {
-  const page = +req.query.page || 1;
-  const perPage = +req.query.perPage || 10;
+  let page = +req.query.page || 1;
+  let perPage = +req.query.perPage || 10;
   let sortFactor = { createdAt: 'desc' }
+  if (req.query.keyword === process.env.LATEST_PRODUCT) {
+    page = 1
+    perPage = 50
+  }
   let products = await Product.find({
     isVerified: { $ne: null },
     isDeleted: null
@@ -250,10 +254,11 @@ exports.latestProducts = async (req, res) => {
     .lean()
     .sort(sortFactor);
 
-    const totalCount = await Product.countDocuments({
+    let totalCount = await Product.countDocuments({
       isVerified: { $ne: null },
       isDeleted: null,
     })  
+    if (totalCount>50) totalCount = 50
     //user's action on each product
     products = products.map(async p => {
       //user's action on this product
@@ -265,7 +270,6 @@ exports.latestProducts = async (req, res) => {
       return p
     })
     products = await Promise.all(products)
-
   res.json({products,totalCount});
 };
 
@@ -286,7 +290,7 @@ exports.searchProducts = async (req, res) => {
   let sortFactor = {createdAt:'desc'} ;
   if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
   if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
-  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
+  if(price && (price === 'asc' || price === 'desc')) sortFactor = {price}
   let {
     keyword = "",
     brands,
@@ -440,7 +444,7 @@ exports.generateFilter = async (req, res) => {
         if (!filters.weights.includes(weight)) filters.weights.push(weight);
       });
     });
-    //making price range =>[[min,max],[min1,max1]]
+    //making price range =>[[min,max],[min1,max1]]7
     let min_price = Math.min(...filters.prices);
     let max_price = Math.max(...filters.prices);
     //make min max price to multiple of 100
@@ -460,7 +464,22 @@ exports.generateFilter = async (req, res) => {
   };
   if (req.query.keyword) {
     // by search keyword
-    let products = await Product.find({
+    let products
+    let sortFactor = { createdAt: 'desc' }
+    //if keyword is system keyword of latest products
+    if (req.query.keyword === process.env.LATEST_PRODUCT) {
+      products = await Product.find({
+        isVerified: { $ne: null },
+        isDeleted: null,
+      })
+      .limit(50)
+      .sort(sortFactor)
+      .populate("brand", "brandName slug")
+      .select("-_id brand warranty size color weight price");
+      let generatedFilters = filterGenerate(products);
+      return res.json(generatedFilters);
+    }
+    products = await Product.find({
       $or: [
         { name: { $regex: req.query.keyword, $options: "i" } },
         { tags: { $regex: req.query.keyword, $options: "i" } },
@@ -468,8 +487,8 @@ exports.generateFilter = async (req, res) => {
       isVerified: { $ne: null },
       isDeleted: null,
     })
-      .populate("brand", "brandName slug")
-      .select("-_id brand warranty size color weight price");
+    .populate("brand", "brandName slug")
+    .select("-_id brand warranty size color weight price");
     // if (!products.length) {
     //   return res.status(404).json({ error: "Cannot generate filter" });
     // }
