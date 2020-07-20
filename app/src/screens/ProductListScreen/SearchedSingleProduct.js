@@ -11,6 +11,34 @@ import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../constants/Constants";
 
 const SearchedSingleProduct = (props) => {
+  const renderActionButtonComponent = (type) => {
+    switch (type) {
+      case "searched":
+        return (
+          <View style={styles.rowFlex}>
+            <Button onPress={() => console.warn("Wifi")}>
+              <Text style={{ color: "black" }}>{"Add to Wishlist "}</Text>
+              <AntDesign
+                name="heart"
+                size={Constants.normalScreenDescriptionSize}
+                color="black"
+              />
+            </Button>
+            <Button>
+              <Text style={{ color: "black" }}>{"Add to Cart "}</Text>
+              <AntDesign
+                name="shoppingcart"
+                size={Constants.normalScreenDescriptionSize}
+                color="black"
+              />
+            </Button>
+          </View>
+        );
+      default:
+        <View style={styles.rowFlex}></View>;
+    }
+  };
+
   return (
     <TouchableWithoutFeedback>
       <Card
@@ -49,24 +77,7 @@ const SearchedSingleProduct = (props) => {
             marginTop: 5,
           }}
         >
-          <View style={styles.rowFlex}>
-            <Button onPress={() => console.warn("Wifi")}>
-              <Text style={{ color: "black" }}>{"Add to Wishlist "}</Text>
-              <AntDesign
-                name="heart"
-                size={Constants.normalScreenDescriptionSize}
-                color="black"
-              />
-            </Button>
-            <Button>
-              <Text style={{ color: "black" }}>{"Add to Cart "}</Text>
-              <AntDesign
-                name="shoppingcart"
-                size={Constants.normalScreenDescriptionSize}
-                color="black"
-              />
-            </Button>
-          </View>
+          {renderActionButtonComponent(props.type)}
         </Card.Actions>
       </Card>
     </TouchableWithoutFeedback>
