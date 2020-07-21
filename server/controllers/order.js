@@ -181,7 +181,7 @@ exports.createOrder = async (req, res) => {
   for (let i = 0; i < Products.length; i++) {
     const product = Products[i];
     if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
-      error = `Seller not available of product ${product.name} `
+      error = `Seller not available of product ${product.name}`
       break;
     }
     if (

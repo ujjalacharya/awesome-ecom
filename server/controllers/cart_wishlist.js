@@ -34,7 +34,8 @@ exports.addCart = async (req, res) => {
     let newCart = {
         user: req.user._id,
         product: product._id,
-        quantity: req.body.quantity
+        quantity: req.body.quantity,
+        productAttributes: req.body.productAttributes
     };
     newCart = new Cart(newCart);
     await newCart.save();
@@ -103,9 +104,9 @@ exports.getCarts = async (req, res) => {
     carts = carts.map(async c => {
         //user's action on this product
         const { hasOnWishlist } = await userHas(c.product, req.user, 'carts')
+        c.hasOnWishlist = hasOnWishlist
         //ratings of this product
         c.stars = await getRatingInfo(c.product)
-        c.hasOnWishlist = hasOnWishlist
         return c
     })
     carts = await Promise.all(carts)
