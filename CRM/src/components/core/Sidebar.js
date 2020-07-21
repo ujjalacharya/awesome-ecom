@@ -24,6 +24,13 @@ export default class SideBar extends Component {
                          </a>
 
                      </li>
+                     <li className="treeview">
+                         <a href="#">
+                             <i className="fa fa-user"></i>
+                             <span>My Profile</span>
+                         </a>
+
+                     </li>
 
                      <li>
                      <a href="pages/calendar.html">

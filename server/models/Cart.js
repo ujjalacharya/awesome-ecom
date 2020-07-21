@@ -12,6 +12,9 @@ const cartSchema = mongoose.Schema({
     quantity: {
         type: Number,
     },
+    productAttributes: {
+        type: String
+    },
     isDeleted: {
         type: Date,
         default: null
