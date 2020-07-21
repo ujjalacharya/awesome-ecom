@@ -73,7 +73,6 @@ class ProductListView extends Component {
     let newCheckoutItems = [];
 
     if (checkoutItems.length > 0) {
-
       let itemsInserted = false;
       checkoutItems.map((itemCheck) => {
         if (itemValue.product._id !== itemCheck.product._id) {
@@ -86,23 +85,27 @@ class ProductListView extends Component {
       if (!itemsInserted) {
         newCheckoutItems.push(e.target.value);
       }
-
     } else {
       newCheckoutItems.push(e.target.value);
     }
-    
+
     this.setState({
       checkoutItems: newCheckoutItems,
     });
 
-    this.props.getCheckoutItems(newCheckoutItems)
+    let p_slugs = newCheckoutItems.map((newItems) => {
+      return newItems.product.slug;
+    });
+
+    this.props.getShippingCharge({ p_slugs });
+
+    this.props.getCheckoutItems(newCheckoutItems);
   };
 
   render() {
     return (
       <>
         {this.state.listItems?.carts?.map((items, i) => {
-          
           return (
             <div className="product-list-view">
               <Row>
@@ -187,21 +190,39 @@ class ProductListView extends Component {
                           }
                         />
                         <Input
+                          type="number"
                           defaultValue={this.state.pdQty}
                           value={this.state["pdQty" + i]}
                           onChange={(e) => {
-                            this.setState({
-                              ["pdQty" + i]: e.target.value,
-                            });
+                            if(items.product.quantity <= e.target.value){
+                              openNotification('Alert', 'Maximum product quantity excceded')
+                              this.setState({
+                                ["pdQty" + i]: items.product.quantity,
+                              });
+                            } else{
+                              this.setState({
+                                ["pdQty" + i]: e.target.value,
+                              });
+                            }
                           }}
                         />
                         <i
-                          className="fa fa-plus"
+                          className={
+                            "fa fa-plus " +
+                            (items.product.quantity <= this.state["pdQty" + i]
+                              ? "disabled clickDisable"
+                              : "")
+                          }
                           aria-hidden="true"
                           onClick={() => this.changePdValue(1, i, items._id)}
                         />
                       </span>
                     </div>
+                    {items.product.quantity <= 5 && (
+                      <div className="available-stock">
+                        Only {items.product.quantity} items available on stock
+                      </div>
+                    )}
                     <div className="delete-product">
                       <Popconfirm
                         title="Are you sure you want to remove this from cart?"

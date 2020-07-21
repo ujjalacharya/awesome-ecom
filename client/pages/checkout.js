@@ -34,9 +34,8 @@ class CheckoutCart extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
-      <Layout title="Cart">
+      <Layout title="Checkout">
         <section className="checkout">
           <div className="container">
             <Row>

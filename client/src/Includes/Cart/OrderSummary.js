@@ -5,7 +5,7 @@ import {
   EnvironmentOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-import { getDiscountedPrice } from "../../../utils/common";
+import { getDiscountedPrice, openNotification } from "../../../utils/common";
 import Link from "next/link";
 import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
 import { connect } from "react-redux";
@@ -13,6 +13,8 @@ import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
 import initialize from "../../../utils/initialize";
 import EditAddressModal from "../../Components/EditAddressModal";
+
+const shortid = require('shortid');
 
 class OrderSummary extends Component {
   state = {
@@ -22,7 +24,6 @@ class OrderSummary extends Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    console.log(nextProps);
     if (nextProps.userData !== prevState.userData && nextProps.userData) {
       let activeLocation = {};
       nextProps.userData.location.map((loc) => {
@@ -45,19 +46,48 @@ class OrderSummary extends Component {
   };
 
   placeOrderItems = () => {
-    let { items } = this.props.checkoutItems[0]
-    console.log(items)
-    // let body = {
-    //   p_slug: items.product.slug,
-    //   quantity
-    // }
-  }
+    
+    let { checkoutItems, userData } = this.props;
+    
+    let products = checkoutItems.carts.map((item) => {
+      return {
+        p_slug: item.product.slug,
+        quantity: item.product.quantity,
+      };
+    });
+
+    let activeAddress = {}
+    userData.location.map((loc) => {
+      if(loc.isActive){
+        activeAddress = loc
+      }
+    });
+
+    let body = {
+      products,
+      shipto: {
+        region: activeAddress.region,
+        city: activeAddress.city,
+        area: activeAddress.area,
+        address: activeAddress.address,
+        lat: activeAddress.geolocation.coordinates[0],
+        long: activeAddress.geolocation.coordinates[1],
+        phoneno: activeAddress.phoneno,
+      },
+      shippingCharge: this.props.shippingCharge ? this.props.shippingCharge : 0,
+      orderID: shortid.generate(),
+      method: "Cash on Delivery"
+    };
+
+    this.props.placeOrder(body)
+  };
 
   render() {
     let { activeLocation, userData } = this.state;
+    console.log(this.props)
 
     let totalCheckoutItems = 0;
-    if (!this.props.checkoutItems.totalAmount) {
+    if (!this.props.checkoutItems?.totalAmount) {
       this.props.checkoutItems?.map((items) => {
         totalCheckoutItems += getDiscountedPrice(
           items.product.price.$numberDecimal,
@@ -68,8 +98,10 @@ class OrderSummary extends Component {
       totalCheckoutItems = this.props.checkoutItems.totalAmount;
     }
 
-    let deliveryCharges = 0;
-    console.log(this.state);
+    let deliveryCharges = this.props.shippingCharge
+      ? this.props.shippingCharge
+      : 0;
+
     return (
       <div className="order-shipping">
         <EditAddressModal
@@ -153,27 +185,30 @@ class OrderSummary extends Component {
                 </div>
               </div>
             </div>
-            <div
-              className="order-procced"
-              onClick={() =>
-                this.props.saveCheckoutItems({
-                  carts: this.props.checkoutItems,
-                  totalCount: this.props.checkoutItems.length,
-                  totalAmount: totalCheckoutItems,
-                })
-              }
-            >
-              {this.props.orderTxt === "PLACE ORDER" ? (
+
+            {this.props.orderTxt === "PLACE ORDER" ? (
+              <div className="order-procced">
                 <Button
                   className={"btn " + this.props.diableOrderBtn}
                   disabled={
                     this.props.checkoutItems.carts.totalCount > 1 ? true : false
                   }
-                  onClick = {this.placeOrderItems}
+                  onClick={this.placeOrderItems}
                 >
                   {this.props.orderTxt}
                 </Button>
-              ) : (
+              </div>
+            ) : (
+              <div
+                className="order-procced"
+                onClick={() =>
+                  this.props.saveCheckoutItems({
+                    carts: this.props.checkoutItems,
+                    totalCount: this.props.checkoutItems.length,
+                    totalAmount: totalCheckoutItems,
+                  })
+                }
+              >
                 <Link href="/checkout">
                   <a>
                     <Button
@@ -188,8 +223,8 @@ class OrderSummary extends Component {
                     </Button>
                   </a>
                 </Link>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -197,10 +232,20 @@ class OrderSummary extends Component {
   }
 }
 
+const mapStatesToProps = (state) => ({
+  shippingCharge: state.order.getShippingChargeResp,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   saveCheckoutItems: (checkoutItems) => {
     dispatch({ type: STORE_CHECKOUT_ITEMS, payload: checkoutItems });
   },
+  placeOrder: (body) => {
+    dispatch(actions.placeOrder(body))
+  }
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(OrderSummary));
+export default connect(
+  mapStatesToProps,
+  mapDispatchToProps
+)(withRouter(OrderSummary));

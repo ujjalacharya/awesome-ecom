@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER } from "../types";
+import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE } from "../types";
 import { OrderService } from "../services/orderService";
 
 const getOrders = (query) => {
@@ -46,8 +46,24 @@ const placeOrder = (body) => {
   };
 };
 
+const getShippingCharge = (body) => {
+  return async (dispatch) => {
+    const orderService = new OrderService();
+    const response = await orderService.getShippingCharge(body);
+    if (response.isSuccess) {
+      dispatch({ type: GET_SHIPPING_CHARGE, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 export default {
   getOrders,
   getOrdersStatuses,
-  placeOrder
+  placeOrder,
+  getShippingCharge
 };

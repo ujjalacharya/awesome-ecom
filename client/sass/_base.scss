@@ -324,3 +324,8 @@ input.inputfile+label{
 .noCheckbox{
   display: none;
 }
+
+.clickDisable{
+  pointer-events: none;
+  cursor: not-allowed;
+}
