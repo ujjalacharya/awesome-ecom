@@ -3,7 +3,7 @@ import { SIGN_IN, SIGN_OUT } from "../types";
 const localSt = localStorage.getItem("token");
 
 const initialState = localSt
-  ? { isAuth: true, token: localSt }
+  ? { isAuth: false, token: localSt,role:'superadmin' ,loading:true}
   : { isAuth: false };
 
 export default function (state = initialState, action) {
@@ -13,6 +13,7 @@ export default function (state = initialState, action) {
         ...state,
         token: "dummy_token",
         isAuth: true,
+        loading:false
       };
     case SIGN_OUT:
       return {
@@ -20,6 +21,7 @@ export default function (state = initialState, action) {
         auth: {
           token: "",
           isAuth: false,
+          loading:true
         },
       };
     default:

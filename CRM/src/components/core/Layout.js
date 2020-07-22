@@ -1,13 +1,32 @@
-import React from "react";
-import SideBar from "./Sidebar";
-import Header from "./Header";
+import React, { Fragment } from "react";
+import SuperadminBar from "./navbar/SuperadminBar";
+import Footer from "./Footer";
+import TopNavbar from './navbar/TopNavbar'
+import AdminBar from './navbar/AdminBar'
+import { connect } from 'react-redux'
 
-const Layout = ({ title="Title", description="", children, className="content-wrapper" }) => (
-  <div>
-    <Header />
-    <SideBar /> 
-    <div className={className}>{children}</div>
-  </div>
-);
+const Layout = ({ children, role }) => {
+  return (
+    <Fragment>
+      <div className="wrapper">
+        {role === 'superadmin' && <SuperadminBar />}
+        {role === 'admin' && <AdminBar />}
+        <div className='main'>
+          <TopNavbar />
+          <main className='content'>
 
-export default Layout;
+            <div className='container-fluid p-0'>
+              {children}
+            </div>
+
+          </main>
+          <Footer />
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+const mapStateToProps = state => ({
+  role: state.User.role
+})
+export default connect(mapStateToProps)(Layout);

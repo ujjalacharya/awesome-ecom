@@ -5,13 +5,13 @@ import { Route, Redirect } from "react-router-dom";
 
 const SuperAdminRoute = ({
     component: Component,
-    auth: { isAuthenticated, loading, role },
+    auth: { isAuth, loading, role },
     ...rest
 }) => (
         <Route
             {...rest}
             render={props => {
-                return (isAuthenticated && !loading && role === 'superadmin') ? (
+                return (isAuth && !loading && role === 'superadmin') ? (
                     <Component {...props} />
                 ) : (
                         <Redirect
@@ -30,6 +30,6 @@ SuperAdminRoute.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.User
 });
 export default connect(mapStateToProps)(SuperAdminRoute);
