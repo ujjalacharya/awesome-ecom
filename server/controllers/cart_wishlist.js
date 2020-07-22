@@ -34,7 +34,8 @@ exports.addCart = async (req, res) => {
     let newCart = {
         user: req.user._id,
         product: product._id,
-        quantity: req.body.quantity
+        quantity: req.body.quantity,
+        productAttributes: req.body.productAttributes
     };
     newCart = new Cart(newCart);
     await newCart.save();
@@ -97,15 +98,15 @@ exports.getCarts = async (req, res) => {
         totalAmount += parseFloat(c.product.price)
     })
     
-    carts = _.drop(carts, perPage * page - perPage)
-    carts = _.take(carts, perPage)
+    // carts = _.drop(carts, perPage * page - perPage)
+    // carts = _.take(carts, perPage)
     //user's action on each product
     carts = carts.map(async c => {
         //user's action on this product
         const { hasOnWishlist } = await userHas(c.product, req.user, 'carts')
+        c.hasOnWishlist = hasOnWishlist
         //ratings of this product
         c.stars = await getRatingInfo(c.product)
-        c.hasOnWishlist = hasOnWishlist
         return c
     })
     carts = await Promise.all(carts)
