@@ -98,8 +98,8 @@ exports.getCarts = async (req, res) => {
         totalAmount += parseFloat(c.product.price)
     })
     
-    carts = _.drop(carts, perPage * page - perPage)
-    carts = _.take(carts, perPage)
+    // carts = _.drop(carts, perPage * page - perPage)
+    // carts = _.take(carts, perPage)
     //user's action on each product
     carts = carts.map(async c => {
         //user's action on this product

@@ -81,7 +81,6 @@ class ProductSpecs extends Component {
     let {
       data: { product },
     } = this.props;
-    console.log(product)
 
     let description = "";
     let allDescription = "";

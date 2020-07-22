@@ -2,7 +2,7 @@ import { getTokenService, postTokenService } from "../../utils/commonService";
 
 export class CartService {
   getCartProducts(query, ctx) {
-    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}&perPage=5`
+    let url = `${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?${query}&perPage=20`
     let data = getTokenService(url, 'GET', ctx);
     return data;
   }

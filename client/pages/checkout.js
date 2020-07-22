@@ -10,6 +10,7 @@ import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 import { getCookie } from "../utils/cookie";
 import { getUserInfo } from "../utils/common";
+import CheckoutItems from "../src/Includes/Cart/CheckoutItems";
 
 class CheckoutCart extends Component {
   static async getInitialProps(ctx) {
@@ -34,15 +35,14 @@ class CheckoutCart extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
-      <Layout title="Cart">
+      <Layout title="Checkout">
         <section className="checkout">
           <div className="container">
             <Row>
               {/* <Col span={1}></Col> */}
               <Col md={16} xs={24}>
-                <CartItems
+                <CheckoutItems
                   cartData={
                     this.props.cart.checkoutItems
                       ? this.props.cart.checkoutItems
