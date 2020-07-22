@@ -13,7 +13,7 @@ import {
 import { times } from "lodash";
 import next from "next";
 
-class CartItems extends Component {
+class CheckoutItems extends Component {
   state = {
     cardItems: [],
     inStockProducts: [],
@@ -32,18 +32,7 @@ class CartItems extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.cartData !== prevState.listItems && nextProps.cartData) {
-
       return {
-        allnoStockProducts: nextProps.cartData.noStockProducts,
-        noStockProducts: {
-          ...nextProps.cartData.noStockProducts,
-          carts: [...nextProps.cartData.noStockProducts.carts].slice(0, prevState.perPage),
-        },
-        allinStockProducts: nextProps.cartData.inStockProducts,
-        inStockProducts: {
-          ...nextProps.cartData.inStockProducts,
-          carts: [...nextProps.cartData.inStockProducts.carts].slice(0, prevState.perPage),
-        },
         listItems: nextProps.cartData,
       };
     }
@@ -121,20 +110,19 @@ class CartItems extends Component {
         </div>
         <div className="bag-items">
           <div className="title">
-            <h4>My Cart ({this.state.inStockProducts?.totalCount} Items)</h4>
+            <h4>My Cart ({this.state.listItems?.totalCount} Items)</h4>
             <div className="price">
-              Total: Rs {this.state.inStockProducts?.totalAmount?.toFixed(2)}
+              Total: Rs {this.state.listItems?.totalAmount?.toFixed(2)}
             </div>
           </div>
           <div className="items-list">
             <ProductListView
               // data={this.state.cardItems}
-              inStockProducts={this.state.inStockProducts}
-              noStockProducts={this.state.noStockProducts}
+              inStockProducts={this.state.listItems}
               getCheckoutItems={this.props.getCheckoutItems}
               showCheckbox={this.props.showCheckbox}
             />
-            <div className="all-pagination">
+            {/* <div className="all-pagination">
               <Pagination
                 defaultCurrent={1}
                 pageSize={5}
@@ -142,7 +130,7 @@ class CartItems extends Component {
                 onChange={this.onChangePageInStock}
                 showLessItems={true}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -150,4 +138,4 @@ class CartItems extends Component {
   }
 }
 
-export default connect((state) => state, actions)(CartItems);
+export default connect((state) => state, actions)(CheckoutItems);

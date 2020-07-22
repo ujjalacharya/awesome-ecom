@@ -4,7 +4,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import _ from "lodash";
 import actions from "../../redux/actions";
-import { openNotification } from "../../utils/common";
+import { openNotification, getDiscountedPrice } from "../../utils/common";
 import Link from "next/link";
 
 class ProductListView extends Component {
@@ -12,29 +12,41 @@ class ProductListView extends Component {
     pdQty: 1,
     listItems: [],
     checkoutItems: [],
+    noStockProducts: [],
+    inStockProducts: [],
   };
 
   componentDidMount() {
-    this.props.data?.carts?.map((item, i) => {
+    this.props.inStockProducts?.carts?.map((item, i) => {
       this.setState({
-        ["pdQty" + i]: item.quantity,
+        ["pdQtyInStock" + i]: item.quantity,
       });
     });
-    this.setState({
-      listItems: this.props.data,
+
+    this.props.noStockProducts?.carts?.map((item, i) => {
+      this.setState({
+        ["pdQtyNoStock" + i]: item.quantity,
+      });
     });
+
+    this.setState({
+      inStockProducts: this.props.inStockProducts,
+      noStockProducts: this.props.noStockProducts
+    })
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.data !== prevProps.data && this.props.data.carts) {
-      this.props.data.carts.map((item, i) => {
+    
+    if (this.props.inStockProducts !== prevProps.inStockProducts && this.props.inStockProducts.carts) {
+     this.props.inStockProducts?.carts?.map((item, i) => {
         this.setState({
-          ["pdQty" + i]: item.quantity,
+          ["pdQtyInStock" + i]: item.quantity,
         });
       });
+  
       this.setState({
-        listItems: this.props.data,
-      });
+        inStockProducts: this.props.inStockProducts,
+      })
     }
 
     if (
@@ -56,10 +68,11 @@ class ProductListView extends Component {
   }
 
   changePdValue = (num, i, cartId) => {
-    let newPdQty = parseInt(this.state["pdQty" + i]) + num;
+    
+    let newPdQty = parseInt(this.state["pdQtyInStock" + i]) + num;
     if (newPdQty >= 1) {
       this.setState({
-        ["pdQty" + i]: newPdQty,
+        ["pdQtyInStock" + i]: newPdQty,
       });
     }
     this.props.editCartQty(cartId + "?quantity=" + newPdQty);
@@ -105,7 +118,7 @@ class ProductListView extends Component {
   render() {
     return (
       <>
-        {this.state.listItems?.carts?.map((items, i) => {
+        {this.state.inStockProducts?.carts?.map((items, i) => {
           return (
             <div className="product-list-view">
               <Row>
@@ -186,22 +199,25 @@ class ProductListView extends Component {
                           onClick={() => this.changePdValue(-1, i, items._id)}
                           className={
                             "fa fa-minus " +
-                            (this.state.pdQty === 1 ? "disabled" : "")
+                            (this.state['pdQtyInStock'+i] === 1 ? "disabled" : "")
                           }
                         />
                         <Input
                           type="number"
                           defaultValue={this.state.pdQty}
-                          value={this.state["pdQty" + i]}
+                          value={this.state["pdQtyInStock" + i]}
                           onChange={(e) => {
-                            if(items.product.quantity <= e.target.value){
-                              openNotification('Alert', 'Maximum product quantity excceded')
+                            if (items.product.quantity <= e.target.value) {
+                              openNotification(
+                                "Alert",
+                                "Maximum product quantity excceded"
+                              );
                               this.setState({
-                                ["pdQty" + i]: items.product.quantity,
+                                ["pdQtyInStock" + i]: items.product.quantity,
                               });
-                            } else{
+                            } else {
                               this.setState({
-                                ["pdQty" + i]: e.target.value,
+                                ["pdQtyInStock" + i]: e.target.value,
                               });
                             }
                           }}
@@ -209,7 +225,7 @@ class ProductListView extends Component {
                         <i
                           className={
                             "fa fa-plus " +
-                            (items.product.quantity <= this.state["pdQty" + i]
+                            (items.product.quantity <= this.state["pdQtyInStock" + i]
                               ? "disabled clickDisable"
                               : "")
                           }

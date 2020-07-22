@@ -84,7 +84,6 @@ class OrderSummary extends Component {
 
   render() {
     let { activeLocation, userData } = this.state;
-    console.log(this.props)
 
     let totalCheckoutItems = 0;
     if (!this.props.checkoutItems?.totalAmount) {
@@ -190,9 +189,6 @@ class OrderSummary extends Component {
               <div className="order-procced">
                 <Button
                   className={"btn " + this.props.diableOrderBtn}
-                  disabled={
-                    this.props.checkoutItems.carts.totalCount > 1 ? true : false
-                  }
                   onClick={this.placeOrderItems}
                 >
                   {this.props.orderTxt}
