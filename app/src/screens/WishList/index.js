@@ -7,6 +7,7 @@ import SearchedSingleProduct from "../ProductListScreen/SearchedSingleProduct";
 import { productData } from "../../utils/mock";
 import { ScrollView } from "react-native-gesture-handler";
 import SnackbarView from "../../components/SnackBarView";
+import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 
 export class WishListScreen extends Component {
   state = {
@@ -59,6 +60,9 @@ export class WishListScreen extends Component {
                 {...this.props}
               />
             ))}
+          <View style={{ height: 200 }}>
+            <FeaturedProducts title={"Similar Products"} />
+          </View>
           </View>
         </ScrollView>
         <View
@@ -78,6 +82,7 @@ export class WishListScreen extends Component {
             </Button>
           </View>
         </View>
+
         <SnackbarView
           visible={this.state.visible}
           setVisible={this.setVisible}
