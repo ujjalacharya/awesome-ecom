@@ -118,7 +118,7 @@ class CheckoutItems extends Component {
           <div className="items-list">
             <ProductListView
               // data={this.state.cardItems}
-              inStockProducts={this.state.listItems}
+              productsData={this.state.listItems}
               getCheckoutItems={this.props.getCheckoutItems}
               showCheckbox={this.props.showCheckbox}
             />

@@ -88,7 +88,7 @@ class OrderSummary extends Component {
     let totalCheckoutItems = 0;
     if (!this.props.checkoutItems?.totalAmount) {
       this.props.checkoutItems?.map((items) => {
-        totalCheckoutItems += getDiscountedPrice(
+        totalCheckoutItems += items.quantity * getDiscountedPrice(
           items.product.price.$numberDecimal,
           items.product.discountRate
         );
@@ -157,7 +157,7 @@ class OrderSummary extends Component {
             <div className="price-cover">
               <div className="ti-pr">
                 <div className="ti">Cart Total</div>
-                <div className="pr">Rs {totalCheckoutItems}</div>
+                <div className="pr">Rs {totalCheckoutItems.toFixed(2)}</div>
               </div>
               {/* <div className="ti-pr">
                 <div className="ti">Cart Discount</div>
@@ -180,7 +180,7 @@ class OrderSummary extends Component {
               <div className="ti-pr">
                 <div className="ti">Total</div>
                 <div className="pr">
-                  Rs {totalCheckoutItems + deliveryCharges}
+                  Rs {(totalCheckoutItems + deliveryCharges).toFixed(2)}
                 </div>
               </div>
             </div>
