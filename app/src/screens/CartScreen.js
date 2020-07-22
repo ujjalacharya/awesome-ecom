@@ -28,7 +28,6 @@ export class CartScreen extends Component {
         <Text> Cart Screen </Text>
         <Text> Cart Screen </Text>
         <Text> Cart Screen </Text>
-        <Text> Cart Screen </Text>
       </View>
     );
   }
