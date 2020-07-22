@@ -18,7 +18,6 @@ class EditAddressModal extends Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    console.log(nextProps);
     if (nextProps.data !== prevState.userData && nextProps.data) {
       return {
         userData: nextProps.data,

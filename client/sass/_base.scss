@@ -49,7 +49,7 @@ body {
 }
 
 .ant-input {
-  height: auto;
+  height: auto !important;
 }
 
 .ant-input-affix-wrapper {
@@ -269,7 +269,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.yes-no>span{
+.yes-no > span {
   padding: 0 5px;
 }
 
@@ -296,9 +296,9 @@ input:checked + .slider:before {
   }
 }
 
-.inputFile{
-  width: .1px;
-  height: .1px;
+.inputFile {
+  width: 0.1px;
+  height: 0.1px;
   opacity: 0;
   overflow: hidden;
   position: absolute;
@@ -308,19 +308,40 @@ input:checked + .slider:before {
 // input.inputfile{
 //   display: none;
 // }
-input.inputfile+label{
-    width: 100%;
-    border: 1px dashed #948c8c;
-    text-align: center;
-    padding: 15px;
-    margin-bottom: 0;
-    cursor: pointer;
+input.inputfile + label {
+  width: 100%;
+  border: 1px dashed #948c8c;
+  text-align: center;
+  padding: 15px;
+  margin-bottom: 0;
+  cursor: pointer;
 }
 
-.all-pagination{
+.all-pagination {
   text-align: right;
 }
 
-.noCheckbox{
-  display: none;
+.noCheckbox,
+.displayNone {
+  display: none !important;
+}
+
+.clickDisable {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.not-available {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.35);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

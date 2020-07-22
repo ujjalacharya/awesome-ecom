@@ -13,7 +13,7 @@ import {
 import { times } from "lodash";
 import next from "next";
 
-class CartItems extends Component {
+class CheckoutItems extends Component {
   state = {
     cardItems: [],
     inStockProducts: [],
@@ -33,22 +33,6 @@ class CartItems extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.cartData !== prevState.listItems && nextProps.cartData) {
       return {
-        allnoStockProducts: nextProps.cartData.noStockProducts,
-        noStockProducts: {
-          ...nextProps.cartData.noStockProducts,
-          carts: [...nextProps.cartData.noStockProducts.carts].slice(
-            0,
-            prevState.perPage
-          ),
-        },
-        allinStockProducts: nextProps.cartData.inStockProducts,
-        inStockProducts: {
-          ...nextProps.cartData.inStockProducts,
-          carts: [...nextProps.cartData.inStockProducts.carts].slice(
-            0,
-            prevState.perPage
-          ),
-        },
         listItems: nextProps.cartData,
       };
     }
@@ -72,16 +56,23 @@ class CartItems extends Component {
   }
 
   onChangePageInStock = (page) => {
-    let pageNum = (page - 1) * this.state.perPage;
+    // this.setState({
+    //   currentPage: page,
+    // });
+    // let body = {
+    //   keyword: this.props.router.query.slug,
+    // };
+    // this.props.getCartProducts(`page=${page}`);
 
+    // let allData = [...this.state.allinStockProducts.carts];
+
+    let pageNum = (page - 1) * this.state.perPage;
+    
     let newInStockProducts = {
       ...this.state.inStockProducts,
-      carts: [...this.state.allinStockProducts.carts].slice(
-        pageNum,
-        pageNum + this.state.perPage
-      ),
-    };
-
+      carts: [...this.state.allinStockProducts.carts].slice(pageNum, (pageNum + this.state.perPage)),
+    }
+    
     this.setState({
       inStockProducts: newInStockProducts,
       currentPage: page,
@@ -89,9 +80,14 @@ class CartItems extends Component {
   };
 
   render() {
+    
     return (
       <div className="cart-items">
         <div className="delivery-status">
+          {/* <div className="delivery-free">
+            <img src="/images/delivery-van.png" alt="delivery van" />
+            You Have <b>Free Delivery</b> on this Order.
+          </div> */}
           <div className="delivery-price">
             <span className="delivery-icon">
               <img src="/images/delivery-van.png" alt="delivery van" />
@@ -114,18 +110,19 @@ class CartItems extends Component {
         </div>
         <div className="bag-items">
           <div className="title">
-            <h4>My Cart ({this.state.inStockProducts?.totalCount} Items)</h4>
+            <h4>My Cart ({this.state.listItems?.totalCount} Items)</h4>
             <div className="price">
-              Total: Rs {this.state.inStockProducts?.totalAmount?.toFixed(2)}
+              Total: Rs {this.state.listItems?.totalAmount?.toFixed(2)}
             </div>
           </div>
           <div className="items-list">
             <ProductListView
-              productsData={this.state.inStockProducts}
+              // data={this.state.cardItems}
+              productsData={this.state.listItems}
               getCheckoutItems={this.props.getCheckoutItems}
               showCheckbox={this.props.showCheckbox}
             />
-            <div className="all-pagination">
+            {/* <div className="all-pagination">
               <Pagination
                 defaultCurrent={1}
                 pageSize={5}
@@ -133,32 +130,12 @@ class CartItems extends Component {
                 onChange={this.onChangePageInStock}
                 showLessItems={true}
               />
-            </div>
+            </div> */}
           </div>
         </div>
-
-        {this.state.noStockProducts.carts.length > 0 && (
-          <div className="bag-items">
-            <div className="title">
-              <h4>
-                Out Of Stock ({this.state.noStockProducts?.totalCount} Items)
-              </h4>
-              <div className="price">
-                Total: Rs {this.state.noStockProducts?.totalAmount?.toFixed(2)}
-              </div>
-            </div>
-            <div className="items-list">
-              <ProductListView
-                showCheckbox="noCheckbox"
-                productsData={this.state.noStockProducts}
-                showQtySection="displayNone"
-              />
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 }
 
-export default connect((state) => state, actions)(CartItems);
+export default connect((state) => state, actions)(CheckoutItems);

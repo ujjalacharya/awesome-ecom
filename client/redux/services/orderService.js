@@ -18,4 +18,10 @@ export class OrderService {
     let data = postTokenService(url, "POST", body);
     return data;
   }
+
+  getShippingCharge(body) {
+    let url = `${process.env.SERVER_BASE_URL}/api/order/shipping-charge`;
+    let data = postTokenService(url, "POST", body);
+    return data;
+  }
 }
