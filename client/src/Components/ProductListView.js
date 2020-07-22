@@ -13,11 +13,12 @@ class ProductListView extends Component {
     listItems: [],
     checkoutItems: [],
     noStockProducts: [],
-    inStockProducts: [],
+    productsData: [],
+    showQtySection: "",
   };
 
   componentDidMount() {
-    this.props.inStockProducts?.carts?.map((item, i) => {
+    this.props.productsData?.carts?.map((item, i) => {
       this.setState({
         ["pdQtyInStock" + i]: item.quantity,
       });
@@ -30,23 +31,26 @@ class ProductListView extends Component {
     });
 
     this.setState({
-      inStockProducts: this.props.inStockProducts,
-      noStockProducts: this.props.noStockProducts
-    })
+      productsData: this.props.productsData,
+      showQtySection: this.props.showQtySection,
+    });
   }
 
   componentDidUpdate(prevProps) {
-    
-    if (this.props.inStockProducts !== prevProps.inStockProducts && this.props.inStockProducts.carts) {
-     this.props.inStockProducts?.carts?.map((item, i) => {
+    if (
+      this.props.productsData !== prevProps.productsData &&
+      this.props.productsData.carts
+    ) {
+      this.props.productsData?.carts?.map((item, i) => {
         this.setState({
           ["pdQtyInStock" + i]: item.quantity,
         });
       });
-  
+
       this.setState({
-        inStockProducts: this.props.inStockProducts,
-      })
+        productsData: this.props.productsData,
+        showQtySection: this.props.showQtySection,
+      });
     }
 
     if (
@@ -68,7 +72,6 @@ class ProductListView extends Component {
   }
 
   changePdValue = (num, i, cartId) => {
-    
     let newPdQty = parseInt(this.state["pdQtyInStock" + i]) + num;
     if (newPdQty >= 1) {
       this.setState({
@@ -116,9 +119,10 @@ class ProductListView extends Component {
   };
 
   render() {
+    
     return (
       <>
-        {this.state.inStockProducts?.carts?.map((items, i) => {
+        {this.state.productsData?.carts?.map((items, i) => {
           return (
             <div className="product-list-view">
               <Row>
@@ -144,6 +148,11 @@ class ProductListView extends Component {
                           }
                           alt="helmet"
                         />
+                        {this.props.showQtySection && (
+                          <div className="not-available">
+                            <span>NOT AVAILABLE</span>
+                          </div>
+                        )}
                       </div>
                     </a>
                   </Link>
@@ -191,7 +200,7 @@ class ProductListView extends Component {
                         )}
                       </div>
                     </div>
-                    <div className="qty">
+                    <div className={"qty " + this.state.showQtySection}>
                       <span className="qty-title">Qty:</span>
                       <span className="qty-inc-dcs">
                         <i
@@ -199,7 +208,9 @@ class ProductListView extends Component {
                           onClick={() => this.changePdValue(-1, i, items._id)}
                           className={
                             "fa fa-minus " +
-                            (this.state['pdQtyInStock'+i] === 1 ? "disabled" : "")
+                            (this.state["pdQtyInStock" + i] === 1
+                              ? "disabled"
+                              : "")
                           }
                         />
                         <Input
@@ -225,7 +236,8 @@ class ProductListView extends Component {
                         <i
                           className={
                             "fa fa-plus " +
-                            (items.product.quantity <= this.state["pdQtyInStock" + i]
+                            (items.product.quantity <=
+                            this.state["pdQtyInStock" + i]
                               ? "disabled clickDisable"
                               : "")
                           }
@@ -234,11 +246,12 @@ class ProductListView extends Component {
                         />
                       </span>
                     </div>
-                    {items.product.quantity <= 5 && (
-                      <div className="available-stock">
-                        Only {items.product.quantity} items available on stock
-                      </div>
-                    )}
+                    {items.product.quantity <= 5 &&
+                      !this.state.showQtySection && (
+                        <div className="available-stock">
+                          Only {items.product.quantity} items available on stock
+                        </div>
+                      )}
                     <div className="delete-product">
                       <Popconfirm
                         title="Are you sure you want to remove this from cart?"
