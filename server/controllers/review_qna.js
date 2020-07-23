@@ -140,10 +140,9 @@ exports.myReviews = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
     const myReviews = await Review.find({ user: req.user._id })
-        .populate('product', 'name slug')
         .populate({
             path: "product",
-            select: "soldBy",
+            select: "soldBy name slug",
             populate: {
                 path: "soldBy",
                 model: "admin",
