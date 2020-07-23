@@ -12,24 +12,26 @@ function parseToken(token) {
 
 const token = localStorage.getItem("token");
 const decoded = parseToken(token)
-// const initialState = {
-//   token: localStorage.getItem("token"),
-//   isAuth: decoded !== null ? true : null,
-//   loading: decoded !== null ? false : true,
-//   user: decoded !== null ? {
-//     _id: decoded._id,
-//     name: decoded.name,
-//     email: decoded.email
-//   } : null,
-//   role: decoded !== null ? decoded.role : null
-// };
+
 const initialState = {
-  token:null,
-  isAuth: false,
-  loading: true,
-  user:null,
-  role:''
-}
+  token: localStorage.getItem("token"),
+  isAuth: decoded !== null ? true : null,
+  loading: decoded !== null ? false : true,
+  user: decoded !== null ? {
+    _id: decoded._id,
+    name: decoded.name,
+    email: decoded.email
+  } : null,
+  role: decoded !== null ? decoded.role : null
+};
+
+// const initialState = {
+//   token:null,
+//   isAuth: false,
+//   loading: true,
+//   user:null,
+//   role:''
+// }
 export default function (state = initialState, action) {
   const { type, payload, role } = action;
   console.log(payload);
