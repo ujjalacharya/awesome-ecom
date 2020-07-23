@@ -139,7 +139,17 @@ exports.getReviews = async (req, res) => {
 exports.myReviews = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
-    const myReviews = await Review.find({ user: req.user._id }).populate('product', 'name slug')
+    const myReviews = await Review.find({ user: req.user._id })
+        .populate('product', 'name slug')
+        .populate({
+            path: "product",
+            select: "soldBy",
+            populate: {
+                path: "soldBy",
+                model: "admin",
+                select:'shopName'
+            },
+        })
         .skip(perPage * page - perPage)
         .limit(perPage)
         .lean()
