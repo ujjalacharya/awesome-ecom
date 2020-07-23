@@ -19,6 +19,7 @@ class MyOrders extends Component {
     appendUrl: "page=1",
     currentPage: 1,
     searchKeyword: "",
+    loading: false,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -46,23 +47,25 @@ class MyOrders extends Component {
     ) {
       this.setState({
         myOrders: this.props.order.getOrders,
+        loading: false,
       });
     }
   }
 
   getSearch = (val) => {
-    this.setState({ searchKeyword: val }, () => this.initialRequest());
+    this.setState({ searchKeyword: val, loading: true }, () =>
+      this.initialRequest()
+    );
   };
 
   initialRequest = () => {
     let appendUrl = "";
 
     appendUrl = `page=${this.state.currentPage}`;
-    
-    appendUrl = appendUrl + (this.state.currentStatus
-      ? `&status=${this.state.currentStatus}`
-      : "");
 
+    appendUrl =
+      appendUrl +
+      (this.state.currentStatus ? `&status=${this.state.currentStatus}` : "");
 
     appendUrl =
       appendUrl +
@@ -75,6 +78,7 @@ class MyOrders extends Component {
     this.setState(
       {
         currentPage: page.current,
+        loading: true,
       },
       () => this.initialRequest()
     );
@@ -82,7 +86,9 @@ class MyOrders extends Component {
   };
 
   onStatusChange = (status) => {
-    this.setState({ currentStatus: status }, () => this.initialRequest());
+    this.setState({ currentStatus: status, loading: true }, () =>
+      this.initialRequest()
+    );
   };
 
   render() {
@@ -232,6 +238,7 @@ class MyOrders extends Component {
           dataSource={data}
           pagination={{ total: this.state.myOrders?.totalCount }}
           onChange={this.onChangePage}
+          loading={this.state.loading}
         />
       </div>
     );
