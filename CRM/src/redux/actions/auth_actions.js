@@ -16,7 +16,6 @@ export const loadMe = () => async dispatch => {
     const decoded = jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
     const { _id, name, email, role } = decoded;
     const payload = { _id, name, email }
-    console.log(payload);
     // dispatch({
     //   type: LOAD_ME,
     //   payload,
