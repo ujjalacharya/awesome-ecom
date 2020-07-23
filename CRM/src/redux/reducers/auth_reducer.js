@@ -1,28 +1,56 @@
-import { SIGN_IN, SIGN_OUT } from "../types";
+import { SIGN_IN, SIGN_OUT, AUTH_ERROR, LOAD_ME } from "../types";
+import jwt from "jsonwebtoken";
 
-const localSt = localStorage.getItem("token");
 
-const initialState = localSt
-  ? { isAuth: false, token: localSt,role:'superadmin' ,loading:true}
-  : { isAuth: false };
+function parseToken(token) {
+  try {
+    return jwt.verify(token, process.env.JWT_SIGNIN_KEY);
+  } catch (error) {
+    return null;
+  }
+}
 
+const token = localStorage.getItem("token");
+const decoded = parseToken(token)
+const initialState = {
+  token: localStorage.getItem("token"),
+  isAuth: decoded !== null ? true : null,
+  loading: decoded !== null ? false : true,
+  user: decoded !== null ? {
+    _id: decoded._id,
+    name: decoded.name,
+    email: decoded.email
+  } : null,
+  role: decoded !== null ? decoded.role : null
+};
 export default function (state = initialState, action) {
-  switch (action.type) {
+  const { type, payload, role } = action;
+  switch (type) {
     case SIGN_IN:
+      localStorage.setItem("token", payload);
       return {
         ...state,
-        token: "dummy_token",
+        token: payload,
         isAuth: true,
         loading:false
       };
-    case SIGN_OUT:
+    case LOAD_ME:
       return {
         ...state,
-        auth: {
-          token: "",
-          isAuth: false,
-          loading:true
-        },
+        user: payload,
+        isAuth: true,
+        loading: false,
+        role
+      };
+    case AUTH_ERROR:
+    case SIGN_OUT:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        token: "",
+        isAuth: false,
+        loading: true,
+        user: null
       };
     default:
       return state;

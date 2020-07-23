@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../redux/store";
+import { SIGN_OUT} from '../redux/types'
 
 const api = axios.create({
   baseURL: "/api",
@@ -18,7 +19,7 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response.data.msg === "JWT malformed") {
-      //   store.dispatch({ type: LOGOUT });
+      store.dispatch({ type: SIGN_OUT });
     }
     return Promise.reject(err);
   }

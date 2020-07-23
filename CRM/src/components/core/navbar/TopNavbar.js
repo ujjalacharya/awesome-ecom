@@ -1,13 +1,13 @@
 import React from 'react'
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 // import { logout } from '../../../actions/auth_actions'
 
 const TopNavbar = ({  }) => {
     return (
 		<nav className="navbar navbar-expand navbar-light bg-white">
-			<a className="sidebar-toggle d-flex mr-2">
+			<a className="sidebar-toggle d-flex mr-2" href='#!'>
 				<i className="hamburger align-self-center"></i>
 			</a>
 
@@ -18,7 +18,7 @@ const TopNavbar = ({  }) => {
 			<div className="navbar-collapse collapse">
 				<ul className="navbar-nav ml-auto">
 					{/* <li className="nav-item dropdown">
-						<a className="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-toggle="dropdown">
+						<a className="nav-icon dropdown-toggle" href="#!" id="messagesDropdown" data-toggle="dropdown">
 							<div className="position-relative">
 								<i className="align-middle" data-feather="message-circle"></i>
 								<span className="indicator">4</span>
@@ -31,7 +31,7 @@ const TopNavbar = ({  }) => {
 									</div>
 							</div>
 							<div className="list-group">
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-5.jpg" className="avatar img-fluid rounded-circle" alt="Ashley Briggs" />
@@ -43,7 +43,7 @@ const TopNavbar = ({  }) => {
 										</div>
 									</div>
 								</a>
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-2.jpg" className="avatar img-fluid rounded-circle" alt="Carl Jenkins" />
@@ -55,7 +55,7 @@ const TopNavbar = ({  }) => {
 										</div>
 									</div>
 								</a>
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-4.jpg" className="avatar img-fluid rounded-circle" alt="Stacie Hall" />
@@ -67,7 +67,7 @@ const TopNavbar = ({  }) => {
 										</div>
 									</div>
 								</a>
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-3.jpg" className="avatar img-fluid rounded-circle" alt="Bertha Martin" />
@@ -81,12 +81,12 @@ const TopNavbar = ({  }) => {
 								</a>
 							</div>
 							<div className="dropdown-menu-footer">
-								<a href="#" className="text-muted">Show all messages</a>
+								<a href="#!" className="text-muted">Show all messages</a>
 							</div>
 						</div>
 					</li> */}
 					{/* <li className="nav-item dropdown">
-						<a className="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-toggle="dropdown">
+						<a className="nav-icon dropdown-toggle" href="#!" id="alertsDropdown" data-toggle="dropdown">
 							<div className="position-relative">
 								<i className="align-middle" data-feather="bell-off"></i>
 							</div>
@@ -96,7 +96,7 @@ const TopNavbar = ({  }) => {
 								4 New Notifications
 								</div>
 							<div className="list-group">
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<i className="text-danger" data-feather="alert-circle"></i>
@@ -108,7 +108,7 @@ const TopNavbar = ({  }) => {
 										</div>
 									</div>
 								</a>
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<i className="text-warning" data-feather="bell"></i>
@@ -120,7 +120,7 @@ const TopNavbar = ({  }) => {
 										</div>
 									</div>
 								</a>
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<i className="text-primary" data-feather="home"></i>
@@ -131,7 +131,7 @@ const TopNavbar = ({  }) => {
 										</div>
 									</div>
 								</a>
-								<a href="#" className="list-group-item">
+								<a href="#!" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<i className="text-success" data-feather="user-plus"></i>
@@ -145,49 +145,49 @@ const TopNavbar = ({  }) => {
 								</a>
 							</div>
 							<div className="dropdown-menu-footer">
-								<a href="#" className="text-muted">Show all notifications</a>
+								<a href="#!" className="text-muted">Show all notifications</a>
 							</div>
 						</div>
 					</li> */}
 					{/* <li className="nav-item dropdown">
-							<a className="nav-flag dropdown-toggle" href="#" id="languageDropdown" data-toggle="dropdown">
+							<a className="nav-flag dropdown-toggle" href="#!" id="languageDropdown" data-toggle="dropdown">
                 <img src="img\flags\us.png" alt="English"/>
               </a>
 							<div className="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
-								<a className="dropdown-item" href="#">
+								<a className="dropdown-item" href="#!">
                   <img src="img\flags\us.png" alt="English" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">English</span>
                 </a>
-								<a className="dropdown-item" href="#">
+								<a className="dropdown-item" href="#!">
                   <img src="img\flags\es.png" alt="Spanish" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">Spanish</span>
                 </a>
-								<a className="dropdown-item" href="#">
+								<a className="dropdown-item" href="#!">
                   <img src="img\flags\de.png" alt="German" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">German</span>
                 </a>
-								<a className="dropdown-item" href="#">
+								<a className="dropdown-item" href="#!">
                   <img src="img\flags\nl.png" alt="Dutch" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">Dutch</span>
                 </a>
 							</div>
 						</li> */}
 					<li className="nav-item dropdown">
-						<a className="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-toggle="dropdown">
+						<a className="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#!" data-toggle="dropdown">
 							<i className="align-middle" data-feather="settings"></i>
 						</a>
 
-						<a className="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
+						<a className="nav-link dropdown-toggle d-none d-sm-inline-block" href="#!" data-toggle="dropdown">
 							<img src="img\avatar1.png" className="avatar img-fluid rounded-circle mr-1" alt="profile"/> 
 							<span className="text-dark">Super Admin</span>
 						</a>
 						<div className="dropdown-menu dropdown-menu-right">
 							<a className="dropdown-item" href="pages-profile.html"><i className="align-middle mr-1" data-feather="user"></i> Profile</a>
-							<a className="dropdown-item" href="#"><i className="align-middle mr-1" data-feather="pie-chart"></i> Analytics</a>
+							<a className="dropdown-item" href="#!"><i className="align-middle mr-1" data-feather="pie-chart"></i> Analytics</a>
 							<div className="dropdown-divider"></div>
 							<a className="dropdown-item" href="pages-settings.html">Settings & Privacy</a>
-							<a className="dropdown-item" href="#">Help</a>
-							<a className="dropdown-item" >Sign out</a>
+							<a className="dropdown-item" href="#!">Help</a>
+							<a className="dropdown-item" href="#!">Sign out</a>
 						</div>
 					</li>
 				</ul>
