@@ -15,8 +15,7 @@ const MainRouter = (props) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/" exact component={Home} />
-        <AdminRoute exact path="/profile" component={Profile} />
+        <AdminRoute exact path="/" exact component={Home} />
       </Switch>
     </BrowserRouter>
   );
