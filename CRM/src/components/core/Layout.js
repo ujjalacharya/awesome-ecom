@@ -27,6 +27,6 @@ const Layout = ({ children, role }) => {
   );
 };
 const mapStateToProps = state => ({
-  role: state.User.role
+  role: state.Auth.role
 })
 export default connect(mapStateToProps)(Layout);

@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-// import { logout } from '../../../actions/auth'
+// import { logout } from '../../../actions/auth_actions'
 import SideBar from '../../common/SideBar'
 
 const AdminBar = ({}) => {
