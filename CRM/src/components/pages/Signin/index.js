@@ -29,9 +29,9 @@ const Login = (props) => {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    setState({ ...state, error: false, loading: true });
+    // setState({ ...state, error: false, loading: true });
 
     props.signIn(email,password);
   };

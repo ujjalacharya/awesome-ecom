@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 function parseToken(token) {
   try {
-    return jwt.verify(token, process.env.JWT_SIGNIN_KEY);
+    return jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
   } catch (error) {
     return null;
   }
@@ -12,19 +12,27 @@ function parseToken(token) {
 
 const token = localStorage.getItem("token");
 const decoded = parseToken(token)
+// const initialState = {
+//   token: localStorage.getItem("token"),
+//   isAuth: decoded !== null ? true : null,
+//   loading: decoded !== null ? false : true,
+//   user: decoded !== null ? {
+//     _id: decoded._id,
+//     name: decoded.name,
+//     email: decoded.email
+//   } : null,
+//   role: decoded !== null ? decoded.role : null
+// };
 const initialState = {
-  token: localStorage.getItem("token"),
-  isAuth: decoded !== null ? true : null,
-  loading: decoded !== null ? false : true,
-  user: decoded !== null ? {
-    _id: decoded._id,
-    name: decoded.name,
-    email: decoded.email
-  } : null,
-  role: decoded !== null ? decoded.role : null
-};
+  token:null,
+  isAuth: false,
+  loading: true,
+  user:null,
+  role:''
+}
 export default function (state = initialState, action) {
   const { type, payload, role } = action;
+  console.log(payload);
   switch (type) {
     case SIGN_IN:
       localStorage.setItem("token", payload);
