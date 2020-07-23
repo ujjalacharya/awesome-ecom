@@ -66,7 +66,7 @@
       font-size: 13px;
       .cate {
         color: $light-text-color;
-        max-width: 145px;
+        max-width: 130px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -76,6 +76,9 @@
           color: $tertiary-color;
           padding-left: 5px;
           font-size: 11px;
+          &.fade-star {
+            color: #eee;
+          }
         }
       }
     }

@@ -38,11 +38,12 @@ class AddressDetails extends Component {
       });
     }
     if (
-      this.props.user.toggleActiveAddResp !== prevProps.user.toggleActiveAddResp &&
+      this.props.user.toggleActiveAddResp !==
+        prevProps.user.toggleActiveAddResp &&
       this.props.user.toggleActiveAddResp
     ) {
       openNotification("Success", "Active address changed successfully");
-      this.props.getUserProfile(this.state.userData._id)
+      this.props.getUserProfile(this.state.userData._id);
     }
   }
 
@@ -57,8 +58,8 @@ class AddressDetails extends Component {
   };
 
   toggleAddress = (label) => {
-    this.props.toggleActiveAddress(`label=${label}`)
-  }
+    this.props.toggleActiveAddress(`label=${label}`);
+  };
 
   render() {
     const columns = [
@@ -141,14 +142,19 @@ class AddressDetails extends Component {
           city: address.city,
           region: address.region,
           phoneNo: address.phoneno ? address.phoneno : "-",
-          geoLocation: address.geolocation.coordinates[0]+' , '+address.geolocation.coordinates[1],
+          geoLocation:
+            address.geolocation.coordinates[0] +
+            " , " +
+            address.geolocation.coordinates[1],
           isActive: (
             <div className="yes-no">
               <span>No</span>
               <label className="switch">
                 <input
                   type="checkbox"
-                  onChange={() => {!address.isActive && this.toggleAddress(address.label)}}
+                  onChange={() => {
+                    !address.isActive && this.toggleAddress(address.label);
+                  }}
                   checked={address.isActive ? true : false}
                 />
                 <span className="slider round"></span>
@@ -192,7 +198,12 @@ class AddressDetails extends Component {
             />
           )
         ) : (
-          <Table columns={columns} dataSource={data} pagination={false} />
+          <Table
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            loading={this.state.allAddress.length > 0 ? false : true}
+          />
         )}
       </div>
     );

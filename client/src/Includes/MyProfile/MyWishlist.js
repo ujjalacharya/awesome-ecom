@@ -19,7 +19,8 @@ const { Search } = Input;
 class MyWishlist extends Component {
   state = {
     allWishlistItems: { wishlists: [], totalCount: 0 },
-    currentPage: 1
+    currentPage: 1,
+    loading: false
   };
 
   componentDidMount() {
@@ -38,6 +39,7 @@ class MyWishlist extends Component {
       scrollToTop();
       return {
         allWishlistItems: nextProps.wishlist.getWishlistItems,
+        loading: false
       };
     }
     return null;
@@ -77,6 +79,7 @@ class MyWishlist extends Component {
   onChangePage = (page) => {
     this.setState({
       currentPage: page.current,
+      loading: true
     });
     // let body = {
     //   keyword: this.props.router.query.slug,
@@ -223,6 +226,7 @@ class MyWishlist extends Component {
           dataSource={data}
           pagination={{ total: this.state.allWishlistItems?.totalCount }}
           onChange={this.onChangePage}
+          loading={this.state.loading}
         />
       </div>
     );

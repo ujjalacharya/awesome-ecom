@@ -247,7 +247,9 @@ class ProductCard extends Component {
                 {!checkSkeleton && (
                   <div className="stars">
                     {productData?.averageRating?.$numberDecimal &&
-                      Array(Math.round(productData.averageRating.$numberDecimal))
+                      Array(
+                        Math.round(productData.averageRating.$numberDecimal)
+                      )
                         .fill(0)
                         .map((num, i) => {
                           return (
@@ -258,6 +260,18 @@ class ProductCard extends Component {
                             ></i>
                           );
                         })}
+
+                    {Array(5 - Math.round(productData.averageRating.$numberDecimal))
+                      .fill(0)
+                      .map((num, k) => {
+                        return (
+                          <i
+                            className="fa fa-star fade-star"
+                            aria-hidden="true"
+                            key={k}
+                          ></i>
+                        );
+                      })}
                   </div>
                 )}
               </div>
