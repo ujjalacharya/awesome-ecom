@@ -97,4 +97,31 @@
       margin-top: 20px;
     }
   }
+
+  .my-reviews {
+    .shop-review {
+      margin: 15px 0;
+      .shop-name {
+        font-weight: bold;
+        font-size: 20px;
+        img{
+          height: 30px;
+        }
+      }
+      .name-rating {
+        display: flex;
+        align-items: center;
+        .ratings {
+          margin-left: 5px;
+          i {
+            color: $tertiary-color;
+            padding-left: 5px;
+            &.fade-star {
+              color: #eee;
+            }
+          }
+        }
+      }
+    }
+  }
 }
