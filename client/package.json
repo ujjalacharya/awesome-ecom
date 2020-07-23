@@ -27,6 +27,7 @@
     "react-cookie": "^4.0.3",
     "react-dom": "16.13.1",
     "react-image-magnify": "^2.7.4",
+    "react-magnifier": "^3.0.4",
     "react-redux": "^7.2.0",
     "react-slick": "^0.26.1",
     "react-sticky": "^6.0.3",
