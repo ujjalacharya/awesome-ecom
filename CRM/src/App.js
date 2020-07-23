@@ -19,7 +19,7 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.User.isAuth,
+    isAuthenticated: state.Auth.isAuth,
   };
 };
 

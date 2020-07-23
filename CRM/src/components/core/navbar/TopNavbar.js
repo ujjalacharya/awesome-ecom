@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-// import { logout } from '../../../actions/auth'
+// import { logout } from '../../../actions/auth_actions'
 
 const TopNavbar = ({  }) => {
     return (
@@ -201,6 +201,6 @@ const TopNavbar = ({  }) => {
 // 	profile: PropTypes.object,
 // }
 const mapStateToProps = state =>({
-	profile:state.User.user
+	profile:state.Auth.user
 })
 export default connect(mapStateToProps, {  })(TopNavbar)

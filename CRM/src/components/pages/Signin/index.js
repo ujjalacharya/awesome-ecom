@@ -3,7 +3,7 @@ import SigninForm from "./SigninForm";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { signIn } from "../../../redux/actions/user_actions";
+import { signIn } from "../../../redux/actions/auth_actions";
 
 // import {
 //   signIn,
@@ -61,7 +61,7 @@ const Login = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.User.isAuth,
+    isAuthenticated: state.Auth.isAuth,
   };
 };
 
