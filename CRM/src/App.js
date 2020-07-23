@@ -13,7 +13,6 @@ const App = (props) => {
     setAuthToken(localStorage.token);
     // store.dispatch(loadUser());
   }, []);
-
   return <>{!props.isAuthenticated ? <Signin /> : <MainRouter />}</>;
 };
 

@@ -15,14 +15,14 @@ const MainRouter = (props) => {
   return (
     <BrowserRouter>
       <Switch>
-        <AdminRoute exact path="/" exact component={Home} />
+        <AdminRoute exact path="/" component={Home} />
       </Switch>
     </BrowserRouter>
   );
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.User,
+  isAuthenticated: state.Auth,
 });
 
 export default connect(mapStateToProps)(MainRouter);

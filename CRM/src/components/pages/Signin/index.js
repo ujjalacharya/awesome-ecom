@@ -13,13 +13,13 @@ import { signIn } from "../../../redux/actions/auth_actions";
 
 const Login = (props) => {
   const [state, setState] = useState({
-    email: "john@hotmail.com",
-    password: "qwerty12345",
+    email: "aanandbhandari143@gmail.com",
+    password: "helloworld1",
     error: "",
     loading: false,
   });
 
-  const { loading, error } = state;
+  const { loading, error, email,password } = state;
 
   const handleChange = (event) => {
     setState({
@@ -29,11 +29,11 @@ const Login = (props) => {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    setState({ ...state, error: false, loading: true });
+    // setState({ ...state, error: false, loading: true });
 
-    props.signIn("sup");
+    props.signIn(email,password);
   };
 
   const showError = () => <div className="alert alert-danger">{error}</div>;
@@ -69,4 +69,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ signIn }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, { signIn })(Login);

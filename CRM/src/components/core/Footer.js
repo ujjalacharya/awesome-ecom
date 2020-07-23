@@ -9,16 +9,16 @@ const Footer = props => {
                         <div className="col-6 text-left">
                             <ul className="list-inline">
                                 <li className="list-inline-item">
-                                    <a className="text-muted" href="#">Support</a>
+                                    <a className="text-muted" href="#!">Support</a>
                                 </li>
                                 <li className="list-inline-item">
-                                    <a className="text-muted" href="#">Help Center</a>
+                                    <a className="text-muted" href="#!">Help Center</a>
                                 </li>
                                 <li className="list-inline-item">
-                                    <a className="text-muted" href="#">Privacy</a>
+                                    <a className="text-muted" href="#!">Privacy</a>
                                 </li>
                                 <li className="list-inline-item">
-                                    <a className="text-muted" href="#">Terms of Service</a>
+                                    <a className="text-muted" href="#!">Terms of Service</a>
                                 </li>
                             </ul>
                         </div>
