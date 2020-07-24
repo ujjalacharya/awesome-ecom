@@ -7,6 +7,7 @@ import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
 import "./App.scss";
 import Signin from "./components/pages/Signin";
+import Home from "./components/pages/Home";
 
 const App = (props) => {
   useEffect(() => {
