@@ -30,6 +30,7 @@
     "react-magnifier": "^3.0.4",
     "react-redux": "^7.2.0",
     "react-slick": "^0.26.1",
+    "react-star-ratings": "^2.3.0",
     "react-sticky": "^6.0.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",

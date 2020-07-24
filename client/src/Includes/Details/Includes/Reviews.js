@@ -6,6 +6,8 @@ import {
   openNotification,
   convertDateToCurrentTz,
 } from "../../../../utils/common";
+import { Progress } from "antd";
+import StarRatings from "react-star-ratings";
 
 class Reviews extends Component {
   state = {
@@ -40,10 +42,79 @@ class Reviews extends Component {
     }
   }
 
+  showStars = (starsPercentage, totalStars, star) => {
+    return (
+      <div className="stars-show">
+        <div className="star-show">
+          <StarRatings
+            rating={totalStars}
+            starDimension="20px"
+            starSpacing="2px"
+            starRatedColor="#f2c900"
+            starEmptyColor="#eee"
+          />
+        </div>
+        <div className="star-bar">
+          <Progress
+            percent={starsPercentage}
+            showInfo={false}
+            type="line"
+            strokeLinecap="square"
+            strokeWidth="15px"
+            strokeColor="#f2c900"
+            trailColor="#eee"
+          />
+        </div>
+        <span>{star}</span>
+      </div>
+    );
+  };
+
   render() {
+    let { data } = this.props;
+    console.log(data);
+    let totalStars = data
+      ? data.stars.fiveStars +
+        data.stars.fourStars +
+        data.stars.threeStars +
+        data.stars.twoStars +
+        data.stars.oneStars
+      : 0;
+    let fiveStarPercent = (data?.stars.fiveStars / totalStars) * 100;
+    let fourStarPercent = (data?.stars.fourStars / totalStars) * 100;
+    let threeStarPercent = (data?.stars.threeStars / totalStars) * 100;
+    let twoStarPercent = (data?.stars.twoStars / totalStars) * 100;
+    let oneStarPercent = (data?.stars.oneStars / totalStars) * 100;
     return (
       <div className="details-reviews">
         <div className="product-reviews">
+          <div className="title">Ratings & Reviews of {data.name}</div>
+          <div className="all-ratings-chart">
+            {/* <Rate allowHalf defaultValue={1.7} disabled />           */}
+            <div className="rate-avge-stars">
+              <div className="ratings">
+                <span className="ave-rate">
+                  {parseFloat(data?.averageRating?.$numberDecimal).toFixed(1)}
+                </span>{" "}
+                / 5
+              </div>
+              <StarRatings
+                rating={data?.stars?.averageStar}
+                starDimension="40px"
+                starSpacing="5px"
+                starRatedColor="#f2c900"
+                starEmptyColor="#eee"
+              />
+              <div className="total stars">{totalStars} ratings</div>
+            </div>
+            <div>
+              {this.showStars(fiveStarPercent, 5, data.stars.fiveStars)}
+              {this.showStars(fourStarPercent, 4, data.stars.fourStars)}
+              {this.showStars(threeStarPercent, 3, data.stars.threeStars)}
+              {this.showStars(twoStarPercent, 2, data.stars.twoStars)}
+              {this.showStars(oneStarPercent, 1, data.stars.oneStars)}
+            </div>
+          </div>
           <div className="title">Product Reviews</div>
           <div className="all-reviews">
             {!_.isEmpty(this.state.productReviews.reviews) ? (
