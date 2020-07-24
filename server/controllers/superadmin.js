@@ -384,9 +384,15 @@ exports.blockUnblockAdmin = async (req, res) => {
         await admin.save()
         return res.json(admin)
     }
+    let products = await Product.find({soldBy:admin._id})
     admin.isBlocked = Date.now()
     admin.isVerified = null
     await admin.save()
+    products = products.map(async p=>{
+        p.isVerified = null
+        return await p.save()
+    })
+    await Promise.all(products)
     res.json(admin)
 }
 
