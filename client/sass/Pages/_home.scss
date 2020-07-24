@@ -1,5 +1,8 @@
 .product-slider{
     padding: 0 40px;
+    @media screen and (max-width: 480px) {
+      padding: 0 15px;
+    }
 }
 
 .slider-header{

@@ -46,6 +46,10 @@
       width: 100%;
       max-height: 400px; 
       object-fit: cover;
+      object-position: center;
+      @media screen and (max-width: 480px) {
+        height: 150px;
+      }
     }
   }
 }
@@ -106,4 +110,12 @@
     height: 30px !important;
     width: 15px !important;
   }
+}
+
+.slick-next{
+  right: -10px !important;
+}
+
+.slick-prev{
+  left: -10px !important;
 }
