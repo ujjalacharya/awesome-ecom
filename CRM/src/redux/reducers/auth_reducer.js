@@ -9,23 +9,27 @@ function parseToken(token) {
   }
 }
 
-const token = localStorage.getItem("token");
-const decoded = parseToken(token);
+const renderInitial = (tok) => {
+  const token = tok || localStorage.getItem("token");
+  const decoded = parseToken(token);
 
-const initialState = {
-  token: localStorage.getItem("token"),
-  isAuth: decoded !== null ? true : null,
-  loading: decoded !== null ? false : true,
-  user:
-    decoded !== null
-      ? {
-          _id: decoded._id,
-          name: decoded.name,
-          email: decoded.email,
-        }
-      : null,
-  role: decoded !== null ? decoded.role : null,
+  return {
+    token: localStorage.getItem("token"),
+    isAuth: decoded !== null ? true : null,
+    loading: decoded !== null ? false : true,
+    user:
+      decoded !== null
+        ? {
+            _id: decoded._id,
+            name: decoded.name,
+            email: decoded.email,
+          }
+        : null,
+    role: decoded !== null ? decoded.role : null,
+  };
 };
+
+const initialState = renderInitial();
 
 // const initialState = {
 //   token:null,
@@ -40,22 +44,11 @@ export default function (state = initialState, action) {
   switch (type) {
     case SIGN_IN:
       localStorage.setItem("token", payload);
-      const decoded = parseToken(payload);
+      const parsedInitial = renderInitial(payload);
 
       return {
         ...state,
-        token: payload,
-        isAuth: decoded !== null ? true : null,
-        loading: decoded !== null ? false : true,
-        user:
-          decoded !== null
-            ? {
-                _id: decoded._id,
-                name: decoded.name,
-                email: decoded.email,
-              }
-            : null,
-        role: decoded !== null ? decoded.role : null,
+        ...parsedInitial,
       };
     case LOAD_ME:
       return {
