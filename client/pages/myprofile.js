@@ -32,6 +32,8 @@ class MyProfile extends Component {
     this.props.getOrders(`page=1`)
 
     this.props.getOrdersStatuses()
+
+    this.props.getMyReviews(`page=1`)
   }
 
   componentDidUpdate(prevProps){

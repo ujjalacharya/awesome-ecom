@@ -30,5 +30,11 @@ export class UserService {
     let data = uploadImageService(url, 'PATCH', body);
     return data;
   }
+
+  async getMyReviews(query) {
+    let url = `${process.env.SERVER_BASE_URL}/api/review-qna/my-reviews?${query}&perPage=5`
+    let data = uploadImageService(url, 'GET');
+    return data;
+  }
   
 }

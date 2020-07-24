@@ -141,6 +141,36 @@
         }
       }
     }
+    .all-ratings-chart {
+      display: flex;
+      margin-top: 35px;
+      .rate-avge-stars {
+        .ratings {
+          font-size: 25px;
+          color: #b9b7b7;
+          .ave-rate {
+            font-size: 50px;
+            color: rgba(0,0,0,.65);
+          }
+        }
+      }
+      .stars-show {
+        margin-left: 40px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        .star-bar {
+          width: 250px;
+          margin-left: 15px;
+          .ant-progress-inner {
+            border-radius: unset;
+          }
+        }
+        span {
+          margin-left: 10px;
+        }
+      }
+    }
   }
   .reviews-form {
     max-width: 400px;

@@ -38,7 +38,7 @@ class OtherDetails extends Component {
             <AdditionalInformation data={addInfo} />
           </TabPane>
           <TabPane tab="Reviews" key="4">
-            <Reviews />
+            <Reviews data={product} />
             {!this.props.data.hasReviewed && this.props.data.hasBought && <ReviewsForm />}
           </TabPane>
         </Tabs>

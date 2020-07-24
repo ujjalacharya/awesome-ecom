@@ -6,6 +6,7 @@ import actions from "../../../redux/actions";
 import { openNotification } from "../../../utils/common";
 import { DeleteOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import StarRatings from "react-star-ratings";
 
 class ProductSpecs extends Component {
   state = {
@@ -101,25 +102,27 @@ class ProductSpecs extends Component {
           <div className="product-title">{product.name}</div>
           <div className="ratings-reviews">
             <div className="ratings">
-              {product.averageRating?.$numberDecimal &&
-                Array(Math.round(product.averageRating.$numberDecimal))
-                  .fill(0)
-                  .map((num, i) => {
-                    return (
-                      <i className="fa fa-star" aria-hidden="true" key={i}></i>
-                    );
-                  })}
+              {product.averageRating?.$numberDecimal && (
+                <StarRatings
+                  rating={parseFloat(product.averageRating.$numberDecimal)}
+                  starDimension="18px"
+                  starSpacing="1px"
+                  starRatedColor="#f2c900"
+                  starEmptyColor="#eee"
+                />
+              )}
               <span>
+                {" "}
                 {product.averageRating?.$numberDecimal
                   ? parseFloat(product.averageRating.$numberDecimal).toFixed(1)
-                  : 'No'}{" "}
+                  : "No"}{" "}
                 stars ratings
               </span>
             </div>
             <div className="reviews">
               <span>
-                ( {product.totalRatingUsers} customer reviews | 41
-                FAQ answered )
+                ( {product.totalRatingUsers} customer reviews | 41 FAQ answered
+                )
               </span>
             </div>
           </div>
@@ -130,10 +133,13 @@ class ProductSpecs extends Component {
               </div>
               <div className="new-price">
                 <span className="price">
-                  Rs {product.price.$numberDecimal - (product.price.$numberDecimal * 2) / 100}
+                  Rs{" "}
+                  {product.price.$numberDecimal -
+                    (product.price.$numberDecimal * 2) / 100}
                 </span>
                 <span className="discount">
-                  (Save Rs {(product.price.$numberDecimal * 2) / 100} | {product.discountRate}
+                  (Save Rs {(product.price.$numberDecimal * 2) / 100} |{" "}
+                  {product.discountRate}
                   %)
                 </span>
               </div>

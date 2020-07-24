@@ -1,4 +1,4 @@
-import { USER_PROFILE, GLOBAL_ERROR, EDIT_ADDRESS, ADD_ADDRESS, TOGGLE_ACTIVE_ADDRESS, UPDATE_PROFILE_PICTURE } from "../types";
+import { USER_PROFILE, GLOBAL_ERROR, EDIT_ADDRESS, ADD_ADDRESS, TOGGLE_ACTIVE_ADDRESS, UPDATE_PROFILE_PICTURE, MY_PROFILE_REVIEWS } from "../types";
 import { UserService } from "../services/userService";
 
 const getUserProfile = (id) => {
@@ -76,11 +76,27 @@ const updateProfilePicture = (body) => {
   };
 };
 
+const getMyReviews = (query) => {
+  return async (dispatch) => {
+    const userService = new UserService();
+    const response = await userService.getMyReviews(query);
+    if (response.isSuccess) {
+      dispatch({ type: MY_PROFILE_REVIEWS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 
 export default {
     getUserProfile,
     editAddress,
     addAddress,
     toggleActiveAddress,
-    updateProfilePicture
+    updateProfilePicture,
+    getMyReviews
 };

@@ -1,10 +1,10 @@
 import {
   USER_PROFILE,
-  USER_ERROR,
   EDIT_ADDRESS,
   ADD_ADDRESS,
   TOGGLE_ACTIVE_ADDRESS,
   UPDATE_PROFILE_PICTURE,
+  MY_PROFILE_REVIEWS,
 } from "../types";
 
 const initialState = {
@@ -12,7 +12,8 @@ const initialState = {
   editAddressResp: null,
   addAddressResp: null,
   toggleActiveAddResp: null,
-  profilePictureResp: null
+  profilePictureResp: null,
+  myReviews: null
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +28,8 @@ export default (state = initialState, action) => {
       return { ...state, editAddressResp: action.payload, hasError: false };
     case TOGGLE_ACTIVE_ADDRESS:
       return { ...state, toggleActiveAddResp: action.payload, hasError: false };
+    case MY_PROFILE_REVIEWS:
+      return { ...state, myReviews: action.payload, hasError: false };
     default:
       return state;
   }
