@@ -6,7 +6,7 @@ import {
 } from "react-native-gesture-handler";
 
 import { Avatar, Card, Title, Paragraph, Appbar } from "react-native-paper";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
@@ -52,7 +52,7 @@ export class CartScreen extends Component {
                     source={{ uri: product.image }}
                   />
                 </View>
-                <View style={{ flex: 2 }}>
+                <View style={{ flex: 2}}>
                   <>
                     <Title>{product.title}</Title>
                     <Paragraph>{product.price}</Paragraph>
@@ -63,7 +63,8 @@ export class CartScreen extends Component {
                       backgroundColor="green"
                       width={90}
                       style={{ marginTop: 10 }}
-                    />
+                      />
+                   
                   </>
                 </View>
               </View>
