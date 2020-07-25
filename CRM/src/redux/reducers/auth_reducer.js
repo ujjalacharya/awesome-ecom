@@ -1,10 +1,17 @@
-import { SIGN_IN, SIGN_OUT, AUTH_ERROR, LOAD_ME } from "../types";
+import { SIGN_IN, SIGN_OUT, AUTH_ERROR} from "../types";
 import jwt from "jsonwebtoken";
 
 function parseToken(token) {
   try {
-    return jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
+    let verifiedToken = jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
+    if (verifiedToken.role !== 'admin' && verifiedToken.role !== 'superadmin') {
+      localStorage.removeItem("token");
+      return null
+    }
+    return verifiedToken
+
   } catch (error) {
+    localStorage.removeItem("token");
     return null;
   }
 }
@@ -12,7 +19,6 @@ function parseToken(token) {
 const renderInitial = (tok) => {
   const token = tok || localStorage.getItem("token");
   const decoded = parseToken(token);
-
   return {
     token: localStorage.getItem("token"),
     isAuth: decoded !== null ? true : null,
@@ -31,16 +37,9 @@ const renderInitial = (tok) => {
 
 const initialState = renderInitial();
 
-// const initialState = {
-//   token:null,
-//   isAuth: false,
-//   loading: true,
-//   user:null,
-//   role:''
-// }
 
 export default function (state = initialState, action) {
-  const { type, payload, role } = action;
+  const { type, payload} = action;
   switch (type) {
     case SIGN_IN:
       localStorage.setItem("token", payload);
@@ -49,14 +48,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         ...parsedInitial,
-      };
-    case LOAD_ME:
-      return {
-        ...state,
-        user: payload,
-        isAuth: true,
-        loading: false,
-        role,
       };
     case AUTH_ERROR:
     case SIGN_OUT:
@@ -67,6 +58,7 @@ export default function (state = initialState, action) {
         isAuth: false,
         loading: true,
         user: null,
+        role:null
       };
     default:
       return state;

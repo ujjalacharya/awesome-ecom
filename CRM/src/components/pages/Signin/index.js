@@ -65,8 +65,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ signIn }, dispatch);
-}
-
 export default connect(mapStateToProps, { signIn })(Login);
