@@ -4,13 +4,15 @@ import jwt from "jsonwebtoken";
 function parseToken(token) {
   try {
     let verifiedToken = jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
+    //verify role
     if (verifiedToken.role !== 'admin' && verifiedToken.role !== 'superadmin') {
       localStorage.removeItem("token");
       return null
     }
     return verifiedToken
-
+    
   } catch (error) {
+    //call for refresh token if jwt has expired
     localStorage.removeItem("token");
     return null;
   }

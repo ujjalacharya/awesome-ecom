@@ -7,6 +7,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true// should be only post req
 });
 /**
  intercept any error responses from the api
@@ -18,15 +19,16 @@ const api = axios.create({
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response.data.error === "jwt malformed") {
-      store.dispatch({ type: SIGN_OUT });
-      return Promise.reject(err);
-    }
-    if (err.response.data.error === "jwt expired") {
-      //call for refresh token
-      store.dispatch({ type: SIGN_OUT });
-      return Promise.reject(err);
-    }
+    console.log(err);
+    // if (err.response.data.error === "jwt malformed") {
+    //   store.dispatch({ type: SIGN_OUT });
+    //   return Promise.reject(err);
+    // }
+    // if (err.response.data.error === "jwt expired") {
+    //   //call for refresh token
+    //   store.dispatch({ type: SIGN_OUT });
+    //   return Promise.reject(err);
+    // }
   }
 );
 

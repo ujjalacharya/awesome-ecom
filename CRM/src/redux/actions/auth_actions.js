@@ -4,7 +4,8 @@ import api from '../../utils/api'
 export const signIn = (email,password) => async dispatch=> {
   const body = JSON.stringify({ email, password });
   try {
-    const res = await api.post(`/admin-auth/signin`, body);
+    const res = await api.post(`/admin-auth/signin`, body)
+    console.log(res);
     dispatch({
       type: SIGN_IN,
       payload: res.data.accessToken
@@ -18,11 +19,14 @@ export const signIn = (email,password) => async dispatch=> {
 }
 
 export const signOut = () => async dispatch => {
-  try {
-    dispatch({
-      type:SIGN_OUT
-    })
-  } catch (err) {
-    console.log('****auth_actions/signOut****', err);
-  }
+
+  const res = await api.post(`/admin-auth/refresh-token`, {})
+  console.log(res);
+  // try {
+  //   dispatch({
+  //     type:SIGN_OUT
+  //   })
+  // } catch (err) {
+  //   console.log('****auth_actions/signOut****', err);
+  // }
 }
