@@ -3,10 +3,11 @@ import store from "../redux/store";
 import { SIGN_OUT} from '../redux/types'
 
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: `${process.env.REACT_APP_SERVER_URL}`,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true// should be only post req
 });
 /**
  intercept any error responses from the api
@@ -18,10 +19,16 @@ const api = axios.create({
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response.data.msg === "JWT malformed") {
-      store.dispatch({ type: SIGN_OUT });
-    }
-    return Promise.reject(err);
+    console.log(err);
+    // if (err.response.data.error === "jwt malformed") {
+    //   store.dispatch({ type: SIGN_OUT });
+    //   return Promise.reject(err);
+    // }
+    // if (err.response.data.error === "jwt expired") {
+    //   //call for refresh token
+    //   store.dispatch({ type: SIGN_OUT });
+    //   return Promise.reject(err);
+    // }
   }
 );
 
