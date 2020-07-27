@@ -12,6 +12,7 @@ import {
   Paragraph,
   Appbar,
   Button,
+  Checkbox,
 } from "react-native-paper";
 import { View, Text, Image, StyleSheet } from "react-native";
 
@@ -21,8 +22,18 @@ import { productData } from "../../utils/mock";
 const product = productData[0];
 
 export class CartScreen extends Component {
+  state = {
+    checked: false,
+  };
+
   _goBack = () => {
     this.props.navigation.pop();
+  };
+
+  setChecked = () => {
+    this.setState((prevState) => ({
+      checked: !prevState.checked,
+    }));
   };
 
   render() {
@@ -83,23 +94,48 @@ export class CartScreen extends Component {
         </ScrollView>
 
         <View
-          style={{ backgroundColor: Constants.headerTintColor, height: 50 }}
+          style={{ backgroundColor: Constants.headerTintColor, height: 70 }}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
-            <View style={{ flex: 0.4 }}></View>
+            <View
+              style={{
+                flex: 0.4,
+                justifyContent: "center",
+                flexDirection: "row",
+                marginLeft: 5,
+              }}
+            >
+              <View style={{ flex: 0.2, justifyContent: "center" }}>
+                <Checkbox
+                  status={this.state.checked ? "checked" : "unchecked"}
+                  onPress={() => {
+                    this.setChecked();
+                  }}
+                />
+              </View>
+              <View style={{ flex: 0.8, justifyContent: "center", marginLeft: 5 }}>
+                <Text style={{ fontWeight: "bold" }}>{"ALL"}</Text>
+              </View>
+            </View>
             <View style={{ flex: 0.6 }}>
               <View style={{ flex: 1, flexDirection: "row" }}>
-                <View style={{ flex: .3, alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{fontSize: 10}}>{"Shipping: Rs 0"}</Text>
-                  <Text style={{fontSize: 15}}>{"Total: Rs 0"}</Text>
+                <View
+                  style={{
+                    flex: 0.3,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 10 }}>{"Shipping: Rs 0"}</Text>
+                  <Text style={{ fontSize: 13 }}>{"Total: Rs 0"}</Text>
                 </View>
-                <View style={{ flex: .7 }}>
+                <View style={{ flex: 0.7 }}>
                   <Button
                     style={{
                       flex: 1,
                       backgroundColor: "orange",
                       justifyContent: "center",
-                      margin: 5,
+                      margin: 10,
                       borderRadius: 5,
                     }}
                     labelStyle={{ color: "white" }}
