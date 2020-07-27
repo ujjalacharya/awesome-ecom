@@ -98,11 +98,18 @@ export class CartScreen extends Component {
                         </View>
                         <View style={{ flex: 0.2 }}></View>
 
-                        <View style={{ flex: 0.2 }}></View>
-
                         <View style={{ flex: 0.2, flexDirection: "row" }}>
                           <View style={{ flex: 1 }}>
                             <Text style={{ fontSize: 15, color: "orange" }}>
+                              {product.price}
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: 10,
+                                textDecorationLine: "line-through",
+                                textDecorationStyle: "solid",
+                              }}
+                            >
                               {product.price}
                             </Text>
                           </View>
@@ -123,7 +130,7 @@ export class CartScreen extends Component {
                                 justifyContent: "center",
                               }}
                             >
-                              <Text>{"5"}</Text>
+                              <Text>{"0"}</Text>
                             </View>
                             <TouchableRipple
                               style={{
