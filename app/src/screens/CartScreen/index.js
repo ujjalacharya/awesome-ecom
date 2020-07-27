@@ -13,13 +13,12 @@ import {
   Appbar,
   Button,
   Checkbox,
+  TouchableRipple,
 } from "react-native-paper";
 import { View, Text, Image, StyleSheet } from "react-native";
 
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
-
-const product = productData[0];
 
 export class CartScreen extends Component {
   state = {
@@ -58,7 +57,7 @@ export class CartScreen extends Component {
             </Appbar.Header>
           </View>
 
-          {[0, 0, 0, 0, 0, 0, 0].map((data, i) => (
+          {productData.map((product, i) => (
             <TouchableWithoutFeedback key={i}>
               <Card
                 // onPress={() => props.navigation.navigate("Detail")}
@@ -66,24 +65,78 @@ export class CartScreen extends Component {
               >
                 <Card.Content>
                   <View style={{ flex: 1, flexDirection: "row", marginTop: 5 }}>
-                    <View style={{ flex: 1.5 }}>
+                    <View
+                      style={{
+                        flex: 0.1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginRight: 10,
+                      }}
+                    >
+                      <Checkbox
+                        status={this.state.checked ? "checked" : "unchecked"}
+                        onPress={() => {
+                          this.setChecked();
+                        }}
+                      />
+                    </View>
+                    <View style={{ flex: 0.5 }}>
                       <Image
                         style={styles.tinyLogo}
                         source={{ uri: product.image }}
                       />
                     </View>
-                    <View style={{ flex: 2 }}>
+                    <View style={{ flex: 0.5 }}>
                       <>
-                        <Title>{product.title}</Title>
-                        <Paragraph>{product.price}</Paragraph>
-                        <Avatar.Text
-                          size={24}
-                          label="4/5 stars"
-                          color={Constants.headerTintColor}
-                          backgroundColor="green"
-                          width={90}
-                          style={{ marginTop: 10 }}
-                        />
+                        <View style={{ flex: 0.2 }}>
+                          <Text style={{ ...Constants.titleText }}>
+                            {product.title}
+                          </Text>
+                          <Text style={{ ...Constants.paragraphText }}>
+                            {"Ujjal's shop"}
+                          </Text>
+                        </View>
+                        <View style={{ flex: 0.2 }}></View>
+
+                        <View style={{ flex: 0.2 }}></View>
+
+                        <View style={{ flex: 0.2, flexDirection: "row" }}>
+                          <View style={{ flex: 1 }}>
+                            <Text style={{ fontSize: 15, color: "orange" }}>
+                              {product.price}
+                            </Text>
+                          </View>
+                          <View style={{ flex: 1, flexDirection: "row" }}>
+                            <TouchableRipple
+                              style={{
+                                flex: 0.3,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Button>{"-"}</Button>
+                            </TouchableRipple>
+                            <View
+                              style={{
+                                flex: 0.4,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Text>{"5"}</Text>
+                            </View>
+                            <TouchableRipple
+                              style={{
+                                flex: 0.3,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Button>{"+"}</Button>
+                            </TouchableRipple>
+                          </View>
+                        </View>
+                        <View style={{ flex: 0.2 }}></View>
                       </>
                     </View>
                   </View>
@@ -113,7 +166,9 @@ export class CartScreen extends Component {
                   }}
                 />
               </View>
-              <View style={{ flex: 0.8, justifyContent: "center", marginLeft: 5 }}>
+              <View
+                style={{ flex: 0.8, justifyContent: "center", marginLeft: 5 }}
+              >
                 <Text style={{ fontWeight: "bold" }}>{"ALL"}</Text>
               </View>
             </View>
@@ -129,7 +184,7 @@ export class CartScreen extends Component {
                   <Text style={{ fontSize: 10 }}>{"Shipping: Rs 0"}</Text>
                   <Text style={{ fontSize: 13 }}>{"Total: Rs 0"}</Text>
                 </View>
-                <View style={{ flex: 0.7 }}>
+                <View style={{ flex: 0.7, ...styles.footer }}>
                   <Button
                     style={{
                       flex: 1,
@@ -163,6 +218,13 @@ const styles = StyleSheet.create({
     height: 120,
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
+  },
+  footer: {
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2,
+    // elevation: 2,
   },
 });
 
