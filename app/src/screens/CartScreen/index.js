@@ -86,22 +86,29 @@ export class CartScreen extends Component {
           style={{ backgroundColor: Constants.headerTintColor, height: 50 }}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
-            <View style={{ flex: 0.3 }}></View>
-            <View style={{ flex: 0.3 }}></View>
-            <View style={{ flex: 0.4 }}>
-              <Button
-                style={{
-                  flex: 1,
-                  backgroundColor: "orange",
-                  justifyContent: "center",
-                  margin: 5,
-                  borderRadius: 5
-                }}
-                labelStyle={{ color: "white" }}
-                // onPress={this.setVisible}
-              >
-                Check Out
-              </Button>
+            <View style={{ flex: 0.4 }}></View>
+            <View style={{ flex: 0.6 }}>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: .3, alignItems: "center", justifyContent: "center" }}>
+                  <Text style={{fontSize: 10}}>{"Shipping: Rs 0"}</Text>
+                  <Text style={{fontSize: 15}}>{"Total: Rs 0"}</Text>
+                </View>
+                <View style={{ flex: .7 }}>
+                  <Button
+                    style={{
+                      flex: 1,
+                      backgroundColor: "orange",
+                      justifyContent: "center",
+                      margin: 5,
+                      borderRadius: 5,
+                    }}
+                    labelStyle={{ color: "white" }}
+                    // onPress={this.setVisible}
+                  >
+                    Check Out
+                  </Button>
+                </View>
+              </View>
             </View>
           </View>
         </View>
