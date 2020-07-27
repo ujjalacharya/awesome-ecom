@@ -19,6 +19,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
+import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 
 export class CartScreen extends Component {
   state = {
@@ -60,7 +61,7 @@ export class CartScreen extends Component {
           {productData.map((product, i) => (
             <TouchableWithoutFeedback key={i}>
               <Card
-                // onPress={() => props.navigation.navigate("Detail")}
+                onPress={() => this.props.navigation.navigate("Detail")}
                 style={{ marginBottom: 5 }}
               >
                 <Card.Content>
@@ -115,6 +116,7 @@ export class CartScreen extends Component {
                           </View>
                           <View style={{ flex: 1, flexDirection: "row" }}>
                             <TouchableRipple
+                              onPress={() => console.warn("-")}
                               style={{
                                 flex: 0.3,
                                 alignItems: "center",
@@ -133,6 +135,7 @@ export class CartScreen extends Component {
                               <Text>{"0"}</Text>
                             </View>
                             <TouchableRipple
+                              onPress={() => console.warn("+")}
                               style={{
                                 flex: 0.3,
                                 alignItems: "center",
@@ -151,6 +154,9 @@ export class CartScreen extends Component {
               </Card>
             </TouchableWithoutFeedback>
           ))}
+          <View style={{ height: 250, marginTop: 0 }}>
+            <FeaturedProducts title={"Products for you"} />
+          </View>
         </ScrollView>
 
         <View
