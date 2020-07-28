@@ -207,7 +207,7 @@ export class CartScreen extends Component {
                       borderRadius: 5,
                     }}
                     labelStyle={{ color: "white" }}
-                    // onPress={this.setVisible}
+                    onPress={()=>this.props.navigation.navigate("CheckOut")}
                   >
                     Check Out
                   </Button>
