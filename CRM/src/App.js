@@ -6,10 +6,8 @@ import MainRouter from "./router/MainRouter";
 import "./App.scss";
 import Signin from "./components/pages/Signin";
 
+setAuthToken(localStorage.token);
 const App = (props) => {
-  useEffect(() => {
-    setAuthToken(localStorage.token);
-  }, []);
   return <>{!props.isAuthenticated ? <Signin /> : <MainRouter />}</>;
 };
 
