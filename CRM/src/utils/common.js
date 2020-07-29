@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { JWT_SIGNIN_KEY } from "./config";
 
 export const decodeLocalStorage = () => {
     const token = localStorage.getItem("token");
@@ -23,10 +24,10 @@ export const verifyLocalStorage = () => {
     if (jsontoken) {
       let token = jsontoken;
   
-      jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY, async (err, decoded) => {
+      jwt.verify(token, JWT_SIGNIN_KEY, async (err, decoded) => {
         if (err) {
           if (err.expiredAt !== undefined) {
-            data = { token, user: { ...jwt.decode(token, process.env.REACT_APP_JWT_SIGNIN_KEY) } };
+            data = { token, user: { ...jwt.decode(token, JWT_SIGNIN_KEY) } };
           } else {
             data = false;
           }
