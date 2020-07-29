@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { SIGN_IN, SIGN_OUT, AUTH_ERROR, REFRESH_TOKEN} from "../types";
 import store from '../store'
 import api from '../../utils/api'
-async function parseToken(token) {
+function parseToken(token) {
   try {
     let verifiedToken = jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
     //verify role
@@ -15,31 +15,31 @@ async function parseToken(token) {
     
   } catch (error) {
     
-    if (error.message === 'jwt expired') {
-      // call for refresh token if jwt has expired
-      (async () => {
-        const body = JSON.stringify({ refreshToken: localStorage.getItem('refreshToken') });
-        const res = await api.post(`/admin-auth/refresh-token`, body)
-        store.dispatch({
-          type: REFRESH_TOKEN,
-          payload: res.data
-        });
-        api.defaults.headers.common["x-auth-token"] = res.data.accessToken
-        localStorage.setItem("token", res.data.accessToken);
-        localStorage.setItem("refreshToken", res.data.refreshToken);
-        let verifiedToken = jwt.verify(res.data.accessToken, process.env.REACT_APP_JWT_SIGNIN_KEY);
-        return verifiedToken
-      })()
-    }
+    // if (error.message === 'jwt expired') {
+    //   // call for refresh token if jwt has expired
+    //   (async () => {
+    //     const body = JSON.stringify({ refreshToken: localStorage.getItem('refreshToken') });
+    //     const res = await api.post(`/admin-auth/refresh-token`, body)
+    //     store.dispatch({
+    //       type: REFRESH_TOKEN,
+    //       payload: res.data
+    //     });
+    //     api.defaults.headers.common["x-auth-token"] = res.data.accessToken
+    //     localStorage.setItem("token", res.data.accessToken);
+    //     localStorage.setItem("refreshToken", res.data.refreshToken);
+    //     let verifiedToken = jwt.verify(res.data.accessToken, process.env.REACT_APP_JWT_SIGNIN_KEY);
+    //     return verifiedToken
+    //   })()
+    // }
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     return null;
   }
 }
 
-const renderInitial = async (tok) => {
+const renderInitial =  (tok) => {
   const token = tok || localStorage.getItem("token");
-  const decoded = await parseToken(token);
+  const decoded =  parseToken(token);
   return {
     token: localStorage.getItem("token"),
     isAuth: decoded !== null ? true : null,

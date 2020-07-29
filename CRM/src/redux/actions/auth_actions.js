@@ -1,5 +1,22 @@
-import { SIGN_IN, SIGN_OUT, AUTH_ERROR} from "../types";
+import { SIGN_IN, SIGN_OUT, AUTH_ERROR,LOAD_ME} from "../types";
 import api from '../../utils/api'
+
+
+export const loadMe = () => async dispatch => {
+  try {
+    const res = await api.get('admin-auth/load-me')
+    console.log(res.data);
+    dispatch({
+      type: LOAD_ME,
+      payload: res.data
+    });
+  } catch (err) {
+    console.log('****auth_actions/loadMe****', err);
+    dispatch({
+      type: AUTH_ERROR
+    });
+  }
+}
 
 export const signIn = (email,password) => async dispatch=> {
   const body = JSON.stringify({ email, password });
@@ -10,6 +27,7 @@ export const signIn = (email,password) => async dispatch=> {
       type: SIGN_IN,
       payload: res.data
     });
+    dispatch(loadMe())
   } catch (err) {
     console.log('****auth_actions/signIn****',err);
     dispatch({

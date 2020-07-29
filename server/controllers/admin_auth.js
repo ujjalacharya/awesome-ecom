@@ -154,6 +154,13 @@ exports.refreshToken = async (req, res) => {
     }
 
 }
+
+exports.loadMe = async (req,res) =>{
+    req.admin.resetPasswordLink = undefined
+    req.admin.emailVerifyLink = undefined
+    res.json(req.admin)
+}
+
 exports.forgotPassword = async (req, res) => {
     if (!req.body) return res.status(400).json({ error: "No request body" });
     if (!req.body.email) return res.status(400).json({ error: "No Email in request body" });
