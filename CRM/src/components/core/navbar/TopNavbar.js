@@ -179,7 +179,7 @@ const TopNavbar = ({ signOut,profile }) => {
 
 						<a className="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
 							<img src="img\avatar1.png" className="avatar img-fluid rounded-circle mr-1" alt="profile"/> 
-							<span className="text-dark">{profile.name}</span>
+							<span className="text-dark">{profile && profile.name}</span>
 						</a>
 						<div className="dropdown-menu dropdown-menu-right">
 							<a className="dropdown-item" href="pages-profile.html"><i className="align-middle mr-1" data-feather="user"></i> Profile</a>

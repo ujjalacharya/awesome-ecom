@@ -6,16 +6,17 @@ import MainRouter from "./router/MainRouter";
 import "./App.scss";
 import Signin from "./components/pages/Signin";
 import { loadMe } from "./redux/actions/auth_actions";
-import store from './redux/store'
+import store from "./redux/store";
+import { verifyLocalStorage } from "./utils/common";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
-const App = (props) => {
+const App = () => {
   useEffect(() => {
     store.dispatch(loadMe());
   }, []);
-  return <>{!props.isAuthenticated ? <Signin /> : <MainRouter />}</>;
+  return <>{!verifyLocalStorage() ? <Signin /> : <MainRouter />}</>;
 };
 
 const mapStateToProps = (state) => {
