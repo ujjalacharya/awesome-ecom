@@ -5,7 +5,6 @@ import api from '../../utils/api'
 export const loadMe = () => async dispatch => {
   try {
     const res = await api.get('admin-auth/load-me')
-    console.log(res.data);
     dispatch({
       type: LOAD_ME,
       payload: res.data
@@ -22,7 +21,6 @@ export const signIn = (email,password) => async dispatch=> {
   const body = JSON.stringify({ email, password });
   try {
     const res = await api.post(`/admin-auth/signin`, body)
-    console.log(res);
     dispatch({
       type: SIGN_IN,
       payload: res.data
