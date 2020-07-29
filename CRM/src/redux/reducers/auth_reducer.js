@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { SIGN_IN, SIGN_OUT, AUTH_ERROR, REFRESH_TOKEN, LOAD_ME} from "../types";
 import store from '../store'
 import api from '../../utils/api'
+import { accessTokenKey, refreshTokenKey } from "../../utils/config";
 
 const initialState = {
   token: localStorage.getItem('token'),
@@ -16,8 +17,8 @@ export default function (state = initialState, action) {
   switch (type) {
     case REFRESH_TOKEN:
       case SIGN_IN:
-        localStorage.setItem("token", payload.accessToken);
-        localStorage.setItem("refreshToken", payload.refreshToken);
+        localStorage.setItem(accessTokenKey, payload.accessToken);
+        localStorage.setItem(refreshTokenKey, payload.refreshToken);
         return {
           ...state,
           token: payload.accessToken,
@@ -33,8 +34,8 @@ export default function (state = initialState, action) {
       }
       case AUTH_ERROR:
       case SIGN_OUT:
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
+      localStorage.removeItem(accessTokenKey);
+      localStorage.removeItem(refreshTokenKey);
       return {
         ...state,
         token: "",

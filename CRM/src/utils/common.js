@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import { JWT_SIGNIN_KEY } from "./config";
+import { JWT_SIGNIN_KEY, accessTokenKey } from "./config";
 
 export const decodeLocalStorage = () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(accessTokenKey);
 
     if(token){
         const decoded = jwt.decode(token);
@@ -17,7 +17,7 @@ export const verifyLocalStorage = () => {
       return false;
     }
   
-    let jsontoken = localStorage.getItem("token");
+    let jsontoken = localStorage.getItem(accessTokenKey);
   
     let data;
   
@@ -35,7 +35,7 @@ export const verifyLocalStorage = () => {
           data = decoded
         }
       });
-      localStorage.setItem("token", token);	
+      localStorage.setItem(accessTokenKey, token);	
       return data;
     } else {
       return false;

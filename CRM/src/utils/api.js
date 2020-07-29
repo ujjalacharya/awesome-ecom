@@ -1,8 +1,7 @@
 import axios from "axios";
 import store from "../redux/store";
 import { SIGN_OUT, REFRESH_TOKEN, AUTH_ERROR } from "../redux/types";
-import setAuthToken from "./setAuthToken";
-import { SERVER_URL } from "./config";
+import { SERVER_URL, refreshTokenKey } from "./config";
 
 const api = axios.create({
   baseURL: `${SERVER_URL}`,
@@ -31,7 +30,7 @@ api.interceptors.response.use(
       const originalReq = err.config;
       try {
         const body = JSON.stringify({
-          refreshToken: localStorage.getItem("refreshToken"),
+          refreshToken: localStorage.getItem(refreshTokenKey),
         });
         const res = await api.post(`/admin-auth/refresh-token`, body);
         store.dispatch({
