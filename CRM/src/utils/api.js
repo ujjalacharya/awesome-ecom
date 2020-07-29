@@ -1,13 +1,14 @@
 import axios from "axios";
 import store from "../redux/store";
-import { SIGN_OUT} from '../redux/types'
+import { SIGN_OUT,REFRESH_TOKEN,AUTH_ERROR} from '../redux/types'
+import setAuthToken from './setAuthToken'
 
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_SERVER_URL}`,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true// should be only post req
+  // withCredentials: true// should be only post req
 });
 /**
  intercept any error responses from the api
@@ -18,17 +19,32 @@ const api = axios.create({
 
 api.interceptors.response.use(
   (res) => res,
-  (err) => {
-    console.log(err);
-    // if (err.response.data.error === "jwt malformed") {
-    //   store.dispatch({ type: SIGN_OUT });
-    //   return Promise.reject(err);
-    // }
-    // if (err.response.data.error === "jwt expired") {
-    //   //call for refresh token
-    //   store.dispatch({ type: SIGN_OUT });
-    //   return Promise.reject(err);
-    // }
+  async (err) => {
+    console.log(err.response,'middleware');
+    if (err.status===401 && err.response.data.error === "jwt malformed") {
+      store.dispatch({ type: SIGN_OUT });
+      return Promise.reject(err);
+    }
+    if ( err.response.data.error === "jwt expired") {
+      //call for refresh token
+      const originalReq = err.config;
+      try {
+        const body = JSON.stringify({ refreshToken:localStorage.getItem('refreshToken')});
+        const res = await api.post(`/admin-auth/refresh-token`, body)
+        store.dispatch({
+          type: REFRESH_TOKEN,
+          payload: res.data
+        });
+        originalReq.headers["x-auth-token"] = res.data.accessToken
+        return api(originalReq);
+      } catch (err) {
+        console.log('****refresh token error****', err.response);
+        store.dispatch({
+          type: AUTH_ERROR
+        });
+        return Promise.reject(err);
+      }
+    }
   }
 );
 

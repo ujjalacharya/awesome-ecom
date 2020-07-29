@@ -95,54 +95,72 @@ exports.signin = async (req, res) => {
         { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
     );
     let refreshToken = { 
-        refreshToken: crypto.randomBytes(40).toString('hex'),
+        refreshToken: jwt.sign(
+            payload,
+            process.env.REFRESH_TOKEN_KEY,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRE }
+        ),
         userIP: req.ip,
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),//i.e in 7 days,
-        user: admin._id
      }
     refreshToken = new RefreshToken(refreshToken)
     
     await refreshToken.save()
-    let cookieOptions = {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        httpOnly: true
-    }
-    res.cookie('refreshToken', `${refreshToken.refreshToken}`,cookieOptions);//with that same expire date
-    return res.json({ accessToken });
+    // let cookieOptions = {
+    //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    //     // httpOnly: true
+    // }
+    // res.cookie('refreshToken', `${refreshToken.refreshToken}`,cookieOptions);//with that same expire date
+    return res.json({ accessToken, refreshToken:refreshToken.refreshToken });
 };
 exports.refreshToken = async (req, res) => {
-    console.log('refreshtoken');
-    console.log(req.cookies);
-    let refreshToken = await RefreshToken.findOne({ refreshToken: req.cookies.refreshToken,userIP:req.ip }).populate('user')
-
+    
+    let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken,userIP:req.ip })
     if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
-    if (Date.now() >= refreshToken.expires) {
-        return res.status(401).json({error:'Refresh Token has expired.'})
-    }
-    //extend refreshtoken expiration
-    refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    await refreshToken.save()
+    // if (Date.now() >= refreshToken.expires) {
+    //     return res.status(401).json({error:'Refresh Token has expired.'})
+    // }
+    // //extend refreshtoken expiration
+    // refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    // await refreshToken.save()
+    try {
+        let tokenData = jwt.verify(refreshToken.refreshToken,process.env.REFRESH_TOKEN_KEY)
+        const payload = {
+            _id: tokenData._id,
+            name: tokenData.name,
+            email: tokenData.email,
+            role: tokenData.role
+        };
+        const accessToken = jwt.sign(
+            payload,
+            process.env.JWT_SIGNIN_KEY,
+            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+        );
+        refreshToken.refreshToken = jwt.sign(
+            payload,
+            process.env.REFRESH_TOKEN_KEY,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRE }
+        )
+        await refreshToken.save()
 
-    const payload = {
-        _id: refreshToken.user._id,
-        name: refreshToken.user.name,
-        email: refreshToken.user.email,
-        role: refreshToken.user.role || undefined //as user nd dispatcher has no role
-    };
-    console.log(payload);
-    const accessToken = jwt.sign(
-        payload,
-        process.env.JWT_SIGNIN_KEY,
-        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-    );
-
-    let cookieOptions = {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),//with that same expire date
-        httpOnly: true
+    
+        // let cookieOptions = {
+        //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),//with that same expire date
+        //     httpOnly: true
+        // }
+        // res.cookie('refreshToken', `${refreshToken.refreshToken}`, cookieOptions);
+        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
+    } catch (error) {
+        return res.status(401).json({error:error.message})
     }
-    res.cookie('refreshToken', `${refreshToken.refreshToken}`, cookieOptions);
-    return res.json({ accessToken });
+
 }
+
+exports.loadMe = async (req,res) =>{
+    req.admin.resetPasswordLink = undefined
+    req.admin.emailVerifyLink = undefined
+    res.json(req.admin)
+}
+
 exports.forgotPassword = async (req, res) => {
     if (!req.body) return res.status(400).json({ error: "No request body" });
     if (!req.body.email) return res.status(400).json({ error: "No Email in request body" });

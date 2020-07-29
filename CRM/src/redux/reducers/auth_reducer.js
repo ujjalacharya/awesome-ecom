@@ -1,68 +1,48 @@
-import { SIGN_IN, SIGN_OUT, AUTH_ERROR} from "../types";
 import jwt from "jsonwebtoken";
+import { SIGN_IN, SIGN_OUT, AUTH_ERROR, REFRESH_TOKEN, LOAD_ME} from "../types";
+import store from '../store'
+import api from '../../utils/api'
 
-function parseToken(token) {
-  try {
-    let verifiedToken = jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
-    //verify role
-    if (verifiedToken.role !== 'admin' && verifiedToken.role !== 'superadmin') {
-      localStorage.removeItem("token");
-      return null
-    }
-    return verifiedToken
-    
-  } catch (error) {
-    //call for refresh token if jwt has expired
-    localStorage.removeItem("token");
-    return null;
-  }
+const initialState = {
+  token: localStorage.getItem('token'),
+  isAuth: null,
+  loading: true,
+  user: null
 }
-
-const renderInitial = (tok) => {
-  const token = tok || localStorage.getItem("token");
-  const decoded = parseToken(token);
-  return {
-    token: localStorage.getItem("token"),
-    isAuth: decoded !== null ? true : null,
-    loading: decoded !== null ? false : true,
-    user:
-      decoded !== null
-        ? {
-            _id: decoded._id,
-            name: decoded.name,
-            email: decoded.email,
-          }
-        : null,
-    role: decoded !== null ? decoded.role : null,
-  };
-};
-
-const initialState = renderInitial();
 
 
 export default function (state = initialState, action) {
   const { type, payload} = action;
   switch (type) {
-    case SIGN_IN:
-      localStorage.setItem("token", payload);
-      const parsedInitial = renderInitial(payload);
-
+    case REFRESH_TOKEN:
+      case SIGN_IN:
+        localStorage.setItem("token", payload.accessToken);
+        localStorage.setItem("refreshToken", payload.refreshToken);
+        return {
+          ...state,
+          token: payload.accessToken,
+          isAuth: true,
+          loading: false
+      };
+    case LOAD_ME:
       return {
         ...state,
-        ...parsedInitial,
-      };
-    case AUTH_ERROR:
-    case SIGN_OUT:
+        isAuth: true,
+        loading: false,
+        user: payload
+      }
+      case AUTH_ERROR:
+      case SIGN_OUT:
       localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
       return {
         ...state,
         token: "",
         isAuth: false,
         loading: true,
         user: null,
-        role:null
       };
     default:
       return state;
   }
-}
+} 

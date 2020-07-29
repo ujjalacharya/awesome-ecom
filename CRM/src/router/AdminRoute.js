@@ -5,13 +5,13 @@ import { Route, Redirect } from "react-router-dom";
 
 const AdminRoute = ({
     component: Component,
-    auth: { isAuth, loading, role },
+    auth: { isAuth, loading, user },
     ...rest
 }) => (
         <Route
             {...rest}
             render={props => {
-                return (isAuth && !loading && (role === 'admin' || role==='superadmin')) ? (
+                return (isAuth && !loading && (user?.role === 'admin' || user?.role==='superadmin')) ? (
                     <Component {...props} />
                 ) : (
                         <Redirect

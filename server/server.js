@@ -15,7 +15,7 @@ const { dbConnection, errorHandler} = require('./middleware/helpers');
 dbConnection();
 
 // Middlewares
-app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+app.use(cors());
 
 app.use(express.json());
 app.use(express.static("public"));

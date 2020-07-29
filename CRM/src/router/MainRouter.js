@@ -14,9 +14,7 @@ const MainRouter = (props) => {
   return (
     <Switch>
       <AdminRoute exact path="/" component={Home} />;
-      <SuperAdminRoute exact path="/superadmin" component={() => <h1>Sup SuperAdmin</h1>}
-      />
-      ;
+      <SuperAdminRoute exact path="/superadmin" component={() => <h1>Sup SuperAdmin</h1>}/>
     </Switch>
   );
 };
