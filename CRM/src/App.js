@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-
+import 'antd/dist/antd.css';
 import { connect } from "react-redux";
 import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
