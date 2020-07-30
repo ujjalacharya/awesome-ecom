@@ -90,3 +90,19 @@
     cursor: pointer;
    }
 }
+
+.all-cards{
+  width: 100%;
+  position: relative;
+  .todoCard{
+    width: 300px;
+    z-index: 9;
+  }
+  .dashed-line{
+    width: 100%;
+    border: 1px dashed #eee;
+    z-index: 7;
+    position: absolute;
+    top: 50%;
+  }
+}
