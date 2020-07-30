@@ -1,17 +1,18 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+// import PropTypes from "prop-types";
+// import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
+import { decodeLocalStorage } from "../utils/common";
 
 const SuperAdminRoute = ({
     component: Component,
-    auth: { isAuth, loading, user },
+    // auth: { isAuth, loading, user },
     ...rest
 }) => (
         <Route
             {...rest}
             render={props => {
-                return (isAuth && !loading && user?.role === 'superadmin') ? (
+                return (decodeLocalStorage()?.role === 'superadmin') ? (
                     <Component {...props} />
                 ) : (
                         <Redirect
@@ -25,11 +26,12 @@ const SuperAdminRoute = ({
         />
     );
 
-SuperAdminRoute.propTypes = {
-    auth: PropTypes.object.isRequired
-};
+export default SuperAdminRoute
+// SuperAdminRoute.propTypes = {
+//     auth: PropTypes.object.isRequired
+// };
 
-const mapStateToProps = state => ({
-    auth: state.Auth
-});
-export default connect(mapStateToProps)(SuperAdminRoute);
+// const mapStateToProps = state => ({
+//     auth: state.Auth
+// });
+// export default connect(mapStateToProps)(SuperAdminRoute);

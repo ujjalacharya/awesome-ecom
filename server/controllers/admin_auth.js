@@ -114,15 +114,15 @@ exports.signin = async (req, res) => {
 };
 exports.refreshToken = async (req, res) => {
     
-    let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken,userIP:req.ip })
-    if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
     // if (Date.now() >= refreshToken.expires) {
-    //     return res.status(401).json({error:'Refresh Token has expired.'})
-    // }
-    // //extend refreshtoken expiration
-    // refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    // await refreshToken.save()
-    try {
+        //     return res.status(401).json({error:'Refresh Token has expired.'})
+        // }
+        // //extend refreshtoken expiration
+        // refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        // await refreshToken.save()
+        try {
+        let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken,userIP:req.ip })
+        // if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
         let tokenData = jwt.verify(refreshToken.refreshToken,process.env.REFRESH_TOKEN_KEY)
         const payload = {
             _id: tokenData._id,
@@ -150,15 +150,19 @@ exports.refreshToken = async (req, res) => {
         // res.cookie('refreshToken', `${refreshToken.refreshToken}`, cookieOptions);
         return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
     } catch (error) {
-        return res.status(401).json({error:error.message})
+        return res.status(401).json({error:'Invalid refresh token '})
     }
 
 }
 
 exports.loadMe = async (req,res) =>{
-    req.admin.resetPasswordLink = undefined
-    req.admin.emailVerifyLink = undefined
-    res.json(req.admin)
+    let admin = {
+        _id:req.admin._id,
+        name: req.admin.name,
+        email:req.admin.email,
+        role: req.admin.role
+    }
+    res.json({admin})
 }
 
 exports.forgotPassword = async (req, res) => {

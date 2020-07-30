@@ -7,7 +7,7 @@ export const loadMe = () => async dispatch => {
     const res = await api.get('admin-auth/load-me')
     dispatch({
       type: LOAD_ME,
-      payload: res.data
+      payload: res.data?.admin
     });
   } catch (err) {
     console.log('****auth_actions/loadMe****', err);
@@ -36,13 +36,13 @@ export const signIn = (email,password) => async dispatch=> {
 
 export const signOut = () => async dispatch => {
 
-  const res = await api.get(`/superadmin/dispatchers?page=1&perPage=10`, {})
-  console.log(res,'main');
-  // try {
-  //   dispatch({
-  //     type:SIGN_OUT
-  //   })
-  // } catch (err) {
-  //   console.log('****auth_actions/signOut****', err);
-  // }
+  // const res = await api.get(`/superadmin/dispatchers?page=1&perPage=10`, {})
+  // console.log(res,'main');
+  try {
+    dispatch({
+      type:SIGN_OUT
+    })
+  } catch (err) {
+    console.log('****auth_actions/signOut****', err);
+  }
 }

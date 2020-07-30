@@ -1,12 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+// import PropTypes from "prop-types";
+// import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 import { decodeLocalStorage } from "../utils/common";
 
 const AdminRoute = ({
   component: Component,
-  auth: { isAuth, loading, user },
+  // auth: { isAuth, loading, user },
   ...rest
 }) => (
   <Route
@@ -28,11 +28,13 @@ const AdminRoute = ({
   />
 );
 
-AdminRoute.propTypes = {
-  auth: PropTypes.object.isRequired,
-};
+export default AdminRoute
 
-const mapStateToProps = (state) => ({
-  auth: state.Auth,
-});
-export default connect(mapStateToProps)(AdminRoute);
+// AdminRoute.propTypes = {
+//   auth: PropTypes.object.isRequired,
+// };
+
+// const mapStateToProps = (state) => ({
+//   auth: state.Auth,
+// });
+// export default connect(mapStateToProps)(AdminRoute);

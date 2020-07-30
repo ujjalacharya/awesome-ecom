@@ -26,8 +26,9 @@ export const verifyLocalStorage = () => {
   
       jwt.verify(token, JWT_SIGNIN_KEY, async (err, decoded) => {
         if (err) {
+          //need to check for other error as well..
           if (err.expiredAt !== undefined) {
-            data = { token, user: { ...jwt.decode(token, JWT_SIGNIN_KEY) } };
+            data = {user: { ...jwt.decode(token, JWT_SIGNIN_KEY)}};
           } else {
             data = false;
           }
@@ -35,7 +36,7 @@ export const verifyLocalStorage = () => {
           data = decoded
         }
       });
-      localStorage.setItem(accessTokenKey, token);	
+      // localStorage.setItem(accessTokenKey, token);	
       return data;
     } else {
       return false;

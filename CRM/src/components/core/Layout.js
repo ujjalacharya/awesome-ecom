@@ -5,12 +5,12 @@ import TopNavbar from './navbar/TopNavbar'
 import AdminBar from './navbar/AdminBar'
 import { connect } from 'react-redux'
 
-const Layout = ({ children, role }) => {
+const Layout = ({ children, user }) => {
   return (
     <Fragment>
       <div className="wrapper">
-        {role === 'superadmin' && <SuperadminBar />}
-        {role === 'admin' && <AdminBar />}
+        {user?.role === 'superadmin' && <SuperadminBar />}
+        {user?.role === 'admin' && <AdminBar />}
         <div className='main'>
           <TopNavbar />
           <main className='content'>
@@ -27,6 +27,6 @@ const Layout = ({ children, role }) => {
   );
 };
 const mapStateToProps = state => ({
-  role: state.Auth.role
+  user: state.Auth.user
 })
 export default connect(mapStateToProps)(Layout);
