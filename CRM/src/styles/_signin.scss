@@ -1,7 +1,6 @@
 .login-dark {
   height: 100vh;
-  background: #475d62
-    url("/img/darkbg.jpg");
+  background: #475d62 url("/img/darkbg.jpg");
   background-size: cover;
   position: relative;
 
@@ -29,37 +28,39 @@
     }
 
     .btn-primary {
-     background: #214a80;
-     border: none;
-     border-radius: 4px;
-     padding: 11px;
-     box-shadow: none;
-     margin-top: 26px;
-     text-shadow: none;
-     outline: none;
+      background: #214a80;
+      border: none;
+      border-radius: 4px;
+      padding: 11px;
+      box-shadow: none;
+      margin-top: 26px;
+      text-shadow: none;
+      outline: none;
 
-     &:active{
-      transform: translateY(1px);
+      &:active {
+        transform: translateY(1px);
+      }
+      &:hover,
+      &:active {
+        background: #214a80;
+        outline: none;
+      }
     }
-    &:hover, &:active{
-     background: #214a80;
-     outline: none;
-    }
-   }
 
-   .forgot {
-    display: block;
-    text-align: center;
-    font-size: 12px;
-    color: #6f7a85;
-    opacity: 0.9;
-    text-decoration: none;
+    .forgot {
+      display: block;
+      text-align: center;
+      font-size: 12px;
+      color: #6f7a85;
+      opacity: 0.9;
+      text-decoration: none;
 
-    &:hover, &:active{
-     opacity: 1;
-     text-decoration: none;
+      &:hover,
+      &:active {
+        opacity: 1;
+        text-decoration: none;
+      }
     }
-  }
   }
 
   .illustration {
@@ -68,9 +69,7 @@
     font-size: 100px;
     color: #2980ef;
   }
-
 }
-
 
 .loading-image {
   width: 100%;
@@ -81,26 +80,34 @@
   margin-right: 5px;
 }
 
-.check-group{
-   display: flex;
-   #checkbox{
-     margin-right: 1rem;
-   }
-   .checkbox-label{
+.check-group {
+  display: flex;
+  #checkbox {
+    margin-right: 1rem;
+  }
+  .checkbox-label {
     cursor: pointer;
-   }
+  }
 }
 
-.all-cards{
+.all-cards {
   width: 100%;
   position: relative;
-  .todoCard{
-    width: 300px;
+  .todoCard {
     z-index: 9;
+    margin: 0px 25px;
   }
-  .dashed-line{
+  .dashed-line {
     width: 100%;
-    border: 1px dashed #eee;
+    margin: 5px 0;
+    height: 5px;
+    background: repeating-linear-gradient(
+      to right,
+      #eed 0,
+      #eee 13px,
+      transparent 13px,
+      transparent 18px
+    );
     z-index: 7;
     position: absolute;
     top: 50%;

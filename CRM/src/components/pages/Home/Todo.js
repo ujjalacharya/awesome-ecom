@@ -14,7 +14,7 @@ const Todo = (props) => {
   return (
     <div className="all-cards">
       <Row>
-        <Col span={8}>
+        <Col lg={8} >
           <Card
             title="Default size card"
             extra={<a href="#">More</a>}
@@ -26,7 +26,7 @@ const Todo = (props) => {
           </Card>
         </Col>
 
-        <Col span={8}>
+        <Col lg={8}>
           <Card
             title="Default size card"
             extra={<a href="#">More</a>}
@@ -38,7 +38,7 @@ const Todo = (props) => {
           </Card>
         </Col>
 
-        <Col span={8}>
+        <Col lg={8}>
           <Card
             title="Default size card"
             extra={<a href="#">More</a>}
