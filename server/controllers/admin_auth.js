@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const { sendEmail } = require("../middleware/helpers");
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
+const crypto = require("crypto");
 const RefreshToken = require("../models/RefereshToken")
 
 /**
@@ -93,31 +94,77 @@ exports.signin = async (req, res) => {
         process.env.JWT_SIGNIN_KEY,
         { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
     );
-    let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+    let refreshToken = { 
+        refreshToken: jwt.sign(
+            payload,
+            process.env.REFRESH_TOKEN_KEY,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRE }
+        ),
+        userIP: req.ip,
+     }
     refreshToken = new RefreshToken(refreshToken)
+    
     await refreshToken.save()
-    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-    return res.json({ accessToken, refreshToken });
+    // let cookieOptions = {
+    //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    //     // httpOnly: true
+    // }
+    // res.cookie('refreshToken', `${refreshToken.refreshToken}`,cookieOptions);//with that same expire date
+    return res.json({ accessToken, refreshToken:refreshToken.refreshToken });
 };
 exports.refreshToken = async (req, res) => {
-    const { refreshToken } = req.body
-    if (refreshToken == null) return res.status(400).json({ error: " Token is Null" })
-    let token = await RefreshToken.findOne({ refreshToken })
-    if (!token) return res.status(403).json({ error: "Invalid refresh token" })
-    const admin = await jwt.verify(token.refreshToken, process.env.REFRESH_TOKEN_KEY)
-    const payload = {
-        _id: admin._id,
-        name: admin.name,
-        email: admin.email,
-        role: admin.role
-    };
-    const accessToken = jwt.sign(
-        payload,
-        process.env.JWT_SIGNIN_KEY,
-        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-    );
-    return res.json({ accessToken });
+    
+    // if (Date.now() >= refreshToken.expires) {
+        //     return res.status(401).json({error:'Refresh Token has expired.'})
+        // }
+        // //extend refreshtoken expiration
+        // refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        // await refreshToken.save()
+        try {
+        let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken,userIP:req.ip })
+        // if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
+        let tokenData = jwt.verify(refreshToken.refreshToken,process.env.REFRESH_TOKEN_KEY)
+        const payload = {
+            _id: tokenData._id,
+            name: tokenData.name,
+            email: tokenData.email,
+            role: tokenData.role
+        };
+        const accessToken = jwt.sign(
+            payload,
+            process.env.JWT_SIGNIN_KEY,
+            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+        );
+        refreshToken.refreshToken = jwt.sign(
+            payload,
+            process.env.REFRESH_TOKEN_KEY,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRE }
+        )
+        await refreshToken.save()
+
+    
+        // let cookieOptions = {
+        //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),//with that same expire date
+        //     httpOnly: true
+        // }
+        // res.cookie('refreshToken', `${refreshToken.refreshToken}`, cookieOptions);
+        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
+    } catch (error) {
+        return res.status(401).json({error:'Invalid refresh token '})
+    }
+
 }
+
+exports.loadMe = async (req,res) =>{
+    let admin = {
+        _id:req.admin._id,
+        name: req.admin.name,
+        email:req.admin.email,
+        role: req.admin.role
+    }
+    res.json({admin})
+}
+
 exports.forgotPassword = async (req, res) => {
     if (!req.body) return res.status(400).json({ error: "No request body" });
     if (!req.body.email) return res.status(400).json({ error: "No Email in request body" });

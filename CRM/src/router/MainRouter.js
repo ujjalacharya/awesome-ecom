@@ -1,9 +1,10 @@
 //package
 import React from "react";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Switch, Route} from "react-router-dom";
 import { connect } from "react-redux";
 //router
 import SuperAdminRoute from "./SuperAdminRoute";
+import AdminRoute from './AdminRoute'
 
 //UI components
 import Home from "../components/pages/Home";
@@ -12,13 +13,8 @@ import Profile from "../components/pages/Profile";
 const MainRouter = (props) => {
   return (
     <Switch>
-      <Route exact path="/" component={Home} />;
-      <SuperAdminRoute
-        exact
-        path="/superadmin"
-        component={() => <h1>Sup SuperAdmin</h1>}
-      />
-      ;
+      <AdminRoute exact path="/" component={Home} />;
+      <SuperAdminRoute exact path="/superadmin" component={() => <h1>Sup SuperAdmin</h1>}/>
     </Switch>
   );
 };

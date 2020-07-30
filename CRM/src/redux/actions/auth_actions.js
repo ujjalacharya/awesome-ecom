@@ -1,44 +1,31 @@
-import { SIGN_IN, SIGN_OUT, AUTH_ERROR, LOAD_ME } from "../types";
-import jwt from "jsonwebtoken";
-import axios from 'axios'
-import setAuthToken from '../../utils/setAuthToken'
-const config = {
-  headers: {
-    "Content-Type": "application/json"
-  }
-};
+import { SIGN_IN, SIGN_OUT, AUTH_ERROR,LOAD_ME} from "../types";
+import api from '../../utils/api'
+
+
 export const loadMe = () => async dispatch => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
   try {
-    const token = localStorage.getItem("token");
-    const decoded = jwt.verify(token, process.env.REACT_APP_JWT_SIGNIN_KEY);
-    const { _id, name, email, role } = decoded;
-    const payload = { _id, name, email }
-    // dispatch({
-    //   type: LOAD_ME,
-    //   payload,
-    //   role
-    // });
+    const res = await api.get('admin-auth/load-me')
+    dispatch({
+      type: LOAD_ME,
+      payload: res.data?.admin
+    });
   } catch (err) {
     console.log('****auth_actions/loadMe****', err);
-    // dispatch({
-    //   type: AUTH_ERROR
-    // });
+    dispatch({
+      type: AUTH_ERROR
+    });
   }
-};
+}
+
 export const signIn = (email,password) => async dispatch=> {
   const body = JSON.stringify({ email, password });
-  // console.log('fdsgs');
   try {
-    const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/admin-auth/signin`, body, config);
-    // console.log(res.data);
+    const res = await api.post(`/admin-auth/signin`, body)
     dispatch({
       type: SIGN_IN,
-      payload: res.data.accessToken
+      payload: res.data
     });
-    // dispatch(loadMe());
+    dispatch(loadMe())
   } catch (err) {
     console.log('****auth_actions/signIn****',err);
     dispatch({
@@ -47,9 +34,15 @@ export const signIn = (email,password) => async dispatch=> {
   }
 }
 
-export function signOut(data) {
-  return {
-    type: SIGN_OUT,
-    payload: data,
-  };
+export const signOut = () => async dispatch => {
+
+  // const res = await api.get(`/superadmin/dispatchers?page=1&perPage=10`, {})
+  // console.log(res,'main');
+  try {
+    dispatch({
+      type:SIGN_OUT
+    })
+  } catch (err) {
+    console.log('****auth_actions/signOut****', err);
+  }
 }

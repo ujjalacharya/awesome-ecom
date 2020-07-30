@@ -1,20 +1,22 @@
 import React, { useEffect } from "react";
-
+import 'antd/dist/antd.css';
 import { connect } from "react-redux";
-
-// import { loadUser } from './redux/actions/auth';
 import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
 import "./App.scss";
 import Signin from "./components/pages/Signin";
-import Home from "./components/pages/Home";
+import { loadMe } from "./redux/actions/auth_actions";
+import store from "./redux/store";
+import { verifyLocalStorage } from "./utils/common";
 
-const App = (props) => {
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
+const App = () => {
   useEffect(() => {
-    setAuthToken(localStorage.token);
-    // store.dispatch(loadUser());
+    store.dispatch(loadMe());
   }, []);
-  return <>{!props.isAuthenticated ? <Signin /> : <MainRouter />}</>;
+  return <>{!verifyLocalStorage() ? <Signin /> : <MainRouter />}</>;
 };
 
 const mapStateToProps = (state) => {

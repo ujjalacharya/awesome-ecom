@@ -3,14 +3,14 @@ import SuperadminBar from "./navbar/SuperadminBar";
 import Footer from "./Footer";
 import TopNavbar from './navbar/TopNavbar'
 import AdminBar from './navbar/AdminBar'
-import { connect } from 'react-redux'
+import {verifyLocalStorage} from '../../utils/common'
 
-const Layout = ({ children, role }) => {
+const Layout = ({ children}) => {
   return (
     <Fragment>
       <div className="wrapper">
-        {role === 'superadmin' && <SuperadminBar />}
-        {role === 'admin' && <AdminBar />}
+        {verifyLocalStorage().role === 'superadmin' && <SuperadminBar />}
+        {verifyLocalStorage().role === 'admin' && <AdminBar />}
         <div className='main'>
           <TopNavbar />
           <main className='content'>
@@ -26,7 +26,4 @@ const Layout = ({ children, role }) => {
     </Fragment>
   );
 };
-const mapStateToProps = state => ({
-  role: state.Auth.role
-})
-export default connect(mapStateToProps)(Layout);
+export default Layout;
