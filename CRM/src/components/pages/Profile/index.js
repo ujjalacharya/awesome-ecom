@@ -1,45 +1,50 @@
 
 import React from 'react'
+import { Tabs, Button } from 'antd';
 import Layout from "../../core/Layout";
+import ProfileForm from './ProfileForm';
+const { TabPane } = Tabs
 
 // import PropTypes from 'prop-types'
 
 const Profile = props => {
     return (
         <Layout>
-            <section className="content-header">
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="box">
-                            <div className="box-header with-border">
-                                <h3 className="box-title">Dashboard</h3>
-                            </div>
-                            <div className="box-body">
-                                <div className="row">
-                                    <div className="col-md-8">
-                                        <p className="text-center">
-                                            <strong>This is profile</strong>
-                                        </p>
-                                    </div>
+            <div className="row">
+                <div className="col-12 col-lg-12">
+                    <Tabs size='large'>
+                        <TabPane tab="General" key="1">
+                            <div className="card">
+                                <div className="col-md-12">
+                                    <Tabs >
+                                        <TabPane tab="Profile" key="a">
+                                            <ProfileForm />
+                                        </TabPane>
+                                        <TabPane tab="Business" key="b">
+                                            Business
+                    </TabPane>
+                                        <TabPane tab="Bank" key="c">
+                                            Bank
+                     </TabPane>
+                                        <TabPane tab="Ware House" key="d">
+                                            ware House
+                     </TabPane>
+                                    </Tabs>
                                 </div>
                             </div>
-                            <div className="box-footer">
-                                <div className="row">
-                                    <div className="col-sm-3 col-xs-6">
-                                        <div className="description-block border-right">
-                                            <span className="description-percentage text-green">
-                                                <i className="fa fa-caret-up"></i> 17%
-                                            </span>
-                                            <h5 className="description-header">$35,210.43</h5>
-                                            <span className="description-text">TOTAL REVENUE</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </TabPane>
+                        <TabPane tab="Seller logo" key="2">
+                            logo
+                </TabPane>
+                        <TabPane tab="Shipping" key="ship">
+                            shipping
+                </TabPane>
+                        <TabPane tab="Comissions" key="3">
+                            Comissinons
+                </TabPane>
+                    </Tabs>
                 </div>
-            </section>
+            </div>
         </Layout>
     )
 }
