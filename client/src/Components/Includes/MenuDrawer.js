@@ -1,21 +1,15 @@
 import React, { Component } from "react";
-import { Drawer, Collapse } from "antd";
-import _ from 'lodash'
+import { Drawer } from "antd";
+import _ from "lodash";
+import Router from "next/router";
 
 class MenuDrawer extends Component {
   state = { placement: "left" };
 
-  //   showDrawer = () => {
-  //     this.setState({
-  //       visible: true,
-  //     });
-  //   };
-
-  //   onClose = () => {
-  //     this.setState({
-  //       visible: false,
-  //     });
-  //   };
+  searchProducts = (e, slug, cateId) => {
+    e.stopPropagation();
+    Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
+  };
 
   onChange = (e) => {
     this.setState({
@@ -23,19 +17,10 @@ class MenuDrawer extends Component {
     });
   };
 
-  callback = (key) => {
-    console.log(key);
-  };
-
   render() {
     const { placement } = this.state;
     let { parentCate } = this.props;
 
-    const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
     return (
       <>
         <Drawer
