@@ -7,6 +7,7 @@ import Router from "next/router";
 import { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import MobileHeader from "./MobileHeader";
 
 Router.onRouteChangeStart = (url) => NProgress.start();
 Router.onRouteChangeComplete = (url) => NProgress.done();
@@ -27,6 +28,8 @@ class Layout extends Component {
         <Head>
           <title>{title || ""}</title>
         </Head>
+
+        <MobileHeader />
 
         <Header data={this.props.menuCate}/>
         <div className="has-text-centered">{children}</div>

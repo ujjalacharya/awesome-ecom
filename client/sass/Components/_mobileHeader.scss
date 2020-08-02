@@ -1,0 +1,29 @@
+.mobile-header {
+  height: 50px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  @media screen and (min-width: 481px) {
+      display: none;
+  }
+  .menu-logo {
+    display: flex;
+    align-items: center;
+    .burger-menu {
+      font-size: 20px;
+    }
+  }
+  .search-mob{
+      i{
+        font-size: 18px;
+      }
+  }
+  .logo {
+    margin-left: 15px;
+    img {
+      height: 30px;
+    }
+  }
+}
