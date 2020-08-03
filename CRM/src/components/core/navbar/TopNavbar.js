@@ -3,6 +3,7 @@ import React from 'react'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { signOut } from '../../../redux/actions/auth_actions'
+import { Link } from 'react-router-dom';
 
 const TopNavbar = ({ signOut,profile }) => {
     return (
@@ -182,7 +183,7 @@ const TopNavbar = ({ signOut,profile }) => {
 							<span className="text-dark">{profile && profile.name}</span>
 						</a>
 						<div className="dropdown-menu dropdown-menu-right">
-							<a className="dropdown-item" href="pages-profile.html"><i className="align-middle mr-1" data-feather="user"></i> Profile</a>
+							<Link className="dropdown-item" to='/profile'><i className="align-middle mr-1" data-feather="user"></i> Profile</Link>
 							<a className="dropdown-item" href="#"><i className="align-middle mr-1" data-feather="pie-chart"></i> Analytics</a>
 							<div className="dropdown-divider"></div>
 							<a className="dropdown-item" href="pages-settings.html">Settings & Privacy</a>
