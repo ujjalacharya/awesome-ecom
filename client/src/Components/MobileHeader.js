@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import actions from "../../redux/actions";
 import { withRouter } from "next/router";
 import { getChildCategories, getUserInfo } from "../../utils/common";
+import Link from "next/link";
 
 class MobileHeader extends Component {
   state = { visible: false };
@@ -63,7 +64,7 @@ class MobileHeader extends Component {
   };
 
   render() {
-    let { parentCate } = this.state
+    let { parentCate } = this.state;
 
     return (
       <div className="mobile-header">
@@ -71,9 +72,11 @@ class MobileHeader extends Component {
           <div className="burger-menu" onClick={this.showDrawer}>
             <i class="fa fa-bars" aria-hidden="true"></i>
           </div>
-          <div className="logo">
-            <img src="/images/logo.png" />
-          </div>
+          <Link href="/">
+            <div className="logo">
+              <img src="/images/logo.png" />
+            </div>
+          </Link>
         </div>
         <div className="search-mob">
           <i class="fa fa-search" aria-hidden="true"></i>
@@ -81,7 +84,7 @@ class MobileHeader extends Component {
         <MenuDrawer
           showDrawer={this.state.visible}
           onCloseDrawer={this.onCloseDrawer}
-          parentCate = {parentCate}
+          parentCate={parentCate}
         />
       </div>
     );
