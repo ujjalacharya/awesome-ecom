@@ -21,6 +21,8 @@ import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 
+const productDatas = [productData[0]];
+
 export class CheckOutScreen extends Component {
   state = {
     checked: false,
@@ -54,11 +56,27 @@ export class CheckOutScreen extends Component {
                 />
               )}
 
-              <Appbar.Content title="Checkout" color={Constants.headerTintColor} />
+              <Appbar.Content
+                title="Checkout"
+                color={Constants.headerTintColor}
+              />
             </Appbar.Header>
           </View>
 
-          {productData.map((product, i) => (
+          <View
+            style={{ height: 300, marginBottom: 5, backgroundColor: "white" }}
+          >
+            <>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 0.1, backgroundColor: "pink" }}></View>
+                <View
+                  style={{ flex: 0.9, backgroundColor: "lightblue" }}
+                ></View>
+              </View>
+            </>
+          </View>
+
+          {productDatas.map((product, i) => (
             <TouchableWithoutFeedback key={i}>
               <Card
                 onPress={() => this.props.navigation.navigate("Detail")}
@@ -66,7 +84,6 @@ export class CheckOutScreen extends Component {
               >
                 <Card.Content>
                   <View style={{ flex: 1, flexDirection: "row", marginTop: 5 }}>
-                  
                     <View style={{ flex: 0.5 }}>
                       <Image
                         style={styles.tinyLogo}
@@ -146,32 +163,32 @@ export class CheckOutScreen extends Component {
           style={{ backgroundColor: Constants.headerTintColor, height: 70 }}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View
-                  style={{
-                    flex: 0.3,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text style={{ fontSize: 13 }}>{"Total: Rs 199"}</Text>
-                </View>
-                <View style={{ flex: 0.7, ...styles.footer }}>
-                  <Button
-                    style={{
-                      flex: 1,
-                      backgroundColor: "orange",
-                      justifyContent: "center",
-                      margin: 10,
-                      borderRadius: 5,
-                    }}
-                    labelStyle={{ color: "white" }}
-                    onPress={()=>this.props.navigation.navigate("CheckOut")}
-                  >
-                    Proceed
-                  </Button>
-                </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View
+                style={{
+                  flex: 0.3,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontSize: 13 }}>{"Total: Rs 199"}</Text>
               </View>
+              <View style={{ flex: 0.7, ...styles.footer }}>
+                <Button
+                  style={{
+                    flex: 1,
+                    backgroundColor: "orange",
+                    justifyContent: "center",
+                    margin: 10,
+                    borderRadius: 5,
+                  }}
+                  labelStyle={{ color: "white" }}
+                  onPress={() => this.props.navigation.navigate("CheckOut")}
+                >
+                  Proceed
+                </Button>
+              </View>
+            </View>
           </View>
         </View>
       </>
