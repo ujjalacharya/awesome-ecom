@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import {
   TouchableWithoutFeedback,
   ScrollView,
+  TouchableOpacity,
 } from "react-native-gesture-handler";
 
 import {
@@ -19,7 +20,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
-import FeaturedProducts from "../HomeScreen/FeaturedProducts";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const productDatas = [productData[0]];
 
@@ -64,14 +65,112 @@ export class CheckOutScreen extends Component {
           </View>
 
           <View
-            style={{ height: 300, marginBottom: 5, backgroundColor: "white" }}
+            style={{ height: 250, marginBottom: 5, backgroundColor: "white" }}
           >
             <>
               <View style={{ flex: 1, flexDirection: "row" }}>
-                <View style={{ flex: 0.1, backgroundColor: "pink" }}></View>
-                <View
-                  style={{ flex: 0.9, backgroundColor: "lightblue" }}
-                ></View>
+                <View style={{ flex: 0.1 }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="location-on"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="local-phone"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="email"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                </View>
+                <View style={{ flex: 0.8 }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text>
+                      {
+                        "New Baneswor, Thulo Kharibot, New Baneswor, Kathamandu Metro 10- New Baneswor Area"
+                      }
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="location-on"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="location-on"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                </View>
+                <View style={{ flex: 0.1 }}>
+                  <TouchableRipple
+                    style={{
+                      flex: 1,
+                    }}
+                    onPress={()=>console.warn("pressed")}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <MaterialIcons
+                        name="edit"
+                        size={Constants.normalScreenDescriptionSize}
+                        color={Constants.tintColor}
+                      />
+                    </View>
+                  </TouchableRipple>
+                  <View style={{ flex: 1 }}></View>
+                  <View style={{ flex: 1 }}></View>
+                </View>
               </View>
             </>
           </View>
@@ -118,35 +217,7 @@ export class CheckOutScreen extends Component {
                             </Text>
                           </View>
                           <View style={{ flex: 1, flexDirection: "row" }}>
-                            <TouchableRipple
-                              onPress={() => console.warn("-")}
-                              style={{
-                                flex: 0.3,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Button>{"-"}</Button>
-                            </TouchableRipple>
-                            <View
-                              style={{
-                                flex: 0.4,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Text>{"0"}</Text>
-                            </View>
-                            <TouchableRipple
-                              onPress={() => console.warn("+")}
-                              style={{
-                                flex: 0.3,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Button>{"+"}</Button>
-                            </TouchableRipple>
+                            <Text style={{fontSize: 12}}>{"Quantity: 2"}</Text>
                           </View>
                         </View>
                         <View style={{ flex: 0.2 }}></View>
