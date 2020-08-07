@@ -3,6 +3,9 @@ import React from 'react'
 import { Tabs, Button } from 'antd';
 import Layout from "../../core/Layout";
 import ProfileForm from './ProfileForm';
+import BusinessForm from './BusinessForm'
+import BankForm from './BankForm'
+import WarehouseForm from './WarehouseForm'
 const { TabPane } = Tabs
 
 // import PropTypes from 'prop-types'
@@ -21,13 +24,13 @@ const Profile = props => {
                                             <ProfileForm />
                                         </TabPane>
                                         <TabPane tab="Business" key="b">
-                                            Business
+                                            <BusinessForm/>
                     </TabPane>
                                         <TabPane tab="Bank" key="c">
-                                            Bank
+                                            <BankForm/>
                      </TabPane>
                                         <TabPane tab="Ware House" key="d">
-                                            ware House
+                                            <WarehouseForm/>
                      </TabPane>
                                     </Tabs>
                                 </div>
