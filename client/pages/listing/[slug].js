@@ -84,13 +84,13 @@ class Listing extends Component {
             </div>
             <div className="sticky-filter">
               <Row style={{ width: "100%" }}>
-                <Col span={12}>
+                {/* <Col span={12}>
                   <div className="filter-type" onClick={this.showDrawerSort}>
                     <img src="/images/sortBy.png" alt="sort by icon" />
                     <span>Sort By</span>
                   </div>
-                </Col>
-                <Col span={12}>
+                </Col> */}
+                <Col span={24}>
                   <div
                     className="filter-type removeBorder"
                     onClick={this.showDrawerFiter}
@@ -101,7 +101,7 @@ class Listing extends Component {
                 </Col>
               </Row>
             </div>
-            <Drawer
+            {/* <Drawer
               title="FILTER"
               placement="bottom"
               closable={true}
@@ -114,7 +114,7 @@ class Listing extends Component {
                 removeThisTitle="noDisplay"
                 closeThisFilter={this.onCloseFilter}
               />
-            </Drawer>
+            </Drawer> */}
             <Drawer
               title="SORT BY"
               placement="bottom"
@@ -123,7 +123,8 @@ class Listing extends Component {
               visible={this.state.visibleSort}
               className="showSortDrawer"
             >
-              <div className="show-sort-by">
+              <Filter removeThisFilter="noDisplayMobAndTab" data={this.props.allBrands} />
+              {/* <div className="show-sort-by">
                 <ul>
                   <li
                     onClick={() => this.onCloseSort("ascending")}
@@ -131,7 +132,6 @@ class Listing extends Component {
                       this.state.sortName === "ascending" ? "active" : ""
                     }
                   >
-                    {/* <Icon type="arrow-down" /> */}
                     <span>Ascending</span>
                   </li>
                   <li
@@ -159,7 +159,7 @@ class Listing extends Component {
                     Price: Low To High
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </Drawer>
           </section>
         </div>

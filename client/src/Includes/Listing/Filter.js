@@ -4,17 +4,17 @@ import { Radio, Row, Col } from "antd";
 import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
 const radioStyle = {
-  display: 'block',
-  height: '30px',
-  lineHeight: '30px',
+  display: "block",
+  height: "30px",
+  lineHeight: "30px",
 };
 class Filter extends Component {
   state = {
-    checkedBrands: [],  
+    checkedBrands: [],
     value: 1,
   };
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
       value: e.target.value,
     });
@@ -135,28 +135,36 @@ class Filter extends Component {
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Warrenty Period</div>
           <div className="type-list">
-            <Radio.Group onChange={(e) => this.props.onChangeWarrenty(e.target.value)} value={this.props.selectedWarrenty}>
-              {data.warranties && data.warranties.map((warrenty) => {
-                return (
-                  <Radio style={radioStyle} value={warrenty}>
-                    {warrenty}
-                  </Radio>
-                );
-              })}
+            <Radio.Group
+              onChange={(e) => this.props.onChangeWarrenty(e.target.value)}
+              value={this.props.selectedWarrenty}
+            >
+              {data.warranties &&
+                data.warranties.map((warrenty) => {
+                  return (
+                    <Radio style={radioStyle} value={warrenty}>
+                      {warrenty}
+                    </Radio>
+                  );
+                })}
             </Radio.Group>
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Sizes</div>
           <div className="type-list">
-            <Radio.Group onChange={(e) => this.props.onChangeSize(e.target.value)} value={this.props.selectedSize}>
-              {data.sizes && data.sizes.map((size) => {
-                return (
-                  <Radio style={radioStyle} value={size}>
-                    {size}
-                  </Radio>
-                );
-              })}
+            <Radio.Group
+              onChange={(e) => this.props.onChangeSize(e.target.value)}
+              value={this.props.selectedSize}
+            >
+              {data.sizes &&
+                data.sizes.map((size) => {
+                  return (
+                    <Radio style={radioStyle} value={size}>
+                      {size}
+                    </Radio>
+                  );
+                })}
             </Radio.Group>
           </div>
         </div>
@@ -168,7 +176,10 @@ class Filter extends Component {
               </div>
             </Col>
             <Col span={12}>
-              <div className="filter-type apply-type removeBorder">
+              <div
+                className="filter-type apply-type removeBorder"
+                onClick={this.props.closeThisFilter}
+              >
                 <span>APPLY</span>
               </div>
             </Col>

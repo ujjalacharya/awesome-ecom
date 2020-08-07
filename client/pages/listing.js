@@ -19,9 +19,9 @@ class Listing extends Component {
     currentPage: 1,
     checkedColors: [],
     filterBody: {},
-    minPrice: '',
-    maxPrice: '',
-    selectedWarrenty: ''
+    minPrice: "",
+    maxPrice: "",
+    selectedWarrenty: "",
   };
 
   static getInitialProps(ctx) {
@@ -41,6 +41,7 @@ class Listing extends Component {
   };
 
   onCloseFilter = () => {
+    console.log('hey')
     this.setState({
       visibleFilter: false,
     });
@@ -128,15 +129,15 @@ class Listing extends Component {
 
   onHandleRatings = (rating) => {
     this.setState({
-      currentRating: rating
-    })
+      currentRating: rating,
+    });
 
     let body = {};
 
     body = getFilterAppendBody(
       this.state.filterBody,
       this.props,
-      (rating+''),
+      rating + "",
       "ratings"
     );
 
@@ -149,36 +150,30 @@ class Listing extends Component {
       body
     );
   };
-  
+
   changePrice = (price, type) => {
-    if(type === 'min'){
+    if (type === "min") {
       this.setState({
-        minPrice: price
-      })
-    }else{
+        minPrice: price,
+      });
+    } else {
       this.setState({
-        maxPrice: price
-      })
+        maxPrice: price,
+      });
     }
-  }
+  };
 
   searchPrice = (minPrice, maxPrice) => {
-
     let body = {};
 
     body = getFilterAppendBody(
       this.state.filterBody,
       this.props,
-      (minPrice+''),
+      minPrice + "",
       "min_price"
     );
 
-    body = getFilterAppendBody(
-      body,
-      this.props,
-      (maxPrice+''),
-      "max_price"
-    );
+    body = getFilterAppendBody(body, this.props, maxPrice + "", "max_price");
 
     this.setState({
       filterBody: body,
@@ -188,22 +183,21 @@ class Listing extends Component {
       `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
       body
     );
-  }
+  };
 
   onChangeWarrenty = (warrenty) => {
-    
     this.setState({
-      selectedWarrenty: warrenty
-    })
+      selectedWarrenty: warrenty,
+    });
 
     let body = {};
 
-    let warenty = warrenty === '' ? [] : [warrenty]
+    let warenty = warrenty === "" ? [] : [warrenty];
 
     body = getFilterAppendBody(
       this.state.filterBody,
       this.props,
-      (warenty),
+      warenty,
       "warranties"
     );
 
@@ -215,20 +209,19 @@ class Listing extends Component {
       `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
       body
     );
-  }
+  };
 
   onChangeSize = (size) => {
-    
     this.setState({
-      selectedSize: size
-    })
+      selectedSize: size,
+    });
 
     let body = {};
 
     body = getFilterAppendBody(
       this.state.filterBody,
       this.props,
-      (size),
+      size,
       "sizes"
     );
 
@@ -240,48 +233,52 @@ class Listing extends Component {
       `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
       body
     );
-  }
+  };
 
   removeBrand = (brand) => {
     let allBrands = this.state.checkedBrands;
-    let newBrands = allBrands.filter((obj) => {return obj !== brand})
+    let newBrands = allBrands.filter((obj) => {
+      return obj !== brand;
+    });
 
-    this.onCheckBrands(newBrands)
-  }
+    this.onCheckBrands(newBrands);
+  };
 
   removeColor = (color) => {
     let allColors = this.state.checkedColors;
-    let newColors = allColors.filter((obj) => {return obj !== color})
+    let newColors = allColors.filter((obj) => {
+      return obj !== color;
+    });
 
-    this.onChangeColors(newColors)
-  }
+    this.onChangeColors(newColors);
+  };
 
   removeRating = (rating) => {
-    this.onHandleRatings('')
-  }
+    this.onHandleRatings("");
+  };
 
   removePrice = () => {
     this.setState({
-      minPrice: '',
-      maxPrice: ''
-    })
-    this.searchPrice('', '')
-  }
+      minPrice: "",
+      maxPrice: "",
+    });
+    this.searchPrice("", "");
+  };
 
   removeWarrenty = () => {
-    this.onChangeWarrenty('')
-  }
+    this.onChangeWarrenty("");
+  };
 
   removeSize = () => {
-    this.onChangeSize('')
-  }
+    this.onChangeSize("");
+  };
   render() {
     return (
       <div className="wrapper">
         <section className="listing">
           <div className="container">
             <Row>
-              <Col lg={4} xs={24} md={6}>
+              <Col lg={4} xs={24} md={6} className="remove-filter">
                 <Filter
                   removeThisFilter="noDisplayMobAndTab"
                   data={this.props.getSearchFilter}
@@ -290,29 +287,30 @@ class Listing extends Component {
                   onChangeColors={this.onChangeColors}
                   checkedColors={this.state.checkedColors}
                   onHandleRatings={this.onHandleRatings}
-                  searchPrice = {this.searchPrice}
-                  changePrice = {this.changePrice}
-                  minPrice = {this.state.minPrice}
-                  maxPrice = {this.state.maxPrice}
-                  onChangeWarrenty = {this.onChangeWarrenty}
-                  selectedWarrenty = {this.state.selectedWarrenty}
-                  onChangeSize = {this.onChangeSize}
-                  selectedSize = {this.state.selectedSize}
+                  searchPrice={this.searchPrice}
+                  changePrice={this.changePrice}
+                  minPrice={this.state.minPrice}
+                  maxPrice={this.state.maxPrice}
+                  onChangeWarrenty={this.onChangeWarrenty}
+                  selectedWarrenty={this.state.selectedWarrenty}
+                  onChangeSize={this.onChangeSize}
+                  selectedSize={this.state.selectedSize}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
+                <div className="products-title">All Products</div>
                 <ProductList
                   data={this.props.data}
                   perPage={this.props.perPage}
                   currentPage={this.state.currentPage}
                   currentFilter={this.state.filterBody}
                   searchFilter={this.props.getSearchFilter}
-                  removeBrand = {this.removeBrand}
-                  removeColor = {this.removeColor}
-                  removeRating = {this.removeRating}
-                  removePrice = {this.removePrice}
-                  removeWarrenty = {this.removeWarrenty}
-                  removeSize = {this.removeSize}
+                  removeBrand={this.removeBrand}
+                  removeColor={this.removeColor}
+                  removeRating={this.removeRating}
+                  removePrice={this.removePrice}
+                  removeWarrenty={this.removeWarrenty}
+                  removeSize={this.removeSize}
                 />
                 <div className="pagination">
                   <div className="page-status">
@@ -335,7 +333,7 @@ class Listing extends Component {
             <Row style={{ width: "100%" }}>
               <Col span={12}>
                 <div className="filter-type" onClick={this.showDrawerSort}>
-                  <img src="/images/sortBy.png" alt="sort by icon" />
+                  <i class="fa fa-sort" aria-hidden="true"></i>
                   <span>Sort By</span>
                 </div>
               </Col>
@@ -344,7 +342,7 @@ class Listing extends Component {
                   className="filter-type removeBorder"
                   onClick={this.showDrawerFiter}
                 >
-                  <img src="/images/filter.png" alt="filter icon" />
+                  <i class="fa fa-filter" aria-hidden="true"></i>
                   <span>Filter</span>
                 </div>
               </Col>
@@ -360,7 +358,21 @@ class Listing extends Component {
             height="100vh"
           >
             <Filter
-              removeThisTitle="noDisplay"
+              removeThisFilter="noDisplayMobAndTab"
+              data={this.props.getSearchFilter}
+              onCheckBrands={this.onCheckBrands}
+              checkedBrands={this.state.checkedBrands}
+              onChangeColors={this.onChangeColors}
+              checkedColors={this.state.checkedColors}
+              onHandleRatings={this.onHandleRatings}
+              searchPrice={this.searchPrice}
+              changePrice={this.changePrice}
+              minPrice={this.state.minPrice}
+              maxPrice={this.state.maxPrice}
+              onChangeWarrenty={this.onChangeWarrenty}
+              selectedWarrenty={this.state.selectedWarrenty}
+              onChangeSize={this.onChangeSize}
+              selectedSize={this.state.selectedSize}
               closeThisFilter={this.onCloseFilter}
             />
           </Drawer>
@@ -371,43 +383,8 @@ class Listing extends Component {
             onClose={this.onCloseSort}
             visible={this.state.visibleSort}
             className="showSortDrawer"
-          >
-            <div className="show-sort-by">
-              <ul>
-                <li
-                  onClick={() => this.onCloseSort("ascending")}
-                  className={
-                    this.state.sortName === "ascending" ? "active" : ""
-                  }
-                >
-                  {/* <Icon type="arrow-down" /> */}
-                  <span>Ascending</span>
-                </li>
-                <li
-                  onClick={() => this.onCloseSort("descending")}
-                  className={
-                    this.state.sortName === "descending" ? "active" : ""
-                  }
-                >
-                  Descending
-                </li>
-                <li
-                  onClick={() => this.onCloseSort("highPrice")}
-                  className={
-                    this.state.sortName === "highPrice" ? "active" : ""
-                  }
-                >
-                  Price: High To Low
-                </li>
-                <li
-                  onClick={() => this.onCloseSort("lowPrice")}
-                  className={this.state.sortName === "lowPrice" ? "active" : ""}
-                >
-                  Price: Low To High
-                </li>
-              </ul>
-            </div>
-          </Drawer>
+            height="100vh"
+          ></Drawer>
         </section>
       </div>
     );
