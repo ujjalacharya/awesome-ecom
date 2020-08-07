@@ -13,7 +13,7 @@ import {
   Paragraph,
   Appbar,
   Button,
-  Checkbox,
+  TextInput,
   TouchableRipple,
 } from "react-native-paper";
 import { View, Text, Image, StyleSheet } from "react-native";
@@ -65,7 +65,7 @@ export class CheckOutScreen extends Component {
           </View>
 
           <View
-            style={{ height: 250, marginBottom: 5, backgroundColor: "white" }}
+            style={{ height: 300, marginBottom: 5, backgroundColor: "white" }}
           >
             <>
               <View style={{ flex: 1, flexDirection: "row" }}>
@@ -129,11 +129,11 @@ export class CheckOutScreen extends Component {
                       justifyContent: "center",
                     }}
                   >
-                    <MaterialIcons
-                      name="location-on"
-                      size={Constants.normalScreenDescriptionSize}
-                      color={Constants.tintColor}
+                    <TextInput 
+                    mode="outlined"
+                    value={"9848658331"} 
                     />
+                    
                   </View>
                   <View
                     style={{
@@ -141,10 +141,9 @@ export class CheckOutScreen extends Component {
                       justifyContent: "center",
                     }}
                   >
-                    <MaterialIcons
-                      name="location-on"
-                      size={Constants.normalScreenDescriptionSize}
-                      color={Constants.tintColor}
+                   <TextInput 
+                    mode="outlined"
+                    value={"acharyaujjal1@gmail.com"} 
                     />
                   </View>
                 </View>
@@ -153,7 +152,7 @@ export class CheckOutScreen extends Component {
                     style={{
                       flex: 1,
                     }}
-                    onPress={()=>console.warn("pressed")}
+                    onPress={() => console.warn("pressed")}
                   >
                     <View
                       style={{
@@ -175,7 +174,7 @@ export class CheckOutScreen extends Component {
             </>
           </View>
 
-          {productDatas.map((product, i) => (
+          {productData.map((product, i) => (
             <TouchableWithoutFeedback key={i}>
               <Card
                 onPress={() => this.props.navigation.navigate("Detail")}
@@ -217,7 +216,9 @@ export class CheckOutScreen extends Component {
                             </Text>
                           </View>
                           <View style={{ flex: 1, flexDirection: "row" }}>
-                            <Text style={{fontSize: 12}}>{"Quantity: 2"}</Text>
+                            <Text style={{ fontSize: 12 }}>
+                              {"Quantity: 2"}
+                            </Text>
                           </View>
                         </View>
                         <View style={{ flex: 0.2 }}></View>
