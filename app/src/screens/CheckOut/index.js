@@ -50,12 +50,10 @@ export class CheckOutScreen extends Component {
         >
           <View style={{ height: 50 }}>
             <Appbar.Header statusBarHeight={0}>
-              {isCartStack && (
                 <Appbar.BackAction
                   color={Constants.headerTintColor}
                   onPress={this._goBack}
                 />
-              )}
 
               <Appbar.Content
                 title="Checkout"
