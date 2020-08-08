@@ -16,7 +16,7 @@ import {
   TextInput,
   TouchableRipple,
 } from "react-native-paper";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Alert } from "react-native";
 
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
@@ -39,6 +39,22 @@ export class CheckOutScreen extends Component {
     }));
   };
 
+  handleProceed = () => {
+    Alert.alert(
+      "Place Order!",
+      "Are you sure you about the order placement details?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        { text: "YES", onPress: () => console.warn("Order Placed") },
+      ]
+    );
+    return true;
+  };
+
   render() {
     const isCartStack = this.props.route.name === "CartStack";
     return (
@@ -50,10 +66,10 @@ export class CheckOutScreen extends Component {
         >
           <View style={{ height: 50 }}>
             <Appbar.Header statusBarHeight={0}>
-                <Appbar.BackAction
-                  color={Constants.headerTintColor}
-                  onPress={this._goBack}
-                />
+              <Appbar.BackAction
+                color={Constants.headerTintColor}
+                onPress={this._goBack}
+              />
 
               <Appbar.Content
                 title="Checkout"
@@ -127,11 +143,7 @@ export class CheckOutScreen extends Component {
                       justifyContent: "center",
                     }}
                   >
-                    <TextInput 
-                    mode="outlined"
-                    value={"9848658331"} 
-                    />
-                    
+                    <TextInput mode="outlined" value={"9848658331"} />
                   </View>
                   <View
                     style={{
@@ -139,9 +151,9 @@ export class CheckOutScreen extends Component {
                       justifyContent: "center",
                     }}
                   >
-                   <TextInput 
-                    mode="outlined"
-                    value={"acharyaujjal1@gmail.com"} 
+                    <TextInput
+                      mode="outlined"
+                      value={"acharyaujjal1@gmail.com"}
                     />
                   </View>
                 </View>
@@ -253,7 +265,7 @@ export class CheckOutScreen extends Component {
                     borderRadius: 5,
                   }}
                   labelStyle={{ color: "white" }}
-                  onPress={() => this.props.navigation.navigate("CheckOut")}
+                  onPress={this.handleProceed}
                 >
                   Proceed
                 </Button>
