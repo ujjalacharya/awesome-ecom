@@ -2600,6 +2600,13 @@ expo-linking@~1.0.3:
     qs "^6.5.0"
     url-parse "^1.4.4"
 
+expo-local-authentication@~9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/expo-local-authentication/-/expo-local-authentication-9.1.1.tgz#70058829268f6f652b40fc69cc075f0310b4eff2"
+  integrity sha512-VMk6PTzIdGFBTDWUcB7JgoTV0bOm6bQ9LXeEsT4Wb0y9Uou3IjZKmcVLsMDa3wje7K5B7bs2DZ5acmhB+/AIIA==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-location@~8.2.1:
   version "8.2.1"
   resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-8.2.1.tgz#5ea6bfd3d211939117416da151f1384caa15e0db"
