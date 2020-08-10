@@ -47,6 +47,9 @@ api.interceptors.response.use(
         return Promise.reject(err);
       }
     }
+    if (err.response.status > 400 && err.response.status < 500) {
+      return Promise.reject(err.response.data.error);
+    }
   }
 );
 

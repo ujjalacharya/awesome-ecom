@@ -6,3 +6,7 @@ export function testAction(data) {
     payload: data,
   };
 }
+
+export default {
+  testAction,
+};
