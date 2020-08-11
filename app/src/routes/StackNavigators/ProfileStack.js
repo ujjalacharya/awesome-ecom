@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../../screens/ProfileScreen";
 import LoginScreen from "../../screens/LoginScreen";
+import AuthScreen from "../../screens/Auth";
 
 import { connect } from "react-redux";
 import { headerOptions } from "../../utils/common";
@@ -23,9 +24,9 @@ const ProfileStack = ({ isAuth }) => {
         />
       ) : (
         <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={headerOptions("Login")}
+          name="Auth"
+          component={AuthScreen}
+          options={headerOptions("Authenticate")}
         />
       )}
     </Stack.Navigator>

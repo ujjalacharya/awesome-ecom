@@ -33,15 +33,15 @@ export class LoginScreen extends Component {
   };
 
   handleLogin = async () => {
-    // this.props.signIn("fdf");
     this.checkFinger();
+    this.props.signIn("fdf");
   };
 
   checkFinger = async () => {
     let result = await LocalAuthentication.authenticateAsync();
     console.log(result)
     if (result.success) {
-      console.warn("success");
+      console.warn("successes");
     } else {
       console.warn("unsuccess");
     }
@@ -56,7 +56,7 @@ export class LoginScreen extends Component {
             color={Constants.headerTintColor}
           />
         </Appbar.Header>
-        <Text> Login Screen </Text>
+        <Text> Login Screens </Text>
         <Button title="Login" onPress={this.handleLogin} />
       </View>
     );

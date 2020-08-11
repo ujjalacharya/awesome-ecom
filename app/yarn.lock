@@ -4816,6 +4816,11 @@ react-native-screens@~2.2.0:
   dependencies:
     debounce "^1.2.0"
 
+react-native-status-bar-height@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz#bc0fb85230603850aab9667ee8111a62954de90c"
+  integrity sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA==
+
 react-native-swiper@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.6.0.tgz#59fdbdf95addee49630312f27077622c27776819"
