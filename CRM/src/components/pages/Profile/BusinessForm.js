@@ -39,13 +39,13 @@ const BusinessForm = props => {
                             <input type="file" className="form-control-file" id="exampleFormControlFile1" />
                         </div>
                         <div className="form-group col-md-6">
-                            <label htmlFor="exampleFormControlFile1">Citizenship Back Image</label>
-                            <input type="file" className="form-control-file" id="exampleFormControlFile1" />
+                            <label htmlFor="exampleFormControlFile2">Citizenship Back Image</label>
+                            <input type="file" className="form-control-file" id="exampleFormControlFile2" />
                         </div>
 
                         <div className="form-group col-md-6">
-                            <label htmlFor="exampleFormControlFile1">Business Licence Copy</label>
-                            <input type="file" className="form-control-file" id="exampleFormControlFile1" />
+                            <label htmlFor="exampleFormControlFile3">Business Licence Copy</label>
+                            <input type="file" className="form-control-file" id="exampleFormControlFile3" />
                         </div>
                         </div>
                         <button type="submit" className="btn btn-primary">Submit</button>

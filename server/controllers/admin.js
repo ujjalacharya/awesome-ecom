@@ -41,7 +41,7 @@ exports.updateProfile = async (req, res) => {
     
     profile.holidayMode.start = req.body.holidayStart && req.body.holidayStart
     profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
-
+    
     profile = _.extend(profile, req.body)
     await profile.save();
     profile.password = undefined

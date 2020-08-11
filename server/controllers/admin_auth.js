@@ -156,13 +156,7 @@ exports.refreshToken = async (req, res) => {
 }
 
 exports.loadMe = async (req,res) =>{
-    let admin = {
-        _id:req.admin._id,
-        name: req.admin.name,
-        email:req.admin.email,
-        role: req.admin.role
-    }
-    res.json({admin})
+    res.json({admin:req.admin})
 }
 
 exports.forgotPassword = async (req, res) => {

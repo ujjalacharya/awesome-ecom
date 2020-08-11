@@ -8,3 +8,4 @@ export const TEST_TYPE = 'TEST_TYPE';
 
 //profile
 export const GET_PROFILE = 'GET_PROFILE';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
