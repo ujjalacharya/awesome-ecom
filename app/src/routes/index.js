@@ -15,6 +15,7 @@ import CartStackScreen from "../screens/CartStackScreen";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
 import CheckOut from "../screens/CheckOut";
 import QnAStack from "./StackNavigators/QnAStack";
+import LoginScreen from "../screens/AuthScreen/LoginScreen";
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
         <Stack.Screen name="Detail" component={ProductDetailScreen} />
         <Stack.Screen name="QnA" component={QnAStack} />
         <Stack.Screen name="CheckOut" component={CheckOut} />
+        <Stack.Screen name="Login" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

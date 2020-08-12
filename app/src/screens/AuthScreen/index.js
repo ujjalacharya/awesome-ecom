@@ -8,12 +8,12 @@ import Paragraph from '../../components/Paragraph';
 const AuthScreen = ({ navigation }) => (
   <Background>
     <Logo />
-    <Header>Login Template</Header>
+    <Header>Login Header</Header>
 
     <Paragraph>
-      The easiest way to start with your amazing application.
+      Yadyy yaady yaada, Some random description
     </Paragraph>
-    <Button mode="contained" onPress={() => navigation.navigate('LoginScreen')}>
+    <Button mode="contained" onPress={() => navigation.navigate('Login')}>
       Login
     </Button>
     <Button
