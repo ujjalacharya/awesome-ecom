@@ -37,6 +37,7 @@ export const signOut = () => async (dispatch) => {
     dispatch({
       type: SIGN_OUT,
     });
+    window.location.href = "/"
   } catch (err) {
     console.log("****auth_actions/signOut****", err);
   }
