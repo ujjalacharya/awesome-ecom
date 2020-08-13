@@ -15,9 +15,6 @@ import CartStackScreen from "../screens/CartStackScreen";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
 import CheckOut from "../screens/CheckOut";
 import QnAStack from "./StackNavigators/QnAStack";
-import LoginScreen from "../screens/AuthScreen/LoginScreen";
-import RegisterScreen from "../screens/AuthScreen/RegisterScreen";
-import ForgotPasswordScreen from "../screens/AuthScreen/ForgotPasswordScreen";
 
 export default function App() {
   return (
@@ -36,9 +33,6 @@ export default function App() {
         <Stack.Screen name="Detail" component={ProductDetailScreen} />
         <Stack.Screen name="QnA" component={QnAStack} />
         <Stack.Screen name="CheckOut" component={CheckOut} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
