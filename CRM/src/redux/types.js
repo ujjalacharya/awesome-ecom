@@ -10,5 +10,7 @@ export const TEST_TYPE = "TEST_TYPE";
 export const GET_PROFILE = "GET_PROFILE";
 export const UPDATE_PROFILE = "UPDATE_PROFILE";
 
-// error
+// alert
 export const GLOBAL_ERROR = "GLOBAL_ERROR";
+export const SUCCESS = "SUCCESS"
+

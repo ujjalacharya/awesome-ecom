@@ -1,14 +1,14 @@
 import { combineReducers } from "redux";
-import Auth from "./auth_reducer";
-import Test from "./test_reducer";
-import Profile from './profile_reducer'
-import GlobalError from './globalerror_reducer'
+import auth from "./auth_reducer";
+import test from "./test_reducer";
+import profile from './profile_reducer'
+import alert from './alert_reducer'
 
 const rootReducer = combineReducers({
-  Auth,
-  Test,
-  Profile,
-  GlobalError,
+  auth,
+  test,
+  profile,
+  alert,
 });
 
 export default rootReducer;

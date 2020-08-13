@@ -8,7 +8,7 @@ import Signin from "./components/pages/Signin";
 import { loadMe } from "./redux/actions/auth_actions";
 import store from "./redux/store";
 import { verifyLocalStorage } from "./utils/common";
-import GlobalErrorComponent from "./components/common/GlobalErrorComponent";
+import Alert from "./components/common/Alert";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -19,16 +19,11 @@ const App = (props) => {
   }, []);
   return (
     <>
-      <GlobalErrorComponent {...props} />
+      <Alert {...props} />
       {!verifyLocalStorage() ? <Signin /> : <MainRouter />}
     </>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.Auth.isAuth,
-  };
-};
 
-export default connect(mapStateToProps)(App);
+export default connect(state=>state)(App);

@@ -30,7 +30,7 @@ Home.protoTypes = {
   user:PropTypes.object.isRequired,
 }
 const mapStateToProps = (state) => ({
-  user: state.Auth.user,
+  user: state.auth.user,
 })
 
 export default connect(mapStateToProps,{})(Home)

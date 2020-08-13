@@ -10,9 +10,6 @@ export const loadMe = () => async (dispatch) => {
     });
   } catch (err) {
     console.log("****auth_actions/loadMe****", err);
-    dispatch({
-      type: AUTH_ERROR,
-    });
   }
 };
 
@@ -26,9 +23,6 @@ export const signIn = (email, password) => async (dispatch) => {
         payload: res.data,
       });
       dispatch(loadMe());
-    }else{
-      console.log('****res****',res);
-      dispatch({ type: GLOBAL_ERROR, payload: res || "Not Found" });
     }
   } catch (err) {
     console.log("****auth_actions/signIn****", err);

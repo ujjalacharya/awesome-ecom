@@ -1,16 +1,8 @@
 import React, { useState } from "react";
 import SigninForm from "./SigninForm";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 
 import { signIn } from "../../../redux/actions/auth_actions";
-
-// import {
-//   signIn,
-//   authenticate,
-//   isAuthenticated
-// } from "../../../Utils/Requests/Auth";
-
 const Login = (props) => {
   const [state, setState] = useState({
     email: "aanandbhandari143@gmail.com",
@@ -31,7 +23,6 @@ const Login = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // setState({ ...state, error: false, loading: true });
 
     props.signIn(email,password);
   };
@@ -61,7 +52,7 @@ const Login = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.Auth.isAuth,
+    isAuthenticated: state.auth.isAuth,
   };
 };
 

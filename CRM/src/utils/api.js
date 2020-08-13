@@ -20,11 +20,6 @@ const api = axios.create({
 api.interceptors.response.use(
   (res) => res,
   async (err) => {
-    console.log(err.response, "middleware");
-    if (err.status === 401 && err.response.data.error === "jwt malformed") {
-      store.dispatch({ type: SIGN_OUT });
-      return Promise.reject(err);
-    }
     if (err.response.data.error === "jwt expired") {
       //call for refresh token
       const originalReq = err.config;
@@ -44,10 +39,14 @@ api.interceptors.response.use(
         store.dispatch({
           type: AUTH_ERROR,
         });
-        return Promise.reject(err);
+        return Promise.reject(err.response.data.error);
       }
     }
-    if (err.response.status > 400 && err.response.status < 500) {
+    if (err.response.status === 401) {
+      store.dispatch({ type: AUTH_ERROR });
+      return Promise.reject(err.response.data.error);
+    }
+    if (err.response.status >= 400 && err.response.status <= 500) {
       return Promise.reject(err.response.data.error);
     }
   }

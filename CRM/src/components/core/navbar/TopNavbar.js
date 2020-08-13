@@ -202,6 +202,6 @@ TopNavbar.propTypes = {
 	user: PropTypes.object,
 }
 const mapStateToProps = state =>({
-	user:state.Auth.user
+	user:state.auth.user
 })
 export default connect(mapStateToProps, { signOut })(TopNavbar)

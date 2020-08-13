@@ -21,7 +21,7 @@ const MainRouter = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.Auth,
+  isAuthenticated: state.auth,
 });
 
 export default connect(mapStateToProps)(MainRouter);

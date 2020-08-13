@@ -1,7 +1,6 @@
 import React, { useState,useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Alert from '../../core/Alert'
 import {updateProfile} from '../../../redux/actions/profile_actions'
 
 const ProfileForm = ({user, updateProfile}) => {
@@ -38,21 +37,11 @@ const ProfileForm = ({user, updateProfile}) => {
     const onSubmit = async e => {
         e.preventDefault()
         setIsDisabled(true)
-        const result = await updateProfile(profile,user._id)
-        setIsDisabled(false)
-        setIsSuccess(result)
-        setTimeout(() => setIsSuccess(null), 5000)
+        await updateProfile(profile,user._id)
+        // setIsDisabled(false)
     }
     return (
         <>
-        {isSuccess && <Alert
-            type={'success'}
-            msg={'Profile Updated Successfully!'}
-        />}
-        {isSuccess === false && <Alert
-            type={'error'}
-            msg={'Error Occurred.Please try again!'}
-        />}
         <div className="col-md-12">
             <div className="card">
                 <div className="card-header">
@@ -160,7 +149,7 @@ ProfileForm.propTypes = {
     updateProfile: PropTypes.func.isRequired,
 }
 const mapStateToProps = (state) => ({
-    user: state.Auth.user,
+    user: state.auth.user,
 })
 
 

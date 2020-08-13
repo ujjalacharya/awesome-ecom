@@ -1,4 +1,4 @@
-import { UPDATE_PROFILE } from "../types";
+import { UPDATE_PROFILE, GLOBAL_ERROR } from "../types";
 import api from "../../utils/api";
 
 export const updateProfile = (profile, id) => async (dispatch) => {
@@ -12,6 +12,8 @@ export const updateProfile = (profile, id) => async (dispatch) => {
     return true;
   } catch (err) {
     console.log("****profile_actions/updateProfile****", err);
+    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+
     return false;
     //error handling here..
   }
