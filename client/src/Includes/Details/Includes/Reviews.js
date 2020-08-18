@@ -48,10 +48,11 @@ class Reviews extends Component {
         <div className="star-show">
           <StarRatings
             rating={totalStars}
-            starDimension="20px"
-            starSpacing="2px"
+            starDimension="18px"
+            starSpacing="0px"
             starRatedColor="#f2c900"
             starEmptyColor="#eee"
+            className="review-ratings"
           />
         </div>
         <div className="star-bar">
@@ -115,7 +116,7 @@ class Reviews extends Component {
               {this.showStars(oneStarPercent, 1, data.stars.oneStars)}
             </div>
           </div>
-          <div className="title">Product Reviews</div>
+          <div className="title prod-review">Product Reviews</div>
           <div className="all-reviews">
             {!_.isEmpty(this.state.productReviews.reviews) ? (
               this.state.productReviews.reviews?.map((review, i) => {

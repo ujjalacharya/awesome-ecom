@@ -251,7 +251,7 @@ class ProductCard extends Component {
                         rating={parseFloat(
                           productData.averageRating.$numberDecimal
                         )}
-                        starDimension="16px"
+                        starDimension="13px"
                         starSpacing="1px"
                         starRatedColor="#f2c900"
                         starEmptyColor="#eee"
@@ -259,7 +259,7 @@ class ProductCard extends Component {
                     ) : (
                       <StarRatings
                         rating={5}
-                        starDimension="16px"
+                        starDimension="13px"
                         starSpacing="1px"
                         starRatedColor="#eee"
                         starEmptyColor="#eee"

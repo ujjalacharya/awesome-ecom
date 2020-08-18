@@ -5,14 +5,14 @@
     //   height: 500px;
     // }
     @media screen and (max-width: 480px) {
-      height: 385px;
+      height: 210px;
     }
-    @media screen and (max-width: 375px) {
-      height: 320px;
-    }
-    @media screen and (max-width: 320px) {
-      height: 275px;
-    }
+    // @media screen and (max-width: 375px) {
+    //   height: 320px;
+    // }
+    // @media screen and (max-width: 320px) {
+    //   height: 275px;
+    // }
     .enlargedImage {
       z-index: 9;
       img{
