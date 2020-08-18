@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import {
   TouchableWithoutFeedback,
   ScrollView,
+  TouchableOpacity,
 } from "react-native-gesture-handler";
 
 import {
@@ -12,14 +13,16 @@ import {
   Paragraph,
   Appbar,
   Button,
-  Checkbox,
+  TextInput,
   TouchableRipple,
 } from "react-native-paper";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Alert } from "react-native";
 
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
-import FeaturedProducts from "../HomeScreen/FeaturedProducts";
+import { MaterialIcons } from "@expo/vector-icons";
+
+const productDatas = [productData[0]];
 
 export class CheckOutScreen extends Component {
   state = {
@@ -36,6 +39,22 @@ export class CheckOutScreen extends Component {
     }));
   };
 
+  handleProceed = () => {
+    Alert.alert(
+      "Place Order!",
+      "Are you sure you about the order placement details?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        { text: "YES", onPress: () => console.warn("Order Placed") },
+      ]
+    );
+    return true;
+  };
+
   render() {
     const isCartStack = this.props.route.name === "CartStack";
     return (
@@ -47,15 +66,122 @@ export class CheckOutScreen extends Component {
         >
           <View style={{ height: 50 }}>
             <Appbar.Header statusBarHeight={0}>
-              {isCartStack && (
-                <Appbar.BackAction
-                  color={Constants.headerTintColor}
-                  onPress={this._goBack}
-                />
-              )}
+              <Appbar.BackAction
+                color={Constants.headerTintColor}
+                onPress={this._goBack}
+              />
 
-              <Appbar.Content title="Checkout" color={Constants.headerTintColor} />
+              <Appbar.Content
+                title="Checkout"
+                color={Constants.headerTintColor}
+              />
             </Appbar.Header>
+          </View>
+
+          <View
+            style={{ height: 300, marginBottom: 5, backgroundColor: "white" }}
+          >
+            <>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ flex: 0.1 }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="location-on"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="local-phone"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <MaterialIcons
+                      name="email"
+                      size={Constants.normalScreenDescriptionSize}
+                      color={Constants.tintColor}
+                    />
+                  </View>
+                </View>
+                <View style={{ flex: 0.8 }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text>
+                      {
+                        "New Baneswor, Thulo Kharibot, New Baneswor, Kathamandu Metro 10- New Baneswor Area"
+                      }
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TextInput mode="outlined" value={"9848658331"} />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TextInput
+                      mode="outlined"
+                      value={"acharyaujjal1@gmail.com"}
+                    />
+                  </View>
+                </View>
+                <View style={{ flex: 0.1 }}>
+                  <TouchableRipple
+                    style={{
+                      flex: 1,
+                    }}
+                    onPress={() => console.warn("pressed")}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <MaterialIcons
+                        name="edit"
+                        size={Constants.normalScreenDescriptionSize}
+                        color={Constants.tintColor}
+                      />
+                    </View>
+                  </TouchableRipple>
+                  <View style={{ flex: 1 }}></View>
+                  <View style={{ flex: 1 }}></View>
+                </View>
+              </View>
+            </>
           </View>
 
           {productData.map((product, i) => (
@@ -66,7 +192,6 @@ export class CheckOutScreen extends Component {
               >
                 <Card.Content>
                   <View style={{ flex: 1, flexDirection: "row", marginTop: 5 }}>
-                  
                     <View style={{ flex: 0.5 }}>
                       <Image
                         style={styles.tinyLogo}
@@ -101,35 +226,9 @@ export class CheckOutScreen extends Component {
                             </Text>
                           </View>
                           <View style={{ flex: 1, flexDirection: "row" }}>
-                            <TouchableRipple
-                              onPress={() => console.warn("-")}
-                              style={{
-                                flex: 0.3,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Button>{"-"}</Button>
-                            </TouchableRipple>
-                            <View
-                              style={{
-                                flex: 0.4,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Text>{"0"}</Text>
-                            </View>
-                            <TouchableRipple
-                              onPress={() => console.warn("+")}
-                              style={{
-                                flex: 0.3,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Button>{"+"}</Button>
-                            </TouchableRipple>
+                            <Text style={{ fontSize: 12 }}>
+                              {"Quantity: 2"}
+                            </Text>
                           </View>
                         </View>
                         <View style={{ flex: 0.2 }}></View>
@@ -146,32 +245,32 @@ export class CheckOutScreen extends Component {
           style={{ backgroundColor: Constants.headerTintColor, height: 70 }}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View
-                  style={{
-                    flex: 0.3,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text style={{ fontSize: 13 }}>{"Total: Rs 199"}</Text>
-                </View>
-                <View style={{ flex: 0.7, ...styles.footer }}>
-                  <Button
-                    style={{
-                      flex: 1,
-                      backgroundColor: "orange",
-                      justifyContent: "center",
-                      margin: 10,
-                      borderRadius: 5,
-                    }}
-                    labelStyle={{ color: "white" }}
-                    onPress={()=>this.props.navigation.navigate("CheckOut")}
-                  >
-                    Proceed
-                  </Button>
-                </View>
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <View
+                style={{
+                  flex: 0.3,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontSize: 13 }}>{"Total: Rs 199"}</Text>
               </View>
+              <View style={{ flex: 0.7, ...styles.footer }}>
+                <Button
+                  style={{
+                    flex: 1,
+                    backgroundColor: "orange",
+                    justifyContent: "center",
+                    margin: 10,
+                    borderRadius: 5,
+                  }}
+                  labelStyle={{ color: "white" }}
+                  onPress={this.handleProceed}
+                >
+                  Proceed
+                </Button>
+              </View>
+            </View>
           </View>
         </View>
       </>

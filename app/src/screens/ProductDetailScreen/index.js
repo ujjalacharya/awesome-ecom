@@ -65,7 +65,7 @@ class ProductDetailScreen extends Component {
                 <FeaturedProducts title={"Similar Products"} />
               </View>
             </ScrollView>
-            <ProductDetailFooter />
+            <ProductDetailFooter {...this.props}/>
           </>
         )}
       </View>

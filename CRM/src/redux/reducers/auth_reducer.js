@@ -1,5 +1,5 @@
 // import jwt from "jsonwebtoken";
-import { SIGN_IN, SIGN_OUT, AUTH_ERROR, REFRESH_TOKEN, LOAD_ME} from "../types";
+import { SIGN_IN, SIGN_OUT, AUTH_ERROR, REFRESH_TOKEN, LOAD_ME,  UPDATE_PROFILE} from "../types";
 // import store from '../store'
 // import api from '../../utils/api'
 import { accessTokenKey, refreshTokenKey } from "../../utils/config";
@@ -8,7 +8,8 @@ const initialState = {
   token: localStorage.getItem('token'),
   isAuth: null,
   loading: true,
-  user: null
+  user: null,
+  hasError: false,
 }
 
 
@@ -25,6 +26,7 @@ export default function (state = initialState, action) {
           isAuth: true,
           loading: false
       };
+    case UPDATE_PROFILE:
     case LOAD_ME:
       return {
         ...state,

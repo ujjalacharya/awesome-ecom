@@ -41,8 +41,9 @@ exports.updateProfile = async (req, res) => {
     
     profile.holidayMode.start = req.body.holidayStart && req.body.holidayStart
     profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
-
+    
     profile = _.extend(profile, req.body)
+    profile.isVerified = null
     await profile.save();
     profile.password = undefined
     profile.salt = undefined
@@ -101,7 +102,11 @@ exports.businessinfo = async (req, res) => {
             fs.unlinkSync(filePath)//remove old file from respective folders
             docs[fieldname] = `${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;//updating docs
         })
+        docs.isVerified = null
         docs = await docs.save()
+        //db transaction gareko chaina 
+        profile.isVerified = null
+        await profile.save()
         return res.json(docs)
     }
     //if !businessInfo then create new one
@@ -160,7 +165,11 @@ exports.bankinfo = async (req, res) => {
             fs.unlinkSync(filePath)//remove old file from respective folders
             docs["chequeCopy"] = `bank/${filename}`;//updating docs
         }
+        docs.isVerified = null
         await docs.save()
+        //db transaction gareko chaina 
+        profile.isVerified = null
+        await profile.save()
         return res.json(docs)
     }
     //first check if cheque is empty or not
@@ -194,7 +203,11 @@ exports.warehouse = async (req, res) => {
     if (adminWareHouse) {
         let warehouseInfo = await AdminWarehouse.findById(adminWareHouse)
         warehouseInfo = _.extend(warehouseInfo, req.body)
+        warehouseInfo.isVerified = null
         await warehouseInfo.save()
+        //db transaction gareko chaina 
+        profile.isVerified = null
+        await profile.save()
         return res.json(warehouseInfo)
     }
     let newWareHouse = new AdminWarehouse(req.body)

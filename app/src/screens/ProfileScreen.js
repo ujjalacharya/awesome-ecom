@@ -20,6 +20,7 @@ class ProfileScreen extends Component {
       <>
         <Appbar.Header statusBarHeight={0}>
           <Appbar.Content title="Profile" color={Constants.headerTintColor} />
+          <Appbar.Action icon="logout" color="white" onPress={this.handleLogout} />
         </Appbar.Header>
         <WebView
           source={{

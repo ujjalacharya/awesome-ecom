@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { signOut } from '../../../redux/actions/auth_actions'
 import { Link } from 'react-router-dom';
 
-const TopNavbar = ({ signOut,profile }) => {
+const TopNavbar = ({ signOut,user }) => {
     return (
 		<nav className="navbar navbar-expand navbar-light bg-white">
 			<a className="sidebar-toggle d-flex mr-2" href='#'>
@@ -179,8 +179,8 @@ const TopNavbar = ({ signOut,profile }) => {
 						</a>
 
 						<a className="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
-							<img src="img\avatar1.png" className="avatar img-fluid rounded-circle mr-1" alt="profile"/> 
-							<span className="text-dark">{profile && profile.name}</span>
+							<img src="img\avatar1.png" className="avatar img-fluid rounded-circle mr-1" alt="user"/> 
+							<span className="text-dark">{user && user.name}</span>
 						</a>
 						<div className="dropdown-menu dropdown-menu-right">
 							<Link className="dropdown-item" to='/profile'><i className="align-middle mr-1" data-feather="user"></i> Profile</Link>
@@ -199,9 +199,9 @@ const TopNavbar = ({ signOut,profile }) => {
 }
 TopNavbar.propTypes = {
 	signOut: PropTypes.func.isRequired,
-	profile: PropTypes.object,
+	user: PropTypes.object,
 }
 const mapStateToProps = state =>({
-	profile:state.Auth.user
+	user:state.Auth.user
 })
 export default connect(mapStateToProps, { signOut })(TopNavbar)

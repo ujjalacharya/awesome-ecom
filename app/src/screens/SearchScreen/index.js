@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Searchbar, TouchableRipple } from "react-native-paper";
+import { Searchbar, TouchableRipple, Button } from "react-native-paper";
 import Constants from "../../constants/Constants";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -33,9 +33,20 @@ const SeachScreen = (props) => {
           </TouchableRipple>
         </View>
       </View>
-      <View
-        style={{ flex: 15, backgroundColor: Constants.headerTintColor }}
-      ></View>
+      <View style={{ flex: 15, backgroundColor: Constants.headerTintColor }}>
+        <View
+          style={{ height: 30, width: "100%", margin: 5, flexDirection: "row" }}
+        >
+          <View style={{ flex: 0.8, justifyContent: "center" }}>
+            <Text>{"Search History"}</Text>
+          </View>
+          <View style={{ flex: 0.2 }}>
+            <Button onPress={() => console.warn("delete")}>
+              <AntDesign name="delete" color="red" />
+            </Button>
+          </View>
+        </View>
+      </View>
     </View>
   );
 };

@@ -53,6 +53,7 @@ export default class ProductDetailFooter extends Component {
               Add to Cart
             </Button>
             <Button
+              onPress={()=>this.props.navigation.navigate("CheckOut")}
               style={{
                 flex: 0.45,
                 backgroundColor: "orange",

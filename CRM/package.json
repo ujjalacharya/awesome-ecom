@@ -14,12 +14,13 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
+    "react-toastify": "^6.0.8",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "set PORT=3003 && react-scripts start",
+    "start": "PORT=3003 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
