@@ -1,5 +1,5 @@
 // import jwt from "jsonwebtoken";
-import { SIGN_IN, SIGN_OUT, AUTH_ERROR, REFRESH_TOKEN, LOAD_ME,  UPDATE_PROFILE} from "../types";
+import { SIGN_IN, SIGN_OUT, AUTH_ERROR, REFRESH_TOKEN, LOAD_ME,  UPDATE_USER} from "../types";
 // import store from '../store'
 // import api from '../../utils/api'
 import { accessTokenKey, refreshTokenKey } from "../../utils/config";
@@ -26,7 +26,7 @@ export default function (state = initialState, action) {
           isAuth: true,
           loading: false
       };
-    case UPDATE_PROFILE:
+    case UPDATE_USER:
     case LOAD_ME:
       return {
         ...state,

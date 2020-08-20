@@ -1,16 +1,19 @@
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Tabs, Button } from 'antd';
 import Layout from "../../core/Layout";
 import ProfileForm from './ProfileForm';
 import BusinessForm from './BusinessForm'
 import BankForm from './BankForm'
 import WarehouseForm from './WarehouseForm'
+import { connect } from 'react-redux';
 const { TabPane } = Tabs
 
 // import PropTypes from 'prop-types'
 
-const Profile = props => {
+const Profile = ({user}) => {
+
     return (
         <Layout>
             <div className="row">
@@ -21,13 +24,13 @@ const Profile = props => {
                                 <div className="col-md-12">
                                     <Tabs >
                                         <TabPane tab="Profile" key="a">
-                                            <ProfileForm />
+                                            <ProfileForm user={user} />
                                         </TabPane>
                                         <TabPane tab="Business" key="b">
                                             <BusinessForm/>
                     </TabPane>
                                         <TabPane tab="Bank" key="c">
-                                            <BankForm/>
+                                            <BankForm user={user}/>
                      </TabPane>
                                         <TabPane tab="Ware House" key="d">
                                             <WarehouseForm/>
@@ -52,9 +55,13 @@ const Profile = props => {
     )
 }
 
-// Profile.propTypes = {
+Profile.propTypes = {
+    user: PropTypes.object.isRequired,
+}
+const mapStateToProps = (state) => ({
+    user: state.auth.user,
+})
 
-// }
 
-export default Profile
+export default connect(mapStateToProps,{})(Profile)
 

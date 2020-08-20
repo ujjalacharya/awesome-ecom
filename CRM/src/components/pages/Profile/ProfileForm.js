@@ -17,7 +17,6 @@ const ProfileForm = ({user, updateProfile}) => {
         holidayStart:'',
         holidayEnd:'',
     });
-    const [isSuccess, setIsSuccess] = useState(null)
     const [isDisable,setIsDisabled] = useState(false)
     useEffect(()=>{
         setProfile({
@@ -148,9 +147,9 @@ ProfileForm.propTypes = {
     user: PropTypes.object.isRequired,
     updateProfile: PropTypes.func.isRequired,
 }
-const mapStateToProps = (state) => ({
-    user: state.auth.user,
-})
+// const mapStateToProps = (state) => ({
+//     user: state.auth.user,
+// })
 
 
-export default connect(mapStateToProps,{updateProfile})(ProfileForm)
+export default connect(null,{updateProfile})(ProfileForm)

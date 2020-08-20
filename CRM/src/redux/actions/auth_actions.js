@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT, AUTH_ERROR, LOAD_ME, GLOBAL_ERROR } from "../types";
+import { SIGN_IN, SIGN_OUT, LOAD_ME, GLOBAL_ERROR } from "../types";
 import api from "../../utils/api";
 
 export const loadMe = () => async (dispatch) => {

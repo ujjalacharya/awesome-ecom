@@ -1,4 +1,4 @@
-import { GET_PROFILE } from "../types";
+import { GET_PROFILE, UPDATE_BANK, GET_BANK_INFO } from "../types";
 
 
 const initialState = {
@@ -15,6 +15,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 profile: payload,
+            };
+        case GET_BANK_INFO:
+        case UPDATE_BANK:
+            return {
+                ...state,
+                bank: payload,
             };
 
         default:
