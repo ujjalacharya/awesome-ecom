@@ -8,7 +8,7 @@ import { withRouter } from "next/router";
 import QuickViewModal from "./QuickViewModal";
 import Link from "next/link";
 import actions from "../../../redux/actions";
-import { openNotification } from "../../../utils/common";
+import StarRatings from "react-star-ratings";
 
 const products = {
   category: [
@@ -60,7 +60,7 @@ class ProductCard extends Component {
     let checkSkeleton = this.state.productData.name === "" ? true : false;
 
     let loginToken = this.props.authentication.token;
-
+    
     return (
       <div className={"product-card " + (checkSkeleton && "skeleton")}>
         {this.state.showQuickView && (
@@ -246,32 +246,25 @@ class ProductCard extends Component {
                 </div>
                 {!checkSkeleton && (
                   <div className="stars">
-                    {productData?.averageRating?.$numberDecimal &&
-                      Array(
-                        Math.round(productData.averageRating.$numberDecimal)
-                      )
-                        .fill(0)
-                        .map((num, i) => {
-                          return (
-                            <i
-                              className="fa fa-star"
-                              aria-hidden="true"
-                              key={i}
-                            ></i>
-                          );
-                        })}
-
-                    {Array(5 - Math.round(productData.averageRating.$numberDecimal))
-                      .fill(0)
-                      .map((num, k) => {
-                        return (
-                          <i
-                            className="fa fa-star fade-star"
-                            aria-hidden="true"
-                            key={k}
-                          ></i>
-                        );
-                      })}
+                    {productData?.averageRating?.$numberDecimal ? (
+                      <StarRatings
+                        rating={parseFloat(
+                          productData.averageRating.$numberDecimal
+                        )}
+                        starDimension="13px"
+                        starSpacing="1px"
+                        starRatedColor="#f2c900"
+                        starEmptyColor="#eee"
+                      />
+                    ) : (
+                      <StarRatings
+                        rating={5}
+                        starDimension="13px"
+                        starSpacing="1px"
+                        starRatedColor="#eee"
+                        starEmptyColor="#eee"
+                      />
+                    )}
                   </div>
                 )}
               </div>

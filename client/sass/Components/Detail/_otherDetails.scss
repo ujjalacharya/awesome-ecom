@@ -104,6 +104,9 @@
       font-size: 18px;
       font-weight: bold;
       margin-bottom: 10px;
+      &.prod-review{
+        margin-top: 20px;
+      }
     }
     .no-reviews {
       margin-bottom: 10px;
@@ -144,14 +147,21 @@
     .all-ratings-chart {
       display: flex;
       margin-top: 35px;
+      @media screen and (max-width: 480px) {
+        display: block;
+        margin-top: 0px;
+      }
       .rate-avge-stars {
         .ratings {
           font-size: 25px;
           color: #b9b7b7;
           .ave-rate {
             font-size: 50px;
-            color: rgba(0,0,0,.65);
+            color: rgba(0, 0, 0, 0.65);
           }
+        }
+        .total{
+          margin-bottom: 5px;
         }
       }
       .stars-show {
@@ -159,9 +169,16 @@
         margin-bottom: 8px;
         display: flex;
         align-items: center;
+        @media screen and (max-width: 480px) {
+          margin-left: 0px;
+        }
         .star-bar {
           width: 250px;
           margin-left: 15px;
+          @media screen and (max-width: 480px) {
+            width: 220px;
+            margin-left: 10px;
+          }
           .ant-progress-inner {
             border-radius: unset;
           }

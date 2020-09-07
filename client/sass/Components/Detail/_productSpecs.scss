@@ -14,6 +14,9 @@
       font-size: 24px;
       margin-bottom: 10px;
     }
+    @media screen and (max-width: 480px) {
+      font-size: 20px;
+    }
   }
   .price-specs {
     border-bottom: 1px solid #f7f7f7;
@@ -23,10 +26,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      @media screen and (max-width: 480px) {
+        display: block;
+      }
       .ratings {
         color: $tertiary-color;
         i {
           margin-right: 5px;
+        }
+      }
+      .reviews {
+        @media screen and (max-width: 480px) {
+          margin-top: 5px;
         }
       }
     }
@@ -44,6 +55,9 @@
           span {
             font-size: 16px;
             color: $text;
+            @media screen and (max-width: 480px) {
+              font-size: 14px;
+            }
           }
         }
         .new-price {
@@ -52,6 +66,9 @@
           .price {
             font-size: 28px;
             color: $primary-color;
+            @media screen and (max-width: 480px) {
+              font-size: 18px;
+            }
           }
           .discount {
             margin-left: 15px;

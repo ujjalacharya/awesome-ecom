@@ -6,23 +6,29 @@ import Header from '../../components/Header';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 import BackButton from '../../components/BackButton';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import { signIn } from "../../store/actions/user_actions";
 // import { emailValidator, passwordValidator } from '../core/utils';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, ...props }) => {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 
   const _onLoginPressed = () => {
-    const emailError = emailValidator(email.value);
-    const passwordError = passwordValidator(password.value);
+    // const emailError = emailValidator(email.value);
+    // const passwordError = passwordValidator(password.value);
 
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError });
-      setPassword({ ...password, error: passwordError });
-      return;
-    }
+    // if (emailError || passwordError) {
+    //   setEmail({ ...email, error: emailError });
+    //   setPassword({ ...password, error: passwordError });
+    //   return;
+    // }
 
-    navigation.navigate('Dashboard');
+    // navigation.navigate('Dashboard');
+    props.signIn("fdf");
+
   };
 
   return (
@@ -97,4 +103,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(LoginScreen);
+function mapStateToProps(state) {
+  return {
+    isAuth: state.User.auth.isAuth,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ signIn }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
