@@ -45,6 +45,18 @@ const businessSchema = new mongoose.Schema({
     businessLicence:{
         type: String
     },
+    _citizenshipFront: {
+        type: Schema.Types.ObjectId,
+        ref: "adminfile",
+    },
+    _citizenshipBack: {
+        type: Schema.Types.ObjectId,
+        ref: "adminfile",
+    },
+    _businessLicence: {
+        type: Schema.Types.ObjectId,
+        ref: "adminfile",
+    },
     isVerified:{
         type: Date,//as we may need verified date
         default: null
