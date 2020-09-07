@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"awesome-ecom.orders"},{"v":2,"key":{"geolocation":"2dsphere"},"name":"geolocation_2dsphere","ns":"awesome-ecom.orders","background":true,"2dsphereIndexVersion":3}],"uuid":"a810f466d83b45a88a5af687ac7c81d8"}

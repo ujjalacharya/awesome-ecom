@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"awesome-ecom.categories"},{"v":2,"unique":true,"key":{"slug":1},"name":"slug_1","ns":"awesome-ecom.categories","sparse":false,"background":true}],"uuid":"ed80c047beff44618bba8912e59b55d1"}

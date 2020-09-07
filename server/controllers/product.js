@@ -138,12 +138,12 @@ exports.deleteImage = async (req, res) => {
       });
   }
   let updateProduct = product.toObject();
-  let imageURLS;
+  let imageFound;
   updateProduct.images = product.images.filter((image) => {
-    if (image._id.toString() === req.query.image_id) imageURLS = image;
+    if (image._id.toString() === req.query.image_id) imageFound = image;
     return image._id.toString() !== req.query.image_id;
   });
-  if (!imageURLS) {
+  if (!imageFound) {
     return res.status(404).json({ error: "Image not found" });
   }
   await task
@@ -152,11 +152,11 @@ exports.deleteImage = async (req, res) => {
     .remove(ProductImages, { _id: req.query.image_id })
     .run({ useMongoose: true });
 
-  let Path = `public/uploads/${imageURLS.thumbnail}`;
+  let Path = `public/uploads/${imageFound.thumbnail}`;
   fs.unlinkSync(Path);
-  Path = `public/uploads/${imageURLS.medium}`;
+  Path = `public/uploads/${imageFound.medium}`;
   fs.unlinkSync(Path);
-  Path = `public/uploads/${imageURLS.large}`;
+  Path = `public/uploads/${imageFound.large}`;
   fs.unlinkSync(Path);
   res.json(updateProduct.images);
 };

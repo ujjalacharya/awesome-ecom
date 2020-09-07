@@ -68,7 +68,35 @@ exports.uploadPhoto = async (req, res) => {
     await profile.save()
     res.json({ photo: profile.photo })
 }
+const run = async() => {
+    let File = require('../models/AdminFiles')
+    let admins = await Admin.find({role:'admin'}).populate('businessInfo').populate('adminBank')
+    // console.log(admins);
+    admins = admins.map(async admin => {
+        let cheque = new File({fileUri:admin.adminBank.chequeCopy})
+        // let bank = await AdminBank.findById(admin.adminBank._id)
+        // bank.chequeCopy = cheque._id
 
+        let cfront = new File({ fileUri: admin.businessInfo.citizenshipFront})
+        // let businessinfo = await BusinessInfo.findById(admin.businessInfo._id)
+        // businessinfo.citizenshipFront = cfront._id
+
+        let cback = new File({ fileUri: admin.businessInfo.citizenshipBack })
+        // businessinfo.citizenshipBack = cback._id
+
+        let businessLicence = new File({ fileUri: admin.businessInfo.businessLicence })
+        // businessinfo.businessLicence = businessLicence._id
+
+        await cheque.save()
+        await cfront.save()
+        await cback.save()
+        return await businessLicence.save()
+
+    })
+    admins = await Promise.all(admins)
+    console.log(admins);
+}
+// run()
 exports.getBusinessInfo = async (req, res) => {
     let businessinfo = await BusinessInfo.findOne({ admin: req.profile._id })
     if (!businessinfo) {

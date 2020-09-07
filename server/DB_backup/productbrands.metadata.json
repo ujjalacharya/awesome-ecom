@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"awesome-ecom.productbrands"},{"v":2,"unique":true,"key":{"systemName":1},"name":"systemName_1","ns":"awesome-ecom.productbrands","background":true},{"v":2,"unique":true,"key":{"slug":1},"name":"slug_1","ns":"awesome-ecom.productbrands","sparse":false,"background":true}],"uuid":"40f0f3f7b4a24c248c7cf20427b7fa47"}
