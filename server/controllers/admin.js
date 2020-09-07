@@ -72,26 +72,19 @@ const run = async() => {
     let File = require('../models/AdminFiles')
     let admins = await Admin.find({role:'admin'}).populate('businessInfo').populate('adminBank')
     admins = admins.map(async admin => {
-        let cheque = new File({fileUri:admin.adminBank.chequeCopy})
-        let bank = await AdminBank.findById(admin.adminBank._id)
-        bank._chequeCopy = cheque._id
+    //     let bank = await AdminBank.findById(admin.adminBank._id)
+    //     bank.chequeCopy = bank._chequeCopy
 
-        let cfront = new File({ fileUri: admin.businessInfo.citizenshipFront})
-        let businessinfo = await BusinessInfo.findById(admin.businessInfo._id)
-        businessinfo._citizenshipFront = cfront._id
+    //     let businessinfo = await BusinessInfo.findById(admin.businessInfo._id)
+    //    businessinfo.citizenshipFront= businessinfo._citizenshipFront 
 
-        let cback = new File({ fileUri: admin.businessInfo.citizenshipBack })
-        businessinfo._citizenshipBack = cback._id
+    //    businessinfo.citizenshipBack = businessinfo._citizenshipBack
 
-        let businessLicence = new File({ fileUri: admin.businessInfo.businessLicence })
-        businessinfo._businessLicence = businessLicence._id
-
-        await cheque.save()
-        await cfront.save()
-        await cback.save()
-        await bank.save()
-        await businessinfo.save()
-        return await businessLicence.save()
+    //    businessinfo.businessLicence =  businessinfo._businessLicence
+    //    await bank.save()
+    //    return await businessinfo.save()
+        await AdminBank.findByIdAndUpdate(admin.adminBank._id,{$unset:{_chequeCopy:''}})
+        return await BusinessInfo.findByIdAndUpdate(admin.businessInfo._id, { $unset: { _citizenshipFront: '', _citizenshipBack: '', _businessLicence:''} })
 
     })
     admins = await Promise.all(admins)

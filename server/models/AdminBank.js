@@ -37,7 +37,8 @@ const bankSchema = new mongoose.Schema({
         maxlength: 32
     },
     chequeCopy: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "adminfile",
     },
     _chequeCopy: {
         type: Schema.Types.ObjectId,

@@ -37,13 +37,16 @@ const businessSchema = new mongoose.Schema({
         maxlength: 32
     },
     citizenshipFront: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "adminfile",
     },
     citizenshipBack: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "adminfile",
     },
     businessLicence:{
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "adminfile",
     },
     _citizenshipFront: {
         type: Schema.Types.ObjectId,
