@@ -86,84 +86,74 @@ exports.adminFile = async (req, res) => {
 
     const newFile = new File({ fileUri: `${req.query.filetype}/${image}`})
     await newFile.save()
-    res.json(newFile)
+    res.json({[req.query.filetype]:newFile})
 };
 
-exports.deleteFile = async (req, res) => {
-    let product = req.product;
-    if (product.isVerified) {
-        return res
-            .status(403)
-            .json({
-                error: "Cannot delete image. Product has already been verified.",
-            });
-    }
-    let updateProduct = product.toObject();
-    let imageFound;
-    updateProduct.images = product.images.filter((image) => {
-        if (image._id.toString() === req.query.image_id) imageFound = image;
-        return image._id.toString() !== req.query.image_id;
-    });
-    if (!imageFound) {
-        return res.status(404).json({ error: "Image not found" });
-    }
-    await task
-        .update(product, updateProduct)
-        .options({ viaSave: true })
-        .remove(ProductImages, { _id: req.query.image_id })
-        .run({ useMongoose: true });
 
-    let Path = `public/uploads/${imageFound.thumbnail}`;
-    fs.unlinkSync(Path);
-    res.json(updateProduct.images);
 
-    
-};
-
-const run = async() => {
-    let banks = await AdminBank.find()
-    let businessinfos = await BusinessInfo.find()
-    let Banks = banks.map(async b => {
-        let file = await File.findById(b.chequeCopy)
-        file.admin = b.admin
-        return await file.save()
-    })
-    let bl = businessinfos.map(async b => {
-        let file = await File.findById(b.businessLicence)
-        file.admin = b.admin
-        return await file.save()
-    })
-    let cfronts = businessinfos.map(async b => {
-        let file = await File.findById(b.citizenshipFront)
-        file.admin = b.admin
-        return await file.save()
-    })
-    let cbacks = businessinfos.map(async b => {
-        let file = await File.findById(b.citizenshipBack)
-        file.admin = b.admin
-        return await file.save()
-    })
-    let re = await Promise.all([
-        Promise.all(Banks),
-        Promise.all(bl),
-        Promise.all(cfronts),
-        Promise.all(cbacks)
-    ])
-    console.log(re);
-}
-// run()
 exports.deleteFileById = async (req, res) => {
-    let _file = req.query.filetype === 'bank'
-        ? AdminBank.find(req.profile._id) : (req.query.filetype === 'businessLicence' || req.query.filetype === 'citizenship')
-        ? BusinessInfo.find(req.profile._id) : null
-    let file = await File.findByIdAndRemove(req.query.file_id);
-    let Path = `public/uploads/${file.fileUri}`;
+    const filetype = req.query.filetype
+    if (filetype !== 'bank' || filetype !== 'citizenshipBack' || filetype !== 'citizenshipFront' || filetype !== 'businessLicence' ) {
+        return res.status(403).json({ error: "Invalid file type." })
+    }
+    if (filetype === 'bank') {
+        let bank = await AdminBank.find(req.profile._id)
+        if (!bank || bank.chequeCopy) {
+            return res.status(404).json({ error: "File not found" })
+        }
+        let updateBank = bank.toObject()
+        updateBank.chequeCopy = null
+        updateBank.isVerified = null
+        task.update(bank, updateBank).options({ viaSave: true })
+    }
+    if (filetype === 'citizenshipBack') {
+        let businessinfo = await BusinessInfo.find(req.profile._id)
+        if (!businessinfo || businessinfo.citizenshipBack) {
+            return res.status(404).json({ error: "File not found" })
+        }
+        let updateBusinsessinfo = businessinfo.toObject()
+        updateBusinsessinfo.citizenshipBack = null
+        updateBusinsessinfo.isVerified = null
+        task.update(businessinfo, updateBusinsessinfo).options({ viaSave: true })
+    }
+    if (filetype === 'citizenshipFront') {
+        let businessinfo = await BusinessInfo.find(req.profile._id)
+        if (!businessinfo || businessinfo.citizenshipFront) {
+            return res.status(404).json({ error: "File not found" })
+        }
+        let updateBusinsessinfo = businessinfo.toObject()
+        updateBusinsessinfo.citizenshipFront = null
+        updateBusinsessinfo.isVerified = null
+        task.update(businessinfo, updateBusinsessinfo).options({ viaSave: true })
+    }
+    if (filetype === 'businessLicence') {
+        let businessinfo = await BusinessInfo.find(req.profile._id)
+        if (!businessinfo || businessinfo.businessLicence) {
+            return res.status(404).json({ error: "File not found" })
+        }
+        let updateBusinsessinfo = businessinfo.toObject()
+        updateBusinsessinfo.businessLicence = null
+        updateBusinsessinfo.isVerified = null
+        task.update(businessinfo, updateBusinsessinfo).options({ viaSave: true })
+    }
+
+    // let file = await File.findByIdAndRemove(req.query.file_id);
+    const updateProfile = req.profile.toObject()
+    updateProfile.isVerified = null
+    task.update(req.profile, updateProfile).options({ viaSave: true })
+    let results = await task
+        .remove(File, { _id: req.query.file_id })
+        .run({ useMongoose: true });
+    let Path = `public/uploads/${results[2].fileUri}`;
     fs.unlinkSync(Path);
-    res.json(file);
+    res.json({[filetype]:results[2]});//i.e romoved file
 };
 
 exports.getBusinessInfo = async (req, res) => {
     let businessinfo = await BusinessInfo.findOne({ admin: req.profile._id })
+        .populate('businessLicence')
+        .populate('citizenshipBack')
+        .populate('citizenshipFront')
     if (!businessinfo) {
         return res.status(404).json({ error: "No business information." })
     }
@@ -172,52 +162,57 @@ exports.getBusinessInfo = async (req, res) => {
 
 exports.businessinfo = async (req, res) => {
     //make req.files to array of objs
-    let files = []
-    if (req.files) for (const file in req.files) {
-        files.push(req.files[file][0]);
-    }
-    files.forEach(async file => {
-        const { filename, fieldname, destination, path: filepath } = file;
-        await sharp(filepath)
-            .resize(400)
-            .toFile(path.resolve(destination, fieldname === 'businessLicence' ? "businessLicence" : "citizenship", filename))//add file from uploads to doc folder
-        fs.unlinkSync(filepath);//and remove file from public/uploads
-    })
+    // let files = []
+    // if (req.files) for (const file in req.files) {
+    //     files.push(req.files[file][0]);
+    // }
+    // files.forEach(async file => {
+    //     const { filename, fieldname, destination, path: filepath } = file;
+    //     await sharp(filepath)
+    //         .resize(400)
+    //         .toFile(path.resolve(destination, fieldname === 'businessLicence' ? "businessLicence" : "citizenship", filename))//add file from uploads to doc folder
+    //     fs.unlinkSync(filepath);//and remove file from public/uploads
+    // })
     let profile = req.profile.toObject()
     const { businessInfo } = profile
     if (businessInfo) {
         let docs = await BusinessInfo.findById(businessInfo)
         //remove old file and update with new one
         docs = _.extend(docs, req.body)
-        files.forEach(file => {
-            const { filename, fieldname } = file
-            const filePath = `public/uploads/${docs[fieldname]}`
-            fs.unlinkSync(filePath)//remove old file from respective folders
-            docs[fieldname] = `${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;//updating docs
-        })
+        // files.forEach(file => {
+        //     const { filename, fieldname } = file
+        //     const filePath = `public/uploads/${docs[fieldname]}`
+        //     fs.unlinkSync(filePath)//remove old file from respective folders
+        //     docs[fieldname] = `${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;//updating docs
+        // })
         docs.isVerified = null
-        docs = await docs.save()
-        //db transaction gareko chaina 
+        // docs = await docs.save()
         profile.isVerified = null
-        await profile.save()
-        return res.json(docs)
+        // await profile.save()
+        // return res.json(docs)
+        await task
+            .save(docs)
+            .update(req.profile, profile)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json({ docs: docs[0] })
     }
     //if !businessInfo then create new one
     //first check if files are empty or not
-    if (files.length < 3) {
-        files.forEach(file => {
-            const { filename, fieldname } = file
-            const filePath = `public/uploads/${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;
-            fs.unlinkSync(filePath)
-        })
-        return res.status(400).json({ error: `${3 - files.length} documents are missing` })
-    }
+    // if (files.length < 3) {
+    //     files.forEach(file => {
+    //         const { filename, fieldname } = file
+    //         const filePath = `public/uploads/${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;
+    //         fs.unlinkSync(filePath)
+    //     })
+    //     return res.status(400).json({ error: `${3 - files.length} documents are missing` })
+    // }
     let docs = new BusinessInfo()
     docs = _.extend(docs, req.body)
-    files.forEach(async file => {
-        const { filename, fieldname } = file
-        docs[fieldname] = `${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;
-    })
+    // files.forEach(async file => {
+    //     const { filename, fieldname } = file
+    //     docs[fieldname] = `${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;
+    // })
     docs.admin = profile._id
     profile.businessInfo = docs._id
     await task
@@ -230,7 +225,7 @@ exports.businessinfo = async (req, res) => {
 
 
 exports.getBankInfo = async (req, res) => {
-    let bankinfo = await AdminBank.findOne({ admin: req.profile._id })
+    let bankinfo = await AdminBank.findOne({ admin: req.profile._id }).populate('chequeCopy')
     if (!bankinfo) {
         return res.status(404).json({ error: "No bank information." })
     }
@@ -238,13 +233,13 @@ exports.getBankInfo = async (req, res) => {
 }
 
 exports.bankinfo = async (req, res) => {
-    if (req.file) {
-        const { filename, destination, path: filepath } = req.file;
-        await sharp(filepath)
-            .resize(400)
-            .toFile(path.resolve(destination, "bank", filename))//add file from uploads to doc folder
-        fs.unlinkSync(filepath);//and remove file from public/uploads
-    }
+    // if (req.file) {
+    //     const { filename, destination, path: filepath } = req.file;
+    //     await sharp(filepath)
+    //         .resize(400)
+    //         .toFile(path.resolve(destination, "bank", filename))//add file from uploads to doc folder
+    //     fs.unlinkSync(filepath);//and remove file from public/uploads
+    // }
     let profile = req.profile.toObject()
     const { adminBank } = profile
     if (adminBank) {
@@ -252,26 +247,32 @@ exports.bankinfo = async (req, res) => {
         //remove old file and update with new one
         docs = _.extend(docs, req.body)
         // update cheque file
-        if (req.file) {
-            const { filename } = req.file
-            const filePath = `public/uploads/${docs["chequeCopy"]}`
-            fs.unlinkSync(filePath)//remove old file from respective folders
-            docs["chequeCopy"] = `bank/${filename}`;//updating docs
-        }
+        // if (req.file) {
+        //     const { filename } = req.file
+        //     const filePath = `public/uploads/${docs["chequeCopy"]}`
+        //     fs.unlinkSync(filePath)//remove old file from respective folders
+        //     docs["chequeCopy"] = `bank/${filename}`;//updating docs
+        // }
         docs.isVerified = null
         await docs.save()
         //db transaction gareko chaina 
         profile.isVerified = null
-        await profile.save()
-        return res.json(docs)
+        // await profile.save()
+        // return res.json(docs)
+        docs =  await task
+            .save(docs)
+            .update(req.profile, profile)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json({docs:docs[0]})
     }
     //first check if cheque is empty or not
-    if (!req.file) return res.status(400).json({ error: "Cheque copy is required" })
+    // if (!req.file) return res.status(400).json({ error: "Cheque copy is required" })
 
     let docs = new AdminBank()
     docs = _.extend(docs, req.body)
-    const { filename } = req.file
-    docs["chequeCopy"] = `bank/${filename}`;
+    // const { filename } = req.file
+    // docs["chequeCopy"] = `bank/${filename}`;
     docs.admin = profile._id
     profile.adminBank = docs._id
     await task
@@ -297,11 +298,17 @@ exports.warehouse = async (req, res) => {
         let warehouseInfo = await AdminWarehouse.findById(adminWareHouse)
         warehouseInfo = _.extend(warehouseInfo, req.body)
         warehouseInfo.isVerified = null
-        await warehouseInfo.save()
+        // await warehouseInfo.save()
         //db transaction gareko chaina 
         profile.isVerified = null
-        await profile.save()
-        return res.json(warehouseInfo)
+        // await profile.save()
+        // return res.json(warehouseInfo)
+        await task
+            .save(docs)
+            .update(req.profile, profile)
+            .options({ viaSave: true })
+            .run({ useMongoose: true })
+        return res.json({ warehouseInfo })
     }
     let newWareHouse = new AdminWarehouse(req.body)
     newWareHouse.admin = profile._id

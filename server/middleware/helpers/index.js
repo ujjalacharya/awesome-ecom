@@ -3,7 +3,7 @@ module.exports = {
     uploadAdminPhoto: require("./multer").uploadAdminPhoto,
     uploadUserPhoto: require("./multer").uploadUserPhoto,
     uploadAdminDoc: require("./multer").uploadAdminDoc,
-    uploadCheque: require("./multer").uploadCheque,
+    // uploadCheque: require("./multer").uploadCheque,
     uploadProductImages: require("./multer").uploadProductImages,
     uploadBannerPhoto: require("./multer").uploadBannerPhoto,
     sendEmail: require("./mailer").sendEmail,
