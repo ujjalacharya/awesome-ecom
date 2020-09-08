@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
+const File = require('../models/AdminFiles')
 const sharp = require("sharp")
 const path = require("path");
 const fs = require("fs");
@@ -68,29 +69,99 @@ exports.uploadPhoto = async (req, res) => {
     await profile.save()
     res.json({ photo: profile.photo })
 }
+
+exports.adminFile = async (req, res) => {
+    if (req.file == undefined) {
+        return res.status(400).json({ error: 'Image of adminfile is required.' })
+    }
+    if (req.query.filetype !== 'bank' || req.query.filetype !== 'citizenship' || req.query.filetype !== 'businessLicence') {
+        return res.status(403).json({error: 'Invalid file type.'})
+    }
+    const { filename: image } = req.file;
+    //Compress image
+    await sharp(req.file.path)
+        .resize(400)
+        .toFile(path.resolve(req.file.destination, req.query.filetype, image))//filetype='bank' || 'citizenship' || 'businessLicence'
+    fs.unlinkSync(req.file.path);//remove from public/uploads
+
+    const newFile = new File({ fileUri: `${req.query.filetype}/${image}`})
+    await newFile.save()
+    res.json(newFile)
+};
+
+exports.deleteFile = async (req, res) => {
+    let product = req.product;
+    if (product.isVerified) {
+        return res
+            .status(403)
+            .json({
+                error: "Cannot delete image. Product has already been verified.",
+            });
+    }
+    let updateProduct = product.toObject();
+    let imageFound;
+    updateProduct.images = product.images.filter((image) => {
+        if (image._id.toString() === req.query.image_id) imageFound = image;
+        return image._id.toString() !== req.query.image_id;
+    });
+    if (!imageFound) {
+        return res.status(404).json({ error: "Image not found" });
+    }
+    await task
+        .update(product, updateProduct)
+        .options({ viaSave: true })
+        .remove(ProductImages, { _id: req.query.image_id })
+        .run({ useMongoose: true });
+
+    let Path = `public/uploads/${imageFound.thumbnail}`;
+    fs.unlinkSync(Path);
+    res.json(updateProduct.images);
+
+    
+};
+
 const run = async() => {
-    let File = require('../models/AdminFiles')
-    let admins = await Admin.find({role:'admin'}).populate('businessInfo').populate('adminBank')
-    admins = admins.map(async admin => {
-    //     let bank = await AdminBank.findById(admin.adminBank._id)
-    //     bank.chequeCopy = bank._chequeCopy
-
-    //     let businessinfo = await BusinessInfo.findById(admin.businessInfo._id)
-    //    businessinfo.citizenshipFront= businessinfo._citizenshipFront 
-
-    //    businessinfo.citizenshipBack = businessinfo._citizenshipBack
-
-    //    businessinfo.businessLicence =  businessinfo._businessLicence
-    //    await bank.save()
-    //    return await businessinfo.save()
-        await AdminBank.findByIdAndUpdate(admin.adminBank._id,{$unset:{_chequeCopy:''}})
-        return await BusinessInfo.findByIdAndUpdate(admin.businessInfo._id, { $unset: { _citizenshipFront: '', _citizenshipBack: '', _businessLicence:''} })
-
+    let banks = await AdminBank.find()
+    let businessinfos = await BusinessInfo.find()
+    let Banks = banks.map(async b => {
+        let file = await File.findById(b.chequeCopy)
+        file.admin = b.admin
+        return await file.save()
     })
-    admins = await Promise.all(admins)
-    console.log(admins);
+    let bl = businessinfos.map(async b => {
+        let file = await File.findById(b.businessLicence)
+        file.admin = b.admin
+        return await file.save()
+    })
+    let cfronts = businessinfos.map(async b => {
+        let file = await File.findById(b.citizenshipFront)
+        file.admin = b.admin
+        return await file.save()
+    })
+    let cbacks = businessinfos.map(async b => {
+        let file = await File.findById(b.citizenshipBack)
+        file.admin = b.admin
+        return await file.save()
+    })
+    let re = await Promise.all([
+        Promise.all(Banks),
+        Promise.all(bl),
+        Promise.all(cfronts),
+        Promise.all(cbacks)
+    ])
+    console.log(re);
 }
 // run()
+exports.deleteFileById = async (req, res) => {
+    let _file = req.query.filetype === 'bank'
+        ? AdminBank.find(req.profile._id) : (req.query.filetype === 'businessLicence' || req.query.filetype === 'citizenship')
+        ? BusinessInfo.find(req.profile._id) : null
+    let file = await File.findByIdAndRemove(req.query.file_id);
+    let Path = `public/uploads/${file.fileUri}`;
+    fs.unlinkSync(Path);
+    res.json(file);
+};
+
 exports.getBusinessInfo = async (req, res) => {
     let businessinfo = await BusinessInfo.findOne({ admin: req.profile._id })
     if (!businessinfo) {

@@ -48,18 +48,6 @@ const businessSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "adminfile",
     },
-    _citizenshipFront: {
-        type: Schema.Types.ObjectId,
-        ref: "adminfile",
-    },
-    _citizenshipBack: {
-        type: Schema.Types.ObjectId,
-        ref: "adminfile",
-    },
-    _businessLicence: {
-        type: Schema.Types.ObjectId,
-        ref: "adminfile",
-    },
     isVerified:{
         type: Date,//as we may need verified date
         default: null

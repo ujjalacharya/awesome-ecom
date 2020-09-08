@@ -40,10 +40,6 @@ const bankSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "adminfile",
     },
-    _chequeCopy: {
-        type: Schema.Types.ObjectId,
-        ref: "adminfile",
-    },
     isVerified: {
         type: Date,//as we may need verified date
         default: null
