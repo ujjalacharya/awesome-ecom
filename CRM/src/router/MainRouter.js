@@ -9,12 +9,14 @@ import AdminRoute from './AdminRoute'
 //UI components
 import Home from "../components/pages/Home";
 import Profile from "../components/pages/Profile";
+import Product from '../components/pages/Product'
 
 const MainRouter = (props) => {
   return (
     <Switch>
       <AdminRoute exact path="/" component={Home} />;
-      <AdminRoute exact path="/profile" component={Profile} />;
+      <AdminRoute exact path="/profile" component={Profile} />
+      <AdminRoute exact path="/add-product" component={Product} />
       <SuperAdminRoute exact path="/superadmin" component={() => <h1>Sup SuperAdmin</h1>}/>
     </Switch>
   );
