@@ -118,13 +118,13 @@ exports.validateBusinessInfo = (req, res, next) => {
     // if error show the first one as they happen
     if (errors) {
         //make req.files to array of objs
-        let files = []
-        if (req.files) for (const file in req.files) {
-            files.push(req.files[file][0]);
-        }
-        files.forEach(file => {
-            fs.unlinkSync(file.path);//and remove file from public/uploads
-        })
+        // let files = []
+        // if (req.files) for (const file in req.files) {
+        //     files.push(req.files[file][0]);
+        // }
+        // files.forEach(file => {
+        //     fs.unlinkSync(file.path);//and remove file from public/uploads
+        // })
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }
@@ -140,7 +140,7 @@ exports.validateAdminBankInfo = (req, res, next) => {
     const errors = req.validationErrors();
     // if error show the first one as they happen
     if (errors) {
-        req.file && fs.unlinkSync(req.file.path);//remove file from public/uploads
+        // req.file && fs.unlinkSync(req.file.path);//remove file from public/uploads
         const firstError = errors.map(error => error.msg)[0];
         return res.status(400).json({ error: firstError });
     }

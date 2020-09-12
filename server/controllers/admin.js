@@ -11,7 +11,8 @@ const Fawn = require("fawn");
 const task = Fawn.Task();
 
 exports.profile = async (req, res, next) => {
-    const admin = await Admin.findById(req.params.id).select("-password -salt")
+    const admin = await Admin.findById(req.params.id)
+                // .select('-salt -password')
     if (!admin) {
         return res.status(404).json({ error: 'Admin not found with this id' })
     }
@@ -23,6 +24,8 @@ exports.profile = async (req, res, next) => {
 exports.getProfile = async (req, res) => {
     req.profile.resetPasswordLink = undefined
     req.profile.emailVerifyLink = undefined
+    req.profile.salt = undefined
+    req.profile.password = undefined
     res.json(req.profile)
 }
 
@@ -42,12 +45,11 @@ exports.updateProfile = async (req, res) => {
     
     profile.holidayMode.start = req.body.holidayStart && req.body.holidayStart
     profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
-    
+    profile.password = undefined//for security
+    profile.salt = undefined//for security
     profile = _.extend(profile, req.body)
     profile.isVerified = null
     await profile.save();
-    profile.password = undefined
-    profile.salt = undefined
     res.json(profile);
 }
 
@@ -173,29 +175,33 @@ exports.businessinfo = async (req, res) => {
     //         .toFile(path.resolve(destination, fieldname === 'businessLicence' ? "businessLicence" : "citizenship", filename))//add file from uploads to doc folder
     //     fs.unlinkSync(filepath);//and remove file from public/uploads
     // })
+    // req.profile.businessInfo = null
     let profile = req.profile.toObject()
     const { businessInfo } = profile
     if (businessInfo) {
         let docs = await BusinessInfo.findById(businessInfo)
+        let updateDoc = docs.toObject()
         //remove old file and update with new one
-        docs = _.extend(docs, req.body)
+        console.log(docs,'inside');
+         updateDoc = _.extend(updateDoc, req.body)
         // files.forEach(file => {
         //     const { filename, fieldname } = file
         //     const filePath = `public/uploads/${docs[fieldname]}`
         //     fs.unlinkSync(filePath)//remove old file from respective folders
         //     docs[fieldname] = `${fieldname === 'businessLicence' ? "businessLicence" : "citizenship"}/${filename}`;//updating docs
         // })
-        docs.isVerified = null
+        updateDoc.isVerified = null
         // docs = await docs.save()
         profile.isVerified = null
         // await profile.save()
         // return res.json(docs)
         await task
-            .save(docs)
             .update(req.profile, profile)
-            .options({ viaSave: true })
+            .options({ viaSave: true,multi:true })
+            .update(docs,updateDoc)
+            .options({ viaSave: true, multi: true })
             .run({ useMongoose: true })
-        return res.json({ docs: docs[0] })
+        return res.json(updateDoc)
     }
     //if !businessInfo then create new one
     //first check if files are empty or not
@@ -215,11 +221,13 @@ exports.businessinfo = async (req, res) => {
     // })
     docs.admin = profile._id
     profile.businessInfo = docs._id
+    // console.log(profile);
     await task
-        .save(docs)
         .update(req.profile, profile)
-        .options({ viaSave: true })
+        .options({ viaSave: true, multi: true })
+        .save(docs)
         .run({ useMongoose: true })
+
     res.json(docs)
 }
 

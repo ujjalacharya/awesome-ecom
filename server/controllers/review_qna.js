@@ -64,7 +64,7 @@ exports.postReview = async (req, res) => {
     updateProduct.totalRatingUsers = stars.totalRatingUsers
     updateProduct.averageRating = stars.averageStar
     const results = await task
-                    .update(product,+updateProduct)
+                    .update(product,updateProduct)
                     .options({viaSave:true})
                     .save(newReview)
                     .run({useMongoose:true})

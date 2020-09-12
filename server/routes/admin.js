@@ -17,10 +17,10 @@ router
     .put(auth, hasAuthorization,validateAdminProfile, updateProfile)//update or create
     .patch(auth, hasAuthorization,uploadAdminPhoto, uploadPhoto)
 
-
+//admin's file..
 router
     .route("/file/:id")
-    .put(auth, hasAuthorization, uploadAdminDoc, adminFile)//?filetype
+    .post(auth, hasAuthorization, uploadAdminDoc, adminFile)//?filetype
     .delete(auth, hasAuthorization, deleteFileById)//?filetype&file_id
 
 
