@@ -7,15 +7,19 @@ import "./App.scss";
 import Signin from "./components/pages/Signin";
 import { loadMe } from "./redux/actions/auth_actions";
 import store from "./redux/store";
-import { verifyLocalStorage } from "./utils/common";
+import { verifyLocalStorage, disconnectSocket } from "./utils/common";
 import Alert from "./components/common/Alert";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 const App = (props) => {
-  useEffect(() => {
-    store.dispatch(loadMe());
+  useEffect( () => {
+    store.dispatch(loadMe());//returns socket user obj else null
+    
+      return () =>{
+        disconnectSocket()
+        };
   }, []);
   return (
     <>

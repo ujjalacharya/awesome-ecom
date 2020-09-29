@@ -1,5 +1,6 @@
 import { SIGN_IN, SIGN_OUT, LOAD_ME, GLOBAL_ERROR } from "../types";
 import api from "../../utils/api";
+import { socket } from "../../utils/common";
 
 export const loadMe = () => async (dispatch) => {
   try {
@@ -8,8 +9,14 @@ export const loadMe = () => async (dispatch) => {
       type: LOAD_ME,
       payload: res.data?.admin,
     });
+    let socketUser = socket()
+    socketUser.on("tx", data => {
+      console.log(data);
+    });
+    // return socketUser
   } catch (err) {
     console.log("****auth_actions/loadMe****", err);
+    // return null
   }
 };
 

@@ -32,11 +32,11 @@ const Todo = ({user,completedPercent}) => {
             <Row >
 
               <Col lg={6} >
-            <Link to={!user?.shopName?'/profile':null} >
+            <Link to={!(user?.shopName)?'/profile':''} >
                 <Card
                   title="Profile"
                     extra={<CheckCircleTwoTone twoToneColor="#52c41a" />}
-                    hoverable={!user?.shopName ?true: false}
+                    hoverable={!(user?.shopName) ?true: false}
                   className="todoCard"
                 >
                   <p>Complete your profile</p>
@@ -45,12 +45,12 @@ const Todo = ({user,completedPercent}) => {
               </Col>
 
               <Col lg={6}>
-                <Link to={user?.businessInfo ? '/profile' : null}>
+                <Link to={(user?.businessInfo) ? '/profile' : ''}>
                 <Card
                   title="Business Info"
                   className="todoCard"
                     extra={<CloseCircleTwoTone twoToneColor="#f44455"/>}
-                  hoverable={user?.businessInfo ? true : false}
+                  hoverable={(user?.businessInfo) ? true : false}
                 >
                   <p>Verify your business information</p>
                 </Card>
@@ -58,12 +58,12 @@ const Todo = ({user,completedPercent}) => {
               </Col>
 
               <Col lg={6}>
-                <Link to={!user?.adminBank ? '/profile' : null}>
+                <Link to={!(user?.adminBank) ? '/profile' : ''}>
                 <Card
                   title="Bank Details"
                   className="todoCard"
                   extra={<CloseCircleTwoTone twoToneColor="#f44455"/>}
-                  hoverable={!user?.adminBank ? true : false}
+                  hoverable={!(user?.adminBank) ? true : false}
                 >
                   <p>To receive your money</p>
                 </Card>
@@ -71,12 +71,12 @@ const Todo = ({user,completedPercent}) => {
               </Col>
 
               <Col lg={6}>
-                <Link to={!user?.adminWareHouse ? '/profile' : null}>
+                <Link to={!(user?.adminWareHouse) ? '/profile' : ''}>
                 <Card
                   title="WareHouse"
                   className="todoCard"
                   extra={<CloseCircleTwoTone twoToneColor="#f44455"/>}
-                  hoverable={!user?.adminWareHouse ? true : false}
+                  hoverable={!(user?.adminWareHouse) ? true : false}
                 >
                   <p>To dispatch/return your product</p>
                 </Card>

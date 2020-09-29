@@ -4,7 +4,7 @@ import { SIGN_OUT, REFRESH_TOKEN, AUTH_ERROR } from "../redux/types";
 import { SERVER_URL, refreshTokenKey } from "./config";
 
 const api = axios.create({
-  baseURL: `${SERVER_URL}`,
+  baseURL: `${SERVER_URL}api`,
   headers: {
     "Content-Type": "application/json",
   },

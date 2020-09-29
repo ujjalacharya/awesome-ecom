@@ -1,5 +1,6 @@
 const Admin = require("../models/Admin");
 const { sendEmail } = require("../middleware/helpers");
+const socketMapping = require("../models/socketMapping")
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
 const crypto = require("crypto");
@@ -156,6 +157,21 @@ exports.refreshToken = async (req, res) => {
 }
 
 exports.loadMe = async (req,res) =>{
+    //loadme execute only when CRM is reloaded/after login nd web sockets makes new connection,  so we have to save new socketid for socket maping
+    req.io.on("connection", async socket => {
+        console.log(socket.id,'connected');
+        // disconnect is fired when a client leaves the server
+        const newSocketMapping = new socketMapping({
+            admin: req.admin._id,
+            socketId: socket.id
+        })
+        socket.emit('tx',{hello: 'world'})
+        await newSocketMapping.save()
+        socket.on("disconnect", async() => {
+            await socketMapping.findOneAndRemove({socketId:socket.id})
+            console.log("user disconnected");
+        });
+    });
     res.json({admin:req.admin})
 }
 
@@ -225,7 +241,7 @@ exports.auth = async (req, res, next) => {
                 const admin = await Admin.findById(user._id).select('-password -salt')
                 if (admin) {
                     if (!admin.isBlocked) {
-                        req.admin = admin
+                        req.admin = admin                        
                         return next();
                     }
                     throw 'Your account has been blocked'

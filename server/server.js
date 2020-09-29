@@ -1,6 +1,7 @@
 // Packages
 const expressValidator = require("express-validator");
 const express = require("express");
+const http = require('http')
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
@@ -8,15 +9,27 @@ const Fawn = require('fawn')
 require('express-async-errors')
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
+const socketIO = require("socket.io");
 // Import methods
 const { dbConnection, errorHandler} = require('./middleware/helpers');
 
 // Database Connection
 dbConnection();
 
+// our server instance
+const server = http.createServer(app);
+// This creates our socket using the instance of the server
+const io = socketIO(server);
+// io.origins([`${process.env.ADMIN_CRM_ROUTE}`])
+
+
+
 // Middlewares
 app.use(cors());
-
+app.use((req,res,next)=>{
+    req.io = io
+    next()
+})
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -78,7 +91,7 @@ roller.roll()
 .then(function () {
     // start server
     const port = process.env.PORT;
-    app.listen(port, () => {
+    server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
 });

@@ -1,11 +1,13 @@
 import React from 'react'
-// import { Link } from "react-router-dom";
+
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { signOut } from '../../../redux/actions/auth_actions'
 import { Link } from 'react-router-dom';
 
+
 const TopNavbar = ({ signOut,user }) => {
+	
     return (
 		<nav className="navbar navbar-expand navbar-light bg-white">
 			<a className="sidebar-toggle d-flex mr-2" href='#'>
@@ -86,16 +88,17 @@ const TopNavbar = ({ signOut,user }) => {
 							</div>
 						</div>
 					</li>
-					{/* <li className="nav-item dropdown">
+					<li className="nav-item dropdown">
 						<a className="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-toggle="dropdown">
 							<div className="position-relative">
-								<i className="align-middle" data-feather="bell-off"></i>
+								<i className="align-middle" data-feather="bell"></i>
+								<span className="indicator">10</span>
 							</div>
 						</a>
 						<div className="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="alertsDropdown">
-							<div className="dropdown-menu-header">
+							{/* <div className="dropdown-menu-header">
 								4 New Notifications
-								</div>
+								</div> */}
 							<div className="list-group">
 								<a href="#" className="list-group-item">
 									<div className="row no-gutters align-items-center">
@@ -121,17 +124,17 @@ const TopNavbar = ({ signOut,user }) => {
 										</div>
 									</div>
 								</a>
-								<a href="#" className="list-group-item">
+								<Link to={'/'} className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
-											<i className="text-primary" data-feather="home"></i>
+											<i className="text-primary" data-feather="message-circle"></i>
 										</div>
 										<div className="col-10">
 											<div className="text-dark">Login from 192.186.1.1</div>
 											<div className="text-muted small mt-1">8h ago</div>
 										</div>
 									</div>
-								</a>
+								</Link>
 								<a href="#" className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
@@ -149,7 +152,7 @@ const TopNavbar = ({ signOut,user }) => {
 								<a href="#" className="text-muted">Show all notifications</a>
 							</div>
 						</div>
-					</li> */}
+					</li>
 					{/* <li className="nav-item dropdown">
 							<a className="nav-flag dropdown-toggle" href="#" id="languageDropdown" data-toggle="dropdown">
                 <img src="img\flags\us.png" alt="English"/>

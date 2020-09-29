@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Admin = require("../models/Admin")
 const Payment = require("../models/Payment")
+const Notification = require("../models/Notification")
 const Remark = require("../models/Remark")
 const Review = require("../models/Review")
 const QNA = require("../models/QnA")
@@ -190,6 +191,37 @@ exports.postQuestion = async (req, res) => {
             model: 'admin',
             select: 'name shopName address'
         })
+    const createNotification = async () => {
+        //notify to the admin through socket.io
+        //first save notification
+
+        let notificationObjOfAdmin = await Notification.findOne({ admin: product.soldBy })
+        const obj = {
+            notificationType: 'question_on_product',//order,question_on_product,answer_on_product,review
+            notificationDetail: {//a fix obj for qna details
+                questionBy: req.user.name,
+                onProduct: product.name
+            },
+            hasRead: false,
+            hasSeen: false,
+            date: Date.now()
+        }
+        if (!notificationObjOfAdmin) {
+            // create new notification
+            let newNotification = new Notification({
+                admin: product.soldBy,
+                notifications: [obj]
+            })
+            // await newNotification.save()
+        } else {
+            notificationObjOfAdmin.notifications.push(obj)
+            // await notificationObjOfAdmin.save()
+        }
+        //now notifying to the admin
+        // console.log(req.socket);
+        
+        req.io.emit('tx', { key: "value1" });
+    }
     if (!QnA) {
         let newQNA = new QNA({
             product: product._id,
@@ -199,7 +231,8 @@ exports.postQuestion = async (req, res) => {
                 questionedDate: Date.now()
             }]
         })
-        await newQNA.save()
+        createNotification()
+        // await newQNA.save()
         return res.json(newQNA)
     }
     QnA.qna.push({
@@ -207,10 +240,11 @@ exports.postQuestion = async (req, res) => {
         questionby: req.user.id,
         questionedDate: Date.now()
     })
-    await QnA.save()
+    // await QnA.save()
     QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna, 10)
+    createNotification()
     res.json({ QnA, totalCount })
 }
 

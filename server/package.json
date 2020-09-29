@@ -27,6 +27,7 @@
     "nodemailer": "^6.4.6",
     "sharp": "^0.25.2",
     "shortid": "^2.2.15",
+    "socket.io": "^2.3.0",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
   }

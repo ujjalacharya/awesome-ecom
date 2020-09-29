@@ -1,5 +1,16 @@
 import jwt from "jsonwebtoken";
-import { JWT_SIGNIN_KEY, accessTokenKey } from "./config";
+import socketIOClient from "socket.io-client";
+import { JWT_SIGNIN_KEY, accessTokenKey, SERVER_URL } from "./config";
+var socketUser
+export const socket = () => {
+  socketUser = socketIOClient(SERVER_URL)
+  return socketUser
+};
+
+export const disconnectSocket = () => {
+  console.log(socketUser);
+  return socketUser.close()
+}
 
 export const decodeLocalStorage = () => {
     const token = localStorage.getItem(accessTokenKey);
