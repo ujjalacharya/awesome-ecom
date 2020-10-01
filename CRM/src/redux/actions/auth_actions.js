@@ -1,6 +1,6 @@
 import { SIGN_IN, SIGN_OUT, LOAD_ME, GLOBAL_ERROR } from "../types";
 import api from "../../utils/api";
-import { socket } from "../../utils/common";
+import { socket, disconnectSocket } from "../../utils/common";
 
 export const loadMe = () => async (dispatch) => {
   try {
@@ -44,7 +44,8 @@ export const signOut = () => async (dispatch) => {
     dispatch({
       type: SIGN_OUT,
     });
-    window.location.href = "/"
+    disconnectSocket()
+    // window.location.href = "/"
   } catch (err) {
     console.log("****auth_actions/signOut****", err);
   }

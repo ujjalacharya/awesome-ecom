@@ -158,7 +158,7 @@ exports.refreshToken = async (req, res) => {
 
 exports.loadMe = async (req,res) =>{
     //loadme execute only when CRM is reloaded/after login nd web sockets makes new connection,  so we have to save new socketid for socket maping
-    req.io.on("connection", async socket => {
+    req.io.once("connection", async socket => {
         console.log(socket.id,'connected');
         // disconnect is fired when a client leaves the server
         const newSocketMapping = new socketMapping({

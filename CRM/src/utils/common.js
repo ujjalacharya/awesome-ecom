@@ -8,6 +8,7 @@ export const socket = () => {
 };
 
 export const disconnectSocket = () => {
+  console.log('caf');
   console.log(socketUser);
   return socketUser.close()
 }

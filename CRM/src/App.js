@@ -17,9 +17,7 @@ const App = (props) => {
   useEffect( () => {
     store.dispatch(loadMe());//returns socket user obj else null
     
-      return () =>{
-        disconnectSocket()
-        };
+      
   }, []);
   return (
     <>

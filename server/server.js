@@ -20,7 +20,7 @@ dbConnection();
 const server = http.createServer(app);
 // This creates our socket using the instance of the server
 const io = socketIO(server);
-// io.origins([`${process.env.ADMIN_CRM_ROUTE}`])
+io.origins([`${process.env.ADMIN_CRM_ROUTE}`])
 
 
 
