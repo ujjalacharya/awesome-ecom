@@ -7,7 +7,7 @@ import "./App.scss";
 import Signin from "./components/pages/Signin";
 import { loadMe } from "./redux/actions/auth_actions";
 import store from "./redux/store";
-import { verifyLocalStorage, disconnectSocket } from "./utils/common";
+import { verifyLocalStorage} from "./utils/common";
 import Alert from "./components/common/Alert";
 
 if (localStorage.token) {

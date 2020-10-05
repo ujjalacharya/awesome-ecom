@@ -9,14 +9,14 @@ export const loadMe = () => async (dispatch) => {
       type: LOAD_ME,
       payload: res.data?.admin,
     });
+  //make socket connection to the server
     let socketUser = socket()
+    //todo reconnect if error..
     socketUser.on("tx", data => {
-      console.log(data);
+      // console.log(data);
     });
-    // return socketUser
   } catch (err) {
     console.log("****auth_actions/loadMe****", err);
-    // return null
   }
 };
 

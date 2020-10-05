@@ -16,3 +16,7 @@ export const GET_BANK_INFO = "GET_BANK_INFO"
 export const GLOBAL_ERROR = "GLOBAL_ERROR";
 export const SUCCESS = "SUCCESS"
 
+//notification
+export const GET_NOTIFICATIONS = "GET_NOTIFICATIONS"
+export const SAVE_SOCKET_USER = "SAVE_SOCKET_USER"
+

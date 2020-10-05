@@ -6,6 +6,7 @@ import AdminBar from './navbar/AdminBar'
 import {verifyLocalStorage} from '../../utils/common'
 
 const Layout = ({ children}) => {
+  console.log('hello from layout');
   return (
     <Fragment>
       <div className="wrapper">

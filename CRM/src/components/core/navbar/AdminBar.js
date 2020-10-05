@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 // import { logout } from '../../../actions/auth_actions'
 import SideBar from '../../common/SideBar'
 
 const AdminBar = ({}) => {
-    const titles = [
+    const titles = useMemo(()=>[
      {
         key:'product',
         icon:'layout',
@@ -27,7 +27,7 @@ const AdminBar = ({}) => {
                 path: '/manage-orders'
             }]
         }
-    ]
+    ],[])
 
     return (
         <SideBar titles={titles}/>

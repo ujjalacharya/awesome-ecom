@@ -15,11 +15,15 @@ const notificationSchema = new mongoose.Schema({
         date: {
             type: Date
         },
-        hasSeen: {
-            type: Boolean,
-            default: false
-        }
+        // hasSeen: {
+        //     type: Boolean,
+        //     default: false
+        // }
     }],
+    noOfUnseen: {
+        type: Number,
+        default: 0
+    }
     
 });
 module.exports = mongoose.model('notification', notificationSchema);

@@ -19,7 +19,7 @@ const BankForm = ({bank, updateBank,getAdminBank, user}) => {
     useEffect(()=> {
         getAdminBank(user._id)
 
-    },[])
+    },[user])
     useEffect(() => {
         setAdminBank({
             accountHolder: bank?.accountHolder ? bank.accountHolder : '',
@@ -30,7 +30,7 @@ const BankForm = ({bank, updateBank,getAdminBank, user}) => {
             // chequeCopy: bank?.chequeCopy ? bank.chequeCopy : ''
         })
     }, [bank])
-    const { accountHolder, bankName,branchName, accountNumber, routingNumber, chequeCopy} = adminBank
+    const { accountHolder, bankName,branchName, accountNumber, routingNumber} = adminBank
     const onChange = e => setAdminBank({ ...bank, [e.target.name]: e.target.name === 'chequeCopy' ? e.target.files[0] : e.target.value })
     const onSubmit = async e => {
         e.preventDefault()

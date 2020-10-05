@@ -8,9 +8,11 @@ export const socket = () => {
 };
 
 export const disconnectSocket = () => {
-  console.log('caf');
-  console.log(socketUser);
   return socketUser.close()
+}
+
+export const getRealTimeNotifications = () => {
+  return socketUser.on("notification", data => data);
 }
 
 export const decodeLocalStorage = () => {

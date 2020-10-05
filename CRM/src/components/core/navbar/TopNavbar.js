@@ -4,15 +4,17 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { signOut } from '../../../redux/actions/auth_actions'
 import { Link } from 'react-router-dom';
-
+import { getRealTimeNotifications } from '../../../utils/common';
 
 const TopNavbar = ({ signOut,user }) => {
 	
+	
+	console.log('hello from top nav bar');
     return (
 		<nav className="navbar navbar-expand navbar-light bg-white">
-			<a className="sidebar-toggle d-flex mr-2" href='#'>
+			<Link className="sidebar-toggle d-flex mr-2" to=''>
 				<i className="hamburger align-self-center"></i>
-			</a>
+			</Link>
 
 			<form className="form-inline d-none d-sm-inline-block">
 				<input className="form-control form-control-no-border mr-sm-2" type="text" placeholder="Search projects..." aria-label="Search" />
@@ -21,12 +23,12 @@ const TopNavbar = ({ signOut,user }) => {
 			<div className="navbar-collapse collapse">
 				<ul className="navbar-nav ml-auto">
 					<li className="nav-item dropdown">
-						<a className="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-toggle="dropdown">
+						<Link className="nav-icon dropdown-toggle" to='' id="messagesDropdown" data-toggle="dropdown">
 							<div className="position-relative">
 								<i className="align-middle" data-feather="message-circle"></i>
 								<span className="indicator">4</span>
 							</div>
-						</a>
+						</Link>
 						<div className="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="messagesDropdown">
 							<div className="dropdown-menu-header">
 								<div className="position-relative">
@@ -34,7 +36,7 @@ const TopNavbar = ({ signOut,user }) => {
 									</div>
 							</div>
 							<div className="list-group">
-								<a href="#" className="list-group-item">
+								<Link to='' className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-5.jpg" className="avatar img-fluid rounded-circle" alt="Ashley Briggs" />
@@ -45,8 +47,8 @@ const TopNavbar = ({ signOut,user }) => {
 											<div className="text-muted small mt-1">15m ago</div>
 										</div>
 									</div>
-								</a>
-								<a href="#" className="list-group-item">
+								</Link>
+								<Link to='' className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-2.jpg" className="avatar img-fluid rounded-circle" alt="Carl Jenkins" />
@@ -57,8 +59,8 @@ const TopNavbar = ({ signOut,user }) => {
 											<div className="text-muted small mt-1">2h ago</div>
 										</div>
 									</div>
-								</a>
-								<a href="#" className="list-group-item">
+								</Link>
+								<Link to='' className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-4.jpg" className="avatar img-fluid rounded-circle" alt="Stacie Hall" />
@@ -69,8 +71,8 @@ const TopNavbar = ({ signOut,user }) => {
 											<div className="text-muted small mt-1">4h ago</div>
 										</div>
 									</div>
-								</a>
-								<a href="#" className="list-group-item">
+								</Link>
+								<Link to='' className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<img src="img\avatars\avatar-3.jpg" className="avatar img-fluid rounded-circle" alt="Bertha Martin" />
@@ -81,26 +83,26 @@ const TopNavbar = ({ signOut,user }) => {
 											<div className="text-muted small mt-1">5h ago</div>
 										</div>
 									</div>
-								</a>
+								</Link>
 							</div>
 							<div className="dropdown-menu-footer">
-								<a href="#" className="text-muted">Show all messages</a>
+								<Link to='' className="text-muted">Show all messages</Link>
 							</div>
 						</div>
 					</li>
 					<li className="nav-item dropdown">
-						<a className="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-toggle="dropdown">
+						<Link className="nav-icon dropdown-toggle" to='' id="alertsDropdown" data-toggle="dropdown">
 							<div className="position-relative">
 								<i className="align-middle" data-feather="bell"></i>
 								<span className="indicator">10</span>
 							</div>
-						</a>
+						</Link>
 						<div className="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="alertsDropdown">
 							{/* <div className="dropdown-menu-header">
 								4 New Notifications
 								</div> */}
 							<div className="list-group">
-								<a href="#" className="list-group-item">
+								<Link to='' className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<i className="text-danger" data-feather="alert-circle"></i>
@@ -111,8 +113,8 @@ const TopNavbar = ({ signOut,user }) => {
 											<div className="text-muted small mt-1">2h ago</div>
 										</div>
 									</div>
-								</a>
-								<a href="#" className="list-group-item">
+								</Link>
+								<Link to='' className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<i className="text-warning" data-feather="bell"></i>
@@ -123,7 +125,7 @@ const TopNavbar = ({ signOut,user }) => {
 											<div className="text-muted small mt-1">6h ago</div>
 										</div>
 									</div>
-								</a>
+								</Link>
 								<Link to={'/'} className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
@@ -135,7 +137,7 @@ const TopNavbar = ({ signOut,user }) => {
 										</div>
 									</div>
 								</Link>
-								<a href="#" className="list-group-item">
+								<Link to='' className="list-group-item">
 									<div className="row no-gutters align-items-center">
 										<div className="col-2">
 											<i className="text-success" data-feather="user-plus"></i>
@@ -146,52 +148,52 @@ const TopNavbar = ({ signOut,user }) => {
 											<div className="text-muted small mt-1">12h ago</div>
 										</div>
 									</div>
-								</a>
+								</Link>
 							</div>
 							<div className="dropdown-menu-footer">
-								<a href="#" className="text-muted">Show all notifications</a>
+								<Link to='' className="text-muted">Show all notifications</Link>
 							</div>
 						</div>
 					</li>
 					{/* <li className="nav-item dropdown">
-							<a className="nav-flag dropdown-toggle" href="#" id="languageDropdown" data-toggle="dropdown">
+							<Link className="nav-flag dropdown-toggle" to='' id="languageDropdown" data-toggle="dropdown">
                 <img src="img\flags\us.png" alt="English"/>
-              </a>
+              </Link>
 							<div className="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
-								<a className="dropdown-item" href="#">
+								<Link className="dropdown-item" to=''>
                   <img src="img\flags\us.png" alt="English" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">English</span>
-                </a>
-								<a className="dropdown-item" href="#">
+                </Link>
+								<Link className="dropdown-item" to=''>
                   <img src="img\flags\es.png" alt="Spanish" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">Spanish</span>
-                </a>
-								<a className="dropdown-item" href="#">
+                </Link>
+								<Link className="dropdown-item" to=''>
                   <img src="img\flags\de.png" alt="German" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">German</span>
-                </a>
-								<a className="dropdown-item" href="#">
+                </Link>
+								<Link className="dropdown-item" to=''>
                   <img src="img\flags\nl.png" alt="Dutch" width="20" className="align-middle mr-1"/>
                   <span className="align-middle">Dutch</span>
-                </a>
+                </Link>
 							</div>
 						</li> */}
 					<li className="nav-item dropdown">
-						<a className="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-toggle="dropdown">
+						<Link className="nav-icon dropdown-toggle d-inline-block d-sm-none" to='' data-toggle="dropdown">
 							<i className="align-middle" data-feather="settings"></i>
-						</a>
+						</Link>
 
-						<a className="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
+						<Link className="nav-link dropdown-toggle d-none d-sm-inline-block" to='' data-toggle="dropdown">
 							<img src="img\avatar1.png" className="avatar img-fluid rounded-circle mr-1" alt="user"/> 
 							<span className="text-dark">{user && user.name}</span>
-						</a>
+						</Link>
 						<div className="dropdown-menu dropdown-menu-right">
 							<Link className="dropdown-item" to='/profile'><i className="align-middle mr-1" data-feather="user"></i> Profile</Link>
-							<a className="dropdown-item" href="#"><i className="align-middle mr-1" data-feather="pie-chart"></i> Analytics</a>
+							<Link className="dropdown-item" to=''><i className="align-middle mr-1" data-feather="pie-chart"></i> Analytics</Link>
 							<div className="dropdown-divider"></div>
-							<a className="dropdown-item" href="pages-settings.html">Settings & Privacy</a>
-							<a className="dropdown-item" href="#">Help</a>
-							<a className="dropdown-item" onClick={signOut}>Sign out</a>
+							<Link className="dropdown-item" to=''>Settings & Privacy</Link>
+							<Link className="dropdown-item" to=''>Help</Link>
+							<Link className="dropdown-item" to='' onClick={signOut}>Sign out</Link>
 						</div>
 					</li>
 				</ul>
@@ -207,4 +209,4 @@ TopNavbar.propTypes = {
 const mapStateToProps = state =>({
 	user:state.auth.user
 })
-export default connect(mapStateToProps, { signOut })(TopNavbar)
+export default connect(mapStateToProps, { signOut })(React.memo(TopNavbar))

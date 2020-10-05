@@ -13,7 +13,7 @@ const { TabPane } = Tabs
 // import PropTypes from 'prop-types'
 
 const Profile = ({user}) => {
-
+    console.log('hello from Profile');
     return (
         <Layout>
             <div className="row">
@@ -59,9 +59,9 @@ Profile.propTypes = {
     user: PropTypes.object.isRequired,
 }
 const mapStateToProps = (state) => ({
-    user: state.auth.user,
+    user: state.auth.user || {} ,
 })
 
 
-export default connect(mapStateToProps,{})(Profile)
+export default connect(mapStateToProps,{})(React.memo(Profile))
 

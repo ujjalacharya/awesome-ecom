@@ -20,6 +20,7 @@ const ProfileForm = ({user, updateProfile}) => {
     const [isDisable,setIsDisabled] = useState(false)
     useEffect(()=>{
         setProfile({
+            ...profile,
             name:user?.name?user.name:'',
             shopName:user?.shopName?user.shopName:'',
             address:user?.address?user.address:'',
@@ -28,7 +29,7 @@ const ProfileForm = ({user, updateProfile}) => {
             phone:user?.phone?user.phone:'',
             muncipality:user?.muncipality?user.muncipality:'',
             holidayEnd: user?.holidayMode?.end ? user.holidayMode.end:'',
-            holidayStart: user?.holidayMode?.start ? user.holidayMode.start:''
+            holidayStart: user?.holidayMode?.start ? user.holidayMode.start:'',
         })
     },[user])
    const {name,address,muncipality,shopName,district,wardno,phone,holidayEnd,holidayStart,oldPassword,newPassword} = profile

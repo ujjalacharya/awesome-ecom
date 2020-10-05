@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
+//later we have to do mapping through redis server
 const socketMappingSchema = new mongoose.Schema({
-    admin: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: "admin",
     },

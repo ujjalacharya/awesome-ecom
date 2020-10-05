@@ -1,6 +1,6 @@
 const Admin = require("../models/Admin");
 const { sendEmail } = require("../middleware/helpers");
-const socketMapping = require("../models/socketMapping")
+const SocketMapping = require("../models/SocketMapping")
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
 const crypto = require("crypto");
@@ -161,14 +161,14 @@ exports.loadMe = async (req,res) =>{
     req.io.once("connection", async socket => {
         console.log(socket.id,'connected');
         // disconnect is fired when a client leaves the server
-        const newSocketMapping = new socketMapping({
-            admin: req.admin._id,
+        const newSocketMapping = new SocketMapping({
+            user: req.admin._id,
             socketId: socket.id
         })
         socket.emit('tx',{hello: 'world'})
         await newSocketMapping.save()
         socket.on("disconnect", async() => {
-            await socketMapping.findOneAndRemove({socketId:socket.id})
+            await SocketMapping.findOneAndRemove({socketId:socket.id})
             console.log("user disconnected");
         });
     });

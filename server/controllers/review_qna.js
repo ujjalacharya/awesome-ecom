@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Admin = require("../models/Admin")
 const Payment = require("../models/Payment")
 const Notification = require("../models/Notification")
+const SocketMapping = require("../models/SocketMapping")
 const Remark = require("../models/Remark")
 const Review = require("../models/Review")
 const QNA = require("../models/QnA")
@@ -203,24 +204,30 @@ exports.postQuestion = async (req, res) => {
                 onProduct: product.name
             },
             hasRead: false,
-            hasSeen: false,
+            // hasSeen: false,
             date: Date.now()
         }
         if (!notificationObjOfAdmin) {
             // create new notification
             let newNotification = new Notification({
                 admin: product.soldBy,
-                notifications: [obj]
+                notifications: [obj],
+                noOfUnseen: 1
             })
-            // await newNotification.save()
+            await newNotification.save()
         } else {
             notificationObjOfAdmin.notifications.push(obj)
-            // await notificationObjOfAdmin.save()
+            notificationObjOfAdmin.noOfUnseen += 1
+            await notificationObjOfAdmin.save()
         }
-        //now notifying to the admin
-        // console.log(req.socket);
-        
-        req.io.emit('tx', { key: "value1" });
+        //now notifying to the admin    
+        let socketUser = await SocketMapping.find({user:product.soldBy})
+        if (!socketUser.length) {
+            //for every same login user emit notification
+            socketUser.forEach(u=>{
+                req.io.to(u.socketId).emit('notification', {noOfUnseen:notificationObjOfAdmin.noOfUnseen});
+            })
+        }    
     }
     if (!QnA) {
         let newQNA = new QNA({

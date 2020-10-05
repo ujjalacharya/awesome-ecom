@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom";
 
 const SideBar = ({titles}) => {
+    
     return (
         <nav id="sidebar" className="sidebar" width='10%'>
             <div className="sidebar-content ">
@@ -54,4 +55,4 @@ const SideBar = ({titles}) => {
     )
 }
 
-export default SideBar
+export default React.memo(SideBar)
