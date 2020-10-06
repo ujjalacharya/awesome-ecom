@@ -1,8 +1,8 @@
-import { GET_PROFILE, UPDATE_BANK, GET_BANK_INFO } from "../types";
+import { GET_NOTIFICATIONS } from "../types";
 
 
 const initialState = {
-    noofUnseen:0,
+    noofUnseen:null,
     admin:null,
     notifications:[]
 }
@@ -10,18 +10,13 @@ const initialState = {
 export default function (state = initialState, action) {
     const {type, payload} = action
     switch (type) {
-        case GET_PROFILE:
+        case GET_NOTIFICATIONS:
             return {
                 ...state,
-                profile: payload,
+                notifications: payload.notifications,
+                admin: payload.admin,
+                noOfUnseen: payload.noOfUnseen
             };
-        case GET_BANK_INFO:
-        case UPDATE_BANK:
-            return {
-                ...state,
-                bank: payload,
-            };
-
         default:
             return state;
     }

@@ -209,21 +209,22 @@ exports.postQuestion = async (req, res) => {
         }
         if (!notificationObjOfAdmin) {
             // create new notification
-            let newNotification = new Notification({
+            notificationObjOfAdmin = new Notification({
                 admin: product.soldBy,
                 notifications: [obj],
                 noOfUnseen: 1
             })
-            await newNotification.save()
+            // await notificationObjOfAdmin.save()
         } else {
             notificationObjOfAdmin.notifications.push(obj)
             notificationObjOfAdmin.noOfUnseen += 1
-            await notificationObjOfAdmin.save()
+            // await notificationObjOfAdmin.save()
         }
         //now notifying to the admin    
         let socketUser = await SocketMapping.find({user:product.soldBy})
-        if (!socketUser.length) {
+        if (socketUser.length) {
             //for every same login user emit notification
+            console.log(notificationObjOfAdmin);
             socketUser.forEach(u=>{
                 req.io.to(u.socketId).emit('notification', {noOfUnseen:notificationObjOfAdmin.noOfUnseen});
             })

@@ -1,14 +1,19 @@
 import React from 'react'
-
+import {isEmpty} from 'lodash'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { signOut } from '../../../redux/actions/auth_actions'
 import { Link } from 'react-router-dom';
-import { getRealTimeNotifications } from '../../../utils/common';
 
-const TopNavbar = ({ signOut,user }) => {
+const TopNavbar = ({ signOut,user , socket}) => {
+	if (!isEmpty(socket)) {
+		console.log(socket);
+		socket.on("notification", data => {
+    console.log(data);  
+    });
+	}
 	
-	
+	// console.log(data);
 	console.log('hello from top nav bar');
     return (
 		<nav className="navbar navbar-expand navbar-light bg-white">
@@ -205,8 +210,10 @@ const TopNavbar = ({ signOut,user }) => {
 TopNavbar.propTypes = {
 	signOut: PropTypes.func.isRequired,
 	user: PropTypes.object,
+	socket: PropTypes.object,
 }
 const mapStateToProps = state =>({
-	user:state.auth.user
+	user:state.auth.user,
+	socket: state.socket
 })
 export default connect(mapStateToProps, { signOut })(React.memo(TopNavbar))

@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT, LOAD_ME, GLOBAL_ERROR } from "../types";
+import { SIGN_IN, SIGN_OUT, LOAD_ME, GLOBAL_ERROR, SAVE_SOCKET_USER } from "../types";
 import api from "../../utils/api";
 import { socket, disconnectSocket } from "../../utils/common";
 
@@ -11,10 +11,18 @@ export const loadMe = () => async (dispatch) => {
     });
   //make socket connection to the server
     let socketUser = socket()
+    console.log(socketUser);
+    dispatch({
+      type: SAVE_SOCKET_USER,
+      payload: socketUser
+    })
     //todo reconnect if error..
     socketUser.on("tx", data => {
-      // console.log(data);
+      console.log(data);
     });
+    // socketUser.on("notification", data => {
+    // console.log(data);  
+    // });
   } catch (err) {
     console.log("****auth_actions/loadMe****", err);
   }
