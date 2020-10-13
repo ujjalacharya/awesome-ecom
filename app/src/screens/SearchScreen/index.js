@@ -51,6 +51,15 @@ const SeachScreen = (props) => {
     props.navigation.navigate("Products")
   }
 
+  const handleRemoveHistory = async() => {
+    await AsyncStorage.removeItem(
+      '@uzzStore:history'
+      , ()=>{
+        setHistory([])
+      }
+    );
+  }
+
   return (
     <View style={styles.searchViewWrapper}>
       <View style={styles.searchBarWrapper}>
@@ -82,7 +91,7 @@ const SeachScreen = (props) => {
             <Text>{"Search History"}</Text>
           </View>
           <View style={{ flex: 0.2 }}>
-            <Button onPress={() => console.warn("delete")}>
+            <Button onPress={handleRemoveHistory}>
               <AntDesign name="delete" color="red" />
             </Button>
           </View>
