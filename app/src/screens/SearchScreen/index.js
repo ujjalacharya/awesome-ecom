@@ -38,11 +38,10 @@ const SeachScreen = (props) => {
     try {
       let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
 
-      if (asyncItems) {
-        newItemsArr = [searchQuery, ...JSON.parse(asyncItems)];
-      } else {
-        newItemsArr.push(searchQuery);
-      }
+      if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
+
+      searchQuery && newItemsArr.unshift(searchQuery);
+
       await AsyncStorage.setItem(
         "@uzzStore:history",
         JSON.stringify(newItemsArr)
