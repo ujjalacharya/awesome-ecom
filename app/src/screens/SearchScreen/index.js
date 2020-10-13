@@ -46,6 +46,16 @@ const SeachScreen = (props) => {
             </Button>
           </View>
         </View>
+        <View style={{ minHeight: 200, flex: 1, flexDirection: "row", flexWrap: 'wrap' }}>
+          {[0, 0, 0, 1, 2,3].map(item => (
+            <TouchableRipple onPress={()=> console.warn("history")} style={{flexBasis: '28%', height: 40, backgroundColor: "#eff0f5", margin: 10, justifyContent: "center", alignItems: "center"}}>
+              <View>
+              <Text>Whey Protein</Text>
+              </View>
+            </TouchableRipple>
+           
+          ))}
+        </View>
       </View>
     </View>
   );
