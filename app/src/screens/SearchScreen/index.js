@@ -73,11 +73,12 @@ const SeachScreen = (props) => {
               onChangeText={onChangeSearch}
               value={searchQuery}
               onIconPress={() => props.navigation.pop()}
+              onSubmitEditing={handleGo}
             />
           </View>
           <TouchableRipple
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-            onPress={() => handleGo()}
+            onPress={handleGo}
           >
             <Text style={{ fontWeight: "bold" }}>{`Go`}</Text>
           </TouchableRipple>
