@@ -8,5 +8,6 @@ module.exports = {
     uploadBannerPhoto: require("./multer").uploadBannerPhoto,
     sendEmail: require("./mailer").sendEmail,
     dbConnection: require("./dbConnection"),
-    calculateDistance: require("./geoDistance")
+    calculateDistance: require("./geoDistance"),
+    createNotification: require("./createNotification")
 }

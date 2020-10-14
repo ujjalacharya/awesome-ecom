@@ -19,4 +19,5 @@ export const SUCCESS = "SUCCESS"
 //notification
 export const GET_NOTIFICATIONS = "GET_NOTIFICATIONS"
 export const SAVE_SOCKET_USER = "SAVE_SOCKET_USER"
+export const READ_NOTIFICATION = "READ_NOTIFICATION"
 

@@ -1,6 +1,7 @@
 const Admin = require("../models/Admin");
 const { sendEmail } = require("../middleware/helpers");
 const SocketMapping = require("../models/SocketMapping")
+const Notification = require("../models/Notification")
 const jwt = require("jsonwebtoken");
 const _ = require('lodash')
 const crypto = require("crypto");
@@ -165,7 +166,11 @@ exports.loadMe = async (req,res) =>{
             user: req.admin._id,
             socketId: socket.id
         })
+        let notificationObjOfAdmin = await Notification.findOne({admin:req.admin._id})
         socket.emit('tx',{hello: 'world'})
+        if (notificationObjOfAdmin) {
+            socket.emit('notification', { noOfUnseen: notificationObjOfAdmin.noOfUnseen })
+        }
         await newSocketMapping.save()
         socket.on("disconnect", async() => {
             await SocketMapping.findOneAndRemove({socketId:socket.id})
