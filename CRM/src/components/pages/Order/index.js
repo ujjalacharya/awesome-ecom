@@ -1,8 +1,8 @@
 import React from 'react'
-import Table from '../../common/Table'
+import Table from './Table'
 import Layout from '../../core/Layout'
 
-const index = () => {
+const Order = () => {
     return (
         <Layout>
             <Table/>
@@ -10,4 +10,5 @@ const index = () => {
     )
 }
 
-export default index
+
+export default Order

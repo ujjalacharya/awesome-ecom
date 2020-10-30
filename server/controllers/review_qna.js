@@ -211,7 +211,7 @@ exports.postQuestion = async (req, res) => {
             }]
         })
         createNotification(req.io, product.soldBy, notificationObj)
-        // await newQNA.save()
+        await newQNA.save()
         return res.json(newQNA)
     }
     QnA.qna.push({
@@ -219,7 +219,7 @@ exports.postQuestion = async (req, res) => {
         questionby: req.user.id,
         questionedDate: Date.now()
     })
-    // await QnA.save()
+    await QnA.save()
     QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna, 10)
