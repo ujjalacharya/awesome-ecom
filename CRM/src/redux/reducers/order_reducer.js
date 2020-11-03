@@ -1,4 +1,4 @@
-import { GET_ORDERS, GET_ORDER } from "../types";
+import { GET_ORDERS, GET_ORDER, MULTI_ORDER_LOADING,SINGLE_ORDER_LOADING } from "../types";
 
 
 const initialState = {
@@ -25,7 +25,16 @@ export default function (state = initialState, action) {
                 order: payload,
                 singleLoading: false
             };
-
+        case MULTI_ORDER_LOADING:
+            return {
+            ...state,
+            multiLoading: true
+        }
+        case SINGLE_ORDER_LOADING:
+            return {
+                ...state,
+                singleLoading: true
+            }
         default:
             return state;
     }

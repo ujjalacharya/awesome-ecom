@@ -47,8 +47,8 @@ const NotificationBar = ({ socket, getNotifications, adminNotification, readNoti
 
 	console.log('hello from notification');
 	return (
-		<li className="nav-item dropdown">
-			<Link className="nav-icon dropdown-toggle" to='' onClick={getNotifications} id="alertsDropdown" data-toggle="dropdown">
+		<li className="nav-item dropdown" onClick={getNotifications}>
+			<Link className="nav-icon dropdown-toggle" to=''  id="alertsDropdown" data-toggle="dropdown">
 				<div className="position-relative">
 					<i className="align-middle" data-feather="bell"></i>
 					{numberOfNotifications>0?<span className="indicator">{numberOfNotifications}</span>:null}
