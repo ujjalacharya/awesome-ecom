@@ -84,7 +84,7 @@ const SeachScreen = (props) => {
       </View>
       {searchQuery ? (
         <View style={{ flex: 1, backgroundColor: Constants.headerTintColor }}>
-          {searchData.map((item) => {
+          {searchData.map((item, i) => {
             return (
               <View
                 style={{
@@ -95,6 +95,7 @@ const SeachScreen = (props) => {
                   paddingLeft: 5,
                   flexDirection: "row",
                 }}
+                key={i}
               >
                 <View style={{ flex: 0.9, marginLeft: 5 }}>
                   <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
@@ -133,9 +134,9 @@ const SeachScreen = (props) => {
               flexWrap: "wrap",
             }}
           >
-            {history.map((item) => (
+            {history.map((item, i) => (
               <TouchableRipple
-                onPress={() => console.warn("history")}
+                onPress={() => setSearchQuery(item)}
                 style={{
                   flexBasis: "28%",
                   height: 40,
@@ -144,6 +145,7 @@ const SeachScreen = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
+                key={i}
               >
                 <Text>{item}</Text>
               </TouchableRipple>
