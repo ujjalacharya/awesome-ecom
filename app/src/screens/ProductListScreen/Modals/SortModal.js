@@ -8,8 +8,8 @@ export class SortModal extends Component {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={this.props.showModal}
-        onRequestClose={this.props.handleModalVisibility}
+        visible={this.props.showSortModal}
+        onRequestClose={this.props.handleSortModalVisibility}
       >
         <View style={styles.centeredView}>
           <View style={{ flex: 4, backgroundColor: "rgba(0,0,0,0.5)" }}></View>
@@ -40,7 +40,7 @@ export class SortModal extends Component {
             <Divider />
             <Card
               style={{ ...styles.cardStyle, marginTop: 10 }}
-              onPress={this.props.handleModalVisibility}
+              onPress={this.props.handleSortModalVisibility}
             >
               <Card.Content style={styles.cardContentStyle}>
                 <Paragraph style={{ fontWeight: "bold", color: "red" }}>
