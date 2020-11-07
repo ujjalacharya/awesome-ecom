@@ -53,6 +53,7 @@ export class ProductListScreen extends Component {
             <Filters
               {...this.props}
               handleSortModalVisibility={this.handleSortModalVisibility}
+              handleFilterModalVisibility={this.handleFilterModalVisibility}
             />
             <View style={{ flex: 5 }}>
               {productData.map((product, i) => (
