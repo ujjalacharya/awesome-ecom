@@ -1,0 +1,54 @@
+{
+  "name": "swagger-ui-express",
+  "version": "4.1.4",
+  "description": "Swagger UI Express",
+  "main": "./index.js",
+  "files": [
+    "package.json",
+    "index.js",
+    "indexTemplate.html.tpl",
+    "swagger-ui-init.js.tpl",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test/*",
+    "test-app": "node ./test/testapp/run.js "
+  },
+  "keywords": [
+    "swagger",
+    "express",
+    "ui",
+    "json",
+    "documentation"
+  ],
+  "private": false,
+  "engines": {
+    "node": ">= v0.10.32"
+  },
+  "devDependencies": {
+    "es6-shim": "0.35.2",
+    "express": "4.12.2",
+    "mocha": "2.2.5",
+    "phantom": "2.1.21"
+  },
+  "author": {
+    "name": "Stephen Scott",
+    "email": "scottie1984@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:scottie1984/swagger-ui-express.git"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/scottie1984/swagger-ui-express/issues"
+  },
+  "homepage": "https://github.com/scottie1984/swagger-ui-express",
+  "dependencies": {
+    "swagger-ui-dist": "^3.18.1"
+  },
+  "peerDependencies": {
+    "express": ">=4.0.0"
+  }
+}

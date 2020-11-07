@@ -1,0 +1,16 @@
+{
+  "author": "Tim Caswell <tim@creationix.com> (http://github.com/creationix)",
+  "name": "corn",
+  "description": "Corn is a simple async template language for node",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/creationix/corn.git"
+  },
+  "main": "corn.js",
+  "engines": {
+    "node": ">0.2"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

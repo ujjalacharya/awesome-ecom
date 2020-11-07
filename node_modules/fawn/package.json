@@ -1,0 +1,42 @@
+{
+  "name": "fawn",
+  "version": "2.1.5",
+  "description": "Promise based library for transactions in MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/all.tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/e-oj/Fawn"
+  },
+  "keywords": [
+    "mongoose",
+    "mongoDB",
+    "mongoose transaction",
+    "mongoose transactions",
+    "mongoose transact",
+    "mongoose atomic",
+    "atomic mongoose",
+    "mongodb transaction",
+    "mongodb transactions",
+    "mongodb transact",
+    "mongodb atomic",
+    "atomic mongodb",
+    "multi phase commit",
+    "two phase commit",
+    "transaction"
+  ],
+  "author": "Emmanuel Olaojo",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "3.5.0",
+    "gridfs-stream": "1.1.1",
+    "mongoose": "4.12.3"
+  },
+  "devDependencies": {
+    "chai": "4.1.0",
+    "chai-as-promised": "7.1.1",
+    "mocha": "3.4.2"
+  }
+}
