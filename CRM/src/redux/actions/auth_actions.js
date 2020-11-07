@@ -11,20 +11,17 @@ export const loadMe = () => async (dispatch) => {
     });
   //make socket connection to the server
     let socketUser = socket()
-    console.log(socketUser);
     dispatch({
       type: SAVE_SOCKET_USER,
       payload: socketUser
     })
     //todo reconnect if error..
-    socketUser.on("tx", data => {
-      console.log(data);
-    });
-    // socketUser.on("notification", data => {
-    // console.log(data);  
+    // socketUser.on("tx", data => {
+    //   console.log(data);
     // });
   } catch (err) {
     console.log("****auth_actions/loadMe****", err);
+    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
   }
 };
 

@@ -11,7 +11,7 @@ const Product = require("../models/Product")
 const ProductBrand = require("../models/ProductBrand")
 const ProductImages = require("../models/ProductImages")
 const Order = require("../models/Order")
-const { calculateDistance } = require("../middleware/helpers")
+const { calculateDistance, createNotification } = require("../middleware/helpers")
 const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const sharp = require("sharp")
 const shortid = require('shortid');
@@ -192,43 +192,14 @@ exports.postQuestion = async (req, res) => {
             model: 'admin',
             select: 'name shopName address'
         })
-    const createNotification = async () => {
-        //notify to the admin through socket.io
-        //first save notification
-
-        let notificationObjOfAdmin = await Notification.findOne({ admin: product.soldBy })
-        const obj = {
-            notificationType: 'question_on_product',//order,question_on_product,answer_on_product,review
-            notificationDetail: {//a fix obj for qna details
-                questionBy: req.user.name,
-                onProduct: product.name
-            },
-            hasRead: false,
-            // hasSeen: false,
-            date: Date.now()
-        }
-        if (!notificationObjOfAdmin) {
-            // create new notification
-            notificationObjOfAdmin = new Notification({
-                admin: product.soldBy,
-                notifications: [obj],
-                noOfUnseen: 1
-            })
-            // await notificationObjOfAdmin.save()
-        } else {
-            notificationObjOfAdmin.notifications.push(obj)
-            notificationObjOfAdmin.noOfUnseen += 1
-            // await notificationObjOfAdmin.save()
-        }
-        //now notifying to the admin    
-        let socketUser = await SocketMapping.find({user:product.soldBy})
-        if (socketUser.length) {
-            //for every same login user emit notification
-            console.log(notificationObjOfAdmin);
-            socketUser.forEach(u=>{
-                req.io.to(u.socketId).emit('notification', {noOfUnseen:notificationObjOfAdmin.noOfUnseen});
-            })
-        }    
+    const notificationObj = {
+        notificationType: 'question_on_product',//order,question_on_product,answer_on_product,review
+        notificationDetail: {//a fix notificationObj for qna details
+            questionBy: req.user.name,
+            onProduct: product.name
+        },
+        hasRead: false,
+        date: Date.now()
     }
     if (!QnA) {
         let newQNA = new QNA({
@@ -239,8 +210,8 @@ exports.postQuestion = async (req, res) => {
                 questionedDate: Date.now()
             }]
         })
-        createNotification()
-        // await newQNA.save()
+        createNotification(req.io, product.soldBy, notificationObj)
+        await newQNA.save()
         return res.json(newQNA)
     }
     QnA.qna.push({
@@ -248,11 +219,11 @@ exports.postQuestion = async (req, res) => {
         questionby: req.user.id,
         questionedDate: Date.now()
     })
-    // await QnA.save()
+    await QnA.save()
     QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
     QnA.qna = _.takeRight(QnA.qna, 10)
-    createNotification()
+    createNotification(req.io, product.soldBy, notificationObj)
     res.json({ QnA, totalCount })
 }
 

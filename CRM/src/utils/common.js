@@ -11,9 +11,9 @@ export const disconnectSocket = () => {
   return socketUser.close()
 }
 
-export const getRealTimeNotifications = () => {
-  return socketUser.on("notification", data => data);
-}
+// export const getRealTimeNotifications = () => {
+//   return socketUser.on("notification", data => data);
+// }
 
 export const decodeLocalStorage = () => {
     const token = localStorage.getItem(accessTokenKey);

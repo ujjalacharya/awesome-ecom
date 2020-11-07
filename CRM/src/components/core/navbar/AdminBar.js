@@ -24,7 +24,7 @@ const AdminBar = ({}) => {
             main: 'Order',
             sub: [ {
                 name: 'Manage Orders',
-                path: '/manage-orders'
+                path: '/order'
             }]
         }
     ],[])

@@ -2,6 +2,7 @@ const Admin = require("../models/Admin");
 const BusinessInfo = require("../models/BusinessInfo")
 const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
+const Notification = require("../models/Notification")
 const File = require('../models/AdminFiles')
 const sharp = require("sharp")
 const path = require("path");
@@ -327,4 +328,43 @@ exports.warehouse = async (req, res) => {
         .options({ viaSave: true })
         .run({ useMongoose: true })
     res.json(newWareHouse)
+}
+
+
+exports.getNotifications = async(req,res) => {
+    let adminNotification = await Notification.findOne({ admin: req.admin._id })
+    if (adminNotification) {
+        adminNotification.noOfUnseen = 0
+        // adminNotification.notifications  = _.reverse(adminNotification.notifications)
+        // adminNotification.markModified('notifications')
+        adminNotification =   await adminNotification.save()
+        return res.json(adminNotification)
+    }
+    adminNotification = {
+        admin: req.admin._id,
+        notifications:[],
+        noOFUnseen:0
+    }
+    res.json(adminNotification)
+
+}
+
+exports.readNotification = async(req,res) => {
+    let adminNotification = await Notification.findOne({ admin: req.admin._id })
+    if (adminNotification) {
+        adminNotification.notifications = adminNotification.notifications.map(n=> {
+            if (n._id.toString() === req.notification_id) {
+                n.hasRead = true
+            }
+            return n
+        })
+        await adminNotification.save()
+        return res.json(adminNotification)
+    }
+    adminNotification = {
+        admin: req.admin._id,
+        notifications: [],
+        noOFUnseen: 0
+    }
+    res.json(adminNotification)
 }

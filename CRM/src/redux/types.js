@@ -16,7 +16,16 @@ export const GET_BANK_INFO = "GET_BANK_INFO"
 export const GLOBAL_ERROR = "GLOBAL_ERROR";
 export const SUCCESS = "SUCCESS"
 
+//socket
+export const SAVE_SOCKET_USER = "SAVE_SOCKET_USER"
+
 //notification
 export const GET_NOTIFICATIONS = "GET_NOTIFICATIONS"
-export const SAVE_SOCKET_USER = "SAVE_SOCKET_USER"
+export const READ_NOTIFICATION = "READ_NOTIFICATION"
+
+//order
+export const GET_ORDERS = "GET_ORDERS"
+export const GET_ORDER = "GET_ORDER"
+export const MULTI_ORDER_LOADING = "MULTI_ORDER_LOADING"
+export const SINGLE_ORDER_LOADING = "SINGLE_ORDER_LOADING"
 

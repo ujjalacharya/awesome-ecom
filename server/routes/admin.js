@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getProfile, updateProfile, profile, businessinfo, bankinfo, warehouse, getBusinessInfo, getBankInfo, getWareHouse, uploadPhoto,adminFile,deleteFileById
+    getProfile, updateProfile, profile, businessinfo, bankinfo, warehouse, getBusinessInfo, getBankInfo, getWareHouse, uploadPhoto, adminFile, deleteFileById, getNotifications, readNotification
 } = require("../controllers/admin");
 const { auth, hasAuthorization } = require('../controllers/admin_auth')
 
@@ -9,6 +9,10 @@ const { uploadAdminPhoto, uploadAdminDoc } = require("../middleware/helpers");
 const { validateAdminBankInfo, validateBusinessInfo, validateWareHouse, validateAdminProfile } = require("../middleware/validator")
 
 const router = express.Router();
+
+//notification..
+router.get('/notifications',auth, getNotifications)
+router.patch('/read-notification/:notification_id', auth, readNotification)
 
 // admin profile..
 router
@@ -35,7 +39,6 @@ router.route('/bank/:id')
 router.route('/warehouse/:id')
     .put(auth, hasAuthorization, validateWareHouse, warehouse)//update or create
     .get(auth, hasAuthorization, getWareHouse)
-
 router.param('id', profile)
 
 

@@ -5,6 +5,7 @@ import profile from './profile_reducer'
 import alert from './alert_reducer'
 import notification from './notification_reducer'
 import socket from './socket_reducer'
+import order from './order_reducer'
 
 const rootReducer = combineReducers({
   auth,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   profile,
   alert,
   notification,
-  socket
+  socket,
+  order
 });
 
 export default rootReducer;
