@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Modal, StyleSheet } from "react-native";
-import { Card, Paragraph, Divider } from "react-native-paper";
+import { ScrollView } from "react-native-gesture-handler";
+import { Card, Paragraph, Button } from "react-native-paper";
+import Constants from "../../../constants/Constants";
 
 const FilterModal = (props) => {
   return (
@@ -10,42 +12,75 @@ const FilterModal = (props) => {
       visible={props.showFilterModal}
       onRequestClose={props.handleFilterModalVisibility}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Card style={styles.cardStyle}>
-            <Card.Content style={styles.cardContentStyle}>
-              <Paragraph>Highest Price</Paragraph>
-            </Card.Content>
-          </Card>
-          <Divider />
-          <Card style={styles.cardStyle}>
-            <Card.Content style={styles.cardContentStyle}>
-              <Paragraph>Lowest Price</Paragraph>
-            </Card.Content>
-          </Card>
-          <Divider />
-          <Card style={styles.cardStyle}>
-            <Card.Content style={styles.cardContentStyle}>
-              <Paragraph>Latest Product</Paragraph>
-            </Card.Content>
-          </Card>
-          <Divider />
-          <Card style={styles.cardStyle}>
-            <Card.Content style={styles.cardContentStyle}>
-              <Paragraph>Oldest Product</Paragraph>
-            </Card.Content>
-          </Card>
-          <Divider />
-          <Card
-            style={{ ...styles.cardStyle, marginTop: 10 }}
-            onPress={props.handleFilterModalVisibility}
-          >
-            <Card.Content style={styles.cardContentStyle}>
-              <Paragraph style={{ fontWeight: "bold", color: "red" }}>
-                Cancel
-              </Paragraph>
-            </Card.Content>
-          </Card>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        {/* <View style={{height: 5}}>
+
+        </View> */}
+        <Card style={styles.cardStyle}>
+          <Card.Content style={styles.cardContentStyle}>
+            <Paragraph>Latest Product</Paragraph>
+          </Card.Content>
+        </Card>
+        <Card style={styles.cardStyle}>
+          <Card.Content style={styles.cardContentStyle}>
+            <Paragraph>Latest Product</Paragraph>
+          </Card.Content>
+        </Card>
+        <Card style={styles.cardStyle}>
+          <Card.Content style={styles.cardContentStyle}>
+            <Paragraph>Latest Product</Paragraph>
+          </Card.Content>
+        </Card>
+        <Card style={styles.cardStyle}>
+          <Card.Content style={styles.cardContentStyle}>
+            <Paragraph>Latest Product</Paragraph>
+          </Card.Content>
+        </Card>
+        <Card style={styles.cardStyle}>
+          <Card.Content style={styles.cardContentStyle}>
+            <Paragraph>Latest Product</Paragraph>
+          </Card.Content>
+        </Card>
+        <Card style={styles.cardStyle}>
+          <Card.Content style={styles.cardContentStyle}>
+            <Paragraph>Latest Product</Paragraph>
+          </Card.Content>
+        </Card>
+
+        <Card style={styles.cardStyle}>
+          <Card.Content style={styles.cardContentStyle}>
+            <Paragraph>Oldest Product</Paragraph>
+          </Card.Content>
+        </Card>
+      </ScrollView>
+      <View style={styles.productFooter}>
+        <View
+          style={{ backgroundColor: Constants.headerTintColor, height: 50 }}
+        >
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <Button
+              style={{
+                flex: 0.5,
+                backgroundColor: "red",
+                justifyContent: "center",
+              }}
+              labelStyle={{ color: "white" }}
+              onPress={props.handleFilterModalVisibility}
+            >
+              Cancel
+            </Button>
+            <Button
+              // onPress={() => this.props.navigation.navigate("CheckOut")}
+              style={{
+                flex: 0.5,
+                backgroundColor: Constants.primaryGreen,
+                justifyContent: "center",
+              }}
+              labelStyle={{ color: "white" }}
+            >
+              Apply Filter
+            </Button>
+          </View>
         </View>
       </View>
     </Modal>
@@ -61,6 +96,11 @@ const styles = StyleSheet.create({
   },
   modalView: {
     flex: 1,
+  },
+  productFooter: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
   },
 });
 
