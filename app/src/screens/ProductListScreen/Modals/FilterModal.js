@@ -1,8 +1,10 @@
 import React from "react";
-import { View, Modal, StyleSheet } from "react-native";
+import { View, Text, Modal, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Card, Paragraph, Button } from "react-native-paper";
+import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../../constants/Constants";
+import Header from "../../../components/Header";
 
 const FilterModal = (props) => {
   return (
@@ -13,9 +15,25 @@ const FilterModal = (props) => {
       onRequestClose={props.handleFilterModalVisibility}
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {/* <View style={{height: 5}}>
-
-        </View> */}
+        <View
+          style={{ height: 40, flexDirection: "row", alignItems: "center" }}
+        >
+          <View style={{ flex: 0.99, marginLeft: 20 }}>
+            <Text style={{fontSize: 18}}>Filters</Text>
+          </View>
+          <View>
+            <Button
+              icon={() => (
+                <AntDesign
+                  name="close"
+                  size={15}
+                  // color={Constants.primaryGreen}
+                />
+              )}
+              onPress={props.handleFilterModalVisibility}
+            ></Button>
+          </View>
+        </View>
         <Card style={styles.cardStyle}>
           <Card.Content style={styles.cardContentStyle}>
             <Paragraph>Latest Product</Paragraph>
