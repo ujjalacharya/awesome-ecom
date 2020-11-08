@@ -91,6 +91,7 @@ roller.roll()
 .then(function () {
     // start server
     const port = process.env.PORT;
+    console.log(port)
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
