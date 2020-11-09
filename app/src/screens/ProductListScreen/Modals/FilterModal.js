@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Modal, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Card, Paragraph, Button } from "react-native-paper";
+import { Card, Paragraph, Button, Divider } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../../constants/Constants";
 import Header from "../../../components/Header";
@@ -19,7 +19,7 @@ const FilterModal = (props) => {
           style={{ height: 40, flexDirection: "row", alignItems: "center" }}
         >
           <View style={{ flex: 0.99, marginLeft: 20 }}>
-            <Text style={{fontSize: 18}}>Filters</Text>
+            <Text style={{ fontSize: 18 }}>Filters</Text>
           </View>
           <View>
             <Button
@@ -35,10 +35,29 @@ const FilterModal = (props) => {
           </View>
         </View>
         <Card style={styles.cardStyle}>
+          <Card.Title title="Brands" />
           <Card.Content style={styles.cardContentStyle}>
-            <Paragraph>Latest Product</Paragraph>
+            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+              {[0, 0, 0, 0].map((_, i) => (
+                <Button
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "gray",
+                    borderRadius: 5,
+                    marginRight: 10,
+                    marginBottom: 10,
+                    width: "30%",
+                  }}
+                  key={i}
+                  onPress={() => console.warn("brand")}
+                >
+                  <Text style={{ fontSize: 12 }}>Samsung</Text>
+                </Button>
+              ))}
+            </View>
           </Card.Content>
         </Card>
+        <Divider />
         <Card style={styles.cardStyle}>
           <Card.Content style={styles.cardContentStyle}>
             <Paragraph>Latest Product</Paragraph>
