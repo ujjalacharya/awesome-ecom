@@ -24,10 +24,18 @@ exports.order = async (req, res, next) => {
   const order = await Order.findById(req.params.order_id)
     .populate("user", "-password -salt -resetPasswordLink -emailVerifyLink")
     .populate("payment", "-user -order")
-    .populate(
-      "product",
-      "_id slug name slug category brand return isVerified isDeleted warranty quantity"
-    )
+  //   .populate(
+  //     "product",
+  //     "_id slug name slug category brand return isVerified isDeleted warranty quantity"
+  // )
+  .populate({
+    path: "product",
+    select: "name slug images price _id category brand return isVerified isDeleted warranty quantity",
+    populate: {
+      path: "images",
+      model: "productimages",
+    },
+  })
     .populate({
       path: "soldBy",
       select:"name shopName address isVerified isBlocked holidayMode photo email",

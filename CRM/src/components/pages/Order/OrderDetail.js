@@ -1,13 +1,15 @@
 import React from 'react'
 import moment from 'moment'
-import { Carousel } from 'antd';
+import { Carousel, Avatar } from 'antd';
+import { SideBySideMagnifier} from "react-image-magnifiers";
+import OrderStatus from './OrderStatus';
 
 const OrderDetail = ({ order }) => {
     function onChange(a, b, c) {
-        console.log(a, b, c);
+        // console.log(a, b, c);
     }
     const contentStyle = {
-        height: '160px',
+        height: '170px',
         color: '#fff',
         lineHeight: '160px',
         textAlign: 'center',
@@ -24,110 +26,97 @@ const OrderDetail = ({ order }) => {
                             <div className="mb-2">
                                 <h6>Product Details</h6>
                             </div>
-                            <div className="row">
+                            <div className="row mb-4">
                                 <div className="col-md-6">
                                     
-                                <Carousel dots={{color:'black'}} afterChange={onChange}>
-                                    <div>
-                                        <h3 style={contentStyle}> <img class="img-fluid" src="https://i.imgur.com/iItpzRh.jpg" /></h3>
+                                <Carousel afterChange={onChange}>
+                                {
+                                    order?.product?.images.map(image=> (
+
+                                    <div key={image._id}>
+                                        <h3 style={contentStyle}>
+                                            <SideBySideMagnifier
+                                                style={{ height: '100%', width: '100%' }}
+                                                alwaysInPlace={true}
+                                                imageSrc={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.medium}`}
+                                                imageAlt="Example"
+                                                largeImageSrc={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.large}`} // Optional
+                                            />
+                                         {/* <img style={{height:'100%',width:'100%'}} src={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.medium}`}/> */}
+                                         </h3>
                                     </div>
-                                    <div>
-                                        <h3 style={contentStyle}>2</h3>
-                                    </div>
-                                    <div>
-                                        <h3 style={contentStyle}> <img class="img-fluid" src="https://i.imgur.com/iItpzRh.jpg" /></h3>
-                                    </div>
-                                    <div>
-                                        <h3 style={contentStyle}> <img class="img-fluid" src="https://i.imgur.com/iItpzRh.jpg" /></h3>
-                                    </div>
+                                    ))
+                                }
                                 </Carousel>
                                 </div>
                                 <div className="col-md-6 text-md-right">
-                                    <div className="text-muted">Payment Date</div>
-                                    <strong>October 2, 2018 - 03:45 pm</strong>
+                                    <div className="text-muted">Name</div>
+                                <strong>{order?.product?.name}</strong>
                                 </div>
                             </div>
                             <hr className="my-4" />
+                            <div className="mb-2">
+                                <h6>Order Details</h6>
+                            </div>
                             <div className="row mb-4">
                                 <div className="col-md-6">
-                                    <div className="text-muted">Client</div>
-                                    <strong>
-                                        Chris Wood
-                                     </strong>
+                                <strong>
                                     <p>
-                                        4183 Forest Avenue <br /> New York City <br /> 10011 <br /> USA <br />
-                                        <a href="#">
-                                            chris.wood@gmail.com
-                                         </a>
+                                    OrderID<br/> Current Status <br /> Quantity <br /> Created At <br />
                                     </p>
+                                </strong>
                                 </div>
                                 <div className="col-md-6 text-md-right">
-                                    <div className="text-muted">Payment To</div>
-                                    <strong>
-                                        AppStack LLC
-                                     </strong>
                                     <p>
-                                        354 Roy Alley <br /> Denver <br /> 80202 <br /> USA <br />
-                                        <a href="#">
-                                            info@appstack.com
-                                        </a>
+                                    {order?.orderID} <br />
+                                        <OrderStatus status={order?.status?.currentStatus} />
+                                     {/* {
+                                        (order?.status?.currentStatus ==='active' || order?.status?.currentStatus === 'approve') ?
+                                            <Switch checkedChildren='active' unCheckedChildren='approve' defaultChecked={(order?.status?.currentStatus === 'active')? true:false} /> : order?.status?.currentStatus
+
+                                        } */}
+                                         <br /> {order?.quantity} <br /> {order && moment(order?.createdAt).format('ddd mm yyyy')} <br />
                                     </p>
                                 </div>
                             </div>
-                            <table className="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Quantity</th>
-                                        <th className="text-right">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>AppStack Theme Customization</td>
-                                        <td>2</td>
-                                        <td className="text-right">$150.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Monthly Subscription </td>
-                                        <td>3</td>
-                                        <td className="text-right">$25.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Additional Service</td>
-                                        <td>1</td>
-                                        <td className="text-right">$100.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>&nbsp;</th>
-                                        <th>Subtotal </th>
-                                        <th className="text-right">$275.00</th>
-                                    </tr>
-                                    <tr>
-                                        <th>&nbsp;</th>
-                                        <th>Shipping </th>
-                                        <th className="text-right">$8.00</th>
-                                    </tr>
-                                    <tr>
-                                        <th>&nbsp;</th>
-                                        <th>Discount </th>
-                                        <th className="text-right">5%</th>
-                                    </tr>
-                                    <tr>
-                                        <th>&nbsp;</th>
-                                        <th>Total </th>
-                                        <th className="text-right">$268.85</th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div className="text-center">
-                                <p className="text-sm">
-                                    <strong>Extra note:</strong> Please send all items at the same time to the shipping address. Thanks in advance.
-                                    </p>
-                                <a href="#" className="btn btn-primary">
-                                    Print this receipt
-                                </a>
+                        <hr className="my-4" />
+                        <div className="mb-2">
+                            <h6>Transaction Details</h6>
+                        </div>
+                        <div className="row mb-4">
+                            <div className="col-md-6">
+                            <strong>
+
+                                <p>
+                                    Transaction Code<br />isPaid <br/> Method <br /> Shipping Charge <br /> Amount <br /> Returned Amount <br />
+                                </p>
+                            </strong>
                             </div>
+                            <div className="col-md-6 text-md-right">
+                                <p>
+                                    {order?.payment?.transactionCode}<br />{order && (order?.isPaid ? "Yes" : "No")} <br /> {order?.payment?.method}<br/> {order?.payment?.shippingCharge} <br/> {order?.payment?.amount} <br /> {order?.payment?.returnedAmount} <br />
+                                </p>
+                            </div>
+                        </div>
+                        <hr className="my-4" />
+                        <div className="mb-2">
+                            <h6>User Details</h6>
+                        </div>
+                        <div className="row mb-4">
+                            <div className="col-md-6">
+                                <strong>
+
+                                    <p>
+                                        Name<br />Email <br /> DOB <br /> Gender <br /> Photo <br />
+                                    </p>
+                                </strong>
+                            </div>
+                            <div className="col-md-6 text-md-right">
+                                <p>
+                                    {order?.user?.name}<br />{order?.user?.email} <br /> {order?.user?.dob}<br /> {order?.user?.gender}<br /> {<Avatar shape="square" size='medium' src={`${process.env.REACT_APP_SERVER_URL}/uploads/${order?.user.photo}`} />}
+                                </p>
+                            </div>
+                        </div>
                         </div>
 
                     </div>
@@ -208,4 +197,4 @@ const OrderDetail = ({ order }) => {
     )
 }
 
-export default React.memo(OrderDetail)
+export default (OrderDetail)

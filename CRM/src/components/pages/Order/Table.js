@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { Table as AntdTable, Input, Button, Space, Modal , Avatar} from 'antd';
+import { Table as AntdTable, Input, Button, Space, Modal , Avatar, Drawer} from 'antd';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
 import { SearchOutlined } from '@ant-design/icons';
@@ -16,7 +16,7 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, or
     // })
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const searchInput = useRef(null);
     useEffect(() => {
         user && getOrders(user._id, pagination.current, pagination.pageSize)
@@ -105,13 +105,12 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, or
         
     })
 
+    const openOrder = (order) => {
+        setIsDrawerOpen(true)
+        getOrder(order.soldBy, order._id)
+    }
+
     const columns = useMemo(() => [
-        {
-            title: 'Date',
-            dataIndex: 'createdAt',
-            width: '10%',
-            render: date => `${moment(date).format("MMM Do YYYY")}`
-        },
         {
             title: 'Product',
             dataIndex: 'product',
@@ -151,11 +150,6 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, or
             ]
         },
         {
-            title: 'Qty',
-            dataIndex: 'quantity',
-            width: '5%',
-        },
-        {
             title: 'Status',
             dataIndex: 'status',
             filterMultiple: false,
@@ -171,21 +165,40 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, or
             ],
             render: status => {
                 let badgeClass = status.currentStatus === 'active' ? "badge badge-pill badge-info" :
-                        status.currentStatus === 'approve' ? "badge badge-pill badge-secondary" :
-                        status.currentStatus === 'dispatch' ? "badge badge-pill badge-primary":
-                        status.currentStatus === 'cancel' ? "badge badge-pill badge-danger":
-                        status.currentStatus === 'complete' ? "badge badge-pill badge-success":
-                        status.currentStatus === 'tobereturned' ? "badge badge-pill badge-warning":
-                        "badge badge-pill badge-dark"
+                status.currentStatus === 'approve' ? "badge badge-pill badge-secondary" :
+                status.currentStatus === 'dispatch' ? "badge badge-pill badge-primary":
+                status.currentStatus === 'cancel' ? "badge badge-pill badge-danger":
+                status.currentStatus === 'complete' ? "badge badge-pill badge-success":
+                status.currentStatus === 'tobereturned' ? "badge badge-pill badge-warning":
+                "badge badge-pill badge-dark"
                 return(<span className={badgeClass}>{status.currentStatus}</span>)
             },
             width: '5%',
         },
+        {
+            title: 'Qty',
+            dataIndex: 'quantity',
+            width: '5%',
+        },
+        {
+            title: 'Date',
+            dataIndex: 'createdAt',
+            width: '10%',
+            render: date => `${moment(date).format("MMM Do YYYY")}`
+        },
+        {
+            title: 'Action',
+            dataIndex: '',
+            width: '5%',
+            render: action => <button className="btn btn-info"><i className="fas fa-eye"></i></button>,
+            onCell:order => {
+                return {
+                    onClick: e => openOrder(order)
+                }
+            }
+        },
     ], []);
-    const openOrder = (order) => {
-        setIsModalOpen(true)
-        getOrder(user._id, order._id)
-    }
+    
 
     return (
     <>
@@ -197,23 +210,32 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, or
         loading={multiLoading}
         onChange={handleTableChange}
         size='small'
-        onRow={ order => {
-            return {
-                onClick:e => openOrder(order)
-            }
-        }}
+        // onRow={ order => {
+        //     return {
+        //         onClick:e => openOrder(order)
+        //     }
+        // }}
     />
-    <Modal
+    <Drawer
+        title="Order Details"
+        placement="right"
+        width={800}
+        closable={false}
+        onClose={()=>setIsDrawerOpen(false)}
+        visible={isDrawerOpen}
+    >
+        <OrderDetail order={order} />
+    </Drawer>
+    {/* <Modal
         title="Order Detail"
         centered
-        visible={isModalOpen}
-        onOk={() => setIsModalOpen(false)}
-        onCancel={() => setIsModalOpen(false)}
-        width={800}
-        height={800}
+        visible={isDrawerOpen}
+        onOk={() => setIsDrawerOpen(false)}
+        onCancel={() => setIsDrawerOpen(false)}
+        width={1000}
     >
         <OrderDetail order={order}/>
-    </Modal>
+    </Modal> */}
     </>)
 }
 

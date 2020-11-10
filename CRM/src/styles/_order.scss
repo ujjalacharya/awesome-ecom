@@ -1,0 +1,14 @@
+.ant-carousel {
+  .slick-dots {
+    li {
+      button {
+        background: rgb(67, 56, 56);
+      }
+    }
+    li.slick-active {
+      button {
+        background: #000;
+      }
+    }
+  }
+}

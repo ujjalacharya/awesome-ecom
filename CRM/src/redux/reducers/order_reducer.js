@@ -1,4 +1,4 @@
-import { GET_ORDERS, GET_ORDER, MULTI_ORDER_LOADING,SINGLE_ORDER_LOADING } from "../types";
+import { GET_ORDERS, GET_ORDER, MULTI_ORDER_LOADING,SINGLE_ORDER_LOADING, TOGGLE_ORDER_APPROVAL, TOGGLE_TOBERETURN_ORDER, CANCEL_ORDER } from "../types";
 
 
 const initialState = {
@@ -19,6 +19,9 @@ export default function (state = initialState, action) {
                 multiLoading: false,
                 totalCount:payload.totalCount
             };
+        case TOGGLE_ORDER_APPROVAL:
+        case TOGGLE_TOBERETURN_ORDER:
+        case CANCEL_ORDER:
         case GET_ORDER:
             return {
                 ...state,
