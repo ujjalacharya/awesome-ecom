@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Modal, StyleSheet } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   Card,
   TextInput,
@@ -12,6 +12,12 @@ import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../../constants/Constants";
 
 const FilterModal = (props) => {
+  const [rating, setRating] = useState(0);
+
+  const handleRating = (rate) => {
+    setRating(rate);
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -61,10 +67,10 @@ const FilterModal = (props) => {
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <>
-                {[1, 2, 3, 4, 5].map((star, i) => (
-                  <TouchableRipple onPress={() => console.warn(star)} key={i}>
+                {[1, 2, 3, 4, 5].map((star, index) => (
+                  <TouchableRipple onPress={() => handleRating(star)} key={index}>
                     <AntDesign
-                      name="staro"
+                      name={rating > index ? "star" : "staro"}
                       size={20}
                       color={Constants.primaryGreen}
                       style={{ marginRight: 8 }}
