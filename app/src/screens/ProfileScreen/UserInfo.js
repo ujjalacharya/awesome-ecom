@@ -6,8 +6,8 @@ import Constants from "../../constants/Constants";
 function UserInfo() {
   return (
     <View>
-      <Card style={{ margin: 10, height: 150, flex: 1 }}>
-        <View style={{ flex: 0.7, flexDirection: "row" }}>
+      <Card style={{ margin: 10, height: 250, flex: 1 }}>
+        <View style={{ flex: 0.4, flexDirection: "row" }}>
           <View
             style={{
               flex: 0.3,
@@ -40,7 +40,7 @@ function UserInfo() {
               <Button
                 style={{
                   ...styles.changeProfileButton,
-                  backgroundColor: "white",
+                  backgroundColor: Constants.lightGray,
                 }}
                 uppercase={false}
               >
@@ -56,14 +56,36 @@ function UserInfo() {
             </View>
           </View>
         </View>
-        <View style={{ flex: 0.3, flexDirection: "row", alignItems: "center" }}>
-          <View style={{ flex: 0.4, marginLeft: 10 }}>
-            <Text style={styles.fadedTitle}>Mobile Number</Text>
-            <Text>9848658331</Text>
+        <View style={{ flex: 0.6 }}>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flex: 0.45, marginLeft: 10 }}>
+              <Text style={styles.fadedTitle}>Mobile Number</Text>
+              <Text>9848658331</Text>
+            </View>
+            <View style={{ flex: 0.55 }}>
+              <Text style={styles.fadedTitle}>Joined Since</Text>
+              <Text>10th July 2019</Text>
+            </View>
           </View>
-          <View style={{ flex: 0.6 }}>
-            <Text style={styles.fadedTitle}>Joined Since</Text>
-            <Text>10th July 2019</Text>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flex: 0.45, marginLeft: 10 }}>
+              <Text style={styles.fadedTitle}>Date Of Birth</Text>
+              <Text>1996 May 17</Text>
+            </View>
+            <View style={{ flex: 0.55 }}>
+              <Text style={styles.fadedTitle}>Gender</Text>
+              <Text>Male</Text>
+            </View>
+          </View>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flex: 0.45, marginLeft: 10 }}>
+              <Text style={styles.fadedTitle}>Address</Text>
+              <Text>New Baneswor</Text>
+            </View>
+            <View style={{ flex: 0.55 }}>
+              <Text style={styles.fadedTitle}>Occupation</Text>
+              <Text>Programmar</Text>
+            </View>
           </View>
         </View>
       </Card>
@@ -79,14 +101,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: "45%",
     backgroundColor: Constants.chosenFilterBackgroundColor,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowColor: "#fff",
   },
   fadedTitle: { fontSize: 12, color: Constants.grayColor },
 });
