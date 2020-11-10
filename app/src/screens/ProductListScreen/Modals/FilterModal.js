@@ -12,10 +12,42 @@ import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../../constants/Constants";
 
 const FilterModal = (props) => {
-  const [rating, setRating] = useState(0);
+  const [brand, setBrand] = useState(null);
+  const [rating, setRating] = useState(null);
+  const [warrenty, setWarrenty] = useState(null);
+  const [price, setPrice] = useState(null);
+  const [color, setColor] = useState(null);
+  const [size, setSize] = useState(null);
 
+  const handleBrand = (brand) => {
+    setBrand(brand);
+  };
   const handleRating = (rate) => {
     setRating(rate);
+  };
+  const handleWarrenty = (war) => {
+    setWarrenty(war);
+  };
+  const handlePrice = (pr) => {
+    setPrice(pr);
+  };
+  const handleColor = (col) => {
+    setColor(col);
+  };
+  const handleSize = (siz) => {
+    setSize(siz);
+  };
+
+  const checkedStyle = (index, type) => {
+    return index === type
+      ? {
+          color: Constants.chosenFilterColor,
+          backgroundColor: Constants.chosenFilterBackgroundColor,
+        }
+      : {
+          color: "black",
+          backgroundColor: "white",
+        };
   };
 
   return (
@@ -49,13 +81,23 @@ const FilterModal = (props) => {
           <Card.Title title="Brands" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[0, 0, 0, 0].map((_, i) => (
+              {[1, 2, 3, 4].map((item, index) => (
                 <Button
-                  style={{ ...styles.filterButton }}
-                  key={i}
-                  onPress={() => console.warn("brand")}
+                  style={{
+                    ...styles.filterButton,
+                    backgroundColor: checkedStyle(index, brand).backgroundColor,
+                  }}
+                  key={index}
+                  onPress={() => handleBrand(index)}
                 >
-                  <Text style={{ fontSize: 12, color: "black" }}>Samsung</Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: checkedStyle(index, brand).color,
+                    }}
+                  >
+                    Samsung
+                  </Text>
                 </Button>
               ))}
             </View>
@@ -68,7 +110,10 @@ const FilterModal = (props) => {
             <View style={{ flex: 1, flexDirection: "row" }}>
               <>
                 {[1, 2, 3, 4, 5].map((star, index) => (
-                  <TouchableRipple onPress={() => handleRating(star)} key={index}>
+                  <TouchableRipple
+                    onPress={() => handleRating(star)}
+                    key={index}
+                  >
                     <AntDesign
                       name={rating > index ? "star" : "staro"}
                       size={20}
@@ -83,23 +128,7 @@ const FilterModal = (props) => {
           </Card.Content>
         </Card>
         <Divider />
-        <Card style={styles.cardStyle}>
-          <Card.Title title="Warrenties" />
-          <Card.Content style={styles.cardContentStyle}>
-            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2].map((item, i) => (
-                <Button
-                  style={{ ...styles.filterButton }}
-                  key={i}
-                  onPress={() => console.warn("brand")}
-                >
-                  <Text style={{ fontSize: 12, color: "black" }}>{item} year(s)</Text>
-                </Button>
-              ))}
-            </View>
-          </Card.Content>
-        </Card>
-        <Divider />
+
         <Card style={styles.cardStyle}>
           <Card.Title title="Price" />
           <Card.Content style={styles.cardContentStyle}>
@@ -123,16 +152,54 @@ const FilterModal = (props) => {
         </Card>
         <Divider />
         <Card style={styles.cardStyle}>
+          <Card.Title title="Warrenties" />
+          <Card.Content style={styles.cardContentStyle}>
+            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+              {[1, 2].map((item, index) => (
+                <Button
+                  style={{
+                    ...styles.filterButton,
+                    backgroundColor: checkedStyle(index, warrenty)
+                      .backgroundColor,
+                  }}
+                  key={index}
+                  onPress={() => handleWarrenty(index)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: checkedStyle(index, warrenty).color,
+                    }}
+                  >
+                    {item} year(s)
+                  </Text>
+                </Button>
+              ))}
+            </View>
+          </Card.Content>
+        </Card>
+        <Divider />
+        <Card style={styles.cardStyle}>
           <Card.Title title="Colors" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[0, 0, 0, 0].map((_, i) => (
+              {[1, 2, 3, 4].map((_, index) => (
                 <Button
-                  style={{ ...styles.filterButton, backgroundColor: "#deebff" }}
-                  key={i}
-                  onPress={() => console.warn("colors")}
+                  style={{
+                    ...styles.filterButton,
+                    backgroundColor: checkedStyle(index, color).backgroundColor,
+                  }}
+                  key={index}
+                  onPress={() => handleColor(index)}
                 >
-                  <Text style={{ fontSize: 12, color: "#36f" }}>White</Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: checkedStyle(index, color).color,
+                    }}
+                  >
+                    White
+                  </Text>
                 </Button>
               ))}
             </View>
@@ -143,13 +210,23 @@ const FilterModal = (props) => {
           <Card.Title title="Sizes" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[0, 0, 0, 0].map((_, i) => (
+              {[1, 2, 3, 4].map((_, index) => (
                 <Button
-                  style={{ ...styles.filterButton }}
-                  key={i}
-                  onPress={() => console.warn("sized")}
+                  style={{
+                    ...styles.filterButton,
+                    backgroundColor: checkedStyle(index, size).backgroundColor,
+                  }}
+                  key={index}
+                  onPress={() => handleSize(index)}
                 >
-                  <Text style={{ fontSize: 12, color: "black" }}>Medium</Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: checkedStyle(index, size).color,
+                    }}
+                  >
+                    Medium
+                  </Text>
                 </Button>
               ))}
             </View>
@@ -160,7 +237,11 @@ const FilterModal = (props) => {
       </ScrollView>
       <View style={styles.productFooter}>
         <View
-          style={{ backgroundColor: Constants.headerTintColor, height: 50, padding: 7 }}
+          style={{
+            backgroundColor: Constants.headerTintColor,
+            height: 50,
+            padding: 7,
+          }}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
             <Button
@@ -174,15 +255,15 @@ const FilterModal = (props) => {
             >
               Cancel
             </Button>
-            <View style={{flex: .04}}></View>
+            <View style={{ flex: 0.04 }}></View>
             <Button
-              // onPress={() => this.props.navigation.navigate("CheckOut")}
               style={{
                 flex: 0.48,
                 backgroundColor: Constants.primaryGreen,
                 justifyContent: "center",
               }}
               labelStyle={{ color: "white" }}
+              onPress={props.handleFilterModalVisibility}
             >
               Apply Filter
             </Button>
