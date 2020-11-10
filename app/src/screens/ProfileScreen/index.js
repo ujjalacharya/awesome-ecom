@@ -8,6 +8,7 @@ import { signOut } from "../../store/actions/user_actions";
 import Constants from "../../constants/Constants";
 
 import UserInfo from "./UserInfo";
+import MyActions from "./MyActions";
 import { ScrollView } from "react-native";
 
 class ProfileScreen extends Component {
@@ -28,6 +29,7 @@ class ProfileScreen extends Component {
         </Appbar.Header>
         <ScrollView>
           <UserInfo />
+          <MyActions />
         </ScrollView>
       </>
     );
