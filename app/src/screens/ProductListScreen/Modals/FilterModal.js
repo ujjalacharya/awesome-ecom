@@ -84,16 +84,16 @@ const FilterModal = (props) => {
         </Card>
         <Divider />
         <Card style={styles.cardStyle}>
-          <Card.Title title="Brands" />
+          <Card.Title title="Warrenties" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[0, 0, 0, 0].map((_, i) => (
+              {[1, 2].map((item, i) => (
                 <Button
                   style={{ ...styles.filterButton }}
                   key={i}
                   onPress={() => console.warn("brand")}
                 >
-                  <Text style={{ fontSize: 12, color: "black" }}>Samsung</Text>
+                  <Text style={{ fontSize: 12, color: "black" }}>{item} year(s)</Text>
                 </Button>
               ))}
             </View>
@@ -160,12 +160,12 @@ const FilterModal = (props) => {
       </ScrollView>
       <View style={styles.productFooter}>
         <View
-          style={{ backgroundColor: Constants.headerTintColor, height: 50 }}
+          style={{ backgroundColor: Constants.headerTintColor, height: 50, padding: 7 }}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>
             <Button
               style={{
-                flex: 0.5,
+                flex: 0.48,
                 backgroundColor: "red",
                 justifyContent: "center",
               }}
@@ -174,10 +174,11 @@ const FilterModal = (props) => {
             >
               Cancel
             </Button>
+            <View style={{flex: .04}}></View>
             <Button
               // onPress={() => this.props.navigation.navigate("CheckOut")}
               style={{
-                flex: 0.5,
+                flex: 0.48,
                 backgroundColor: Constants.primaryGreen,
                 justifyContent: "center",
               }}
