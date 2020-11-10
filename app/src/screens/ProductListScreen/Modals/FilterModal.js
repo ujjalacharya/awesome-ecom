@@ -1,10 +1,9 @@
 import React from "react";
 import { View, Text, Modal, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Card, Paragraph, Button, Divider } from "react-native-paper";
+import { Card, TextInput, Button, Divider } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../../constants/Constants";
-import Header from "../../../components/Header";
 
 const FilterModal = (props) => {
   return (
@@ -59,36 +58,75 @@ const FilterModal = (props) => {
         </Card>
         <Divider />
         <Card style={styles.cardStyle}>
+          <Card.Title title="Price" />
           <Card.Content style={styles.cardContentStyle}>
-            <Paragraph>Latest Product</Paragraph>
+            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+              {["Min", "Max"].map((item, i) => (
+                <TextInput
+                  style={{
+                    marginRight: 10,
+                    height: 40,
+                    width: "47%",
+                    backgroundColor: "white",
+                  }}
+                  underlineColor="transparent"
+                  mode="outlined"
+                  placeholder={item}
+                  keyboardType="number-pad"
+                />
+              ))}
+            </View>
           </Card.Content>
         </Card>
+        <Divider />
         <Card style={styles.cardStyle}>
+          <Card.Title title="Colors" />
           <Card.Content style={styles.cardContentStyle}>
-            <Paragraph>Latest Product</Paragraph>
+            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+              {[0, 0, 0, 0].map((_, i) => (
+                <Button
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "gray",
+                    borderRadius: 5,
+                    marginRight: 10,
+                    marginBottom: 10,
+                    width: "30%",
+                  }}
+                  key={i}
+                  onPress={() => console.warn("colors")}
+                >
+                  <Text style={{ fontSize: 12 }}>White</Text>
+                </Button>
+              ))}
+            </View>
           </Card.Content>
         </Card>
+        <Divider />
         <Card style={styles.cardStyle}>
+          <Card.Title title="Sizes" />
           <Card.Content style={styles.cardContentStyle}>
-            <Paragraph>Latest Product</Paragraph>
+            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+              {[0, 0, 0, 0].map((_, i) => (
+                <Button
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "gray",
+                    borderRadius: 5,
+                    marginRight: 10,
+                    marginBottom: 10,
+                    width: "30%",
+                  }}
+                  key={i}
+                  onPress={() => console.warn("sized")}
+                >
+                  <Text style={{ fontSize: 12 }}>Medium</Text>
+                </Button>
+              ))}
+            </View>
           </Card.Content>
         </Card>
-        <Card style={styles.cardStyle}>
-          <Card.Content style={styles.cardContentStyle}>
-            <Paragraph>Latest Product</Paragraph>
-          </Card.Content>
-        </Card>
-        <Card style={styles.cardStyle}>
-          <Card.Content style={styles.cardContentStyle}>
-            <Paragraph>Latest Product</Paragraph>
-          </Card.Content>
-        </Card>
-
-        <Card style={styles.cardStyle}>
-          <Card.Content style={styles.cardContentStyle}>
-            <Paragraph>Oldest Product</Paragraph>
-          </Card.Content>
-        </Card>
+        <Divider />
       </ScrollView>
       <View style={styles.productFooter}>
         <View
