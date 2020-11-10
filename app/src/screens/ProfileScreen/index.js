@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import { Text, View, Button } from "react-native";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Appbar } from "react-native-paper";
 
-import { signOut } from "../store/actions/user_actions";
-import Constants from "../constants/Constants";
+import { signOut } from "../../store/actions/user_actions";
+import Constants from "../../constants/Constants";
 
-import WebView from "react-native-webview";
+import UserInfo from "./UserInfo";
+import { ScrollView } from "react-native";
 
 class ProfileScreen extends Component {
   handleLogout = async () => {
@@ -20,14 +20,15 @@ class ProfileScreen extends Component {
       <>
         <Appbar.Header statusBarHeight={0}>
           <Appbar.Content title="Profile" color={Constants.headerTintColor} />
-          <Appbar.Action icon="logout" color="white" onPress={this.handleLogout} />
+          <Appbar.Action
+            icon="logout"
+            color="white"
+            onPress={this.handleLogout}
+          />
         </Appbar.Header>
-        <WebView
-          source={{
-            uri: "https://google.com",
-          }}
-          // style={{ marginTop: 20 }}
-        />
+        <ScrollView>
+          <UserInfo />
+        </ScrollView>
       </>
     );
   }

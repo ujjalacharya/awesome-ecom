@@ -1,6 +1,6 @@
 import { SIGN_IN, SIGN_OUT } from "../types";
 
-export default function (state={auth: {isAuth: false}}, action) {
+export default function (state={auth: {isAuth: true}}, action) {
   switch (action.type) {
     case SIGN_IN:
       return {
