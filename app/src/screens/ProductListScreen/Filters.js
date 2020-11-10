@@ -25,7 +25,7 @@ class Filters extends Component {
         >
           <View style={styles.filterWrapper}>
             <Button
-              onPress={this.props.handleModalVisibility}
+              onPress={this.props.handleSortModalVisibility}
               style={{ width: "100%" }}
             >
               <MaterialCommunityIcons
@@ -52,7 +52,10 @@ class Filters extends Component {
             <Text> </Text>
           </View>
           <View style={styles.filterWrapper}>
-            <Button style={{ width: "100%" }}>
+            <Button
+              onPress={this.props.handleFilterModalVisibility}
+              style={{ width: "100%" }}
+            >
               <MaterialCommunityIcons
                 name="filter"
                 size={Constants.normalScreenDescriptionSize}

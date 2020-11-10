@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import SearchedSingleProduct from "./SearchedSingleProduct";
 import { productData } from "../../utils/mock";
 import SortModal from "./Modals/SortModal";
+import FilterModal from "./Modals/FilterModal";
 import ProductListHeader from "./ProductListHeader";
 import Filters from "./Filters";
 
@@ -14,12 +15,19 @@ export class ProductListScreen extends Component {
     progressBar: 0,
     intervalId: "",
     progressColor: "#b2cede",
-    showModal: false,
+    showSortModal: false,
+    showFilterModal: false,
   };
 
-  handleModalVisibility = () => {
+  handleSortModalVisibility = () => {
     this.setState({
-      showModal: !this.state.showModal,
+      showSortModal: !this.state.showSortModal,
+    });
+  };
+
+  handleFilterModalVisibility = () => {
+    this.setState({
+      showFilterModal: !this.state.showFilterModal,
     });
   };
 
@@ -27,10 +35,12 @@ export class ProductListScreen extends Component {
     return (
       <>
         <SortModal
-          handleModalVisibility={this.handleModalVisibility}
-          showModal={this.state.showModal}
-          addressState={this.state.addressState}
-          handleFromTo={this.handleFromTo}
+          handleSortModalVisibility={this.handleSortModalVisibility}
+          showSortModal={this.state.showSortModal}
+        />
+        <FilterModal
+          handleFilterModalVisibility={this.handleFilterModalVisibility}
+          showFilterModal={this.state.showFilterModal}
         />
         <View style={{ flex: 1 }}>
           <ScrollView
@@ -42,7 +52,8 @@ export class ProductListScreen extends Component {
             <ProductListHeader {...this.props} />
             <Filters
               {...this.props}
-              handleModalVisibility={this.handleModalVisibility}
+              handleSortModalVisibility={this.handleSortModalVisibility}
+              handleFilterModalVisibility={this.handleFilterModalVisibility}
             />
             <View style={{ flex: 5 }}>
               {productData.map((product, i) => (

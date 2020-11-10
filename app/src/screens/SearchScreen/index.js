@@ -24,7 +24,8 @@ const SeachScreen = (props) => {
       let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
 
       if (asyncItems) {
-        setHistory([...JSON.parse(asyncItems)]);
+        let parsedItems = [...JSON.parse(asyncItems)];
+        setHistory(parsedItems);
       }
     } catch (error) {
       // Error saving data
@@ -37,14 +38,15 @@ const SeachScreen = (props) => {
     let newItemsArr = [];
     try {
       let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
-
       if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
 
       searchQuery && newItemsArr.unshift(searchQuery);
+      newItemsArr = newItemsArr.map(item => item.trim())
+      let uniqueItems = [...new Set(newItemsArr)];
 
       await AsyncStorage.setItem(
         "@uzzStore:history",
-        JSON.stringify(newItemsArr)
+        JSON.stringify(uniqueItems)
       );
     } catch (error) {
       // Error saving data
@@ -84,7 +86,7 @@ const SeachScreen = (props) => {
       </View>
       {searchQuery ? (
         <View style={{ flex: 1, backgroundColor: Constants.headerTintColor }}>
-          {searchData.map((item) => {
+          {searchData.map((item, i) => {
             return (
               <View
                 style={{
@@ -95,6 +97,7 @@ const SeachScreen = (props) => {
                   paddingLeft: 5,
                   flexDirection: "row",
                 }}
+                key={i}
               >
                 <View style={{ flex: 0.9, marginLeft: 5 }}>
                   <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
@@ -133,9 +136,9 @@ const SeachScreen = (props) => {
               flexWrap: "wrap",
             }}
           >
-            {history.map((item) => (
+            {history.map((item, i) => (
               <TouchableRipple
-                onPress={() => console.warn("history")}
+                onPress={() => setSearchQuery(item)}
                 style={{
                   flexBasis: "28%",
                   height: 40,
@@ -144,6 +147,7 @@ const SeachScreen = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
+                key={i}
               >
                 <Text>{item}</Text>
               </TouchableRipple>
