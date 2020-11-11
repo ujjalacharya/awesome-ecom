@@ -2,14 +2,19 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Card } from "react-native-paper";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-
-const icons = ["bookmark"];
+import { useNavigation } from "@react-navigation/native";
 
 const MyActions = () => {
+  const navigation = useNavigation();
+
   return (
     <>
       {["My Orders", "My Reviews", "My WishLists"].map((item, index) => (
-        <Card style={{ margin: 10, height: 80, flex: 1 }} key={index}>
+        <Card
+          style={{ margin: 10, height: 80, flex: 1 }}
+          key={index}
+          onPress={() => navigation.navigate(item)}
+        >
           <View style={{ flex: 1, flexDirection: "row", padding: 10 }}>
             <View style={{ flex: 0.7, justifyContent: "center", margin: 10 }}>
               <Text style={{ fontSize: 30 }}>0</Text>

@@ -52,12 +52,36 @@ const SearchedSingleProduct = (props) => {
                 color="red"
               />
             </Button>
-            <Button onPress={()=>props.setVisible(product)} style={{ flex: 1 }}>
+            <Button
+              onPress={() => props.setVisible(product)}
+              style={{ flex: 1 }}
+            >
               <Text style={{ color: Constants.tintColor }}>
                 {"Add to Cart "}
               </Text>
               <AntDesign
                 name="shoppingcart"
+                size={Constants.normalScreenDescriptionSize}
+                color={Constants.tintColor}
+              />
+            </Button>
+          </View>
+        );
+      case "myorders":
+        return (
+          <View style={styles.rowFlex}>
+            <Button onPress={() => console.warn("Wifi")} style={{ flex: 1 }}>
+              <Text style={{ color: "red" }}>{"Remove "}</Text>
+              <AntDesign
+                name="delete"
+                size={Constants.normalScreenDescriptionSize}
+                color="red"
+              />
+            </Button>
+            <Button onPress={() => console.warn("details")} style={{ flex: 1 }}>
+              <Text style={{ color: Constants.tintColor }}>{"Details "}</Text>
+              <AntDesign
+                name="eye"
                 size={Constants.normalScreenDescriptionSize}
                 color={Constants.tintColor}
               />
