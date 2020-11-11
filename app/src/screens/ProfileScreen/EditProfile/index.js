@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
-import { Avatar, Card, Divider, TextInput, Button } from "react-native-paper";
+import React from "react";
+import { View } from "react-native";
+import { Card, Divider, TextInput, Button } from "react-native-paper";
 
 import ListingScreen from "../../../components/ListingScreen";
-import Constants from "../../../constants/Constants";
+import EditAvatar from "./EditAvatar";
 
 const EditProfile = () => {
   const [email, setEmail] = React.useState("");
@@ -13,32 +13,8 @@ const EditProfile = () => {
 
   return (
     <ListingScreen title="Edit Profile">
-      {/* <View style={{height: 600}}>
-        <Divider />
-    */}
       <Card>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            margin: 10,
-          }}
-        >
-          <Avatar.Image
-            size={100}
-            source={require("../../../../assets/avatar.jpg")}
-          />
-          <Button
-            icon="image"
-            mode="contained"
-            onPress={() => console.log("Pressed")}
-            style={{ margin: 10, backgroundColor: "white" }}
-            uppercase={false}
-          >
-            <Text style={{ color: "black" }}>Change Avatar</Text>
-          </Button>
-        </View>
+        <EditAvatar />
       </Card>
       <Divider />
       <Card>
@@ -104,9 +80,7 @@ const EditProfile = () => {
             }}
             //   error={true}
           />
-          <Button uppercase={false}
-        //   style={{backgroundColor: Constants.tintColor}}
-          >Update Profile</Button>
+          <Button uppercase={false}>Update Profile</Button>
         </View>
       </Card>
     </ListingScreen>
