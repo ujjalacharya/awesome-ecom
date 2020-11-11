@@ -68,6 +68,8 @@ const SearchedSingleProduct = (props) => {
           </View>
         );
       case "myorders":
+      case "myreviews":
+      case "mywishlists":
         return (
           <View style={styles.rowFlex}>
             <Button onPress={() => console.warn("Wifi")} style={{ flex: 1 }}>

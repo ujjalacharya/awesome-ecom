@@ -9,7 +9,7 @@ const MyActions = () => {
 
   return (
     <>
-      {["My Orders", "My Reviews", "My WishLists"].map((item, index) => (
+      {["My Orders", "My Reviews", "My Wishlists"].map((item, index) => (
         <Card
           style={{ margin: 10, height: 80, flex: 1 }}
           key={index}
