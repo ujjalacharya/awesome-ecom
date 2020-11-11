@@ -2,8 +2,11 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { Card, Avatar, Button } from "react-native-paper";
 import Constants from "../../constants/Constants";
+import { useNavigation } from "@react-navigation/native";
 
-function UserInfo() {
+const UserInfo = () => {
+  const navigation = useNavigation();
+
   return (
     <View>
       <Card style={{ margin: 10, height: 250, flex: 1 }}>
@@ -27,7 +30,11 @@ function UserInfo() {
               </Text>
             </View>
             <View style={{ flex: 1, flexDirection: "row" }}>
-              <Button style={styles.changeProfileButton} uppercase={false}>
+              <Button
+                style={styles.changeProfileButton}
+                uppercase={false}
+                onPress={() => navigation.navigate("Edit Profile")}
+              >
                 <Text
                   style={{
                     fontSize: 12,
@@ -91,7 +98,7 @@ function UserInfo() {
       </Card>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   changeProfileButton: {

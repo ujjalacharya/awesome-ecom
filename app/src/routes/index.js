@@ -18,6 +18,7 @@ import QnAStack from "./StackNavigators/QnAStack";
 import MyOrders from "../screens/ProfileScreen/Listings/MyOrders";
 import MyReviews from "../screens/ProfileScreen/Listings/MyReviews";
 import MyWishlists from "../screens/ProfileScreen/Listings/MyWishlists";
+import EditProfile from "../screens/ProfileScreen/EditProfile";
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
         <Stack.Screen name="My Orders" component={MyOrders} />
         <Stack.Screen name="My Reviews" component={MyReviews} />
         <Stack.Screen name="My Wishlists" component={MyWishlists} />
+        <Stack.Screen name="Edit Profile" component={EditProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );
