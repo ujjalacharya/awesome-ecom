@@ -1,11 +1,14 @@
 import axios from "axios";
 import store from "../redux/store";
 import { SIGN_OUT, REFRESH_TOKEN, AUTH_ERROR } from "../redux/types";
-import { SERVER_URL, refreshTokenKey } from "./config";
+import { SERVER_URL, refreshTokenKey, accessTokenKey } from "./config";
+import setAuthToken from './setAuthToken'
+import { verifyLocalStorage } from "./common";
 
 const api = axios.create({
   baseURL: `${SERVER_URL}api`,
   headers: {
+
     "Content-Type": "application/json",
   },
   // withCredentials: true// should be only post req
@@ -16,7 +19,17 @@ const api = axios.create({
  ie. Token has expired
  logout the user if the token has expired
 **/
-
+api.interceptors.request.use(function (config) {
+  // Do something before request is sent
+  // console.log(verifyLocalStorage() ? localStorage.getItem(accessTokenKey) : null);
+  console.log(config);
+  // setAuthToken(verifyLocalStorage() ? localStorage.getItem(accessTokenKey) : null)
+  config.headers["x-auth-token"] = verifyLocalStorage() ? localStorage.getItem(accessTokenKey) : null;
+  return config
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
 api.interceptors.response.use(
   (res) => res,
   async (err) => {

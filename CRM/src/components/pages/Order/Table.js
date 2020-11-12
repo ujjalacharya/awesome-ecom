@@ -224,7 +224,7 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         onClose={()=>setIsDrawerOpen(false)}
         visible={isDrawerOpen}
         closable
-        closeIcon={<button className="btn btn-danger"><i className="fas fa-times"></i></button>}
+        closeIcon={<i className="fas fa-times btn btn-danger"></i>}
     >
         <OrderDetail  />
     </Drawer>
