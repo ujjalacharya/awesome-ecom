@@ -4,6 +4,7 @@ export default {
   tintColor,
   primaryGreen: "#61ce70",
   grayColor: "#66727e",
+  lightGray: "#DCDCDC",
   chosenFilterBackgroundColor: "#deebff",
   chosenFilterColor: "#36f",
   backgroundColor: "#86909a",

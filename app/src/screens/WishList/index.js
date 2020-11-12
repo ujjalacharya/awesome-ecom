@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
-import { Appbar, Button } from "react-native-paper";
-import { FontAwesome } from "@expo/vector-icons";
+import { View } from "react-native";
+import { Button } from "react-native-paper";
 import Constants from "../../constants/Constants";
 import SearchedSingleProduct from "../ProductListScreen/SearchedSingleProduct";
 import { productData } from "../../utils/mock";
-import { ScrollView } from "react-native-gesture-handler";
 import SnackbarView from "../../components/SnackBarView";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
+import ListingScreen from "../../components/ListingScreen";
 
 export class WishListScreen extends Component {
   state = {
@@ -34,23 +33,8 @@ export class WishListScreen extends Component {
   render() {
     return (
       <>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          stickyHeaderIndices={[1]}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View>
-            <Appbar.Header statusBarHeight={0}>
-              <Appbar.BackAction
-                onPress={this._goBack}
-                color={Constants.headerTintColor}
-              />
-              <Appbar.Content
-                title="Wish List"
-                color={Constants.headerTintColor}
-              />
-            </Appbar.Header>
+        <ListingScreen title="Wish List">
+          <>
             {productData.map((product, i) => (
               <SearchedSingleProduct
                 product={product}
@@ -60,11 +44,12 @@ export class WishListScreen extends Component {
                 {...this.props}
               />
             ))}
-          <View style={{ height: 200 }}>
-            <FeaturedProducts title={"Similar Products"} />
-          </View>
-          </View>
-        </ScrollView>
+            <View style={{ height: 200 }}>
+              <FeaturedProducts title={"Similar Products"} />
+            </View>
+          </>
+        </ListingScreen>
+
         <View
           style={{ backgroundColor: Constants.headerTintColor, height: 50 }}
         >
