@@ -4,6 +4,7 @@ import withRedux from "next-redux-wrapper";
 import { initStore } from "../redux";
 import GlobalErrorComponent from "../src/Components/GlobalErrorComponent";
 import "../public/nprogress.css";
+import '../public/css/react-carousel.es.css';
 // import "../sass/index.scss"
 
 export default withRedux(initStore, { debug: false })(

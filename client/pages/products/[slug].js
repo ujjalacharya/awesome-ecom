@@ -35,7 +35,6 @@ class Details extends Component {
     // };
   }
   render() {
-    
     return (
       <Layout title={this.props.products?.productDetails?.product?.name}>
         <div className="wrapper">

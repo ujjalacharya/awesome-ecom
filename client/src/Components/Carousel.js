@@ -16,8 +16,7 @@ class MainCarousel extends Component {
     };
     return (
       <Carousel {...settings}>
-        {/* <div className="img-text"> */}
-          {this.props.data.banners &&
+          {this.props.data?.banners &&
             this.props.data.banners.map((banner,i) => {
               return (
                 <div className="img-text" key={i}>
@@ -26,18 +25,6 @@ class MainCarousel extends Component {
                 </div>
               );
             })}
-          {/* <div className="carousel-text">
-            <h2>GET UPTO 60% OFF</h2>
-            <div className="main-text">SUMMER SALE</div>
-            <h4 className="sub-text">Limited items available at this Price</h4>
-            <Button className="primary">Shop Now</Button>
-          </div> */}
-          {/* <img src="/images/banner.jpg" /> */}
-        {/* </div> */}
-        {/* <div className="img-text">
-          <div className="carousel-text"></div>
-          <img src="/images/carousel-img.jpg" />
-        </div> */}
       </Carousel>
     );
   }
