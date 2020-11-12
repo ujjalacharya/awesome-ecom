@@ -15,7 +15,7 @@
     // }
     .enlargedImage {
       z-index: 9;
-      img{
+      img {
         object-fit: cover !important;
       }
     }
@@ -58,6 +58,23 @@
         @media screen and (max-width: 767px) {
           right: -15px;
         }
+      }
+    }
+  }
+}
+
+.det-slider {
+  .thumbnail {
+    margin-top: 15px;
+    img {
+      height: 100px;
+      width: 100px;
+      object-fit: contain;
+      border: 1px solid #f3f0f0;
+      margin-right: 10px;
+      cursor: pointer;
+      &.active{
+        border-color: #1890ff;
       }
     }
   }
