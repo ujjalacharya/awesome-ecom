@@ -12,6 +12,9 @@ const AdminRoute = ({
   <Route
     {...rest}
     render={(props) => {
+      if(!decodeLocalStorage()){
+        window.location.reload()
+      }
       return decodeLocalStorage()?.role === "admin" ||
         decodeLocalStorage()?.role === "superadmin" ? (
         <Component {...props} />
