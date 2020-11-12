@@ -1,13 +1,22 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import moment from 'moment'
 import { Carousel, Avatar } from 'antd';
 import { SideBySideMagnifier} from "react-image-magnifiers";
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import OrderStatus from './OrderStatus';
+import { cancelOrder } from '../../../redux/actions/order_actions'
 
-const OrderDetail = ({ order }) => {
+const OrderDetail = ({ order, singleLoading }) => {
     function onChange(a, b, c) {
         // console.log(a, b, c);
     }
+    useEffect(() => {
+        console.log('helloworld');
+        return () => {
+            console.log('sdav')
+        }
+    }, [])
     const contentStyle = {
         height: '170px',
         color: '#fff',
@@ -40,7 +49,7 @@ const OrderDetail = ({ order }) => {
                                                 alwaysInPlace={true}
                                                 imageSrc={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.medium}`}
                                                 imageAlt="Example"
-                                                largeImageSrc={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.large}`} // Optional
+                                                // largeImageSrc={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.large}`} // Optional
                                             />
                                          {/* <img style={{height:'100%',width:'100%'}} src={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.medium}`}/> */}
                                          </h3>
@@ -69,12 +78,7 @@ const OrderDetail = ({ order }) => {
                                 <div className="col-md-6 text-md-right">
                                     <p>
                                     {order?.orderID} <br />
-                                        <OrderStatus status={order?.status?.currentStatus} />
-                                     {/* {
-                                        (order?.status?.currentStatus ==='active' || order?.status?.currentStatus === 'approve') ?
-                                            <Switch checkedChildren='active' unCheckedChildren='approve' defaultChecked={(order?.status?.currentStatus === 'active')? true:false} /> : order?.status?.currentStatus
-
-                                        } */}
+                                        <OrderStatus status={order?.status?.currentStatus} order_id={order?._id} admin_id={order?.soldBy} />
                                          <br /> {order?.quantity} <br /> {order && moment(order?.createdAt).format('ddd mm yyyy')} <br />
                                     </p>
                                 </div>
@@ -192,9 +196,17 @@ const OrderDetail = ({ order }) => {
                     </div>
                 </div>
             </div>
-
-
     )
 }
 
-export default (OrderDetail)
+OrderDetail.propTypes = {
+    order: PropTypes.object,
+    singleLoading: PropTypes.bool
+}
+const mapStateToProps = (state) => ({
+    order: state.order.order,
+    singleLoading: state.order.singleLoading
+})
+
+export default connect(mapStateToProps,{cancelOrder})(React.memo(OrderDetail))
+

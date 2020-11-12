@@ -25,7 +25,10 @@ io.origins([`${process.env.ADMIN_CRM_ROUTE}`])
 
 
 // Middlewares
-app.use(cors());
+const corsOptions = {
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+}
+app.use(cors(corsOptions));
 app.use((req,res,next)=>{
     req.io = io
     next()

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useRef, Fragment } from 'react'
 import { Table as AntdTable, Input, Button, Space, Modal , Avatar, Drawer} from 'antd';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { getOrders, getOrder } from '../../../redux/actions/order_actions'
 import OrderDetail from './OrderDetail';
 
-const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, order, singleLoading }) => {
+const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) => {
     // const [pagination, setPagination] = useState({
     //     current: 1,
     //     pageSize: 10,
@@ -223,8 +223,10 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, or
         closable={false}
         onClose={()=>setIsDrawerOpen(false)}
         visible={isDrawerOpen}
+        closable
+        closeIcon={<button className="btn btn-danger"><i className="fas fa-times"></i></button>}
     >
-        <OrderDetail order={order} />
+        <OrderDetail  />
     </Drawer>
     {/* <Modal
         title="Order Detail"
@@ -242,8 +244,6 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user, or
 Table.propTypes = {
     user: PropTypes.object,
     orders: PropTypes.array,
-    order:PropTypes.object,
-    singleLoading:PropTypes.bool,
     multiLoading: PropTypes.bool,
     pageCount: PropTypes.number,
     getOrder: PropTypes.func.isRequired,
@@ -253,8 +253,6 @@ const mapStateToProps = (state) => ({
     user: state.auth.user,
     orders: state.order.orders,
     multiLoading: state.order.multiLoading,
-    order: state.order.order,
-    singleLoading: state.order.singleLoading,
     totalCount: state.order.totalCount,
 })
 

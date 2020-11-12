@@ -12,3 +12,16 @@
     }
   }
 }
+
+.order-status-approve {
+ background-color: #a180da; 
+}
+.order-status-active {
+    background-color: #5b7dff;
+}
+.order-status-complete {
+    background-color: #5fc27e;
+}
+.order-status-tobereturned {
+    background-color: #fcc100;
+}

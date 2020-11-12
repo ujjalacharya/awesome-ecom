@@ -98,7 +98,7 @@ exports.adminOrder = (req, res) => {
   if (order.soldBy._id.toString() !== req.profile._id.toString()) {
     return res.status(401).json({ error: "Unauthorized Admin." });
   }
-  order.soldBy = undefined;
+  order.soldBy = order.soldBy._id;
   res.json(order);
 };
 
@@ -409,14 +409,14 @@ exports.toggleOrderApproval = async (req, res) => {
     order.status.currentStatus = "approve";
     order.status.approvedDate = Date.now();
     await order.save();
-    order.soldBy = undefined;
+    order.soldBy = order.soldBy._id
     return res.json(order);
   }
   if (order.status.currentStatus === "approve") {
     order.status.currentStatus = "active";
     order.status.approvedDate = null;
     await order.save();
-    order.soldBy = undefined;
+    order.soldBy = order.soldBy._id
     return res.json(order);
   }
 };
