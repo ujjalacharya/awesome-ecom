@@ -580,7 +580,7 @@ exports.toggleCompleteOrder = async (req, res) => {
 
 exports.returnOrder = async (req, res) => {
   let order = req.order;
-  if (order.status.currentStatus !== "tobereturn") {
+  if (order.status.currentStatus !== "tobereturned") {
     return res.status(403).json({
       error: `This order cannot be returned. Order current status is ${order.status.currentStatus}`,
     });
@@ -606,45 +606,61 @@ exports.returnOrder = async (req, res) => {
 };
 
 exports.toggletobeReturnOrder = async (req, res) => {
-  let order = req.order;
-  if (
-    order.status.currentStatus !== "complete" &&
-    order.status.currentStatus !== "tobereturn"
-  ) {
-    return res.status(403).json({
-      error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}`,
-    });
-  }
-  let updateOrder = order.toObject();
-  let payment = await Payment.findById(order.payment._id);
-  let updatePayment = payment.toObject();
-  if (order.status.currentStatus === "complete") {
-    updateOrder.status.currentStatus = "tobereturn";
-    updateOrder.status.tobereturnedDate = Date.now();
+  // let orders = await Order.find({ $or: [{ 'status.currentStatus': 'tobereturned' }]})
 
-    updatePayment.returnedAmount = req.body.returnedAmount;
+  // orders = orders.map(async o=> {
+  //   if (o.status.tobeReturnedDetail.remark === null) {
+  //     let newRemark = new Remark({comment:'User do not like this product'})
+  //     await newRemark.save()
+  //     o.status.tobeReturnedDetail.remark = newRemark._id
+  //   }
+  //   return await o.save()
+  // })
+  // orders = await Promise.all(orders)
+  // res.json(orders)
+  
+  // let orders = await Order.updateMany({ $unset: {'status.returnedDetail.remark':''}})
+  let orders = await Order.find({ 'status.currentStatus': 'return' })
+  res.json(orders)
+  // let order = req.order;
+  // if (
+  //   order.status.currentStatus !== "complete" &&
+  //   order.status.currentStatus !== "tobereturn"
+  // ) {
+  //   return res.status(403).json({
+  //     error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}`,
+  //   });
+  // }
+  // let updateOrder = order.toObject();
+  // let payment = await Payment.findById(order.payment._id);
+  // let updatePayment = payment.toObject();
+  // if (order.status.currentStatus === "complete") {
+  //   updateOrder.status.currentStatus = "tobereturn";
+  //   updateOrder.status.tobereturnedDate = Date.now();
 
-    let results = await task
-      .update(order, updateOrder)
-      .options({ viaSave: true })
-      .update(payment, updatePayment)
-      .options({ viaSave: true })
-      .run({ useMongoose: true });
-    return res.json(results);
-  }
-  if (order.status.currentStatus === "tobereturn") {
-    updateOrder.status.currentStatus = "complete";
-    updateOrder.status.tobereturnedDate = null;
+  //   updatePayment.returnedAmount = req.body.returnedAmount;
 
-    updatePayment.returnedAmount = undefined;
-    let results = await task
-      .update(payment, updatePayment)
-      .options({ viaSave: true })
-      .update(order, updateOrder)
-      .options({ viaSave: true })
-      .run({ useMongoose: true });
-    return res.json(results);
-  }
+  //   let results = await task
+  //     .update(order, updateOrder)
+  //     .options({ viaSave: true })
+  //     .update(payment, updatePayment)
+  //     .options({ viaSave: true })
+  //     .run({ useMongoose: true });
+  //   return res.json(results);
+  // }
+  // if (order.status.currentStatus === "tobereturn") {
+  //   updateOrder.status.currentStatus = "complete";
+  //   updateOrder.status.tobereturnedDate = null;
+
+  //   updatePayment.returnedAmount = undefined;
+  //   let results = await task
+  //     .update(payment, updatePayment)
+  //     .options({ viaSave: true })
+  //     .update(order, updateOrder)
+  //     .options({ viaSave: true })
+  //     .run({ useMongoose: true });
+  //   return res.json(results);
+  // }
 };
 
 exports.getOrderStatus = async (req, res) => {

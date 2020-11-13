@@ -40,7 +40,7 @@ export const toggleOrderApproval = (id, order_id) => async (dispatch) => {
     });
     dispatch({
       type: SUCCESS,
-      payload: 'Toggled order approval successfully.',
+      payload: `Order status has sucessfully changed to ${res.data.status.currentStatus}`,
     });
   } catch (err) {
     console.log("****order_actions/toggleOrderApproval****", err);

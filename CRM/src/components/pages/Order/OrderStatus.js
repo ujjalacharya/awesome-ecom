@@ -8,6 +8,7 @@ const OrderStatus = ({status, order_id, admin_id, toggleOrderApproval, toggletob
     const [defaultCheckApprove, setdefaultCheckApprove] = useState(false)
     const [defaultCheckComplete, setdefaultCheckComplete] = useState(false)
     const [switchClass, setSwitchClass] = useState('')
+    const [loading, setLoading] = useState(false)
     useEffect(()=>{
         if (status === 'active') {
             setSwitchClass('order-status-active')
@@ -28,24 +29,24 @@ const OrderStatus = ({status, order_id, admin_id, toggleOrderApproval, toggletob
             setdefaultCheckComplete(false)
 
         }
+        setLoading(false)
 
     },[status])
 
     //active/approve
     const toggleApproval = () => {
+        setLoading(true)
         toggleOrderApproval(admin_id, order_id)
-        // defaultCheckApprove ? setSwitchClass('order-status-approve') : setSwitchClass('order-status-active')
-        setdefaultCheckApprove(!defaultCheckApprove)
     }
     //complete/tobereturned
     const toggleComplete = () => {
-        defaultCheckComplete ? setSwitchClass('order-status-tobereturned') : setSwitchClass('order-status-complete')
-        setdefaultCheckComplete(!defaultCheckComplete)
+        setLoading(true)
+        toggletobeReturnOrder(admin_id, order_id)
     }
     //for status active and approve we have toggle feature so we need switch
-    if (status === 'active' || status === 'approve') return <Switch className={switchClass} onClick={toggleApproval} checkedChildren='active' unCheckedChildren='approve' checked={defaultCheckApprove} />
+    if (status === 'active' || status === 'approve') return <Switch className={switchClass} onClick={toggleApproval} loading={loading} checkedChildren='active' unCheckedChildren='approve' checked={defaultCheckApprove} />
     //for status complete and tobereturn
-    if (status === 'complete' || status === 'tobereturned') return <Switch className={switchClass} onClick={toggleComplete} checkedChildren='complete' unCheckedChildren='toberetured' checked={defaultCheckComplete} />
+    if (status === 'complete' || status === 'tobereturned') return <Switch className={switchClass} onClick={toggleComplete} loading={loading} checkedChildren='complete' unCheckedChildren='toberetured' checked={defaultCheckComplete} />
 
 
 
