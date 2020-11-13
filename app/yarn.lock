@@ -1675,6 +1675,11 @@ badgin@^1.1.2:
   resolved "https://registry.yarnpkg.com/badgin/-/badgin-1.1.8.tgz#6e4c930554945d31752e5de2d8a316036dccda5e"
   integrity sha512-EGbhb5OwZreHS0vd8tFLzdWBqvz3dFREf1sYK5EtivtTDUkYCLSEKz1KvXJ4MBHAyKGDymx8wYPCQwrftQBifw==
 
+badgin@^1.1.5:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/badgin/-/badgin-1.2.2.tgz#cbb0b71b047230c681a68911eb24136f0632adc6"
+  integrity sha512-XtoSjNhy2D09qGiLhFWBJmBwBlmleQuwyYyjddWNCJ3gqGRBOBR25VGcd8CAOSghpEUmghB3LD4NpHrUG89zCg==
+
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
@@ -2538,6 +2543,11 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+expo-application@~2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-2.3.0.tgz#5e6929a1fcee543ac433fb2cee1f88738369e26b"
+  integrity sha512-Jbx8iWAjL5JOvXNUnFaTr5PlMgs8k4MV6SGonYw/a21bWDDERyJQc9EYnaoaSJJJeE/4neVsF7Q3GN1QPz7pUA==
+
 expo-asset@~8.1.7:
   version "8.1.7"
   resolved "https://registry.yarnpkg.com/expo-asset/-/expo-asset-8.1.7.tgz#32618e51f85df56f1d7dd54c71eb486ae7f7674e"
@@ -2548,6 +2558,14 @@ expo-asset@~8.1.7:
     md5-file "^3.2.3"
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
+
+expo-constants@9.2.0, expo-constants@^9.2.0:
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-9.2.0.tgz#e86a38793deaff9018878afac65bce2543c80a4c"
+  integrity sha512-WKwiEMvBgPrEPEyZKm21UUB2KWQux9OCWf6ZDORLTln7kO3rsbaJEprfWUWTP7AxyaLMYfN+/0WFHjZc25SZWQ==
+  dependencies:
+    fbjs "1.0.0"
+    uuid "^3.3.2"
 
 expo-constants@~9.1.1:
   version "9.1.1"
@@ -2622,15 +2640,25 @@ expo-location@~8.2.1:
   dependencies:
     invariant "^2.2.4"
 
+expo-notifications@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.7.2.tgz#2e275036c4f8cc6223a4de263117828bf253a95f"
+  integrity sha512-a5QagTFObadEyWTDhAeHnzscLIUTIBF+iLsfKftegZjQIcv20mxu9Aom/e6OfMNg9470XV/HuuHaO9p+JaY9cg==
+  dependencies:
+    badgin "^1.1.5"
+    expo-application "~2.3.0"
+    expo-constants "9.2.0"
+    uuid "^3.4.0"
+
+expo-permissions@^9.3.0, expo-permissions@~9.3.0:
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.3.0.tgz#b90c7e9e411d306c1c7ba2bae18d5c53c201affd"
+  integrity sha512-ylSJZVvEGJVFTKsFrUL2S6gCvFt+/o8TJ3xT4WaMjHe2/2Z7R8ng6NR47Kt54t7XBIV/SZ7DIY9uRiR7TPuNYA==
+
 expo-permissions@~9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.0.1.tgz#dc10b58654bbe39bbbed5827369942b01b08055e"
   integrity sha512-CosJgy8XQRN/OFG2JTQDcFxz3XTGi27coCMym/hVXWtQfk0z6PwdRG5IXHfLGuSckwIcgmirrwm2+Zc0X3MmNg==
-
-expo-permissions@~9.3.0:
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.3.0.tgz#b90c7e9e411d306c1c7ba2bae18d5c53c201affd"
-  integrity sha512-ylSJZVvEGJVFTKsFrUL2S6gCvFt+/o8TJ3xT4WaMjHe2/2Z7R8ng6NR47Kt54t7XBIV/SZ7DIY9uRiR7TPuNYA==
 
 expo-splash-screen@^0.3.1:
   version "0.3.1"
