@@ -1,24 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { StatusBar, Text } from "react-native";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware, compose } from "redux";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 
-import promiseMiddleware from "redux-promise";
-
 import Main from "./src";
 
-import reducers from "./src/store/reducers";
+import store from "./redux";
 import { default as Constant } from "./src/constants/Constants";
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const createStoreWithMiddleware = createStore(
-  reducers,
-  composeEnhancers(applyMiddleware(promiseMiddleware))
-);
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -61,7 +52,7 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={createStoreWithMiddleware}>
+    <Provider store={store}>
       <StatusBar
         backgroundColor={Constant.tintColor}
         barStyle="light-content"
