@@ -15,7 +15,7 @@ import {
   Checkbox,
   TouchableRipple,
 } from "react-native-paper";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
@@ -30,10 +30,26 @@ export class CartScreen extends Component {
     this.props.navigation.pop();
   };
 
-  setChecked = () => {
-    this.setState((prevState) => ({
-      checked: !prevState.checked,
-    }));
+  setChecked = (i) => {
+    if (i === null) {
+      this.setState((prevState) => ({
+        checked: !prevState.checked,
+      }));
+    } else {
+      this.setState((prevState) => ({
+        ["checked" + i]: !prevState["checked" + i],
+      }));
+    }
+  };
+
+  showToastWithGravityAndOffset = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      "Can not checkout without any product!",
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50
+    );
   };
 
   render() {
@@ -75,9 +91,11 @@ export class CartScreen extends Component {
                       }}
                     >
                       <Checkbox
-                        status={this.state.checked ? "checked" : "unchecked"}
+                        status={
+                          this.state["checked" + i] ? "checked" : "unchecked"
+                        }
                         onPress={() => {
-                          this.setChecked();
+                          this.setChecked(i);
                         }}
                       />
                     </View>
@@ -173,9 +191,9 @@ export class CartScreen extends Component {
             >
               <View style={{ flex: 0.2, justifyContent: "center" }}>
                 <Checkbox
-                  status={this.state.checked ? "checked" : "unchecked"}
+                  status={this.state["checked"] ? "checked" : "unchecked"}
                   onPress={() => {
-                    this.setChecked();
+                    this.setChecked(null);
                   }}
                 />
               </View>
@@ -207,7 +225,12 @@ export class CartScreen extends Component {
                       borderRadius: 5,
                     }}
                     labelStyle={{ color: "white" }}
-                    onPress={()=>this.props.navigation.navigate("CheckOut")}
+                    // onPress={() => this.props.navigation.navigate("CheckOut")}
+                    onPress={
+                      !this.state.checked
+                        ? this.showToastWithGravityAndOffset
+                        : () => this.props.navigation.navigate("CheckOut")
+                    }
                   >
                     Check Out
                   </Button>
