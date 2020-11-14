@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import { List, Appbar } from "react-native-paper";
 
 import { ScrollView } from "react-native-gesture-handler";
 import Constants from "../constants/Constants";
 
+import { productCategories } from "../../redux/actions/productActions";
+
 const CustomDrawer = ({ navigation }) => {
+  // const dispatch = useDispatch();
+
+  // useEffect(() => dispatch(productCategories()), []);
+
+  // useEffect(() => {
+  //   console.warn("Sup")
+    
+  // }, [])
+
   return (
     <>
       <Appbar.Header statusBarHeight={10}>

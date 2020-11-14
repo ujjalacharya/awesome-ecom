@@ -8,7 +8,7 @@ export class ProductService {
   }
 
   productCategories() {
-    let url = `${process.env.SERVER_BASE_URL}/api/superadmin/product-categories`
+    let url = `http://192.168.1.68:3001/api/superadmin/product-categories`
     let data = getService(url, 'GET');
     return data;
   }

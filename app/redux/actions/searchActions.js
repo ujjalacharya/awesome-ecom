@@ -1,4 +1,3 @@
-import fetch from "isomorphic-unfetch";
 import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR, GLOBAL_ERROR, SEARCH_KEYWORD } from "../types";
 import { SearchService } from "../services/searchService";
 
