@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { View } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
-import { connect } from "react-redux";
 import SearchedSingleProduct from "./SearchedSingleProduct";
 import { productData } from "../../utils/mock";
 import SortModal from "./Modals/SortModal";
@@ -72,10 +71,5 @@ export class ProductListScreen extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    Journey: state.Journey.journey_store,
-  };
-}
 
-export default connect(mapStateToProps)(ProductListScreen);
+export default ProductListScreen;
