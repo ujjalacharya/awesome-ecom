@@ -64,7 +64,7 @@ const QnA = ({data}) => {
                 />
               )}
               mode="contained"
-              onPress={() => console.log("Pressed")}
+              onPress={() => console.warn("Pressed")}
               style={{ height: "100%" }}
             ></Button>
           </View>

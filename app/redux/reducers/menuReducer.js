@@ -1,14 +1,16 @@
-import { MENU_CATEGORIES } from "../types";
+import { MENU_CATEGORIES, MENU_CATEGORIES_LOADING } from "../types";
 
 const initialState = {
-  menuCategories: null
+  menuCategories: null,
+  loading: false,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case MENU_CATEGORIES:
-      console.log(action.payload)
-      return {...state, menuCategories: action.payload };
+      return { ...state, menuCategories: action.payload, loading: false };
+    case MENU_CATEGORIES_LOADING:
+      return { ...state, loading: true };
     default:
       return state;
   }

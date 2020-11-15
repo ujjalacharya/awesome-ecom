@@ -20,7 +20,7 @@ import MyReviews from "../screens/ProfileScreen/Listings/MyReviews";
 import MyWishlists from "../screens/ProfileScreen/Listings/MyWishlists";
 import EditProfile from "../screens/ProfileScreen/EditProfile";
 
-export default function App() {
+export default function App(props) {
   return (
     <NavigationContainer headerMode="none">
       <Stack.Navigator
@@ -29,7 +29,10 @@ export default function App() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        <Stack.Screen name="Home" component={DrawerNavigators} />
+        <Stack.Screen name="Home">
+          {(prop) => <DrawerNavigators {...prop} customCategories={props} />}
+        </Stack.Screen>
+        {/* // component={DrawerNavigators} props={props}/> */}
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="Products" component={ProductListScreen} />
         <Stack.Screen name="WishList" component={WishListScreen} />

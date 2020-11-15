@@ -6,6 +6,7 @@ export const DEAUTHENTICATE = 'deauthenticate';
 
 // menu categories
 export const MENU_CATEGORIES = "MENU_CATEGORIES"
+export const MENU_CATEGORIES_LOADING = "MENU_CATEGORIES_LOADING"
 
 // product types 
 export const LATEST_PRODUCTS = "LATEST_PRODUCTS"

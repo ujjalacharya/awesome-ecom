@@ -1,38 +1,21 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import TabNavigators from "./TabNavigators";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawer from "../components/CustomDrawerComponent";
-
-import { productCategories } from "../../redux/actions/productActions";
-
 const Drawer = createDrawerNavigator();
 
-const DrawerNavigators = () => {
-  const dispatch = useDispatch();
-
-  const menu = useSelector((state) => state.menu?.menuCategories);
-
-  useEffect(() => {
-    (async () => {
-      dispatch(productCategories());
-    })();
-  }, []);
-
-  useEffect(() => {
-    console.warn(menu);
-  }, [menu]);
+const DrawerNavigators = (props) => {
 
   return (
     <Drawer.Navigator
       drawerType="slide"
       initialRouteName="Main"
-      drawerContent={(props) => CustomDrawer(props)}
+      drawerContent={(prop) => CustomDrawer({ ...prop, ...props })}
     >
       <Drawer.Screen name="Tab" component={TabNavigators} />
     </Drawer.Navigator>
   );
 };
 
-export default DrawerNavigators;
+export default React.memo(DrawerNavigators);

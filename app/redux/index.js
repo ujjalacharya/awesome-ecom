@@ -6,8 +6,9 @@ import reducer from "./reducers";
 //   return createStore(reducer, initialState, applyMiddleware(thunk));
 // };
 const initialState = {};
+const middleware = [thunk]
 
-const store = createStore(reducer, initialState, applyMiddleware(thunk));
+const store = createStore(reducer, initialState, applyMiddleware(...middleware));
 
 // set up a store subscription listener
 // to store the Auths token in localStorage
@@ -21,8 +22,8 @@ store.subscribe(() => {
   let previousState = currentState;
   currentState = store.getState();
   // if the token changes set the value in localStorage and axios headers
-  if (previousState.auth.token !== currentState.auth.token) {
-    const token = currentState.auth.token;
+  if (previousState.authentication.token !== currentState.authentication.token) {
+    const token = currentState.authentication.token;
     // setAuthToken(token);
   }
 });

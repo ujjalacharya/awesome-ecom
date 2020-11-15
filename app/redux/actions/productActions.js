@@ -9,15 +9,16 @@ import {
   POST_QUESTION,
   PRODUCT_REVIEWS,
   POST_PRODUCT_REVIEWS,
+  MENU_CATEGORIES_LOADING
 } from "../types";
 // import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
 
 export const productCategories = () => {
   return async (dispatch) => {
+    // dispatch(categoriesLoading());
     const productService = new ProductService();
     const response = await productService.productCategories();
-    console.log(response)
     if (response.isSuccess) {
       dispatch({ type: MENU_CATEGORIES, payload: response.data });
     } else if (!response.isSuccess) {
@@ -26,6 +27,12 @@ export const productCategories = () => {
         payload: response.errorMessage,
       });
     }
+  };
+};
+
+export const categoriesLoading = () => {
+  return (dispatch) => {
+    dispatch({ type: MENU_CATEGORIES_LOADING });
   };
 };
 
