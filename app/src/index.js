@@ -10,6 +10,7 @@ import {
 
 import COLORCONSTANT from "./constants/Constants";
 import { getChildCategories } from "../utils/common";
+import GlobalErrorComponent from "./components/shared/GlobalErrorComponent";
 
 export default function Main() {
   const [customCategories, setCustomCategories] = useState([]);
@@ -61,6 +62,7 @@ export default function Main() {
 
   return (
     <PaperProvider theme={theme}>
+      <GlobalErrorComponent />
       <RootRoute customCategories={customCategories}/>
     </PaperProvider>
   );

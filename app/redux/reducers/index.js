@@ -4,7 +4,7 @@ import authReducer from './authReducer';
 import menuReducer from './menuReducer';
 // import listingReducer from './listingReducer';
 // import userReducer from './userReducer';
-// import globalErrorReducer from './globalErrorReducer';
+import globalErrorReducer from './globalErrorReducer';
 // import otherReducer from './otherReducer';
 // import cartReducer from './cartReducer';
 // import wishlistReducer from './wishlistReducer';
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   menu: menuReducer,
   // listing: listingReducer,
   // user: userReducer,
-  // globalError: globalErrorReducer,
+  globalError: globalErrorReducer,
   // other: otherReducer,
   // cart: cartReducer,
   // wishlist: wishlistReducer,
