@@ -606,21 +606,19 @@ exports.returnOrder = async (req, res) => {
 };
 
 exports.toggletobeReturnOrder = async (req, res) => {
-  // let orders = await Order.find({ $or: [{ 'status.currentStatus': 'tobereturned' }]})
+  let orders = await Order.find({ $or: [{ 'status.currentStatus': 'tobereturned' }, { 'status.currentStatus': 'return' }]})
 
-  // orders = orders.map(async o=> {
-  //   if (o.status.tobeReturnedDetail.remark === null) {
-  //     let newRemark = new Remark({comment:'User do not like this product'})
-  //     await newRemark.save()
-  //     o.status.tobeReturnedDetail.remark = newRemark._id
-  //   }
-  //   return await o.save()
-  // })
-  // orders = await Promise.all(orders)
+  orders = orders.map(async o=> {
+    if (o.status.tobeReturnedDetail.remark) {
+      o.status.returnedDetail.remark = o.status.tobeReturnedDetail.remark
+      return await o.save()
+    }
+  })
+  orders = await Promise.all(orders)
   // res.json(orders)
   
   // let orders = await Order.updateMany({ $unset: {'status.returnedDetail.remark':''}})
-  let orders = await Order.find({ 'status.currentStatus': 'return' })
+  // let orders = await Order.find({ 'status.currentStatus': 'return' })
   res.json(orders)
   // let order = req.order;
   // if (
