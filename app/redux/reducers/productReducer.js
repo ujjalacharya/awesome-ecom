@@ -9,7 +9,7 @@ import {
 } from "../types";
 
 const initialState = {
-  latestProducts: null,
+  latestProducts: {},
   productDetails: null,
   hasError: false,
   latestLoading: false,

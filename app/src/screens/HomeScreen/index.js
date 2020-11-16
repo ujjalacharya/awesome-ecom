@@ -41,7 +41,7 @@ const HomeScreen = (props) => {
           <MainCarousel />
         </View>
         <View style={{ flex: 2 }}>
-          <FeaturedProducts title={"Featured Products"} />
+          <FeaturedProducts title={"Latest Products"} type="latest"/>
         </View>
         <View style={{ flex: 1 }}>
           <Image
@@ -50,7 +50,7 @@ const HomeScreen = (props) => {
           ></Image>
         </View>
         <View style={{ flex: 2 }}>
-          <FeaturedProducts title={"Latest Products"} />
+          <FeaturedProducts title={"Featured Products"} />
         </View>
       </View>
     </ScrollView>

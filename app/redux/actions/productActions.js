@@ -36,21 +36,21 @@ export const categoriesLoading = () => {
   };
 };
 
-// const getLatestProducts = (ctx) => {
-//   return async (dispatch) => {
-//     dispatch({type: LATEST_LOADING, payload: []})
-//     const productService = new ProductService();
-//     const response = await productService.getLatestProducts(ctx);
-//     if (response.isSuccess) {
-//       dispatch({ type: LATEST_PRODUCTS, payload: response.data });
-//     } else if (!response.isSuccess) {
-//       dispatch({
-//         type: GLOBAL_ERROR,
-//         payload: response.errorMessage,
-//       });
-//     }
-//   };
-// };
+export const getLatestProducts = () => {
+  return async (dispatch) => {
+    dispatch({type: LATEST_LOADING, payload: []})
+    const productService = new ProductService();
+    const response = await productService.getLatestProducts();
+    if (response.isSuccess) {
+      dispatch({ type: LATEST_PRODUCTS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 // const getProductDetails = (slug, ctx) => {
 //   return async (dispatch) => {
@@ -149,7 +149,7 @@ export const categoriesLoading = () => {
 // };
 
 export default {
-  // getLatestProducts,
+  getLatestProducts,
   productCategories,
   // getProductDetails,
   // getOrders,

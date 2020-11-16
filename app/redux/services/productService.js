@@ -1,45 +1,45 @@
 import { getService, getTokenService, postTokenService } from "../../utils/commonService";
-const SERVER_BASE_URL = "http://192.168.1.68:3001/api"
+export const SERVER_BASE_URL = "http://192.168.1.68:3001"
 
 export class ProductService {
-  getLatestProducts(ctx) {
-    let url = `${SERVER_BASE_URL}/product/latest`
-    let data = getTokenService(url, 'GET', ctx);
+  getLatestProducts() {
+    let url = `${SERVER_BASE_URL}/api/product/latest`
+    let data = getService(url, 'GET');
     return data;
   }
 
   productCategories() {
-    let url = `${SERVER_BASE_URL}/superadmin/product-categories`
+    let url = `${SERVER_BASE_URL}/api/superadmin/product-categories`
     let data = getService(url, 'GET');
     return data;
   }
 
   getProductDetails(slug, ctx) {
-    let url = `${SERVER_BASE_URL}/product/${slug}`
+    let url = `${SERVER_BASE_URL}/api/product/${slug}`
     let data = getTokenService(url, 'GET', ctx);
     return data;
   }
 
   async getQandA(query) {
-    let url = `${SERVER_BASE_URL}/review-qna/qna/${query}&perPage=5`
+    let url = `${SERVER_BASE_URL}/api/review-qna/qna/${query}&perPage=5`
     let data = getService(url, 'GET');
     return data;
   }
 
   async postQuestion(query, body) {
-    let url = `${SERVER_BASE_URL}/review-qna/qna/${query}`
+    let url = `${SERVER_BASE_URL}/api/review-qna/qna/${query}`
     let data = postTokenService(url, 'POST', body);
     return data;
   }
 
   async getProductReviews(query) {
-    let url = `${SERVER_BASE_URL}/review-qna/review/${query}`
+    let url = `${SERVER_BASE_URL}/api/review-qna/review/${query}`
     let data = getService(url, 'GET');
     return data;
   }
 
   async postReviews(query, body) {
-    let url = `${SERVER_BASE_URL}/review-qna/review/${query}`
+    let url = `${SERVER_BASE_URL}/api/review-qna/review/${query}`
     let data = postTokenService(url, 'POST', body);
     return data;
   }

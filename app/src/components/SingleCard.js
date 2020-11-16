@@ -3,9 +3,9 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 import { Text, View, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
-import Constants from "../constants/Constants";
-
 import { useNavigation } from "@react-navigation/native";
+import Constants from "../constants/Constants";
+import {SERVER_BASE_URL} from "../../redux/services/productService"
 
 const SingleCard = ({ product }) => {
   const navigation = useNavigation();
@@ -17,14 +17,14 @@ const SingleCard = ({ product }) => {
     >
       <>
         <View style={{ flex: 2 }}>
-          <Image style={styles.tinyLogo} source={{ uri: product.image }} />
+          <Image style={styles.tinyLogo} source={{ uri: SERVER_BASE_URL+"/uploads/"+ product.images[0].medium }} />
         </View>
         <Card style={styles.productDetails}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.title}>{product.title}</Text>
+            <Text style={styles.name}>{product.name}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.price}>{product.price}</Text>
+            <Text style={styles.price}>{product.price.$numberDecimal}</Text>
           </View>
         </Card>
         <View style={{ flex: 0.25 }}></View>
