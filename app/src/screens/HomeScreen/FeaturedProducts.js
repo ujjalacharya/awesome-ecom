@@ -11,7 +11,13 @@ import { getLatestProducts } from "../../../redux/actions/productActions";
 
 const FeaturedProducts = (props) => {
   const dispatch = useDispatch();
-  const { products } = useSelector(({ products }) => products.latestProducts);
+  const {
+    latestProducts: { products },
+    loading
+  } = useSelector(({ products }) => ({
+    latestProducts: products.latestProducts,
+    loading: products.latestLoading,
+  }));
 
   const { type } = props;
 
@@ -19,8 +25,7 @@ const FeaturedProducts = (props) => {
     if (type === "latest") dispatch(getLatestProducts());
   }, [type, dispatch]);
 
-  useEffect(() => {
-  }, [products]);
+  useEffect(() => {}, [products]);
 
   return (
     <View style={styles.container}>
@@ -34,9 +39,13 @@ const FeaturedProducts = (props) => {
           scrollEventThrottle={200}
           decelerationRate="fast"
         >
-          {products?.map((product) => (
-            <SingleCard key={product._id} product={product} />
-          ))}
+          {loading ? (
+            <Text>Loading</Text>
+          ) : (
+            products?.map((product) => (
+              <SingleCard key={product._id} product={product} />
+            ))
+          )}
         </ScrollView>
       </View>
     </View>
