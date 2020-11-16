@@ -20,7 +20,6 @@ const FeaturedProducts = (props) => {
   }, [type, dispatch]);
 
   useEffect(() => {
-    console.log(products);
   }, [products]);
 
   return (

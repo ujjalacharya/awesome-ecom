@@ -6,9 +6,11 @@ import { Card } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Constants from "../constants/Constants";
 import {SERVER_BASE_URL} from "../../redux/services/productService"
+import { nameWithTripleDots } from "../../utils/common";
 
 const SingleCard = ({ product }) => {
   const navigation = useNavigation();
+
   return (
     <TouchableWithoutFeedback
       key={product.id}
@@ -21,10 +23,10 @@ const SingleCard = ({ product }) => {
         </View>
         <Card style={styles.productDetails}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.name}>{product.name}</Text>
+            <Text style={styles.name}>{nameWithTripleDots(product.name)}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.price}>{product.price.$numberDecimal}</Text>
+            <Text style={styles.price}>Rs {product.price.$numberDecimal}</Text>
           </View>
         </Card>
         <View style={{ flex: 0.25 }}></View>
