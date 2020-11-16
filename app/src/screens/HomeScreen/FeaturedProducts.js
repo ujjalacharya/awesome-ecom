@@ -8,12 +8,13 @@ import SingleCard from "../../components/SingleCard";
 import { getPhoneDetails } from "../../utils/common";
 import Constants from "../../constants/Constants";
 import { getLatestProducts } from "../../../redux/actions/productActions";
+import Skeleton from "../../components/shared/Skeleton";
 
 const FeaturedProducts = (props) => {
   const dispatch = useDispatch();
   const {
     latestProducts: { products },
-    loading
+    loading,
   } = useSelector(({ products }) => ({
     latestProducts: products.latestProducts,
     loading: products.latestLoading,
@@ -40,7 +41,7 @@ const FeaturedProducts = (props) => {
           decelerationRate="fast"
         >
           {loading ? (
-            <Text>Loading</Text>
+            <Skeleton />
           ) : (
             products?.map((product) => (
               <SingleCard key={product._id} product={product} />
