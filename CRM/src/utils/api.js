@@ -21,9 +21,6 @@ const api = axios.create({
 **/
 api.interceptors.request.use(function (config) {
   // Do something before request is sent
-  // console.log(verifyLocalStorage() ? localStorage.getItem(accessTokenKey) : null);
-  console.log(config);
-  // setAuthToken(verifyLocalStorage() ? localStorage.getItem(accessTokenKey) : null)
   config.headers["x-auth-token"] = verifyLocalStorage() ? localStorage.getItem(accessTokenKey) : null;
   return config
 }, function (error) {

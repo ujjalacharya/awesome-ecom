@@ -580,7 +580,7 @@ exports.toggleCompleteOrder = async (req, res) => {
 
 exports.returnOrder = async (req, res) => {
   let order = req.order;
-  if (order.status.currentStatus !== "tobereturn") {
+  if (order.status.currentStatus !== "tobereturned") {
     return res.status(403).json({
       error: `This order cannot be returned. Order current status is ${order.status.currentStatus}`,
     });
@@ -592,15 +592,15 @@ exports.returnOrder = async (req, res) => {
   updateOrder.status.returnedDetail.returnedDate = Date.now();
   updateOrder.status.returnedDetail.remark = newRemark._id;
   updateOrder.status.returnedDetail.returneddBy = req.dispatcher._id;
-  let product = await Product.findById(order.product._id);
-  let updateProduct = product.toObject();
+  // let product = await Product.findById(order.product._id);
+  // let updateProduct = product.toObject();
 
   let results = await task
     .save(newRemark)
     .update(order, updateOrder)
     .options({ viaSave: true })
-    .update(product, updateProduct)
-    .options({ viaSave: true })
+    // .update(product, updateProduct)
+    // .options({ viaSave: true })
     .run({ useMongoose: true });
   return res.json(results);
 };
@@ -609,18 +609,31 @@ exports.toggletobeReturnOrder = async (req, res) => {
   let order = req.order;
   if (
     order.status.currentStatus !== "complete" &&
-    order.status.currentStatus !== "tobereturn"
+    order.status.currentStatus !== "tobereturned"
   ) {
     return res.status(403).json({
       error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}`,
     });
   }
-  let updateOrder = order.toObject();
+  let updateOrder = await Order.findById(order._id)
+  updateOrder = updateOrder.toObject();
   let payment = await Payment.findById(order.payment._id);
   let updatePayment = payment.toObject();
+
   if (order.status.currentStatus === "complete") {
-    updateOrder.status.currentStatus = "tobereturn";
+    if (!req.body.remark) {
+      return res.status(403).json({error: "Remark is required."})
+    }
+
+    updateOrder.status.currentStatus = "tobereturned";
     updateOrder.status.tobereturnedDate = Date.now();
+    
+    let remark = new Remark({
+      comment:req.body.remark,
+      createdBy: req.admin._id,//as it may be superadmin as well
+      reason:'product_tobereturned'//it is system keyword
+    })
+    updateOrder.status.returnedDetail.remark = remark._id
 
     updatePayment.returnedAmount = req.body.returnedAmount;
 
@@ -629,18 +642,28 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .options({ viaSave: true })
       .update(payment, updatePayment)
       .options({ viaSave: true })
+      .save(Remark, remark)
       .run({ useMongoose: true });
     return res.json(results);
   }
-  if (order.status.currentStatus === "tobereturn") {
+  if (order.status.currentStatus === "tobereturned") {
     updateOrder.status.currentStatus = "complete";
     updateOrder.status.tobereturnedDate = null;
+    updateOrder.status.returnedDetail.remark = undefined
+
+
+    let remark = await Remark.findById(order.status.returnedDetail.remark)
+    let updateRemark = remark.toObject()
+    updateRemark.isDeleted = Date.now()
+    updateRemark.deletedBy = req.admin._id//as it may be superadmin as well
 
     updatePayment.returnedAmount = undefined;
     let results = await task
       .update(payment, updatePayment)
       .options({ viaSave: true })
       .update(order, updateOrder)
+      .options({ viaSave: true })
+      .update(remark, updateRemark)
       .options({ viaSave: true })
       .run({ useMongoose: true });
     return res.json(results);
