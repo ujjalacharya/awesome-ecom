@@ -2,7 +2,7 @@
 import productActions from './productActions';
 // import searchActions from './searchActions';
 // import userActions from './userActions';
-// import otherActions from './otherActions';
+import otherActions from './otherActions';
 // import cartActions from './cartActions';
 // import wishlistActions from './wishlistActions';
 // import orderActions from './orderActions';
@@ -12,7 +12,7 @@ export default {
   ...productActions,
   // ...searchActions,
   // ...userActions,
-  // ...otherActions,
+  ...otherActions,
   // ...cartActions,
   // ...wishlistActions,
   // ...orderActions

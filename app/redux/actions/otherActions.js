@@ -1,7 +1,7 @@
 import { OtherService } from "../services/otherService";
 import { GET_BANNER_IMAGES, GLOBAL_ERROR } from "../types";
 
-const getBannerImages = () => {
+export const getBannerImages = () => {
   return async (dispatch) => {
     const otherService = new OtherService();
     const response = await otherService.getBannerImages();
