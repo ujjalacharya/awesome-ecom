@@ -6,8 +6,13 @@ import ConcideRating from "./ConciseRating";
 import HighlightedInfo from "./HighlightedInfo";
 import ConciseQnA from "./ConciseQnA";
 import YoutubePlayer from "./YoutubePlayer";
+import Skeleton from "../../components/shared/Skeleton";
 
-const ProductDescription = () => {
+const ProductDescription = ({ loading, productDetails }) => {
+  if (loading) {
+    return <Skeleton />;
+  }
+  const { product } = productDetails;
   return (
     <>
       <Card>
@@ -20,7 +25,7 @@ const ProductDescription = () => {
                   fontWeight: "bold",
                 }}
               >
-                {"Rs 199"}
+                {product.price.$numberDecimal}
               </Text>
             }
             subtitle={
@@ -46,18 +51,7 @@ const ProductDescription = () => {
         </View>
         <Card.Content>
           <Paragraph>
-            Redmi Note 8 Pro is a highly sought after smartphone. It has a
-            big-display which measures 6.53-inches and a water drop notch that
-            houses the selfie camera. The display also has support for HDR. It
-            has a glass back that is made out of Corning Gorilla Glass 5. The
-            Redmi Note 8 pro also has an IR Blaster at the top whihc cna be used
-            to control other IR-based appliances. The Redmi Note 8 Pro is
-            powered by the MediaTek Helio G90T which is a gaming processor. It
-            is very capable and can play most gaming title out there on the play
-            store. There are three variants of the Redmi Note 8 Pro, 6GB RAM
-            with 64GB storage, 6GB RAM with 128GB storage and 8GB RAM with 128GB
-            storage. It uses UFS 2.1 for storage and has a dedicated card slot
-            for storage expansion.{" "}
+            {product.description}
           </Paragraph>
           <Avatar.Text
             size={24}
@@ -83,7 +77,7 @@ const ProductDescription = () => {
         </Card.Content>
       </Card>
       <Divider />
-      <HighlightedInfo />
+      <HighlightedInfo {...product}/>
       <Divider />
       <YoutubePlayer />
       <Divider />

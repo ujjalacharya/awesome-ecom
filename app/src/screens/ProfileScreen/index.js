@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import { Appbar } from "react-native-paper";
 
-import { signOut } from "../../store/actions/user_actions";
 import Constants from "../../constants/Constants";
 
 import UserInfo from "./UserInfo";
@@ -13,7 +11,7 @@ import { ScrollView } from "react-native";
 
 class ProfileScreen extends Component {
   handleLogout = async () => {
-    this.props.signOut();
+    // this.props.signOut();
   };
 
   render() {
@@ -38,12 +36,12 @@ class ProfileScreen extends Component {
 
 function mapStateToProps(state) {
   return {
-    isAuth: state.User.auth.isAuth,
+    isAuth: state,
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ signOut }, dispatch);
-}
+// function mapDispatchToProps(dispatch) {
+//   return bindActionCreators({ signOut }, dispatch);
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
+export default connect(mapStateToProps, null)(ProfileScreen);

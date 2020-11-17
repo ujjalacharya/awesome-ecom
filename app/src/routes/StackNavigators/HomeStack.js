@@ -1,6 +1,5 @@
 import React from "react";
 import HomeScreen from "../../screens/HomeScreen";
-import { connect } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
@@ -17,10 +16,4 @@ const HomeStack = () => {
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    isAuth: state.User.auth.isAuth,
-  };
-}
-
-export default connect(mapStateToProps)(HomeStack);
+export default HomeStack;

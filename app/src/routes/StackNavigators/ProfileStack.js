@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../../screens/ProfileScreen";
 import AuthScreen from "../../screens/AuthScreen";
 
-import { connect } from "react-redux";
 import { headerOptions } from "../../utils/common";
 
 const Stack = createStackNavigator();
 
-const ProfileStack = ({ isAuth, ...rest }) => {
+const ProfileStack = ({ ...rest }) => {
+  const isAuth = useSelector((state) => state.authentication.token);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -36,8 +38,8 @@ const ProfileStack = ({ isAuth, ...rest }) => {
 
 function mapStateToProps(state) {
   return {
-    isAuth: state.User.auth.isAuth,
+    isAuth: state.authentication.token,
   };
 }
 
-export default connect(mapStateToProps)(ProfileStack);
+export default ProfileStack;

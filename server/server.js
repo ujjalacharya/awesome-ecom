@@ -25,7 +25,7 @@ io.origins([`${process.env.ADMIN_CRM_ROUTE}`])
 
 
 // Middlewares
-var allowlist = ['http://localhost:3000', 'http://localhost:3003']
+var allowlist = ['http://localhost:3000', 'http://localhost:3003', 'http://localhost:3002']
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {

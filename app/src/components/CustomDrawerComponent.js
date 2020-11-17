@@ -5,7 +5,7 @@ import { List, Appbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import Constants from "../constants/Constants";
 
-const CustomDrawer = ({ navigation }) => {
+const CustomDrawer = ({ navigation, customCategories }) => {
   return (
     <>
       <Appbar.Header statusBarHeight={10}>
@@ -21,69 +21,31 @@ const CustomDrawer = ({ navigation }) => {
           height: "100%",
         }}
       >
-        <List.Section title="Electronic Devices">
-          <List.Accordion
-            title="Second Level"
-            left={(props) => <List.Icon {...props} icon="apps" />}
-            expanded={true}
-            onPress={() => navigation.navigate("Detail")}
-          >
-            <List.Item
-              title="First item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-            <List.Item
-              title="Second item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-            <List.Item
-              title="Third item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-          </List.Accordion>
-        </List.Section>
-        <List.Section title="Electronic Accessories">
-          <List.Accordion
-            title="Second Level"
-            left={(props) => <List.Icon {...props} icon="apps" />}
-            expanded={true}
-            onPress={() => navigation.navigate("Detail")}
-          >
-            <List.Item
-              title="First item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-            <List.Item
-              title="Second item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-            <List.Item
-              title="Third item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-          </List.Accordion>
-        </List.Section>
-        <List.Section title="TV & Home Appliencess">
-          <List.Accordion
-            title="Second Level"
-            left={(props) => <List.Icon {...props} icon="apps" />}
-            expanded={true}
-            onPress={() => navigation.navigate("Detail")}
-          >
-            <List.Item
-              title="First item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-            <List.Item
-              title="Second item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-            <List.Item
-              title="Third item"
-              onPress={() => navigation.navigate("Detail")}
-            />
-          </List.Accordion>
-        </List.Section>
+        {customCategories?.customCategories.map((mainCat) => {
+          return (
+            <List.Section title={mainCat.displayName} key={mainCat._id}>
+              {mainCat?.childCate.map((childCate) => {
+                return (
+                  <List.Accordion
+                    title={childCate.displayName}
+                    left={(props) => <List.Icon {...props} icon="apps" />}
+                    expanded={true}
+                    onPress={() => navigation.navigate("Detail")}
+                    key={childCate._id}
+                  >
+                    {childCate?.childCate.map((final) => (
+                      <List.Item
+                        title={final.displayName}
+                        onPress={() => navigation.navigate("Detail")}
+                        key={final._id}
+                      />
+                    ))}
+                  </List.Accordion>
+                );
+              })}
+            </List.Section>
+          );
+        })}
       </ScrollView>
     </>
   );
