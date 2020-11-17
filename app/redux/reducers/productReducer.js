@@ -1,6 +1,7 @@
 import {
   LATEST_PRODUCTS,
   PRODUCT_DETAILS,
+  PRODUCT_DETAILS_LOADING,
   LATEST_LOADING,
   PRODUCT_QA,
   POST_QUESTION,
@@ -13,10 +14,11 @@ const initialState = {
   productDetails: null,
   hasError: false,
   latestLoading: false,
+  productDetailsLoading: false,
   productQA: null,
   postQnsResp: null,
   productReviews: null,
-  postReviewResp:null
+  postReviewResp: null,
 };
 
 export default (state = initialState, action) => {
@@ -35,8 +37,20 @@ export default (state = initialState, action) => {
         latestLoading: true,
         hasError: false,
       };
+    case PRODUCT_DETAILS_LOADING:
+      return {
+        ...state,
+        productDetails: null,
+        productDetailsLoading: true,
+        hasError: false,
+      };
     case PRODUCT_DETAILS:
-      return { ...state, productDetails: action.payload, hasError: false };
+      return {
+        ...state,
+        productDetails: action.payload,
+        hasError: false,
+        productDetailsLoading: false,
+      };
     case PRODUCT_QA:
       return { ...state, productQA: action.payload, hasError: false };
     case POST_QUESTION:

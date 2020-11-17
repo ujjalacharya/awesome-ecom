@@ -3,6 +3,7 @@ import {
   LATEST_PRODUCTS,
   MENU_CATEGORIES,
   PRODUCT_DETAILS,
+  PRODUCT_DETAILS_LOADING,
   GLOBAL_ERROR,
   LATEST_LOADING,
   PRODUCT_QA,
@@ -52,20 +53,21 @@ export const getLatestProducts = () => {
   };
 };
 
-// const getProductDetails = (slug, ctx) => {
-//   return async (dispatch) => {
-//     const productService = new ProductService();
-//     const response = await productService.getProductDetails(slug, ctx);
-//     if (response.isSuccess) {
-//       dispatch({ type: PRODUCT_DETAILS, payload: response.data });
-//     } else if (!response.isSuccess) {
-//       dispatch({
-//         type: GLOBAL_ERROR,
-//         payload: response.errorMessage,
-//       });
-//     }
-//   };
-// };
+export const getProductDetails = (slug) => {
+  return async (dispatch) => {
+    dispatch({ type: PRODUCT_DETAILS_LOADING });
+    const productService = new ProductService();
+    const response = await productService.getProductDetails(slug);
+    if (response.isSuccess) {
+      dispatch({ type: PRODUCT_DETAILS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 // const getQandA = (query) => {
 //   return async (dispatch) => {

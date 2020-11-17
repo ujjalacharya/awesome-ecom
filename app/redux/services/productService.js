@@ -14,9 +14,9 @@ export class ProductService {
     return data;
   }
 
-  getProductDetails(slug, ctx) {
+  getProductDetails(slug) {
     let url = `${SERVER_BASE_URL}/api/product/${slug}`
-    let data = getTokenService(url, 'GET', ctx);
+    let data = getService(url, 'GET');
     return data;
   }
 

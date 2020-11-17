@@ -7,7 +7,8 @@ import HighlightedInfo from "./HighlightedInfo";
 import ConciseQnA from "./ConciseQnA";
 import YoutubePlayer from "./YoutubePlayer";
 
-const ProductDescription = () => {
+const ProductDescription = (props) => {
+  console.log(props);
   return (
     <>
       <Card>

@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { View, ScrollView } from "react-native";
 import { TouchableRipple, Divider } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,65 +13,68 @@ import ProductDetailFooter from "./ProductDetailFooter";
 import ProductDescription from "./ProductDescription";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 
-class ProductDetailScreen extends Component {
-  state = {
-    showGallery: false,
-  };
+const ProductDetailScreen = (props) => {
+  const { productDetails, productDetailsLoading } = useSelector(
+    ({ products }) => products
+  );
 
-  handleGalleryToggle = () => {
-    this.setState((prevState) => {
+  const [state, setState] = useState({
+    showGallery: false,
+  });
+
+  const handleGalleryToggle = () => {
+    setState((prevState) => {
       return {
         showGallery: !prevState.showGallery,
       };
     });
   };
 
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        {this.state.showGallery ? (
-          <View style={{ flex: 1 }}>
-            <Ionicons
-              name="ios-close-circle"
-              size={30}
-              color={Constants.tintColor}
-              onPress={this.handleGalleryToggle}
-              style={{
-                backgroundColor: "#696969",
-                height: 80,
-                padding: 20,
-              }}
-            />
-            <Gallery
-              useNativeDriver={true}
-              style={{ flex: 1, backgroundColor: "#696969" }}
-              initialPage={0}
-              images={galleryImages}
-            />
-          </View>
-        ) : (
-          <>
-            <ScrollView
-              contentContainerStyle={{ flexGrow: 1 }}
-              // stickyHeaderIndices={[0]}
+  const newProps = { ...props, productDetails, productDetailsLoading };
+  return (
+    <View style={{ flex: 1 }}>
+      {state.showGallery ? (
+        <View style={{ flex: 1 }}>
+          <Ionicons
+            name="ios-close-circle"
+            size={30}
+            color={Constants.tintColor}
+            onPress={handleGalleryToggle}
+            style={{
+              backgroundColor: "#696969",
+              height: 80,
+              padding: 20,
+            }}
+          />
+          <Gallery
+            useNativeDriver={true}
+            style={{ flex: 1, backgroundColor: "#696969" }}
+            initialPage={0}
+            images={galleryImages}
+          />
+        </View>
+      ) : (
+        <>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            // stickyHeaderIndices={[0]}
+          >
+            <TouchableRipple
+              style={{ height: 250 }}
+              onPress={handleGalleryToggle}
             >
-              <TouchableRipple
-                style={{ height: 250 }}
-                onPress={this.handleGalleryToggle}
-              >
-                <ProductDetailHeader {...this.props} />
-              </TouchableRipple>
-              <ProductDescription />
-              <View style={{ height: 250, marginTop: 0 }}>
-                <FeaturedProducts title={"Similar Products"} />
-              </View>
-            </ScrollView>
-            <ProductDetailFooter {...this.props}/>
-          </>
-        )}
-      </View>
-    );
-  }
-}
+              <ProductDetailHeader {...newProps} />
+            </TouchableRipple>
+            <ProductDescription {...newProps} />
+            <View style={{ height: 250, marginTop: 0 }}>
+              <FeaturedProducts title={"Similar Products"} />
+            </View>
+          </ScrollView>
+          <ProductDetailFooter {...newProps} />
+        </>
+      )}
+    </View>
+  );
+};
 
 export default ProductDetailScreen;
