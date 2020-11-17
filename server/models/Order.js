@@ -82,16 +82,15 @@ const orderSchema = new mongoose.Schema({
             type: Date,
             default: null
         },
-        tobeReturnedDetail: {
-            tobereturnedDate: {
-                type: Date,
-                default: null
-            },
-            remark: {
-                type: Schema.Types.ObjectId,
-                ref: 'remark'
-            },
-        },        
+        // tobeReturnedDetail: {
+        //     tobereturnedDate: {
+        //         type: Date
+        //     },
+        //     remark: {
+        //         type: Schema.Types.ObjectId,
+        //         ref: 'remark'
+        //     },
+        // },        
         returnedDetail: {
             returnedDate: {
                 type: Date,
