@@ -68,12 +68,12 @@ const ProductDescription = ({ loading, productDetails }) => {
         <Card.Title title="Additional Information" />
 
         <Card.Content>
-          <Paragraph style={{ fontWeight: "bold" }}>Weight:</Paragraph>
-          <Paragraph style={{ fontWeight: "bold" }}>
+          <Paragraph style={{ fontWeight: "bold" }}>Weight: {product.weight.map(w => w).join(" ")}</Paragraph>
+          {/* <Paragraph style={{ fontWeight: "bold" }}>
             Dimension: 1080x2340
-          </Paragraph>
-          <Paragraph style={{ fontWeight: "bold" }}>Color: white</Paragraph>
-          <Paragraph style={{ fontWeight: "bold" }}>Warrenty: 1 year</Paragraph>
+          </Paragraph> */}
+          <Paragraph style={{ fontWeight: "bold" }}>Color: {product.color.map(c => c).join(" ")}</Paragraph>
+          <Paragraph style={{ fontWeight: "bold" }}>Warrenty: {product.warranty}</Paragraph>
         </Card.Content>
       </Card>
       <Divider />

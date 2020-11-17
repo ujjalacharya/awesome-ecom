@@ -2,32 +2,44 @@ import React from "react";
 import { Appbar, Avatar } from "react-native-paper";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import Constants from "../../constants/Constants";
+import Skeleton from "../../components/shared/Skeleton";
+import { SERVER_BASE_URL } from "../../../redux/services/productService";
 
-const image = { uri: "https://cdn.androidbeat.com/wp-content/uploads/2019/04/redmi-note-8-pro-rear.jpg" };
-
-const ProductDetailHeader = (props) => (
+const ProductDetailHeader = ({ navigation, productDetails }) => (
   <View style={styles.container}>
-    <ImageBackground source={image} style={styles.image}>
-      <Appbar.BackAction
-        color={Constants.initialColor}
-        style={styles.backButton}
-        onPress={() => props.navigation.pop()}
-      />
-       <Appbar.Action
-        style={[styles.heartIcon]}
-        color="orange"
-        icon="heart"
-        onPress={() => props.navigation.navigate("WishList")}
-      />
-      <Avatar.Text
-        size={24}
-        label="12 photos"
-        color="black"
-        backgroundColor={Constants.initialColor}
-        width={90}
-        style={styles.totalPhotos}
-      />
-    </ImageBackground>
+    {!productDetails ? (
+      <Skeleton />
+    ) : (
+      <ImageBackground
+        source={{
+          uri:
+            SERVER_BASE_URL +
+            "/uploads/" +
+            productDetails?.product.images[0].large,
+        }}
+        style={styles.image}
+      >
+        <Appbar.BackAction
+          color={Constants.initialColor}
+          style={styles.backButton}
+          onPress={() => navigation.pop()}
+        />
+        <Appbar.Action
+          style={[styles.heartIcon]}
+          color="orange"
+          icon="heart"
+          onPress={() => navigation.navigate("WishList")}
+        />
+        <Avatar.Text
+          size={24}
+          label={`${productDetails?.product.images.length || "No"} photos`}
+          color="black"
+          backgroundColor={Constants.initialColor}
+          width={90}
+          style={styles.totalPhotos}
+        />
+      </ImageBackground>
+    )}
   </View>
 );
 
@@ -48,7 +60,7 @@ const styles = StyleSheet.create({
   heartIcon: {
     position: "absolute",
     top: 0,
-    right: 0
+    right: 0,
   },
   totalPhotos: {
     position: "absolute",
