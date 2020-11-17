@@ -30,7 +30,7 @@ const ProductDetailScreen = (props) => {
     });
   };
 
-  const newProps = { ...props, productDetails, productDetailsLoading };
+  const newProps = { ...props, productDetails, loading: productDetailsLoading };
   return (
     <View style={{ flex: 1 }}>
       {state.showGallery ? (
