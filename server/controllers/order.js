@@ -437,7 +437,11 @@ exports.orderCancelByAdmin = async (req, res) => {
   if (order.status.currentStatus === "cancel") {
     return res.status(403).json({ error: "Order has already been cancelled." });
   }
-  const newRemark = new Remark({ comment: req.body.remark });
+  const newRemark = new Remark({ 
+    comment: req.body.remark ,
+    createdBy: req.admin._id, //as it may be superadmin as well,
+    reason: 'cancel_order_by_admin'
+  });
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "cancel";
   updateOrder.status.cancelledDetail.cancelledDate = Date.now();
@@ -474,7 +478,7 @@ exports.orderCancelByUser = async (req, res) => {
   if (order.status.currentStatus === "cancel") {
     return res.status(403).json({ error: "Order has already been cancelled." });
   }
-  const newRemark = new Remark({ comment: req.body.remark });
+  const newRemark = new Remark({ comment: req.body.remark,createdBy:req.user._id,reason:'order_cancel_by_user' });
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "cancel";
   updateOrder.status.cancelledDetail.cancelledDate = Date.now();
@@ -585,18 +589,18 @@ exports.returnOrder = async (req, res) => {
       error: `This order cannot be returned. Order current status is ${order.status.currentStatus}`,
     });
   }
-  const newRemark = new Remark({ comment: req.body.remark });
+  // const newRemark = new Remark({ comment: req.body.remark });
 
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "return";
   updateOrder.status.returnedDetail.returnedDate = Date.now();
-  updateOrder.status.returnedDetail.remark = newRemark._id;
+  // updateOrder.status.returnedDetail.remark = newRemark._id;
   updateOrder.status.returnedDetail.returneddBy = req.dispatcher._id;
   // let product = await Product.findById(order.product._id);
   // let updateProduct = product.toObject();
 
   let results = await task
-    .save(newRemark)
+    // .save(newRemark)
     .update(order, updateOrder)
     .options({ viaSave: true })
     // .update(product, updateProduct)

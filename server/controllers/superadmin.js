@@ -530,6 +530,7 @@ exports.approveProduct = async (req, res) => {
     const remark = await Remark.findById(product.remark)
     const updateRemark = remark.toObject()
     updateRemark.isDeleted = Date.now()
+    updateRemark.deletedBy = req.admin._id
 
     const updateProduct = product.toObject()
     updateProduct.isVerified = Date.now()
@@ -549,7 +550,11 @@ exports.disApproveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    const newRemark = new Remark(req.body)
+    const newRemark = new Remark({
+        comment:req.body.comment,
+        createdBy: req.admin._id,
+        reason: 'disapprove_product'
+    })
     const updateProduct = product.toObject()
     updateProduct.isVerified = null
     updateProduct.remark = newRemark._id

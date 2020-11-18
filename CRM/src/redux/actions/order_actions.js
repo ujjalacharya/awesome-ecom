@@ -32,7 +32,7 @@ export const getOrder = (id,order_id) => async (dispatch) => {
 };
 
 export const toggleOrderApproval = (id, order_id) => async (dispatch) => {
-  try {
+    try {
     const res = await api.patch(`/order/toggle-order-approval/${id}/${order_id}`);
     dispatch({
       type: TOGGLE_ORDER_APPROVAL,
@@ -48,9 +48,10 @@ export const toggleOrderApproval = (id, order_id) => async (dispatch) => {
   }
 };
 
-export const toggletobeReturnOrder = (id, order_id) => async (dispatch) => {
+export const toggletobeReturnOrder = (id, order_id, remark = '', returnedAmount = '' ) => async (dispatch) => {
+  const body = JSON.stringify({ remark, returnedAmount });//required only if complete to tobereturned
   try {
-    const res = await api.patch(`/order/toggle-order-to-get-return/${id}/${order_id}`);
+    const res = await api.patch(`/order/toggle-order-to-get-return/${id}/${order_id}`,body);
     dispatch({
       type: TOGGLE_TOBERETURN_ORDER,
       payload: res.data,

@@ -21,7 +21,7 @@ const remarkSchema = mongoose.Schema({
         enum: ['dispatcher', 'admin', 'user', 'superadmin']
     },
     reason: {
-        type: String//product_tobereturned
+        type: String//product_tobereturned,cancel_order_by_admin, cancel_order_by_user, disapprove_product
     }
 }, { timestamps: true });
 module.exports = mongoose.model('remark', remarkSchema);
