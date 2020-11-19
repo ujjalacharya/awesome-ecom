@@ -3,6 +3,11 @@
   @media screen and (max-width: 767px) {
     border: 0px;
   }
+  &.noDisplayMobAndTab {
+    @media screen and (max-width: 767px) {
+      display: none;
+    }
+  }
   .filter-title {
     font-size: 16px;
     font-weight: bold;

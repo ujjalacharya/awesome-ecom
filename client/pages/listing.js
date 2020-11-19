@@ -41,7 +41,6 @@ class Listing extends Component {
   };
 
   onCloseFilter = () => {
-    console.log('hey')
     this.setState({
       visibleFilter: false,
     });
@@ -358,7 +357,8 @@ class Listing extends Component {
             height="100vh"
           >
             <Filter
-              removeThisFilter="noDisplayMobAndTab"
+              removeThisFilter="displayMobAndTab"
+              removeThisTitle="noDisplay"
               data={this.props.getSearchFilter}
               onCheckBrands={this.onCheckBrands}
               checkedBrands={this.state.checkedBrands}

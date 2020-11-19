@@ -70,7 +70,7 @@ class MobileHeader extends Component {
       <div className="mobile-header">
         <div className="menu-logo">
           <div className="burger-menu" onClick={this.showDrawer}>
-            <i class="fa fa-bars" aria-hidden="true"></i>
+            <i className="fa fa-bars" aria-hidden="true"></i>
           </div>
           <Link href="/">
             <div className="logo">
@@ -79,7 +79,7 @@ class MobileHeader extends Component {
           </Link>
         </div>
         <div className="search-mob">
-          <i class="fa fa-search" aria-hidden="true"></i>
+          <i className="fa fa-search" aria-hidden="true"></i>
         </div>
         <MenuDrawer
           showDrawer={this.state.visible}

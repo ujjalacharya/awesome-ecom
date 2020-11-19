@@ -123,7 +123,7 @@ class Listing extends Component {
               visible={this.state.visibleSort}
               className="showSortDrawer"
             >
-              <Filter removeThisFilter="noDisplayMobAndTab" data={this.props.allBrands} />
+              <Filter removeThisFilter="displayMobAndTab" data={this.props.allBrands} />
               {/* <div className="show-sort-by">
                 <ul>
                   <li
