@@ -56,14 +56,14 @@ class MyWishlist extends Component {
 
     if (
       this.props.wishlist.removeFromWishlistResp !==
-        prevProps.wishlist.removeFromWishlistResp &&
+      prevProps.wishlist.removeFromWishlistResp &&
       this.props.wishlist.removeFromWishlistResp
     ) {
       openNotification("Success", "Product removed from wishlist successfully");
       this.props.getWishListItems("page=1&perPage=10");
     }
-    
-    if(this.props.user.userProfile !== prevProps.user.userProfile && this.props.user.userProfile){
+
+    if (this.props.user.userProfile !== prevProps.user.userProfile && this.props.user.userProfile) {
       this.setState({
         userInfo: this.props.user.userProfile
       })
@@ -139,26 +139,28 @@ class MyWishlist extends Component {
         title: "Action",
         key: "action",
         render: (text) => (
-          <Space size="middle">
-            <Popconfirm
-              title="Are you sure delete this from wishlist?"
-              onConfirm={() => this.props.removeFromWishList(text.key)}
-              // onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
-            >
-              <a className="action-btn action-btn-delete">
-                <i className="fa fa-trash-o" aria-hidden="true"></i> Delete
+          <>
+            <div>
+              <Popconfirm
+                title="Are you sure delete this from wishlist?"
+                onConfirm={() => this.props.removeFromWishList(text.key)}
+                // onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <a className="action-btn action-btn-delete">
+                  <i className="fa fa-trash-o" aria-hidden="true"></i> Delete
               </a>
-            </Popconfirm>
+              </Popconfirm>
+            </div>
 
-            <a
+            <div style={{minWidth: 100, marginTop: 10}}><a
               className="action-btn action-btn-add"
               onClick={() => this.props.addToCart(text.slug, { quantity: 1 })}
             >
               <i className="fa fa-plus" aria-hidden="true"></i> Add to Cart
-            </a>
-          </Space>
+            </a></div>
+          </>
         ),
       },
     ];
@@ -167,7 +169,7 @@ class MyWishlist extends Component {
 
     wishlists?.map((item) => {
       let discountedPrice = getDiscountedPrice(
-        item.product.price,
+        item.product.price.$numberDecimal,
         item.product.discountRate
       );
 

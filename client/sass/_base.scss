@@ -357,6 +357,10 @@ input.inputfile + label {
   justify-content: center;
 }
 
+.ant-table-tbody>tr>td, .ant-table-thead>tr>th, .ant-table tfoot>tr>td, .ant-table tfoot>tr>th{
+  padding: 10px !important;
+}
+
 
 
 

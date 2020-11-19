@@ -1,10 +1,14 @@
 // .my-wishlist {
-  table {
-    .ant-table-cell {
-      max-width: 135px;
-      // overflow: hidden;
-      // white-space: nowrap;
-      // text-overflow: ellipsis;
-    }
+table {
+  .ant-table-cell {
+    max-width: 135px;
+    // overflow: hidden;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
   }
+  a.item-title {
+    max-width: 300px !important;
+    display: block;
+  }
+}
 // }
