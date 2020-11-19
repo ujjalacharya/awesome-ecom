@@ -252,7 +252,7 @@ class ProductSpecs extends Component {
               )
             ) : (
               <Link href={`/login?origin=${this.props.router.asPath}`}>
-                <a style={{ display: "flex", alignItems: "center" }}>
+                <a className="qty-btn">
                   <div className="qty">
                     <span className="qty-title">Qty:</span>
                     <span className="qty-inc-dcs">

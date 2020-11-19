@@ -7,7 +7,7 @@ import { getChildCategories, getUserInfo } from "../../utils/common";
 import Link from "next/link";
 
 class MobileHeader extends Component {
-  state = { visible: false };
+  state = { visible: false, loginToken: '' };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.token !== nextProps.authentication.token) {
@@ -64,7 +64,7 @@ class MobileHeader extends Component {
   };
 
   render() {
-    let { parentCate } = this.state;
+    let { parentCate, loginToken } = this.state;
 
     return (
       <div className="mobile-header">
@@ -78,8 +78,34 @@ class MobileHeader extends Component {
             </div>
           </Link>
         </div>
-        <div className="search-mob">
-          <i className="fa fa-search" aria-hidden="true"></i>
+        <div className="mob-menu-items">
+          <Link href="/myprofile">
+            <a>
+              <div className="menu-right-items">
+                <div className="list-icon">
+                  <img src="/images/user.png" />
+                </div>
+                <div className="list-text">
+                  {loginToken ? "Profile" : "Login"}
+                </div>
+              </div>
+            </a>
+          </Link>
+          <div className="menu-right-items">
+            <div className="menu-right-items">
+              <div className="list-icon">
+                <img src="/images/bag.png" />
+              </div>
+              <Link href="/cart">
+                <a>
+                  <div className="list-text">Cart</div>
+                </a>
+              </Link>
+            </div>
+          </div>
+          <div className="search-mob">
+            <i className="fa fa-search" aria-hidden="true"></i>
+          </div>
         </div>
         <MenuDrawer
           showDrawer={this.state.visible}
