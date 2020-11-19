@@ -9,6 +9,7 @@ import Filter from "../src/Includes/Listing/Filter";
 import actions from "../redux/actions";
 import { withRouter } from "next/router";
 import { getFilterAppendBody } from "../utils/common";
+import SortBy from "../src/Includes/Listing/SortBy";
 
 class Listing extends Component {
   state = {
@@ -316,7 +317,7 @@ class Listing extends Component {
                     Page {this.state.currentPage} of{" "}
                     {Math.ceil(
                       this.props.data &&
-                        this.props.data.totalCount / this.props.perPage
+                      this.props.data.totalCount / this.props.perPage
                     )}
                   </div>
                   <Pagination
@@ -333,7 +334,7 @@ class Listing extends Component {
               <Col span={12}>
                 <div className="filter-type" onClick={this.showDrawerSort}>
                   <i class="fa fa-sort" aria-hidden="true"></i>
-                  <span>Sort By</span>
+                  {" "}<span>Sort By</span>
                 </div>
               </Col>
               <Col span={12}>
@@ -342,7 +343,7 @@ class Listing extends Component {
                   onClick={this.showDrawerFiter}
                 >
                   <i class="fa fa-filter" aria-hidden="true"></i>
-                  <span>Filter</span>
+                  {" "}<span>Filter</span>
                 </div>
               </Col>
             </Row>
@@ -383,8 +384,11 @@ class Listing extends Component {
             onClose={this.onCloseSort}
             visible={this.state.visibleSort}
             className="showSortDrawer"
-            height="100vh"
-          ></Drawer>
+            height="40vh"
+          >
+            <SortBy
+              closeThisFilter={this.onCloseSort} />
+          </Drawer>
         </section>
       </div>
     );

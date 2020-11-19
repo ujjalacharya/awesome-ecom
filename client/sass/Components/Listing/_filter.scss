@@ -71,3 +71,20 @@
     }
   }
 }
+
+.showSortDrawer {
+  .ant-drawer-body {
+    padding: 0;
+    ul.sort-filter {
+      li {
+        list-style: none;
+        padding: 15px 25px;
+        font-size: 15px;
+        border-bottom: 1px solid #eee;
+        &:last-child {
+          border: 0px;
+        }
+      }
+    }
+  }
+}
