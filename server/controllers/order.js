@@ -47,6 +47,9 @@ exports.order = async (req, res, next) => {
     .populate({
       path: "status.cancelledDetail.remark",
       model: "remark",
+      // match:{
+      //   isDeleted:null
+      // }
     })
     //not working..
     // .populate({
@@ -72,6 +75,9 @@ exports.order = async (req, res, next) => {
     .populate({
       path: "status.returnedDetail.remark",
       model: "remark",
+      match: {
+        isDeleted: null
+      }
     });
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
@@ -426,27 +432,26 @@ exports.orderCancelByAdmin = async (req, res) => {
   if (order.soldBy._id.toString() !== req.profile._id.toString()) {
     return res.status(401).json({ error: "Unauthorized Admin" });
   }
+  if (order.status.currentStatus === "cancel") {
+    return res.status(403).json({ error: "Order has already been cancelled." });
+  }
   if (
-    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "active" &&
     order.status.currentStatus !== "approve"
   ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
     });
   }
-  if (order.status.currentStatus === "cancel") {
-    return res.status(403).json({ error: "Order has already been cancelled." });
-  }
   const newRemark = new Remark({ 
-    comment: req.body.remark ,
-    createdBy: req.admin._id, //as it may be superadmin as well,
-    reason: 'cancel_order_by_admin'
+    comment: req.body.remark 
   });
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "cancel";
   updateOrder.status.cancelledDetail.cancelledDate = Date.now();
-  (updateOrder.status.cancelledDetail.cancelledBy = req.profile._id),
-    (updateOrder.status.cancelledDetail.remark = newRemark._id);
+  updateOrder.status.cancelledDetail.cancelledBy = req.profile._id
+  updateOrder.status.cancelledDetail.remark = newRemark._id
+
   let product = await Product.findById(order.product._id);
   let updateProduct = product.toObject();
   updateProduct.quantity = order.quantity + product.quantity;
@@ -467,23 +472,23 @@ exports.orderCancelByUser = async (req, res) => {
   if (order.user._id.toString() !== req.user._id.toString()) {
     return res.status(401).json({ error: "Unauthorized User" });
   }
+  if (order.status.currentStatus === "cancel") {
+    return res.status(403).json({ error: "Order has already been cancelled." });
+  }
   if (
-    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "active" &&
     order.status.currentStatus !== "approve"
-  ) {
+    ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
     });
   }
-  if (order.status.currentStatus === "cancel") {
-    return res.status(403).json({ error: "Order has already been cancelled." });
-  }
-  const newRemark = new Remark({ comment: req.body.remark,createdBy:req.user._id,reason:'order_cancel_by_user' });
+  const newRemark = new Remark({ comment: req.body.remark});
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "cancel";
   updateOrder.status.cancelledDetail.cancelledDate = Date.now();
-  (updateOrder.status.cancelledDetail.cancelledBy = req.user._id),
-    (updateOrder.status.cancelledDetail.remark = newRemark._id);
+  updateOrder.status.cancelledDetail.cancelledBy = req.user._id
+  updateOrder.status.cancelledDetail.remark = newRemark._id
 
   let product = await Product.findById(order.product._id);
   let updateProduct = product.toObject();
@@ -633,11 +638,9 @@ exports.toggletobeReturnOrder = async (req, res) => {
     updateOrder.status.tobereturnedDate = Date.now();
     
     let remark = new Remark({
-      comment:req.body.remark,
-      createdBy: req.admin._id,//as it may be superadmin as well
-      reason:'product_tobereturned'//it is system keyword
+      comment:req.body.remark
     })
-    updateOrder.status.returnedDetail.remark = remark._id
+    updateOrder.status.returnedDetail.remark.push(remark._id)
 
     updatePayment.returnedAmount = req.body.returnedAmount;
 
@@ -646,20 +649,16 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .options({ viaSave: true })
       .update(payment, updatePayment)
       .options({ viaSave: true })
-      .save(Remark, remark)
+      .save(remark)
       .run({ useMongoose: true });
     return res.json(results);
   }
   if (order.status.currentStatus === "tobereturned") {
     updateOrder.status.currentStatus = "complete";
     updateOrder.status.tobereturnedDate = null;
-    updateOrder.status.returnedDetail.remark = undefined
-
-
-    let remark = await Remark.findById(order.status.returnedDetail.remark)
+    let remark = await Remark.findById(order.status.returnedDetail.remark[0])
     let updateRemark = remark.toObject()
     updateRemark.isDeleted = Date.now()
-    updateRemark.deletedBy = req.admin._id//as it may be superadmin as well
 
     updatePayment.returnedAmount = undefined;
     let results = await task

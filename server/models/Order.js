@@ -100,10 +100,10 @@ const orderSchema = new mongoose.Schema({
                 type: Schema.Types.ObjectId,
                 ref: 'dispatcher'
             },
-            remark: {
+            remark: [{
                 type: Schema.Types.ObjectId,
                 ref: 'remark'
-            },
+            }],
         },
     },
     shipto:{

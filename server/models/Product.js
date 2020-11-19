@@ -106,10 +106,10 @@ const productSchema = mongoose.Schema({
         type: String,
         unique: true
     },
-    remark: {
+    remark: [{
         type: Schema.Types.ObjectId,
         ref: 'remark'
-    },
+    }],
 }, { timestamps: true });
 productSchema.plugin(URLSlugs('name', { field: 'slug', update: true }));
 module.exports = mongoose.model("product", productSchema);
