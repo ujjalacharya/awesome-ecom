@@ -24,10 +24,18 @@ exports.order = async (req, res, next) => {
   const order = await Order.findById(req.params.order_id)
     .populate("user", "-password -salt -resetPasswordLink -emailVerifyLink")
     .populate("payment", "-user -order")
-    .populate(
-      "product",
-      "_id slug name slug category brand return isVerified isDeleted warranty quantity"
-    )
+  //   .populate(
+  //     "product",
+  //     "_id slug name slug category brand return isVerified isDeleted warranty quantity"
+  // )
+  .populate({
+    path: "product",
+    select: "name slug images price _id category brand return isVerified isDeleted warranty quantity",
+    populate: {
+      path: "images",
+      model: "productimages",
+    },
+  })
     .populate({
       path: "soldBy",
       select:"name shopName address isVerified isBlocked holidayMode photo email",
@@ -39,6 +47,9 @@ exports.order = async (req, res, next) => {
     .populate({
       path: "status.cancelledDetail.remark",
       model: "remark",
+      // match:{
+      //   isDeleted:null
+      // }
     })
     //not working..
     // .populate({
@@ -64,6 +75,9 @@ exports.order = async (req, res, next) => {
     .populate({
       path: "status.returnedDetail.remark",
       model: "remark",
+      match: {
+        isDeleted: null
+      }
     });
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
@@ -90,7 +104,7 @@ exports.adminOrder = (req, res) => {
   if (order.soldBy._id.toString() !== req.profile._id.toString()) {
     return res.status(401).json({ error: "Unauthorized Admin." });
   }
-  order.soldBy = undefined;
+  order.soldBy = order.soldBy._id;
   res.json(order);
 };
 
@@ -401,14 +415,14 @@ exports.toggleOrderApproval = async (req, res) => {
     order.status.currentStatus = "approve";
     order.status.approvedDate = Date.now();
     await order.save();
-    order.soldBy = undefined;
+    order.soldBy = order.soldBy._id
     return res.json(order);
   }
   if (order.status.currentStatus === "approve") {
     order.status.currentStatus = "active";
     order.status.approvedDate = null;
     await order.save();
-    order.soldBy = undefined;
+    order.soldBy = order.soldBy._id
     return res.json(order);
   }
 };
@@ -418,23 +432,26 @@ exports.orderCancelByAdmin = async (req, res) => {
   if (order.soldBy._id.toString() !== req.profile._id.toString()) {
     return res.status(401).json({ error: "Unauthorized Admin" });
   }
+  if (order.status.currentStatus === "cancel") {
+    return res.status(403).json({ error: "Order has already been cancelled." });
+  }
   if (
-    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "active" &&
     order.status.currentStatus !== "approve"
   ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
     });
   }
-  if (order.status.currentStatus === "cancel") {
-    return res.status(403).json({ error: "Order has already been cancelled." });
-  }
-  const newRemark = new Remark({ comment: req.body.remark });
+  const newRemark = new Remark({ 
+    comment: req.body.remark 
+  });
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "cancel";
   updateOrder.status.cancelledDetail.cancelledDate = Date.now();
-  (updateOrder.status.cancelledDetail.cancelledBy = req.profile._id),
-    (updateOrder.status.cancelledDetail.remark = newRemark._id);
+  updateOrder.status.cancelledDetail.cancelledBy = req.profile._id
+  updateOrder.status.cancelledDetail.remark = newRemark._id
+
   let product = await Product.findById(order.product._id);
   let updateProduct = product.toObject();
   updateProduct.quantity = order.quantity + product.quantity;
@@ -455,23 +472,23 @@ exports.orderCancelByUser = async (req, res) => {
   if (order.user._id.toString() !== req.user._id.toString()) {
     return res.status(401).json({ error: "Unauthorized User" });
   }
+  if (order.status.currentStatus === "cancel") {
+    return res.status(403).json({ error: "Order has already been cancelled." });
+  }
   if (
-    order.status.currentStatus !== "active" ||
+    order.status.currentStatus !== "active" &&
     order.status.currentStatus !== "approve"
-  ) {
+    ) {
     return res.status(403).json({
       error: `This order is in ${order.status.currentStatus} state, cannot be cancelled.`,
     });
   }
-  if (order.status.currentStatus === "cancel") {
-    return res.status(403).json({ error: "Order has already been cancelled." });
-  }
-  const newRemark = new Remark({ comment: req.body.remark });
+  const newRemark = new Remark({ comment: req.body.remark});
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "cancel";
   updateOrder.status.cancelledDetail.cancelledDate = Date.now();
-  (updateOrder.status.cancelledDetail.cancelledBy = req.user._id),
-    (updateOrder.status.cancelledDetail.remark = newRemark._id);
+  updateOrder.status.cancelledDetail.cancelledBy = req.user._id
+  updateOrder.status.cancelledDetail.remark = newRemark._id
 
   let product = await Product.findById(order.product._id);
   let updateProduct = product.toObject();
@@ -572,27 +589,27 @@ exports.toggleCompleteOrder = async (req, res) => {
 
 exports.returnOrder = async (req, res) => {
   let order = req.order;
-  if (order.status.currentStatus !== "tobereturn") {
+  if (order.status.currentStatus !== "tobereturned") {
     return res.status(403).json({
       error: `This order cannot be returned. Order current status is ${order.status.currentStatus}`,
     });
   }
-  const newRemark = new Remark({ comment: req.body.remark });
+  // const newRemark = new Remark({ comment: req.body.remark });
 
   let updateOrder = order.toObject();
   updateOrder.status.currentStatus = "return";
   updateOrder.status.returnedDetail.returnedDate = Date.now();
-  updateOrder.status.returnedDetail.remark = newRemark._id;
+  // updateOrder.status.returnedDetail.remark = newRemark._id;
   updateOrder.status.returnedDetail.returneddBy = req.dispatcher._id;
-  let product = await Product.findById(order.product._id);
-  let updateProduct = product.toObject();
+  // let product = await Product.findById(order.product._id);
+  // let updateProduct = product.toObject();
 
   let results = await task
-    .save(newRemark)
+    // .save(newRemark)
     .update(order, updateOrder)
     .options({ viaSave: true })
-    .update(product, updateProduct)
-    .options({ viaSave: true })
+    // .update(product, updateProduct)
+    // .options({ viaSave: true })
     .run({ useMongoose: true });
   return res.json(results);
 };
@@ -601,18 +618,29 @@ exports.toggletobeReturnOrder = async (req, res) => {
   let order = req.order;
   if (
     order.status.currentStatus !== "complete" &&
-    order.status.currentStatus !== "tobereturn"
+    order.status.currentStatus !== "tobereturned"
   ) {
     return res.status(403).json({
       error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}`,
     });
   }
-  let updateOrder = order.toObject();
+  let updateOrder = await Order.findById(order._id)
+  updateOrder = updateOrder.toObject();
   let payment = await Payment.findById(order.payment._id);
   let updatePayment = payment.toObject();
+
   if (order.status.currentStatus === "complete") {
-    updateOrder.status.currentStatus = "tobereturn";
+    if (!req.body.remark) {
+      return res.status(403).json({error: "Remark is required."})
+    }
+
+    updateOrder.status.currentStatus = "tobereturned";
     updateOrder.status.tobereturnedDate = Date.now();
+    
+    let remark = new Remark({
+      comment:req.body.remark
+    })
+    updateOrder.status.returnedDetail.remark.push(remark._id)
 
     updatePayment.returnedAmount = req.body.returnedAmount;
 
@@ -621,18 +649,24 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .options({ viaSave: true })
       .update(payment, updatePayment)
       .options({ viaSave: true })
+      .save(remark)
       .run({ useMongoose: true });
     return res.json(results);
   }
-  if (order.status.currentStatus === "tobereturn") {
+  if (order.status.currentStatus === "tobereturned") {
     updateOrder.status.currentStatus = "complete";
     updateOrder.status.tobereturnedDate = null;
+    let remark = await Remark.findById(order.status.returnedDetail.remark[0])
+    let updateRemark = remark.toObject()
+    updateRemark.isDeleted = Date.now()
 
     updatePayment.returnedAmount = undefined;
     let results = await task
       .update(payment, updatePayment)
       .options({ viaSave: true })
       .update(order, updateOrder)
+      .options({ viaSave: true })
+      .update(remark, updateRemark)
       .options({ viaSave: true })
       .run({ useMongoose: true });
     return res.json(results);

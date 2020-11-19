@@ -1,10 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { View, Image, ScrollView, RefreshControl } from "react-native";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import HomeHeader from "./HomeHeader";
 
-import { jorneyAction } from "../../store/actions/journey_actions";
 import SearchView from "./SearchView";
 import MainCarousel from "./MainCarousel";
 import FeaturedProducts from "./FeaturedProducts";
@@ -44,7 +41,7 @@ const HomeScreen = (props) => {
           <MainCarousel />
         </View>
         <View style={{ flex: 2 }}>
-          <FeaturedProducts title={"Featured Products"} />
+          <FeaturedProducts title={"Latest Products"} type="latest"/>
         </View>
         <View style={{ flex: 1 }}>
           <Image
@@ -53,21 +50,22 @@ const HomeScreen = (props) => {
           ></Image>
         </View>
         <View style={{ flex: 2 }}>
-          <FeaturedProducts title={"Latest Products"} />
+          <FeaturedProducts title={"Featured Products"} />
         </View>
       </View>
     </ScrollView>
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    Journey: state.Journey.journey_store,
-  };
-}
+// function mapStateToProps(state) {
+//   return {
+//     Journey: state.Journey.journey_store,
+//   };
+// }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ jorneyAction }, dispatch);
-}
+// function mapDispatchToProps(dispatch) {
+//   return bindActionCreators({ jorneyAction }, dispatch);
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+// export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default HomeScreen;

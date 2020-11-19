@@ -82,6 +82,15 @@ const orderSchema = new mongoose.Schema({
             type: Date,
             default: null
         },
+        // tobeReturnedDetail: {
+        //     tobereturnedDate: {
+        //         type: Date
+        //     },
+        //     remark: {
+        //         type: Schema.Types.ObjectId,
+        //         ref: 'remark'
+        //     },
+        // },        
         returnedDetail: {
             returnedDate: {
                 type: Date,
@@ -91,10 +100,10 @@ const orderSchema = new mongoose.Schema({
                 type: Schema.Types.ObjectId,
                 ref: 'dispatcher'
             },
-            remark: {
+            remark: [{
                 type: Schema.Types.ObjectId,
                 ref: 'remark'
-            },
+            }],
         },
     },
     shipto:{

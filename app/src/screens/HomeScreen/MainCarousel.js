@@ -1,32 +1,44 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { View, Image, StyleSheet } from "react-native";
 
 import Swiper from "react-native-swiper";
-import { bannerData } from "../../utils/mock";
 import Constants from "../../constants/Constants";
+import { getBannerImages } from "../../../redux/actions/otherActions";
+import { SERVER_BASE_URL } from "../../../redux/services/productService";
 
-class MainCarousel extends Component {
-  render() {
-    return (
-      <Swiper
-        style={styles.wrapper}
-        showsButtons={true}
-        autoplay={true}
-        dot={<View style={styles.dot} />}
-        activeDot={<View style={styles.activeDot} />}
-        showsButtons={false}
-      >
-        {bannerData.map((product) => {
-          return (
-            <View style={styles.slide1} key={product.id}>
-              <Image style={styles.image} source={product.image} />
+const MainCarousel = () => {
+  const dispatch = useDispatch();
+  const bannerImages = useSelector(({ other }) => other.getBannerImages);
+
+  useEffect(() => {
+    dispatch(getBannerImages());
+  }, [dispatch]);
+
+  return (
+    <Swiper
+      style={styles.wrapper}
+      showsButtons={true}
+      autoplay={true}
+      dot={<View style={styles.dot} />}
+      activeDot={<View style={styles.activeDot} />}
+      showsButtons={false}
+    >
+      {bannerImages
+        ? bannerImages?.banners.map((banner) => (
+            <View style={styles.slide1} key={banner._id}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: SERVER_BASE_URL + "/uploads/" + banner.bannerPhoto,
+                }}
+              />
             </View>
-          );
-        })}
-      </Swiper>
-    );
-  }
-}
+          ))
+        : [0, 0, 0, 0, 0, 0, 0].map((_, i) => <View key={i}></View>)}
+    </Swiper>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

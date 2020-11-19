@@ -25,7 +25,19 @@ io.origins([`${process.env.ADMIN_CRM_ROUTE}`])
 
 
 // Middlewares
-app.use(cors());
+var allowlist = ['http://localhost:3000', 'http://localhost:3003', 'http://localhost:3002']
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
+
+app.use(cors(corsOptionsDelegate));
+
 app.use((req,res,next)=>{
     req.io = io
     next()

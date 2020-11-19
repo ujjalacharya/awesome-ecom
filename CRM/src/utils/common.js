@@ -3,7 +3,7 @@ import socketIOClient from "socket.io-client";
 import { JWT_SIGNIN_KEY, accessTokenKey, SERVER_URL } from "./config";
 var socketUser
 export const socket = () => {
-  socketUser = socketIOClient(SERVER_URL)
+  socketUser = socketIOClient(SERVER_URL, { transport : ['websocket'] })
   return socketUser
 };
 

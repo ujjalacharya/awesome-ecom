@@ -145,6 +145,7 @@ const FilterModal = (props) => {
                   mode="outlined"
                   placeholder={item}
                   keyboardType="number-pad"
+                  key={i}
                 />
               ))}
             </View>

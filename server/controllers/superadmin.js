@@ -483,7 +483,13 @@ exports.flipCategoryAvailablity = async (req, res) => {
     res.json(category)
 }
 exports.approveProduct = async (req, res) => {
-    const product = await Product.findOne({ slug: req.params.p_slug })
+    const product = await (await Product.findOne({ slug: req.params.p_slug })).populated({
+        path: "remark",
+        model: "remark",
+        match:{
+          isDeleted:null
+        }
+    })
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
@@ -514,7 +520,7 @@ exports.approveProduct = async (req, res) => {
         await Promise.all(Keywords)
     }
 
-    if (!product.remark) {
+    if (!product.remark.length) {
         const updateProduct = product.toObject()
         updateProduct.isVerified = Date.now()
         addBrandToCategory(updateProduct.brand, categories)
@@ -527,7 +533,7 @@ exports.approveProduct = async (req, res) => {
     }
 
 
-    const remark = await Remark.findById(product.remark)
+    const remark = await Remark.findById(product.remark[0])
     const updateRemark = remark.toObject()
     updateRemark.isDeleted = Date.now()
 
@@ -549,10 +555,12 @@ exports.disApproveProduct = async (req, res) => {
     if (!product) {
         return res.status(404).json({ error: "Product not found" })
     }
-    const newRemark = new Remark(req.body)
+    const newRemark = new Remark({
+        comment:req.body.comment
+    })
     const updateProduct = product.toObject()
     updateProduct.isVerified = null
-    updateProduct.remark = newRemark._id
+    updateProduct.remark.push(newRemark._id)
     const results = await task
         .save(newRemark)
         .update(product, updateProduct)

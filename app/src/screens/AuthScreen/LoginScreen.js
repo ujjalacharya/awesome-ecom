@@ -9,7 +9,7 @@ import BackButton from '../../components/BackButton';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { signIn } from "../../store/actions/user_actions";
+// import { signIn } from "../../store/actions/user_actions";
 // import { emailValidator, passwordValidator } from '../core/utils';
 
 const LoginScreen = ({ navigation, ...props }) => {
@@ -27,7 +27,7 @@ const LoginScreen = ({ navigation, ...props }) => {
     // }
 
     // navigation.navigate('Dashboard');
-    props.signIn("fdf");
+    // props.signIn("fdf");
 
   };
 
@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    isAuth: state.User.auth.isAuth,
+    isAuth: state.authentication,
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ signIn }, dispatch);
-}
+// function mapDispatchToProps(dispatch) {
+//   return bindActionCreators({ signIn }, dispatch);
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
+export default connect(mapStateToProps, null)(LoginScreen);
