@@ -7,11 +7,11 @@ import Gallery from "react-native-image-gallery";
 
 import ProductDetailHeader from "./ProductDetailHeader";
 import Constants from "../../constants/Constants";
-import { galleryImages } from "../../utils/mock";
 
 import ProductDetailFooter from "./ProductDetailFooter";
 import ProductDescription from "./ProductDescription";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
+import { SERVER_BASE_URL } from "../../../redux/services/productService";
 
 const ProductDetailScreen = (props) => {
   const { productDetails, productDetailsLoading } = useSelector(
@@ -31,6 +31,13 @@ const ProductDetailScreen = (props) => {
   };
 
   const newProps = { ...props, productDetails, loading: productDetailsLoading };
+
+  const galleryImage = productDetails?.product.images.map((prod) => ({
+    source: {
+      uri: `${SERVER_BASE_URL + "/uploads/" + prod.large}`,
+    },
+  }));
+
   return (
     <View style={{ flex: 1 }}>
       {state.showGallery ? (
@@ -50,7 +57,7 @@ const ProductDetailScreen = (props) => {
             useNativeDriver={true}
             style={{ flex: 1, backgroundColor: "#696969" }}
             initialPage={0}
-            images={galleryImages}
+            images={galleryImage}
           />
         </View>
       ) : (
