@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import OrderStatus from './OrderStatus';
 import { cancelOrder } from '../../../redux/actions/order_actions'
 
-const OrderDetail = ({ order, singleLoading }) => {
+const OrderDetail = ({ order, singleLoading, isOrderDetailOpen }) => {
     function onChange(a, b, c) {
         // console.log(a, b, c);
     }
@@ -78,8 +78,8 @@ const OrderDetail = ({ order, singleLoading }) => {
                                 <div className="col-md-6 text-md-right">
                                     <p>
                                     {order?.orderID} <br />
-                                        <OrderStatus status={order?.status?.currentStatus} order_id={order?._id} admin_id={order?.soldBy} />
-                                         <br /> {order?.quantity} <br /> {order && moment(order?.createdAt).format('ddd mm yyyy')} <br />
+                                        <OrderStatus isOrderDetailOpen={isOrderDetailOpen} status={order?.status?.currentStatus} order_id={order?._id} admin_id={order?.soldBy} />
+                                    <br /> {order?.quantity} <br /> {order && moment(order?.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")} <br />
                                     </p>
                                 </div>
                             </div>
@@ -98,7 +98,18 @@ const OrderDetail = ({ order, singleLoading }) => {
                             </div>
                             <div className="col-md-6 text-md-right">
                                 <p>
-                                    {order?.payment?.transactionCode}<br />{order && (order?.isPaid ? "Yes" : "No")} <br /> {order?.payment?.method}<br/> {order?.payment?.shippingCharge} <br/> {order?.payment?.amount} <br /> {order?.payment?.returnedAmount} <br />
+                                    {order?.payment?.transactionCode}
+                                    <br />
+                                    {
+                                        order && (order?.isPaid ? <span className="badge badge-pill badge-success">yes</span> :
+                                     <span className="badge badge-pill badge-danger">no</span>)
+                                     }
+                                      <br /> {order?.payment?.method}
+
+                                      <br/> {order?.payment?.shippingCharge} 
+
+                                      <br/> {order?.payment?.amount} 
+                                      <br /> {order?.payment?.returnedAmount} <br />
                                 </p>
                             </div>
                         </div>

@@ -226,7 +226,7 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         closable
         closeIcon={<i className="fas fa-times btn btn-danger"></i>}
     >
-        <OrderDetail  />
+        <OrderDetail isOrderDetailOpen={isDrawerOpen} />
     </Drawer>
     {/* <Modal
         title="Order Detail"

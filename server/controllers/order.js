@@ -47,9 +47,9 @@ exports.order = async (req, res, next) => {
     .populate({
       path: "status.cancelledDetail.remark",
       model: "remark",
-      // match:{
-      //   isDeleted:null
-      // }
+      match:{
+        isDeleted:null
+      }
     })
     //not working..
     // .populate({
@@ -651,6 +651,7 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .options({ viaSave: true })
       .save(remark)
       .run({ useMongoose: true });
+    // return res.redirect(`/api/admin-order/${req.profile._id}/${order._id}`)
     return res.json(results);
   }
   if (order.status.currentStatus === "tobereturned") {
@@ -662,13 +663,14 @@ exports.toggletobeReturnOrder = async (req, res) => {
 
     updatePayment.returnedAmount = undefined;
     let results = await task
-      .update(payment, updatePayment)
-      .options({ viaSave: true })
       .update(order, updateOrder)
+      .options({ viaSave: true })
+      .update(payment, updatePayment)
       .options({ viaSave: true })
       .update(remark, updateRemark)
       .options({ viaSave: true })
       .run({ useMongoose: true });
+    // return res.redirect(`/api/admin-order/${req.profile._id}/${order._id}`)
     return res.json(results);
   }
 };
