@@ -7,7 +7,7 @@ import { getChildCategories, getUserInfo } from "../../utils/common";
 import Link from "next/link";
 
 class MobileHeader extends Component {
-  state = { visible: false, loginToken: '' };
+  state = { visible: false, loginToken: this.props.authentication.token || '' };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.token !== nextProps.authentication.token) {
@@ -15,6 +15,7 @@ class MobileHeader extends Component {
       if (nextProps.authentication.token) {
         userInfo = getUserInfo(loginToken);
       }
+      console.log(nextProps)
       this.setState({
         loginToken: nextProps.authentication.token,
         userInfo,
@@ -92,24 +93,24 @@ class MobileHeader extends Component {
             </a>
           </Link>
           <div className="menu-right-items">
-              <div className="list-icon">
-                <img src="/images/bag.png" />
-              </div>
-              <Link href="/cart">
-                <a>
-                  <div className="list-text">Cart</div>
-                </a>
-              </Link>
+            <div className="list-icon">
+              <img src="/images/bag.png" />
+            </div>
+            <Link href="/cart">
+              <a>
+                <div className="list-text">Cart</div>
+              </a>
+            </Link>
           </div>
           <div className="menu-right-items search-right">
-              <div className="list-icon">
-                <img src="/images/search-icon.png" />
-              </div>
-              <Link href="/cart">
-                <a>
-                  <div className="list-text">Search</div>
-                </a>
-              </Link>
+            <div className="list-icon">
+              <img src="/images/search-icon.png" />
+            </div>
+            <Link href="/cart">
+              <a>
+                <div className="list-text">Search</div>
+              </a>
+            </Link>
           </div>
           {/* <div className="search-mob">
             <i className="fa fa-search" aria-hidden="true"></i>
