@@ -361,14 +361,63 @@ input.inputfile + label {
   justify-content: center;
 }
 
-.ant-table-tbody>tr>td, .ant-table-thead>tr>th, .ant-table tfoot>tr>td, .ant-table tfoot>tr>th{
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th,
+.ant-table tfoot > tr > td,
+.ant-table tfoot > tr > th {
   padding: 10px !important;
 }
 
-.ant-tabs-bar{
+.ant-tabs-bar {
   z-index: 9;
   background: #fff;
 }
 
+.table-wrapper {
+  table thead tr th:first-child, table tbody tr td:first-child {
+    @media (min-width: 1023px) {
+      display: none;
+    }
+  }
+  @media (max-width: 1023px) {
+    th {
+      display: none;
+    }
+    th:nth-child(1),
+    th:nth-child(2),
+    th:nth-child(3) {
+      display: table-cell;
+    }
+  }
+  tbody {
+    @media (max-width: 1023px) {
+      tr {
+        td {
+          display: none;
+        }
+        td:nth-child(1),
+        td:nth-child(2),
+        td:nth-child(3) {
+          display: table-cell;
+        }
+      }
+    }
+  }
+  .expanded-table {
+    tr {
+      td {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 10px;
+      }
+      &:last-child {
+        td {
+          border-bottom: 0px;
+        }
+      }
+    }
+  }
+}
 
-
+.ant-table-row-expand-icon {
+  height: 17px !important;
+}

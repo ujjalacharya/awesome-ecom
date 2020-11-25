@@ -99,6 +99,19 @@
     .orders-table {
       margin-top: 20px;
     }
+    .order-search{
+      width: 400px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+    .order-select{
+      width: 200px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+      }
+    }
   }
 
   .my-wishlist {

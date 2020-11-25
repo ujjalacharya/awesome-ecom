@@ -91,6 +91,7 @@ class MyOrders extends Component {
     );
   };
 
+
   render() {
     let { myOrders } = this.state;
 
@@ -200,17 +201,17 @@ class MyOrders extends Component {
       <div className="my-orders">
         <h3>My Orders</h3>
         <Row>
-          <Col lg={10}>
+          <Col lg={10} xs={24}>
             <Search
-              placeholder="input search text"
+              placeholder="Search By Item Name"
               onSearch={(value) => this.getSearch(value)}
-              style={{ width: 400 }}
+              className="order-search"
             />
           </Col>
-          <Col lg={8}>
+          <Col lg={8} xs={24}>
             <Select
               showSearch
-              style={{ width: 200 }}
+              className="order-select"
               placeholder="Select a status"
               defaultValue="All"
               optionFilterProp="children"
@@ -233,12 +234,51 @@ class MyOrders extends Component {
           <Col span={6}></Col>
         </Row>
         <Table
-          className="orders-table"
+          className="orders-table table-wrapper"
           columns={columns}
           dataSource={data}
           pagination={{ total: this.state.myOrders?.totalCount }}
           onChange={this.onChangePage}
           loading={this.state.loading}
+          expandable={{
+            expandedRowRender: (record) =>
+              <table className="expanded-table">
+                <tr>
+                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                  <td>Status</td>
+                  <td>{record.status.map((tag) => {
+                    let color = "";
+                    if (tag === "approve" || tag === "complete") {
+                      color = "green";
+                    } else if (tag === "cancelled") {
+                      color = "red";
+                    } else if (tag === "dispatch" || tag === "active") {
+                      color = "blue";
+                    }
+                    return (
+                      <Tag color={color} key={tag}>
+                        {tag.toUpperCase()}
+                      </Tag>
+                    );
+                  })}</td>
+                </tr>
+                <tr>
+                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                  <td>Qty</td>
+                  <td>{record.qty}</td>
+                </tr>
+                <tr>
+                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                  <td>Price</td>
+                  <td>{record.price}</td>
+                </tr>
+                <tr>
+                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                  <td>Sold By</td>
+                  <td>{record.soldBy}</td>
+                </tr>
+              </table>
+          }}
         />
       </div>
     );
