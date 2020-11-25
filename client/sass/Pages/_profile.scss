@@ -82,9 +82,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      @media screen and (max-width: 480px) {
+        margin-bottom: 15px;
+      }
     }
     .edit-address {
       margin-top: 25px;
+      @media screen and (max-width: 480px) {
+        margin: 0;
+      }
+      .ant-form-item{
+        @media screen and (max-width: 480px) {
+          margin: 0 0 5px;
+        }
+      }
     }
   }
 

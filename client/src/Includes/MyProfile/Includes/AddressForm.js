@@ -6,8 +6,8 @@ import actions from "../../../../redux/actions";
 import { openNotification } from "../../../../utils/common";
 
 const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
+  labelCol: { lg: 6, xs: 24},
+  wrapperCol: { lg: 18, xs: 24 },
 };
 const tailLayout = {
   wrapperCol: { span: 16 },
@@ -153,7 +153,7 @@ class AddressForm extends Component {
                   <Input />
                 </Form.Item>
               </Col> */}
-            <Col span={12}>
+            <Col lg={12} xs={24}>
               <Form.Item
                 label="Address"
                 name="address"
@@ -165,7 +165,7 @@ class AddressForm extends Component {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col lg={12} xs={24}>
               <Form.Item
                 label="Area"
                 name="area"
@@ -175,7 +175,7 @@ class AddressForm extends Component {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col lg={12} xs={24}>
               <Form.Item
                 label="City"
                 name="city"
@@ -186,7 +186,7 @@ class AddressForm extends Component {
               </Form.Item>
             </Col>
             {_.isEmpty(this.props.editAddressData) && (
-              <Col span={12}>
+              <Col lg={12} xs={24}>
                 <Form.Item
                   label="Label"
                   name="label"
@@ -199,7 +199,7 @@ class AddressForm extends Component {
                 </Form.Item>
               </Col>
             )}
-            <Col span={12}>
+            <Col lg={12} xs={24}>
               <Form.Item
                 label="Region"
                 name="region"
@@ -211,7 +211,7 @@ class AddressForm extends Component {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col lg={12} xs={24}>
               <Form.Item
                 label="Phone Number"
                 name="phoneno"
@@ -226,7 +226,7 @@ class AddressForm extends Component {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col lg={12} xs={24}>
               <Form.Item label="Geo Location">
                 <div style={{ display: "flex" }}>
                   <label style={{ marginRight: 10, width: 65 }}>
@@ -244,12 +244,12 @@ class AddressForm extends Component {
                     onChange={(e) => this.changeGeoLocation(e, "lat")}
                   />
                 </div>
-                <Button style={{ marginTop: 10 }} onClick={this.getMyLocation}>
+                <Button style={{ marginTop: 10, marginBottom: 10 }} onClick={this.getMyLocation}>
                   Get My Location
                 </Button>
               </Form.Item>
             </Col>
-            <Col span={24}>
+            <Col lg={24} xs={24}>
               <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit">
                   Submit
@@ -259,6 +259,7 @@ class AddressForm extends Component {
                   onClick={() => {
                     this.props.changeShow("table");
                   }}
+                  style={{marginLeft: 10}}
                 >
                   Cancel
                 </Button>

@@ -39,7 +39,7 @@ class AddressDetails extends Component {
     }
     if (
       this.props.user.toggleActiveAddResp !==
-        prevProps.user.toggleActiveAddResp &&
+      prevProps.user.toggleActiveAddResp &&
       this.props.user.toggleActiveAddResp
     ) {
       openNotification("Success", "Active address changed successfully");
@@ -183,28 +183,84 @@ class AddressDetails extends Component {
             )}
         </div>
         {this.state.show === "form" ||
-        this.state.showAddNewForm === "addForm" ? (
-          this.state.show === "form" ? (
-            <AddressForm
-              changeShow={this.changeShow}
-              editAddressData={this.state.editAddressData}
-              userId={this.state.userData._id}
-            />
+          this.state.showAddNewForm === "addForm" ? (
+            this.state.show === "form" ? (
+              <AddressForm
+                changeShow={this.changeShow}
+                editAddressData={this.state.editAddressData}
+                userId={this.state.userData._id}
+              />
+            ) : (
+                <AddressForm
+                  changeShow={this.changeShow}
+                  editAddressData={{}}
+                  userId=""
+                />
+              )
           ) : (
-            <AddressForm
-              changeShow={this.changeShow}
-              editAddressData={{}}
-              userId=""
+            <Table
+              className="orders-table table-wrapper"
+              columns={columns}
+              dataSource={data}
+              pagination={false}
+              loading={this.state.allAddress.length > 0 ? false : true} expandable={{
+                expandedRowRender: (record) =>
+                  <table className="expanded-table">
+                    <tbody>
+                      {
+                        Object.entries(record).map(([key, value], i) => {
+                          if (key !== 'key' && key !== 'fullname' && key !== 'label') {
+                            return (
+                              <tr key={i}>
+                                <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                                <td>{key}</td>
+                                <td>{value}</td>
+                              </tr>
+                            )
+                          }
+                        })
+                      }
+                      <tr>
+                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                      <td>Action  </td>
+                        <td>
+                          <Space size="middle">
+                            <a
+                              onClick={() => {
+                                this.setState({
+                                  editAddressData: record,
+                                });
+                                this.changeShow("form");
+                              }}
+                            >
+                              Edit
+                            </a>
+                          </Space>
+                        </td>
+                      </tr>
+                      {/* <tr>
+                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    </tr>
+                    <tr>
+                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                      <td>Address</td>
+                      <td>{record.address}</td>
+                    </tr>
+                    <tr>
+                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                      <td>Area</td>
+                      <td>{record.area}</td>
+                    </tr>
+                    <tr>
+                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                      <td>City</td>
+                      <td>{record.city}</td>
+                    </tr> */}
+                    </tbody>
+                  </table>
+              }}
             />
-          )
-        ) : (
-          <Table
-            columns={columns}
-            dataSource={data}
-            pagination={false}
-            loading={this.state.allAddress.length > 0 ? false : true}
-          />
-        )}
+          )}
       </div>
     );
   }
