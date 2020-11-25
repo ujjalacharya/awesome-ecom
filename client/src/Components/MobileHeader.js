@@ -5,9 +5,10 @@ import actions from "../../redux/actions";
 import { withRouter } from "next/router";
 import { getChildCategories, getUserInfo } from "../../utils/common";
 import Link from "next/link";
+import SearchDrawer from "./Includes/SearchDrawer";
 
 class MobileHeader extends Component {
-  state = { visible: false, loginToken: this.props.authentication.token || '' };
+  state = { visible: false, searchvisible: false, loginToken: this.props.authentication.token || '' };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.token !== nextProps.authentication.token) {
@@ -15,7 +16,6 @@ class MobileHeader extends Component {
       if (nextProps.authentication.token) {
         userInfo = getUserInfo(loginToken);
       }
-      console.log(nextProps)
       this.setState({
         loginToken: nextProps.authentication.token,
         userInfo,
@@ -64,6 +64,18 @@ class MobileHeader extends Component {
     });
   };
 
+  showSearchDrawer = () => {
+    this.setState({
+      searchvisible: true,
+    });
+  };
+
+  onCloseSearchDrawer = () => {
+    this.setState({
+      searchvisible: false,
+    });
+  };
+
   render() {
     let { parentCate, loginToken } = this.state;
 
@@ -102,7 +114,7 @@ class MobileHeader extends Component {
               </a>
             </Link>
           </div>
-          <div className="menu-right-items search-right">
+          <div className="menu-right-items search-right" onClick={this.showSearchDrawer}>
             <div className="list-icon">
               <img src="/images/search-icon.png" />
             </div>
@@ -118,6 +130,10 @@ class MobileHeader extends Component {
           showDrawer={this.state.visible}
           onCloseDrawer={this.onCloseDrawer}
           parentCate={parentCate}
+        />
+        <SearchDrawer
+          showDrawer={this.state.searchvisible}
+          onCloseDrawer={this.onCloseSearchDrawer}
         />
       </div>
     );

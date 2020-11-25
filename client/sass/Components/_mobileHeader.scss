@@ -29,7 +29,7 @@
     .menu-right-items {
       text-align: center;
       padding-right: 15px;
-      &.search-right{
+      &.search-right {
         padding-right: 0px;
       }
       .list-text {
@@ -81,6 +81,13 @@
             }
           }
         }
+      }
+    }
+  }
+  &.search-drawer {
+    .ant-drawer-body {
+      @media screen and (max-width: 480px) {
+        padding-right: 10px;
       }
     }
   }
