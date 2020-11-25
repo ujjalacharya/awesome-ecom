@@ -22,10 +22,11 @@ const AdminBar = ({}) => {
             key:'orders',
             icon: 'layout',
             main: 'Order',
-            sub: [ {
-                name: 'Manage Orders',
-                path: '/order'
-            }]
+            path:'/order',
+            // sub: [ {
+            //     name: 'Manage Orders',
+            //     path: '/order'
+            // }]
         }
     ],[])
 
