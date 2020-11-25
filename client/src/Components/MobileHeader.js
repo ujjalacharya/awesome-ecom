@@ -93,11 +93,11 @@ class MobileHeader extends Component {
             </a>
           </Link>
           <div className="menu-right-items">
-            <div className="list-icon">
-              <img src="/images/bag.png" />
-            </div>
             <Link href="/cart">
               <a>
+                <div className="list-icon">
+                  <img src="/images/bag.png" />
+                </div>
                 <div className="list-text">Cart</div>
               </a>
             </Link>
@@ -106,11 +106,9 @@ class MobileHeader extends Component {
             <div className="list-icon">
               <img src="/images/search-icon.png" />
             </div>
-            <Link href="/cart">
-              <a>
-                <div className="list-text">Search</div>
-              </a>
-            </Link>
+            <a>
+              <div className="list-text">Search</div>
+            </a>
           </div>
           {/* <div className="search-mob">
             <i className="fa fa-search" aria-hidden="true"></i>
