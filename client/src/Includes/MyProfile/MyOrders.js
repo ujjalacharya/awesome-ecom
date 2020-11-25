@@ -243,40 +243,42 @@ class MyOrders extends Component {
           expandable={{
             expandedRowRender: (record) =>
               <table className="expanded-table">
-                <tr>
-                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                  <td>Status</td>
-                  <td>{record.status.map((tag) => {
-                    let color = "";
-                    if (tag === "approve" || tag === "complete") {
-                      color = "green";
-                    } else if (tag === "cancelled") {
-                      color = "red";
-                    } else if (tag === "dispatch" || tag === "active") {
-                      color = "blue";
-                    }
-                    return (
-                      <Tag color={color} key={tag}>
-                        {tag.toUpperCase()}
-                      </Tag>
-                    );
-                  })}</td>
-                </tr>
-                <tr>
-                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                  <td>Qty</td>
-                  <td>{record.qty}</td>
-                </tr>
-                <tr>
-                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                  <td>Price</td>
-                  <td>{record.price}</td>
-                </tr>
-                <tr>
-                  <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                  <td>Sold By</td>
-                  <td>{record.soldBy}</td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Status</td>
+                    <td>{record.status.map((tag) => {
+                      let color = "";
+                      if (tag === "approve" || tag === "complete") {
+                        color = "green";
+                      } else if (tag === "cancelled") {
+                        color = "red";
+                      } else if (tag === "dispatch" || tag === "active") {
+                        color = "blue";
+                      }
+                      return (
+                        <Tag color={color} key={tag}>
+                          {tag.toUpperCase()}
+                        </Tag>
+                      );
+                    })}</td>
+                  </tr>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Qty</td>
+                    <td>{record.qty}</td>
+                  </tr>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Price</td>
+                    <td>{record.price}</td>
+                  </tr>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Sold By</td>
+                    <td>{record.soldBy}</td>
+                  </tr>
+                </tbody>
               </table>
           }}
         />
