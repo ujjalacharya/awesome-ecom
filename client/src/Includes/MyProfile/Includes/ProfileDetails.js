@@ -132,7 +132,7 @@ class ProfileDetails extends Component {
                     disabled={this.state.disableImg ? true : false}
                   />
                   <label htmlFor={"newFile"}>
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                   </label>
                 </div>
               </Col>
