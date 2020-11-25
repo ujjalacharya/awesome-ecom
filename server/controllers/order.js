@@ -429,6 +429,9 @@ exports.toggleOrderApproval = async (req, res) => {
 
 exports.orderCancelByAdmin = async (req, res) => {
   let order = req.order;
+  if (!req.body.remark) {
+    return res.status(403).json({ error: "Remark is required." });
+  }
   if (order.soldBy._id.toString() !== req.profile._id.toString()) {
     return res.status(401).json({ error: "Unauthorized Admin" });
   }
@@ -469,6 +472,9 @@ exports.orderCancelByAdmin = async (req, res) => {
 
 exports.orderCancelByUser = async (req, res) => {
   let order = req.order;
+  if (!req.body.remark) {
+    return res.status(403).json({ error: "Remark is required." });
+  }
   if (order.user._id.toString() !== req.user._id.toString()) {
     return res.status(401).json({ error: "Unauthorized User" });
   }

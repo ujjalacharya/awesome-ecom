@@ -5,9 +5,9 @@ import { SideBySideMagnifier} from "react-image-magnifiers";
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import OrderStatus from './OrderStatus';
-import { cancelOrder } from '../../../redux/actions/order_actions'
+import OrderCancel from './OrderCancel';
 
-const OrderDetail = ({ order, singleLoading, isOrderDetailOpen }) => {
+const OrderDetail = ({ order ,singleLoading ,  isOrderDetailOpen }) => {
     function onChange(a, b, c) {
         // console.log(a, b, c);
     }
@@ -24,6 +24,7 @@ const OrderDetail = ({ order, singleLoading, isOrderDetailOpen }) => {
         textAlign: 'center',
         background: '#364d79',
     };
+
     return (
             <div className="row">
                 <div className="col-xl-8">
@@ -188,7 +189,8 @@ const OrderDetail = ({ order, singleLoading, isOrderDetailOpen }) => {
                                         <small>
                                             <p>This order is returned by {order?.status?.returnedDetail?.returneddBy?.name}<br />
                                                 <strong>Email: </strong> {order?.status?.returnedDetail?.returneddBy?.email}<br />
-                                                <strong>Phone: </strong> {order?.status?.returnedDetail?.returneddBy?.phone}
+                                                <strong>Phone: </strong> {order?.status?.returnedDetail?.returneddBy?.phone}<br/>
+                                            <strong>Customer reason: </strong> {order?.status?.returnedDetail?.remark[0]?.comment}<br />
                                             </p>
                                         </small>
                                     </li>
@@ -205,19 +207,23 @@ const OrderDetail = ({ order, singleLoading, isOrderDetailOpen }) => {
                             </ul>
                         </div>
                     </div>
+                {
+                    order && (order.status.currentStatus==='active' || order.status.currentStatus==='approve') && <OrderCancel isOrderDetailOpen={isOrderDetailOpen} order_id={order?._id} admin_id={order?.soldBy} />
+                }
                 </div>
+                
             </div>
     )
 }
 
 OrderDetail.propTypes = {
     order: PropTypes.object,
-    singleLoading: PropTypes.bool
+    singleLoading: PropTypes.bool,
 }
 const mapStateToProps = (state) => ({
     order: state.order.order,
     singleLoading: state.order.singleLoading
 })
 
-export default connect(mapStateToProps,{cancelOrder})(React.memo(OrderDetail))
+export default connect(mapStateToProps,{})(React.memo(OrderDetail))
 

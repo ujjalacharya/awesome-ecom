@@ -64,17 +64,18 @@ export const toggletobeReturnOrder = (id, order_id, remark = '', returnedAmount 
   } catch (err) {
     console.log("****order_actions/toggletobeReturnOrder****", err);
     dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
-    dispatch(getOrder(id, order_id))
   }
 };
 
-export const cancelOrder = (id, order_id) => async (dispatch) => {
+export const cancelOrder = (id, order_id, remark) => async (dispatch) => {
+  const body = JSON.stringify({remark})
   try {
-    const res = await api.patch(`/order/cancel-order/${id}/${order_id}`);
-    dispatch({
-      type: CANCEL_ORDER,
-      payload: res.data,
-    });
+    const res = await api.patch(`/order/cancel-order/${id}/${order_id}`, body);
+    // dispatch({
+    //   type: CANCEL_ORDER,
+    //   payload: res.data,
+    // });
+    dispatch(getOrder(id, order_id))
     dispatch({
       type: SUCCESS,
       payload: 'Order cancelled sucessfully',

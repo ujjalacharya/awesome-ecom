@@ -36,11 +36,13 @@ const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggleto
         }
         setLoading(false)
         setOpenToBeReturnedForm(false)
+        setToBeReturnedFormData({...toBeReturnedForm,remark:'',returnedAmount:''})
 
 
     },[status])
     useEffect(() => {
         !isOrderDetailOpen && setOpenToBeReturnedForm(false)
+        !isOrderDetailOpen && setToBeReturnedFormData({ ...toBeReturnedForm, remark: '', returnedAmount: '' })
      }, [isOrderDetailOpen])
 
     //active/approve
