@@ -92,7 +92,6 @@ class MobileHeader extends Component {
             </a>
           </Link>
           <div className="menu-right-items">
-            <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/bag.png" />
               </div>
@@ -101,11 +100,20 @@ class MobileHeader extends Component {
                   <div className="list-text">Cart</div>
                 </a>
               </Link>
-            </div>
           </div>
-          <div className="search-mob">
+          <div className="menu-right-items search-right">
+              <div className="list-icon">
+                <img src="/images/search-icon.png" />
+              </div>
+              <Link href="/cart">
+                <a>
+                  <div className="list-text">Search</div>
+                </a>
+              </Link>
+          </div>
+          {/* <div className="search-mob">
             <i className="fa fa-search" aria-hidden="true"></i>
-          </div>
+          </div> */}
         </div>
         <MenuDrawer
           showDrawer={this.state.visible}

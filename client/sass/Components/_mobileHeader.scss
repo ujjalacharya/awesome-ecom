@@ -16,16 +16,26 @@
       font-size: 20px;
     }
   }
-  .mob-menu-items{
+  .mob-menu-items {
     display: flex;
     .search-mob {
       i {
         font-size: 18px;
       }
     }
-    img{
+    img {
       height: 20px;
-      margin-right: 15px;
+    }
+    .menu-right-items {
+      text-align: center;
+      padding-right: 15px;
+      &.search-right{
+        padding-right: 0px;
+      }
+      .list-text {
+        font-size: 10px;
+        padding-top: 2px;
+      }
     }
   }
   .logo {
