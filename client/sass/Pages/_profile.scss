@@ -121,6 +121,13 @@
     .orders-table {
       margin-top: 20px;
     }
+    .order-search{
+      width: 400px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
   }
 
   .my-reviews {

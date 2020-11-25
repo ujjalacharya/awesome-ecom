@@ -154,7 +154,7 @@ class MyWishlist extends Component {
               </Popconfirm>
             </div>
 
-            <div style={{minWidth: 100, marginTop: 10}}><a
+            <div style={{ minWidth: 100, marginTop: 10 }}><a
               className="action-btn action-btn-add"
               onClick={() => this.props.addToCart(text.slug, { quantity: 1 })}
             >
@@ -194,14 +194,14 @@ class MyWishlist extends Component {
       <div className="my-wishlist">
         <h3>My Wishlist</h3>
         <Row>
-          <Col span={8}>
+          <Col lg={8} xs={24}>
             <Search
-              placeholder="input search text"
+              placeholder="Search By Item Name"
               onSearch={(value) => console.log(value)}
-              style={{ width: 400 }}
+              className="order-search"
             />
           </Col>
-          <Col span={8}>
+          <Col lg={8} xs={24}>
             {/* <Select
               showSearch
               style={{ width: 200 }}
@@ -223,12 +223,64 @@ class MyWishlist extends Component {
           <Col span={6}></Col>
         </Row>
         <Table
-          className="orders-table"
+          className="orders-table table-wrapper"
           columns={columns}
           dataSource={data}
           pagination={{ total: this.state.allWishlistItems?.totalCount }}
           onChange={this.onChangePage}
           loading={this.state.loading}
+          expandable={{
+            expandedRowRender: (record) =>
+              <table className="expanded-table">
+                <tbody>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Sold By</td>
+                    <td>{record.soldBy}</td>
+                  </tr>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Price</td>
+                    <td>{record.price}</td>
+                  </tr>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Added On</td>
+                    <td>{record.addedOn}</td>
+                  </tr>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Added On</td>
+                    <td>
+                      <>
+                        <div>
+                          <Popconfirm
+                            title="Are you sure delete this from wishlist?"
+                            onConfirm={() => this.props.removeFromWishList(record.key)}
+                            // onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <a className="action-btn action-btn-delete">
+                              <i className="fa fa-trash-o" aria-hidden="true"></i> Delete
+                            </a>
+                          </Popconfirm>
+                        </div>
+
+                        <div style={{ minWidth: 100, marginTop: 10 }}>
+                          <a
+                            className="action-btn action-btn-add"
+                            onClick={() => this.props.addToCart(record.slug, { quantity: 1 })}
+                          >
+                            <i className="fa fa-plus" aria-hidden="true"></i> Add to Cart
+                          </a>
+                        </div>
+                      </>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          }}
         />
       </div>
     );
