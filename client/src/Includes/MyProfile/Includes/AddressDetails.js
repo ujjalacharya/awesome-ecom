@@ -203,7 +203,8 @@ class AddressDetails extends Component {
               columns={columns}
               dataSource={data}
               pagination={false}
-              loading={this.state.allAddress.length > 0 ? false : true} expandable={{
+              loading={this.state.allAddress.length > 0 ? false : true}
+              expandable={{
                 expandedRowRender: (record) =>
                   <table className="expanded-table">
                     <tbody>
@@ -213,7 +214,7 @@ class AddressDetails extends Component {
                             return (
                               <tr key={i}>
                                 <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                                <td>{key}</td>
+                                <td>{_.capitalize(key)}</td>
                                 <td>{value}</td>
                               </tr>
                             )
@@ -221,8 +222,8 @@ class AddressDetails extends Component {
                         })
                       }
                       <tr>
-                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                      <td>Action  </td>
+                        <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                        <td>Action  </td>
                         <td>
                           <Space size="middle">
                             <a
@@ -234,28 +235,10 @@ class AddressDetails extends Component {
                               }}
                             >
                               Edit
-                            </a>
+                          </a>
                           </Space>
                         </td>
                       </tr>
-                      {/* <tr>
-                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                    </tr>
-                    <tr>
-                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                      <td>Address</td>
-                      <td>{record.address}</td>
-                    </tr>
-                    <tr>
-                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                      <td>Area</td>
-                      <td>{record.area}</td>
-                    </tr>
-                    <tr>
-                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                      <td>City</td>
-                      <td>{record.city}</td>
-                    </tr> */}
                     </tbody>
                   </table>
               }}
