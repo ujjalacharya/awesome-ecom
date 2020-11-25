@@ -57,10 +57,10 @@ class MyProfile extends Component {
         <div className="my-profile">
           <div className="container min-height">
             <Row>
-              <Col span={4} className="left-menu">
-                <Menu changeMenuTab={this.changeMenuTab} />
+              <Col lg={4} xs={24}  className="left-menu">
+                <Menu changeMenuTab={this.changeMenuTab} currentMenu={this.state.currentMenu} />
               </Col>
-              <Col span={20} style={{ paddingLeft: 40 }}>
+              <Col lg={20} xs={24} className="profile-right-menu">
                 {this.state.currentMenu === "manage-account" && <MenuDetails data = {this.state.userInfo} />}
 
                 {this.state.currentMenu === "my-orders" && <MyOrders />}

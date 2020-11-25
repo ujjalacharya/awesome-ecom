@@ -1,15 +1,27 @@
 .my-profile {
   .left-menu {
     border-right: 1px solid #efefef;
+    @media screen and (max-width: 480px) {
+      border: 0px;
+    }
+  }
+  .profile-right-menu{
+    padding: 0 10px;
   }
   .profile-menu {
     margin-top: 10px;
+    @media screen and (max-width: 480px) {
+      padding: 0 10px;
+    }
     ul {
       list-style: none;
       li {
         margin-bottom: 10px;
         cursor: pointer;
         &:hover {
+          color: $secondary-color;
+        }
+        &.active{
           color: $primary-color;
         }
       }
@@ -104,7 +116,7 @@
       .shop-name {
         font-weight: bold;
         font-size: 20px;
-        img{
+        img {
           height: 30px;
         }
       }
