@@ -122,7 +122,9 @@ class Header extends Component {
             <Row className="menu-logo">
               <Col span={2} className="logo">
                 <Link href="/">
-                  <img src="/images/logo.png" />
+                  <a>
+                    <img src="/images/logo.png" />
+                  </a>
                 </Link>
               </Col>
               <Col span={22} className="menu">
@@ -228,7 +230,7 @@ class Header extends Component {
                   this.props.getSearchKeywords(search);
                   this.setState({ searchValue: search });
                 }}
-                // placeholder="Search for products, brands and more"
+              // placeholder="Search for products, brands and more"
               >
                 <Input.Search size="large" placeholder="Search for products, brands and more" />
               </AutoComplete>
