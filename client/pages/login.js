@@ -28,10 +28,6 @@ class Login extends Component {
       this.props.authenticate(body, "signin", redirectUrl);
     };
 
-    const onFinishFailed = (errorInfo) => {
-      console.log("Failed:", errorInfo);
-    };
-
     return (
       <Layout title="Login">
         <div className="container">

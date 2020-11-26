@@ -74,7 +74,7 @@ class MenuDetails extends Component {
     
     return (
       <div className="menu-details">
-        <h3>Manage my accounts</h3>
+        <h3>Manage My Account</h3>
         <StickyContainer>
           <Tabs defaultActiveKey="1" renderTabBar={this.renderTabBar}>
             <TabPane tab="My Profile" key="1">

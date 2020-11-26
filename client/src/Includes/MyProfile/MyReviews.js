@@ -22,7 +22,6 @@ class MyReviews extends Component {
   };
 
   render() {
-    console.log(this.state);
     let { myReviews } = this.state.myReviews;
     return (
       <div className="my-reviews">

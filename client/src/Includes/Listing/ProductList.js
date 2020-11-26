@@ -159,7 +159,7 @@ class ProductList extends Component {
         )}
         <div className="card-list">
           <Row gutter={30}>
-            {data && data.products
+            {data && data.products.length > 0
               ? data.products.map((data, i) => {
                   return (
                     <Col lg={6} sm={12} xs={24} key={i}>

@@ -73,7 +73,7 @@ class Reviews extends Component {
 
   render() {
     let { data } = this.props;
-    console.log(data);
+    
     let totalStars = data
       ? data.stars.fiveStars +
         data.stars.fourStars +

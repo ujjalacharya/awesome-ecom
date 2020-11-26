@@ -27,10 +27,10 @@ class RecentOrders extends Component {
               let color = 'green';
               if (tag === 'purchased') {
                 color = 'green';
-              }else if(tag === 'cancelled'){
-                  color = 'blue'
-              }else{
-                  color='red'
+              } else if (tag === 'cancelled') {
+                color = 'blue'
+              } else {
+                color = 'red'
               }
               return (
                 <Tag color={color} key={tag}>
@@ -57,23 +57,23 @@ class RecentOrders extends Component {
         dataIndex: "price",
         key: "price",
       },
-    //   {
-    //     title: "Action",
-    //     key: "action",
-    //     render: (text, record) => (
-    //       <Space size="middle">
-    //         <a
-    //           onClick={() =>
-    //             this.setState({
-    //               show: "form",
-    //             })
-    //           }
-    //         >
-    //           Edit
-    //         </a>
-    //       </Space>
-    //     ),
-    //   },
+      //   {
+      //     title: "Action",
+      //     key: "action",
+      //     render: (text, record) => (
+      //       <Space size="middle">
+      //         <a
+      //           onClick={() =>
+      //             this.setState({
+      //               show: "form",
+      //             })
+      //           }
+      //         >
+      //           Edit
+      //         </a>
+      //       </Space>
+      //     ),
+      //   },
     ];
 
     const data = [
@@ -98,7 +98,48 @@ class RecentOrders extends Component {
     ];
     return (
       <div className="recent-orders">
-        <Table columns={columns} dataSource={data} />
+        <Table
+          className="orders-table table-wrapper" columns={columns} dataSource={data} expandable={{
+            expandedRowRender: (record) =>
+              <table className="expanded-table">
+                <tbody>
+                  <tr>
+                    <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                    <td>Status</td>
+                    <td><>
+                      {record.status.map(tag => {
+                        let color = 'green';
+                        if (tag === 'purchased') {
+                          color = 'green';
+                        } else if (tag === 'cancelled') {
+                          color = 'blue'
+                        } else {
+                          color = 'red'
+                        }
+                        return (
+                          <Tag color={color} key={tag}>
+                            {tag.toUpperCase()}
+                          </Tag>
+                        );
+                      })}
+                    </></td>
+                  </tr>
+                  {
+                    Object.entries(record).map(([key, value], i) => {
+                      if (key !== 'key' && key !== 'image' && key !== 'itemName' && key !== 'status') {
+                        return (
+                          <tr key={i}>
+                            <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                            <td>{_.capitalize(key)}</td>
+                            <td>{value}</td>
+                          </tr>
+                        )
+                      }
+                    })
+                  }
+                </tbody>
+              </table>
+          }} />
       </div>
     );
   }

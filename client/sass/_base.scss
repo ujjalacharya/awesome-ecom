@@ -17,8 +17,8 @@ body {
     margin-top: 20px;
   }
   @media screen and (max-width: 480px) {
-    padding: 0 10px;
-    margin-top: 20px;
+    padding: 0 15px;
+    margin-top: 10px;
   }
 }
 
@@ -50,6 +50,7 @@ body {
 
 .ant-input {
   height: auto !important;
+  font-size: 14px;
 }
 
 .ant-input-affix-wrapper {
@@ -60,6 +61,9 @@ body {
   margin: 30px 0;
   padding: 10px 0;
   padding-left: 15px;
+  @media screen and (max-width: 480px) {
+    margin: 0px;
+  }
 }
 
 .ant-form-item-label {
@@ -186,6 +190,7 @@ input[type="number"] {
   @media screen and (max-width: 480px) {
     padding-top: 15px;
     padding-bottom: 15px;
+    padding-left: 10px;
   }
   .title {
     margin-right: 10px;
@@ -357,6 +362,63 @@ input.inputfile + label {
   justify-content: center;
 }
 
+.ant-table-tbody > tr > td,
+.ant-table-thead > tr > th,
+.ant-table tfoot > tr > td,
+.ant-table tfoot > tr > th {
+  padding: 10px !important;
+}
 
+.ant-tabs-bar {
+  z-index: 9;
+  background: #fff;
+}
 
+.table-wrapper {
+  table thead tr th:first-child, table tbody tr td:first-child {
+    @media (min-width: 1023px) {
+      display: none;
+    }
+  }
+  @media (max-width: 1023px) {
+    th {
+      display: none;
+    }
+    th:nth-child(1),
+    th:nth-child(2),
+    th:nth-child(3) {
+      display: table-cell;
+    }
+  }
+  tbody {
+    @media (max-width: 1023px) {
+      tr {
+        td {
+          display: none;
+        }
+        td:nth-child(1),
+        td:nth-child(2),
+        td:nth-child(3) {
+          display: table-cell;
+        }
+      }
+    }
+  }
+  .expanded-table {
+    tr {
+      td {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 10px;
+      }
+      &:last-child {
+        td {
+          border-bottom: 0px;
+        }
+      }
+    }
+  }
+}
 
+.ant-table-row-expand-icon {
+  height: 17px !important;
+}

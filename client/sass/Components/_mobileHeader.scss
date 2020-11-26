@@ -16,9 +16,26 @@
       font-size: 20px;
     }
   }
-  .search-mob {
-    i {
-      font-size: 18px;
+  .mob-menu-items {
+    display: flex;
+    .search-mob {
+      i {
+        font-size: 18px;
+      }
+    }
+    img {
+      height: 20px;
+    }
+    .menu-right-items {
+      text-align: center;
+      padding-right: 15px;
+      &.search-right {
+        padding-right: 0px;
+      }
+      .list-text {
+        font-size: 10px;
+        padding-top: 2px;
+      }
     }
   }
   .logo {
@@ -64,6 +81,13 @@
             }
           }
         }
+      }
+    }
+  }
+  &.search-drawer {
+    .ant-drawer-body {
+      @media screen and (max-width: 480px) {
+        padding-right: 10px;
       }
     }
   }

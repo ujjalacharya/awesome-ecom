@@ -108,6 +108,13 @@
       @media screen and (max-width: 375px) {
         display: block;
       }
+      .qty-btn {
+        display: "flex";
+        align-items: "center";
+        @media screen and (max-width: 480px) {
+          display: block;
+        }
+      }
       .qty {
         display: flex;
         align-items: center;

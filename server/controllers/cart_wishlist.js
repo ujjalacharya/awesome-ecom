@@ -27,7 +27,7 @@ exports.addCart = async (req, res) => {
     if (req.query.quantity < 1) {
         return res.status(403).json({ error: 'Quantity is required' })
     }
-    let cart = await Cart.findOne({ product: product._id, isDeleted: null})
+    let cart = await Cart.findOne({user:req.user._id, product: product._id, isDeleted: null})
     if (cart) {
         return res.status(403).json({error:'Cart already exist.'})
     }
@@ -139,7 +139,8 @@ exports.addWishlist = async (req, res) => {
     if (req.query.quantity < 1) {
         return res.status(403).json({ error: 'Quantity is required' })
     }
-    let wishlist = await Wishlist.findOne({ product: product._id ,isDeleted:null})
+    
+    let wishlist = await Wishlist.findOne({user:req.user._id, product: product._id ,isDeleted:null})
     if (wishlist) {
         return res.status(403).json({ error: 'Wishlist already exist.' })
     }

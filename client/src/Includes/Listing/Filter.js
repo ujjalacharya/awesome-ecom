@@ -44,7 +44,6 @@ class Filter extends Component {
       <div className={"listing-filter " + this.props.removeThisFilter}>
         <div className={"filter-title " + this.props.removeThisTitle}>
           <span>FILTERS</span>
-          {/* <Icon type="close" className="close"/> */}
         </div>
         <div className="filter-types">
           <div className="type-title">BRAND</div>
@@ -77,7 +76,7 @@ class Filter extends Component {
                 this.props.searchPrice(this.props.minPrice, this.props.maxPrice)
               }
             >
-              <i class="fa fa-search" aria-hidden="true"></i>
+              <i className="fa fa-search" aria-hidden="true"></i>
             </button>
           </div>
         </div>
@@ -140,9 +139,9 @@ class Filter extends Component {
               value={this.props.selectedWarrenty}
             >
               {data.warranties &&
-                data.warranties.map((warrenty) => {
+                data.warranties.map((warrenty, l) => {
                   return (
-                    <Radio style={radioStyle} value={warrenty}>
+                    <Radio style={radioStyle} value={warrenty} key={l}>
                       {warrenty}
                     </Radio>
                   );
@@ -158,9 +157,9 @@ class Filter extends Component {
               value={this.props.selectedSize}
             >
               {data.sizes &&
-                data.sizes.map((size) => {
+                data.sizes.map((size, s) => {
                   return (
-                    <Radio style={radioStyle} value={size}>
+                    <Radio style={radioStyle} value={size} key={s}>
                       {size}
                     </Radio>
                   );

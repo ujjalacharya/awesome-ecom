@@ -7,6 +7,7 @@ import { openNotification } from "../../../utils/common";
 import { DeleteOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import StarRatings from "react-star-ratings";
+import _ from 'lodash'
 
 class ProductSpecs extends Component {
   state = {
@@ -146,12 +147,12 @@ class ProductSpecs extends Component {
             </div>
             <div className="wish-btn">
               {loginToken ? (
-                this.props.data.hasOnWishlist ? (
+                !_.isEmpty(product.hasOnWishlist) ? (
                   <Popconfirm
                     title="Are you sure you want to remove this from wishlist?"
                     onConfirm={() =>
                       this.props.removeFromWishList(
-                        this.props.data.hasOnWishlist._id
+                        product.hasOnWishlist._id
                       )
                     }
                     // onCancel={cancel}
@@ -198,7 +199,7 @@ class ProductSpecs extends Component {
         <div className="qty-cart-btn">
           <div className="qty-cart">
             {loginToken ? (
-              !this.props.data.hasOnCart ? (
+              !product.hasOnCart ? (
                 <>
                   <div className="qty">
                     <span className="qty-title">Qty:</span>
@@ -235,7 +236,7 @@ class ProductSpecs extends Component {
                   <Popconfirm
                     title="Are you sure you want to remove this from cart?"
                     onConfirm={() =>
-                      this.props.removeCart(this.props.data.hasOnCart._id)
+                      this.props.removeCart(product.hasOnCart._id)
                     }
                     // onCancel={cancel}
                     okText="Yes"
@@ -252,7 +253,7 @@ class ProductSpecs extends Component {
               )
             ) : (
               <Link href={`/login?origin=${this.props.router.asPath}`}>
-                <a style={{ display: "flex", alignItems: "center" }}>
+                <a className="qty-btn">
                   <div className="qty">
                     <span className="qty-title">Qty:</span>
                     <span className="qty-inc-dcs">

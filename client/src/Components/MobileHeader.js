@@ -5,9 +5,10 @@ import actions from "../../redux/actions";
 import { withRouter } from "next/router";
 import { getChildCategories, getUserInfo } from "../../utils/common";
 import Link from "next/link";
+import SearchDrawer from "./Includes/SearchDrawer";
 
 class MobileHeader extends Component {
-  state = { visible: false };
+  state = { visible: false, searchvisible: false, loginToken: this.props.authentication.token || '' };
 
   componentWillReceiveProps(nextProps) {
     if (this.props.authentication.token !== nextProps.authentication.token) {
@@ -63,28 +64,78 @@ class MobileHeader extends Component {
     });
   };
 
+  showSearchDrawer = () => {
+    this.setState({
+      searchvisible: true,
+    });
+  };
+
+  onCloseSearchDrawer = () => {
+    this.setState({
+      searchvisible: false,
+    });
+  };
+
   render() {
-    let { parentCate } = this.state;
+    let { parentCate, loginToken } = this.state;
 
     return (
       <div className="mobile-header">
         <div className="menu-logo">
           <div className="burger-menu" onClick={this.showDrawer}>
-            <i class="fa fa-bars" aria-hidden="true"></i>
+            <i className="fa fa-bars" aria-hidden="true"></i>
           </div>
           <Link href="/">
-            <div className="logo">
-              <img src="/images/logo.png" />
-            </div>
+            <a>
+              <div className="logo">
+                <img src="/images/logo.png" />
+              </div>
+            </a>
           </Link>
         </div>
-        <div className="search-mob">
-          <i class="fa fa-search" aria-hidden="true"></i>
+        <div className="mob-menu-items">
+          <Link href="/myprofile">
+            <a>
+              <div className="menu-right-items">
+                <div className="list-icon">
+                  <img src="/images/user.png" />
+                </div>
+                <div className="list-text">
+                  {loginToken ? "Profile" : "Login"}
+                </div>
+              </div>
+            </a>
+          </Link>
+          <div className="menu-right-items">
+            <Link href="/cart">
+              <a>
+                <div className="list-icon">
+                  <img src="/images/bag.png" />
+                </div>
+                <div className="list-text">Cart</div>
+              </a>
+            </Link>
+          </div>
+          <div className="menu-right-items search-right" onClick={this.showSearchDrawer}>
+            <div className="list-icon">
+              <img src="/images/search-icon.png" />
+            </div>
+            <a>
+              <div className="list-text">Search</div>
+            </a>
+          </div>
+          {/* <div className="search-mob">
+            <i className="fa fa-search" aria-hidden="true"></i>
+          </div> */}
         </div>
         <MenuDrawer
           showDrawer={this.state.visible}
           onCloseDrawer={this.onCloseDrawer}
           parentCate={parentCate}
+        />
+        <SearchDrawer
+          showDrawer={this.state.searchvisible}
+          onCloseDrawer={this.onCloseSearchDrawer}
         />
       </div>
     );

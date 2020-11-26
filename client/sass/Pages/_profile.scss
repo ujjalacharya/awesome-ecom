@@ -1,15 +1,27 @@
 .my-profile {
   .left-menu {
     border-right: 1px solid #efefef;
+    @media screen and (max-width: 480px) {
+      border: 0px;
+    }
+  }
+  .profile-right-menu{
+    padding: 0 10px;
   }
   .profile-menu {
     margin-top: 10px;
+    @media screen and (max-width: 480px) {
+      padding: 0 10px;
+    }
     ul {
       list-style: none;
       li {
         margin-bottom: 10px;
         cursor: pointer;
         &:hover {
+          color: $secondary-color;
+        }
+        &.active{
           color: $primary-color;
         }
       }
@@ -70,9 +82,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      @media screen and (max-width: 480px) {
+        margin-bottom: 15px;
+      }
     }
     .edit-address {
       margin-top: 25px;
+      @media screen and (max-width: 480px) {
+        margin: 0;
+      }
+      .ant-form-item{
+        @media screen and (max-width: 480px) {
+          margin: 0 0 5px;
+        }
+      }
     }
   }
 
@@ -87,6 +110,19 @@
     .orders-table {
       margin-top: 20px;
     }
+    .order-search{
+      width: 400px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+    .order-select{
+      width: 200px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+      }
+    }
   }
 
   .my-wishlist {
@@ -96,6 +132,13 @@
     .orders-table {
       margin-top: 20px;
     }
+    .order-search{
+      width: 400px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
   }
 
   .my-reviews {
@@ -104,7 +147,7 @@
       .shop-name {
         font-weight: bold;
         font-size: 20px;
-        img{
+        img {
           height: 30px;
         }
       }

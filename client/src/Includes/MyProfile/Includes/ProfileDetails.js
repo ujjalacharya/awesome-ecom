@@ -105,7 +105,7 @@ class ProfileDetails extends Component {
         <div className="main-profile">
           {!_.isEmpty(userData) && (
             <Row className={checkSekelton && "skeleton"}>
-              <Col span={6} className="left-prof">
+              <Col lg={6} xs={24} className="left-prof">
                 <div className="change-profile">
                   <img
                     // src="/images/default-user.png"
@@ -132,11 +132,11 @@ class ProfileDetails extends Component {
                     disabled={this.state.disableImg ? true : false}
                   />
                   <label htmlFor={"newFile"}>
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                   </label>
                 </div>
               </Col>
-              <Col span={18} className="right-prof">
+              <Col lg={18} xs={24} className="right-prof">
                 <h3>
                   <span>{userData.name}</span>
                 </h3>
