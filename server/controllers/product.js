@@ -187,14 +187,17 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
-  const {createdAt,updatedAt,price, status} = req.query
+  const {createdAt,updatedAt,price, status, keyword} = req.query
   
   let sortFactor = {createdAt:'desc'} ;
   if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
   if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
   if(price && (price==='asc' || price==='desc')) sortFactor = {price}
-
   let query = { soldBy: req.profile._id }
+  if(keyword) query = {
+    ...query,
+    name: { $regex: keyword, $options: "i" }
+  }
   if (status && status === 'verified') query = {
     ...query,
     isVerified: { $ne: null }

@@ -10,6 +10,7 @@ const AdminBar = ({}) => {
         key:'product',
         icon:'layout',
         main: 'Product',
+        // path:'/product'
         sub: [{
             name: 'Add Product',
             path: '/add-product'

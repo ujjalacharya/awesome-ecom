@@ -45,7 +45,7 @@ const SideBar = ({titles}) => {
 
                 </ul>
 
-                <div className="sidebar-bottom d-none d-lg-block">
+                {/* <div className="sidebar-bottom d-none d-lg-block">
                     <div className="media">
                         <img className="rounded-circle mr-3" src="img\avatars\avatar.jpg" alt="Chris Wood" width="40" height="40" />
                         <div className="media-body">
@@ -55,7 +55,7 @@ const SideBar = ({titles}) => {
 							</div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
             </div>
         </nav>
