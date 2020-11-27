@@ -77,7 +77,7 @@ class QA extends Component {
         {!this.state.token ? (
           <div className="not-logged-in">
             <Link href={`/login?origin=${this.props.router.asPath}`}>
-              Login
+              <a>Login</a>
             </Link>{" "}
             or <a>Register</a> to ask questions
           </div>

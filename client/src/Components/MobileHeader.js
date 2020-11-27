@@ -86,9 +86,11 @@ class MobileHeader extends Component {
             <i className="fa fa-bars" aria-hidden="true"></i>
           </div>
           <Link href="/">
-            <div className="logo">
-              <img src="/images/logo.png" />
-            </div>
+            <a>
+              <div className="logo">
+                <img src="/images/logo.png" />
+              </div>
+            </a>
           </Link>
         </div>
         <div className="mob-menu-items">

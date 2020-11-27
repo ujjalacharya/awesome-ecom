@@ -60,7 +60,7 @@ class ProductCard extends Component {
     let checkSkeleton = this.state.productData.name === "" ? true : false;
 
     let loginToken = this.props.authentication.token;
-    
+
     return (
       <div className={"product-card " + (checkSkeleton && "skeleton")}>
         {this.state.showQuickView && (
@@ -102,43 +102,43 @@ class ProductCard extends Component {
                       />
                     </Tooltip>
                   ) : (
-                    <Popconfirm
-                      title="Are you sure you want to remove this from cart?"
-                      onConfirm={() =>
-                        this.props.removeCart(productData.hasOnCart._id)
-                      }
-                      // onCancel={cancel}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <a>
+                      <Popconfirm
+                        title="Are you sure you want to remove this from cart?"
+                        onConfirm={() =>
+                          this.props.removeCart(productData.hasOnCart._id)
+                        }
+                        // onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <a>
+                          <Tooltip
+                            placement="topLeft"
+                            title="Remove from Cart"
+                            arrowPointAtCenter
+                          >
+                            <img
+                              src="/images/bag.png"
+                              alt="bag.jpg"
+                              title="Remove from Cart"
+                            />
+                          </Tooltip>
+                        </a>
+                      </Popconfirm>
+                    )
+                ) : (
+                    <Link href={`/login?origin=${this.props.router.asPath}`}>
+                      <a style={{ display: "flex", alignItems: "center" }}>
                         <Tooltip
                           placement="topLeft"
-                          title="Remove from Cart"
+                          title="Add to Cart"
                           arrowPointAtCenter
                         >
-                          <img
-                            src="/images/bag.png"
-                            alt="bag.jpg"
-                            title="Remove from Cart"
-                          />
+                          <img src="/images/bag.png" alt="bag.jpg" />
                         </Tooltip>
                       </a>
-                    </Popconfirm>
-                  )
-                ) : (
-                  <Link href={`/login?origin=${this.props.router.asPath}`}>
-                    <a style={{ display: "flex", alignItems: "center" }}>
-                      <Tooltip
-                        placement="topLeft"
-                        title="Add to Cart"
-                        arrowPointAtCenter
-                      >
-                        <img src="/images/bag.png" alt="bag.jpg" />
-                      </Tooltip>
-                    </a>
-                  </Link>
-                )}
+                    </Link>
+                  )}
               </div>
               <div className="card-items">
                 {loginToken ? (
@@ -168,23 +168,6 @@ class ProductCard extends Component {
                       </a>
                     </Popconfirm>
                   ) : (
-                    <Tooltip
-                      placement="topLeft"
-                      title="Add to Wishlist"
-                      arrowPointAtCenter
-                    >
-                      <img
-                        data-tip="Add to Wishlist"
-                        src="/images/heart.png"
-                        onClick={() =>
-                          this.props.addWishListItems(productData.slug)
-                        }
-                      />
-                    </Tooltip>
-                  )
-                ) : (
-                  <Link href={`/login?origin=${this.props.router.asPath}`}>
-                    <a>
                       <Tooltip
                         placement="topLeft"
                         title="Add to Wishlist"
@@ -193,11 +176,28 @@ class ProductCard extends Component {
                         <img
                           data-tip="Add to Wishlist"
                           src="/images/heart.png"
+                          onClick={() =>
+                            this.props.addWishListItems(productData.slug)
+                          }
                         />
                       </Tooltip>
-                    </a>
-                  </Link>
-                )}
+                    )
+                ) : (
+                    <Link href={`/login?origin=${this.props.router.asPath}`}>
+                      <a>
+                        <Tooltip
+                          placement="topLeft"
+                          title="Add to Wishlist"
+                          arrowPointAtCenter
+                        >
+                          <img
+                            data-tip="Add to Wishlist"
+                            src="/images/heart.png"
+                          />
+                        </Tooltip>
+                      </a>
+                    </Link>
+                  )}
               </div>
               <div className="card-items">
                 <Tooltip
@@ -214,16 +214,18 @@ class ProductCard extends Component {
               key={productData.slug}
               as={`/products/${productData.slug}`}
             >
-              <div className="image img-skeleton">
-                <img
-                  src={`${process.env.SERVER_BASE_URL}/uploads/${productData.images[0].medium}`}
-                  onError={(ev) => {
-                    ev.target.src = "/images/default-image.png";
-                  }}
-                  alt={productData.name}
-                  className="productImg-loader"
-                />
-              </div>
+              <a>
+                <div className="image img-skeleton">
+                  <img
+                    src={`${process.env.SERVER_BASE_URL}/uploads/${productData.images[0].medium}`}
+                    onError={(ev) => {
+                      ev.target.src = "/images/default-image.png";
+                    }}
+                    alt={productData.name}
+                    className="productImg-loader"
+                  />
+                </div>
+              </a>
             </Link>
           </div>
 
@@ -232,47 +234,49 @@ class ProductCard extends Component {
             key={productData.slug}
             as={`/products/${productData.slug}`}
           >
-            <div className="card-body">
-              <div className="card-category small-line">
-                <div className="cate">
-                  {productData.category.map((cate, i) => {
-                    return (
-                      <span key={i}>
-                        {cate.displayName}
-                        {productData.category.length !== i + 1 && " - "}
-                      </span>
-                    );
-                  })}
-                </div>
-                {!checkSkeleton && (
-                  <div className="stars">
-                    {productData?.averageRating?.$numberDecimal ? (
-                      <StarRatings
-                        rating={parseFloat(
-                          productData.averageRating.$numberDecimal
-                        )}
-                        starDimension="13px"
-                        starSpacing="1px"
-                        starRatedColor="#f2c900"
-                        starEmptyColor="#eee"
-                      />
-                    ) : (
-                      <StarRatings
-                        rating={5}
-                        starDimension="13px"
-                        starSpacing="1px"
-                        starRatedColor="#eee"
-                        starEmptyColor="#eee"
-                      />
-                    )}
+            <a>
+              <div className="card-body">
+                <div className="card-category small-line">
+                  <div className="cate">
+                    {productData.category.map((cate, i) => {
+                      return (
+                        <span key={i}>
+                          {cate.displayName}
+                          {productData.category.length !== i + 1 && " - "}
+                        </span>
+                      );
+                    })}
                   </div>
-                )}
+                  {!checkSkeleton && (
+                    <div className="stars">
+                      {productData?.averageRating?.$numberDecimal ? (
+                        <StarRatings
+                          rating={parseFloat(
+                            productData.averageRating.$numberDecimal
+                          )}
+                          starDimension="13px"
+                          starSpacing="1px"
+                          starRatedColor="#f2c900"
+                          starEmptyColor="#eee"
+                        />
+                      ) : (
+                          <StarRatings
+                            rating={5}
+                            starDimension="13px"
+                            starSpacing="1px"
+                            starRatedColor="#eee"
+                            starEmptyColor="#eee"
+                          />
+                        )}
+                    </div>
+                  )}
+                </div>
+                <div className="prod-name medium-line">{productData.name}</div>
+                <div className="prod-price large-line">
+                  {!checkSkeleton && "Rs"} {productData.price.$numberDecimal}
+                </div>
               </div>
-              <div className="prod-name medium-line">{productData.name}</div>
-              <div className="prod-price large-line">
-                {!checkSkeleton && "Rs"} {productData.price.$numberDecimal}
-              </div>
-            </div>
+            </a>
           </Link>
         </div>
       </div>

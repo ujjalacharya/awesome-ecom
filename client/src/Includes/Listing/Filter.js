@@ -76,7 +76,7 @@ class Filter extends Component {
                 this.props.searchPrice(this.props.minPrice, this.props.maxPrice)
               }
             >
-              <i class="fa fa-search" aria-hidden="true"></i>
+              <i className="fa fa-search" aria-hidden="true"></i>
             </button>
           </div>
         </div>

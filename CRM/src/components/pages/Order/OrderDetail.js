@@ -5,9 +5,9 @@ import { SideBySideMagnifier} from "react-image-magnifiers";
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import OrderStatus from './OrderStatus';
-import { cancelOrder } from '../../../redux/actions/order_actions'
+import OrderCancel from './OrderCancel';
 
-const OrderDetail = ({ order, singleLoading }) => {
+const OrderDetail = ({ order ,singleLoading ,  isOrderDetailOpen }) => {
     function onChange(a, b, c) {
         // console.log(a, b, c);
     }
@@ -24,6 +24,7 @@ const OrderDetail = ({ order, singleLoading }) => {
         textAlign: 'center',
         background: '#364d79',
     };
+
     return (
             <div className="row">
                 <div className="col-xl-8">
@@ -78,8 +79,8 @@ const OrderDetail = ({ order, singleLoading }) => {
                                 <div className="col-md-6 text-md-right">
                                     <p>
                                     {order?.orderID} <br />
-                                        <OrderStatus status={order?.status?.currentStatus} order_id={order?._id} admin_id={order?.soldBy} />
-                                         <br /> {order?.quantity} <br /> {order && moment(order?.createdAt).format('ddd mm yyyy')} <br />
+                                        <OrderStatus isOrderDetailOpen={isOrderDetailOpen} status={order?.status?.currentStatus} order_id={order?._id} admin_id={order?.soldBy} />
+                                    <br /> {order?.quantity} <br /> {order && moment(order?.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")} <br />
                                     </p>
                                 </div>
                             </div>
@@ -98,7 +99,18 @@ const OrderDetail = ({ order, singleLoading }) => {
                             </div>
                             <div className="col-md-6 text-md-right">
                                 <p>
-                                    {order?.payment?.transactionCode}<br />{order && (order?.isPaid ? "Yes" : "No")} <br /> {order?.payment?.method}<br/> {order?.payment?.shippingCharge} <br/> {order?.payment?.amount} <br /> {order?.payment?.returnedAmount} <br />
+                                    {order?.payment?.transactionCode}
+                                    <br />
+                                    {
+                                        order && (order?.isPaid ? <span className="badge badge-pill badge-success">yes</span> :
+                                     <span className="badge badge-pill badge-danger">no</span>)
+                                     }
+                                      <br /> {order?.payment?.method}
+
+                                      <br/> {order?.payment?.shippingCharge} 
+
+                                      <br/> {order?.payment?.amount} 
+                                      <br /> {order?.payment?.returnedAmount} <br />
                                 </p>
                             </div>
                         </div>
@@ -177,7 +189,8 @@ const OrderDetail = ({ order, singleLoading }) => {
                                         <small>
                                             <p>This order is returned by {order?.status?.returnedDetail?.returneddBy?.name}<br />
                                                 <strong>Email: </strong> {order?.status?.returnedDetail?.returneddBy?.email}<br />
-                                                <strong>Phone: </strong> {order?.status?.returnedDetail?.returneddBy?.phone}
+                                                <strong>Phone: </strong> {order?.status?.returnedDetail?.returneddBy?.phone}<br/>
+                                            <strong>Customer reason: </strong> {order?.status?.returnedDetail?.remark[0]?.comment}<br />
                                             </p>
                                         </small>
                                     </li>
@@ -194,19 +207,23 @@ const OrderDetail = ({ order, singleLoading }) => {
                             </ul>
                         </div>
                     </div>
+                {
+                    order && (order.status.currentStatus==='active' || order.status.currentStatus==='approve') && <OrderCancel isOrderDetailOpen={isOrderDetailOpen} order_id={order?._id} admin_id={order?.soldBy} />
+                }
                 </div>
+                
             </div>
     )
 }
 
 OrderDetail.propTypes = {
     order: PropTypes.object,
-    singleLoading: PropTypes.bool
+    singleLoading: PropTypes.bool,
 }
 const mapStateToProps = (state) => ({
     order: state.order.order,
     singleLoading: state.order.singleLoading
 })
 
-export default connect(mapStateToProps,{cancelOrder})(React.memo(OrderDetail))
+export default connect(mapStateToProps,{})(React.memo(OrderDetail))
 

@@ -333,7 +333,7 @@ class Listing extends Component {
             <Row style={{ width: "100%" }}>
               <Col span={12}>
                 <div className="filter-type" onClick={this.showDrawerSort}>
-                  <i class="fa fa-sort" aria-hidden="true"></i>
+                  <i className="fa fa-sort" aria-hidden="true"></i>
                   {" "}<span>Sort By</span>
                 </div>
               </Col>
@@ -342,7 +342,7 @@ class Listing extends Component {
                   className="filter-type removeBorder"
                   onClick={this.showDrawerFiter}
                 >
-                  <i class="fa fa-filter" aria-hidden="true"></i>
+                  <i className="fa fa-filter" aria-hidden="true"></i>
                   {" "}<span>Filter</span>
                 </div>
               </Col>

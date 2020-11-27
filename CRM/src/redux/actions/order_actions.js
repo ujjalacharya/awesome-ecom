@@ -52,13 +52,14 @@ export const toggletobeReturnOrder = (id, order_id, remark = '', returnedAmount 
   const body = JSON.stringify({ remark, returnedAmount });//required only if complete to tobereturned
   try {
     const res = await api.patch(`/order/toggle-order-to-get-return/${id}/${order_id}`,body);
-    dispatch({
-      type: TOGGLE_TOBERETURN_ORDER,
-      payload: res.data,
-    });
+    // dispatch({
+    //   type: TOGGLE_TOBERETURN_ORDER,
+    //   payload: res.data,
+    // });
+    dispatch(getOrder(id,order_id))
     dispatch({
       type: SUCCESS,
-      payload: `Order status has sucessfully changed to ${res.data.order.status.currentStatus}`,
+      payload: `Order status has sucessfully changed to ${res.data[0].status.currentStatus}`,
     });
   } catch (err) {
     console.log("****order_actions/toggletobeReturnOrder****", err);
@@ -66,13 +67,15 @@ export const toggletobeReturnOrder = (id, order_id, remark = '', returnedAmount 
   }
 };
 
-export const cancelOrder = (id, order_id) => async (dispatch) => {
+export const cancelOrder = (id, order_id, remark) => async (dispatch) => {
+  const body = JSON.stringify({remark})
   try {
-    const res = await api.patch(`/order/cancel-order/${id}/${order_id}`);
-    dispatch({
-      type: CANCEL_ORDER,
-      payload: res.data,
-    });
+    const res = await api.patch(`/order/cancel-order/${id}/${order_id}`, body);
+    // dispatch({
+    //   type: CANCEL_ORDER,
+    //   payload: res.data,
+    // });
+    dispatch(getOrder(id, order_id))
     dispatch({
       type: SUCCESS,
       payload: 'Order cancelled sucessfully',
