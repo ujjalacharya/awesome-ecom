@@ -10,8 +10,8 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigators = (props) => {
 
   const dispatch = useDispatch()
-  const setData = () => {
-    dispatch(getProductsByCategory())
+  const setDataTogetProductsByCategory = ({_id, slug}) => {
+    dispatch(getProductsByCategory({_id, slug}))
     props.navigation.navigate("Products")
   }
 
@@ -19,7 +19,7 @@ const DrawerNavigators = (props) => {
     <Drawer.Navigator
       drawerType="slide"
       initialRouteName="Main"
-      drawerContent={(prop) => CustomDrawer({ ...prop, ...props, setData })}
+      drawerContent={(prop) => CustomDrawer({ ...prop, ...props, setDataTogetProductsByCategory })}
     >
       <Drawer.Screen name="Tab" component={TabNavigators} />
     </Drawer.Navigator>

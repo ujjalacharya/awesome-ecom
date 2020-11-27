@@ -31,8 +31,8 @@ import { SearchService } from "../services/searchService";
 //   };
 // };
 
-export const getProductsByCategory = () => {
-  const query = `?page=1&perPage=10&cat_id=5eb99018c5aa2f08ecd41986&cat_slug=mobiles`
+export const getProductsByCategory = ({_id, slug}) => {
+  const query = `?page=1&perPage=10&cat_id=${_id}&cat_slug=${slug}`
   return async (dispatch) => {
     dispatch({ type: SEARCH_PRODUCTS_LOADING });
     const searchService = new SearchService();

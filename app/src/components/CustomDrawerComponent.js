@@ -5,7 +5,7 @@ import { List, Appbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import Constants from "../constants/Constants";
 
-const CustomDrawer = ({ customCategories, setData }) => {
+const CustomDrawer = ({ customCategories, setDataTogetProductsByCategory }) => {
   return (
     <>
       <Appbar.Header statusBarHeight={10}>
@@ -30,7 +30,9 @@ const CustomDrawer = ({ customCategories, setData }) => {
                     title={childCate.displayName}
                     left={(props) => <List.Icon {...props} icon="apps" />}
                     expanded={true}
-                    onPress={() => setData()}
+                    onPress={() => {
+                      setDataTogetProductsByCategory(childCate)
+                    }}
                     key={childCate._id}
                   >
                     {childCate?.childCate.map((final) => (
