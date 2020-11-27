@@ -13,6 +13,7 @@ const DrawerNavigators = (props) => {
 
   const setData = () => {
     dispatch(getProductsByCategory())
+    props.navigation.navigate("Products")
   }
 
   return (
