@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   Avatar,
   Button,
@@ -17,8 +18,10 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Constants from "../../constants/Constants";
 import { SERVER_BASE_URL } from "../../../redux/services/productService";
+import { getProductDetails } from "../../../redux/actions/productActions";
 
 const SearchedSingleProduct = (props) => {
+  const dispatch = useDispatch()
   const renderActionButtonComponent = (type, product) => {
     switch (type) {
       case "searched":
@@ -99,7 +102,10 @@ const SearchedSingleProduct = (props) => {
   return (
     <TouchableWithoutFeedback>
       <Card
-        onPress={() => props.navigation.navigate("Detail")}
+        onPress={() => {
+        props.product && dispatch(getProductDetails(props.product.slug));
+          props.navigation.navigate("Detail")
+        }}
         style={{ marginBottom: 5 }}
       >
         <TouchableNativeFeedback>

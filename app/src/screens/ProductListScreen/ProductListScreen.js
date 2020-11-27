@@ -4,7 +4,6 @@ import { View } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
 import SearchedSingleProduct from "./SearchedSingleProduct";
-import { productData } from "../../utils/mock";
 import SortModal from "./Modals/SortModal";
 import FilterModal from "./Modals/FilterModal";
 import ProductListHeader from "./ProductListHeader";
@@ -51,7 +50,7 @@ const ProductListScreen = (props) => {
       <View style={{ flex: 1 }}>
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
-          stickyHeaderIndices={[1]}
+          // stickyHeaderIndices={[1]}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
