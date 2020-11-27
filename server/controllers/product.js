@@ -187,7 +187,7 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
-  const {createdAt,updatedAt,price, status, keyword} = req.query
+  const {createdAt,updatedAt,price, status, keyword,outofstock} = req.query
   
   let sortFactor = {createdAt:'desc'} ;
   if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
@@ -206,15 +206,15 @@ exports.getProducts = async (req, res) => {
     ...query,
     isVerified: null
   }
-  if (status && status === 'deleted') query = {
-    ...query,
-    isDeleted: { $ne: null }
-  }
-  if (status && status === 'notdeleted') query = {
-    ...query,
-    isDeleted: null
-  }
-  if (status && status === 'outofstock') query = {
+  // if (status && status === 'deleted') query = {
+  //   ...query,
+  //   isDeleted: { $ne: null }
+  // }
+  // if (status && status === 'notdeleted') query = {
+  //   ...query,
+  //   isDeleted: null
+  // }
+  if (outofstock && outofstock === 'yes') query = {
     ...query,
     quantity:0
   }

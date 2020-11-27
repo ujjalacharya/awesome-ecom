@@ -19,10 +19,10 @@ index.propTypes = {
     prop: PropTypes
 }
 
-const mapStateToProps = (state) => null
+// const mapStateToProps = (state) => null
 
 const mapDispatchToProps = {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default connect(null, mapDispatchToProps)(index)
