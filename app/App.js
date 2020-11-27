@@ -10,6 +10,7 @@ import Main from "./src";
 import store from "./redux";
 import { default as Constant } from "./src/constants/Constants";
 
+import NetInfo from "@react-native-community/netinfo";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -34,7 +35,7 @@ const App = () => {
     notificationListener.current = Notifications.addNotificationReceivedListener(
       (notification) => {
         setNotification(notification);
-        console.warn(notification)
+        console.warn(notification);
       }
     );
 
@@ -45,9 +46,18 @@ const App = () => {
       }
     );
 
+    // Subscribe
+    const unsubscribeInternet = NetInfo.addEventListener((state) => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+    });
+
+    // UnsubscribeInternet
+
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
+      unsubscribeInternet();
     };
   }, []);
 

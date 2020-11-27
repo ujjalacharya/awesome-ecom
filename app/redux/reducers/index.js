@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import productReducer from './productReducer';
 import authReducer from './authReducer';
 import menuReducer from './menuReducer';
-// import listingReducer from './listingReducer';
+import listingReducer from './listingReducer';
 // import userReducer from './userReducer';
 import globalErrorReducer from './globalErrorReducer';
 import otherReducer from './otherReducer';
@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   authentication: authReducer,
   products: productReducer,
   menu: menuReducer,
-  // listing: listingReducer,
+  listing: listingReducer,
   // user: userReducer,
   globalError: globalErrorReducer,
   other: otherReducer,
