@@ -16,6 +16,7 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 
 import Constants from "../../constants/Constants";
+import { SERVER_BASE_URL } from "../../../redux/services/productService";
 
 const SearchedSingleProduct = (props) => {
   const renderActionButtonComponent = (type, product) => {
@@ -107,13 +108,20 @@ const SearchedSingleProduct = (props) => {
               <View style={{ flex: 1.5 }}>
                 <Image
                   style={styles.tinyLogo}
-                  source={{ uri: props.product.image }}
+                  source={{
+                    uri:
+                      SERVER_BASE_URL +
+                      "/uploads/" +
+                      (props.product.image || props.product.images[0].medium),
+                  }}
                 />
               </View>
               <View style={{ flex: 2 }}>
                 <>
-                  <Title>{props.product.title}</Title>
-                  <Paragraph>{props.product.price}</Paragraph>
+                  <Title>{props.product.title || props.product.name}</Title>
+                  <Paragraph>
+                    {props.product.price.$numberDecimal || props.product.price}
+                  </Paragraph>
                   <Avatar.Text
                     size={24}
                     label="4/5 stars"

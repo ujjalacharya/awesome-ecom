@@ -1,4 +1,4 @@
-import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR, SEARCH_KEYWORD } from "../types";
+import { SEARCH_PRODUCTS,SEARCH_PRODUCTS_LOADING, SEARCH_FILTER, SEARCH_ERROR, SEARCH_KEYWORD } from "../types";
 
 const initialState = {
   getSearchFilter: null,

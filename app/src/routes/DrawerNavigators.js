@@ -10,7 +10,6 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigators = (props) => {
 
   const dispatch = useDispatch()
-
   const setData = () => {
     dispatch(getProductsByCategory())
     props.navigation.navigate("Products")
