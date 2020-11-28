@@ -34,9 +34,18 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
     //     setPagination({ ...pagination, total: totalCount })
     // }, [totalCount])
 
-    const handleTableChange = (pagination, filters) => {
-        console.log(filters);
-        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt: 'ace', updatedAt:'ace', status:filters.status?.[0], price:'ace', outofstock:filters.qty?.[0]})
+    const handleTableChange = (pagination, filters, sorter) => {
+        if (!sorter.length) {
+            sorter = [sorter]
+        }
+
+        let price = sorter.find(s=>s.columnKey==='price')
+        price = price?.order? price.order==='ascend'?'ace':'desc':''
+
+        let createdAt = sorter.find(s=>s.columnKey==='createdAt')
+        createdAt = createdAt?.order? createdAt.order==='ascend'?'ace':'desc':''
+
+        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt, updatedAt:'', status:filters.status?.[0], price, outofstock:filters.qty?.[0]})
     }
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -133,6 +142,9 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
         {
             title: 'Price',
             dataIndex: '',
+            sorter: {
+                multiple:1
+            },
             key: 'price',
             render: product => `Price: ${product.price.$numberDecimal} Discount Rate: ${product.discountRate}`,
             width: '15%',
@@ -169,8 +181,11 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             width: '5%',
         },
         {
-            title: 'Date',
+            title: 'createdAt',
             dataIndex: 'createdAt',
+            sorter: {
+                multiple:2
+            },
             key: 'createdAt',
             width: '10%',
             render: date => `${moment(date).format("MMM Do YYYY")}`
