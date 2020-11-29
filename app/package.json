@@ -23,7 +23,7 @@
     "expo-notifications": "^0.7.2",
     "expo-permissions": "^9.3.0",
     "expo-status-bar": "^1.0.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "moment": "^2.25.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

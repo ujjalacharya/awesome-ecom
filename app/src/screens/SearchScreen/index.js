@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { View, Text, StyleSheet, AsyncStorage } from "react-native";
 import { Searchbar, TouchableRipple, Button } from "react-native-paper";
+import { debounce } from "lodash";
 import Constants from "../../constants/Constants";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { getSearchKeywords } from "../../../redux/actions/searchActions";
 
-const searchData = [
+const searchKeywords = [
   { id: 1, name: "One Plus 8T" },
   { id: 2, name: "One on One" },
   { id: 3, name: "Car One plus" },
 ];
 
 const SeachScreen = (props) => {
+  const dispatch = useDispatch();
+  const {searchKeywords} = useSelector(state => state.listing)
   const [searchQuery, setSearchQuery] = useState("");
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
     fetchHistoryFromAsyncStorage();
   }, []);
+
+  console.log(searchKeywords)
 
   const fetchHistoryFromAsyncStorage = async () => {
     try {
@@ -32,7 +39,18 @@ const SeachScreen = (props) => {
     }
   };
 
-  const onChangeSearch = (query) => setSearchQuery(query);
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    keywordSearch(query);
+  };
+
+  const searchKeyWordsFromQuery = (query) => {
+    dispatch(getSearchKeywords(query));
+  };
+
+  const keywordSearch = debounce((term) => {
+    searchKeyWordsFromQuery(term);
+  }, 300);
 
   const handleGo = async () => {
     let newItemsArr = [];
@@ -41,7 +59,7 @@ const SeachScreen = (props) => {
       if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
 
       searchQuery && newItemsArr.unshift(searchQuery);
-      newItemsArr = newItemsArr.map(item => item.trim())
+      newItemsArr = newItemsArr.map((item) => item.trim());
       let uniqueItems = [...new Set(newItemsArr)];
 
       await AsyncStorage.setItem(
@@ -86,7 +104,7 @@ const SeachScreen = (props) => {
       </View>
       {searchQuery ? (
         <View style={{ flex: 1, backgroundColor: Constants.headerTintColor }}>
-          {searchData.map((item, i) => {
+          {searchKeywords.map((item, i) => {
             return (
               <View
                 style={{
@@ -100,9 +118,9 @@ const SeachScreen = (props) => {
                 key={i}
               >
                 <View style={{ flex: 0.9, marginLeft: 5 }}>
-                  <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
+                  <Text style={{ fontWeight: "bold" }}>{item}</Text>
                 </View>
-                <TouchableRipple onPress={() => setSearchQuery(item.name)}>
+                <TouchableRipple onPress={() => setSearchQuery(item)}>
                   <Feather name="arrow-up-left" size={20} color="gray" />
                 </TouchableRipple>
               </View>

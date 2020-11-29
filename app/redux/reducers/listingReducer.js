@@ -4,13 +4,14 @@ const initialState = {
   getSearchFilter: null,
   getSearchData: null,
   getSearchDataLoading: false,
-  getSearchKeywords: null
+  getSearchKeywords: null,
+  searchKeywords: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SEARCH_KEYWORD:
-      return { ...state, getSearchKeywords: action.payload, hasError: false };
+      return { ...state, searchKeywords: action.payload, hasError: false };
     case SEARCH_FILTER:
       return { ...state, getSearchFilter: action.payload, hasError: false };
     case SEARCH_PRODUCTS:
