@@ -8,10 +8,8 @@ import ConciseQnA from "./ConciseQnA";
 import YoutubePlayer from "./YoutubePlayer";
 import Skeleton from "../../components/shared/Skeleton";
 
-const ProductDescription = ({ loading, productDetails }) => {
-  if (loading) {
-    return <Skeleton />;
-  }
+const ProductDescription = ({ productDetails }) => {
+ 
   const { product } = productDetails;
   return (
     <>
