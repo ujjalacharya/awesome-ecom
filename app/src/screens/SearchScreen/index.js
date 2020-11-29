@@ -8,6 +8,7 @@ import Constants from "../../constants/Constants";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import {
   getSearchKeywords,
+  searchFilter,
   searchProducts,
 } from "../../../redux/actions/searchActions";
 
@@ -59,7 +60,7 @@ const SeachScreen = (props) => {
     if (!itemName) {
       try {
         let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
-        searchQueryForSearch = searchQuery
+        searchQueryForSearch = searchQuery;
         if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
 
         searchQuery && newItemsArr.unshift(searchQuery);
@@ -73,12 +74,13 @@ const SeachScreen = (props) => {
       } catch (error) {
         // Error saving data
       }
-    }else{
-      searchQueryForSearch = searchQuery
+    } else {
+      searchQueryForSearch = searchQuery;
     }
-    dispatch(
-      searchProducts(`?page=1&perPage=10`, { keyword: searchQueryForSearch })
-    );
+
+    dispatch(searchProducts(`?page=1&perPage=10`, { keyword: searchQueryForSearch }));
+    dispatch(searchFilter({ keyword: searchQueryForSearch }));
+
     props.navigation.navigate("Products");
   };
 

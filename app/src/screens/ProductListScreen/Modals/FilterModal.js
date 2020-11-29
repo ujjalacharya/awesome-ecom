@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { View, Text, Modal, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
@@ -10,14 +11,19 @@ import {
 } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../../constants/Constants";
+import Skeleton from "../../../components/shared/Skeleton"
 
 const FilterModal = (props) => {
+  const dispatch = useDispatch()
+  const {getSearchFilter} = useSelector(state => state.listing);
+
   const [brand, setBrand] = useState(null);
   const [rating, setRating] = useState(null);
   const [warrenty, setWarrenty] = useState(null);
   const [price, setPrice] = useState(null);
   const [color, setColor] = useState(null);
   const [size, setSize] = useState(null);
+
 
   const handleBrand = (brand) => {
     setBrand(brand);
@@ -57,7 +63,8 @@ const FilterModal = (props) => {
       visible={props.showFilterModal}
       onRequestClose={props.handleFilterModalVisibility}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      {
+        getSearchFilter ? <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View
           style={{ height: 40, flexDirection: "row", alignItems: "center" }}
         >
@@ -81,7 +88,7 @@ const FilterModal = (props) => {
           <Card.Title title="Brands" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2, 3, 4].map((item, index) => (
+              {getSearchFilter.brands.map((item, index) => (
                 <Button
                   style={{
                     ...styles.filterButton,
@@ -96,7 +103,7 @@ const FilterModal = (props) => {
                       color: checkedStyle(index, brand).color,
                     }}
                   >
-                    Samsung
+                    {item.brandName}
                   </Text>
                 </Button>
               ))}
@@ -156,7 +163,7 @@ const FilterModal = (props) => {
           <Card.Title title="Warrenties" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2].map((item, index) => (
+              {getSearchFilter.warranties.map((item, index) => (
                 <Button
                   style={{
                     ...styles.filterButton,
@@ -172,7 +179,7 @@ const FilterModal = (props) => {
                       color: checkedStyle(index, warrenty).color,
                     }}
                   >
-                    {item} year(s)
+                    {item}
                   </Text>
                 </Button>
               ))}
@@ -184,7 +191,7 @@ const FilterModal = (props) => {
           <Card.Title title="Colors" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2, 3, 4].map((_, index) => (
+              {getSearchFilter.colors.map((color, index) => (
                 <Button
                   style={{
                     ...styles.filterButton,
@@ -199,7 +206,7 @@ const FilterModal = (props) => {
                       color: checkedStyle(index, color).color,
                     }}
                   >
-                    White
+                    {color}
                   </Text>
                 </Button>
               ))}
@@ -211,7 +218,7 @@ const FilterModal = (props) => {
           <Card.Title title="Sizes" />
           <Card.Content style={styles.cardContentStyle}>
             <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2, 3, 4].map((_, index) => (
+              {getSearchFilter.sizes.map((size, index) => (
                 <Button
                   style={{
                     ...styles.filterButton,
@@ -226,7 +233,7 @@ const FilterModal = (props) => {
                       color: checkedStyle(index, size).color,
                     }}
                   >
-                    Medium
+                    {size}
                   </Text>
                 </Button>
               ))}
@@ -235,7 +242,8 @@ const FilterModal = (props) => {
         </Card>
         <Divider />
         <View style={{ marginBottom: 50 }}></View>
-      </ScrollView>
+      </ScrollView> : <Skeleton />
+      }
       <View style={styles.productFooter}>
         <View
           style={{
@@ -264,7 +272,7 @@ const FilterModal = (props) => {
                 justifyContent: "center",
               }}
               labelStyle={{ color: "white" }}
-              onPress={props.handleFilterModalVisibility}
+              onPress={getSearchFilter && props.handleFilterModalVisibility}
             >
               Apply Filter
             </Button>

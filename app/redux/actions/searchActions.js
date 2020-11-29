@@ -1,4 +1,4 @@
-import { SEARCH_PRODUCTS, SEARCH_PRODUCTS_LOADING, SEARCH_FILTER, SEARCH_ERROR, GLOBAL_ERROR, SEARCH_KEYWORD } from "../types";
+import { SEARCH_PRODUCTS, SEARCH_PRODUCTS_LOADING, SEARCH_FILTER, SEARCH_ERROR, GLOBAL_ERROR, SEARCH_KEYWORD, SEARCH_FILTER_LOADING } from "../types";
 import { SearchService } from "../services/searchService";
 
 export const getSearchKeywords = (query) => {
@@ -49,20 +49,21 @@ export const getProductsByCategory = ({_id, slug}) => {
   };
 };
 
-// const searchFilter = (query) => {
-//   return async (dispatch) => {
-//     const searchService = new SearchService();
-//     const response = await searchService.searchFilter(query);
-//     if (response.isSuccess) {
-//       dispatch({ type: SEARCH_FILTER, payload: response.data });
-//     } else if (!response.isSuccess) {
-//       dispatch({
-//         type: GLOBAL_ERROR,
-//         payload: response.errorMessage,
-//       });
-//     }
-//   };
-// };
+export const searchFilter = (query) => {
+  return async (dispatch) => {
+    dispatch({ type: SEARCH_FILTER_LOADING});
+    const searchService = new SearchService();
+    const response = await searchService.searchFilter(query);
+    if (response.isSuccess) {
+      dispatch({ type: SEARCH_FILTER, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 // export default {
 //   searchProducts,
