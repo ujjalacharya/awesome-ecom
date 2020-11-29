@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, Fragment } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Table as AntdTable, Input, Button, Space, Modal, Avatar, Drawer } from 'antd';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
@@ -18,10 +18,6 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
     // const [searchedColumn, setSearchedColumn] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const searchInput = useRef(null);
-    useEffect(() => {
-        user && getProducts(user._id, pagination.current, pagination.pageSize)
-    }, [user])
-
     const pagination = useMemo(() => {
         return {
             // current: 1,
@@ -29,13 +25,27 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             total: totalCount
         }
     }, [totalCount])
+    useEffect(() => {
+        user && getProducts({id:user._id, page:pagination.current, perPage:pagination.pageSize})
+    }, [user])
+
 
     // useEffect(() => {
     //     setPagination({ ...pagination, total: totalCount })
     // }, [totalCount])
 
-    const handleTableChange = (pagination, filters) => {
-        user && getProducts(user._id, pagination.current, pagination.pageSize, filters.status?.[0], filters.product?.[0])
+    const handleTableChange = (pagination, filters, sorter) => {
+        if (!sorter.length) {
+            sorter = [sorter]
+        }
+
+        let price = sorter.find(s=>s.columnKey==='price')
+        price = price?.order? price.order==='ascend'?'ace':'desc':''
+
+        let createdAt = sorter.find(s=>s.columnKey==='createdAt')
+        createdAt = createdAt?.order? createdAt.order==='ascend'?'ace':'desc':''
+
+        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt, updatedAt:'', status:filters.status?.[0], price, outofstock:filters.qty?.[0]})
     }
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -113,9 +123,10 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
     const columns = useMemo(() => [
         {
             title: 'Product',
-            dataIndex: 'product',
+            dataIndex: '',
+            key: 'product',
             width: '20%',
-            ...getProductsearchProps('product')
+            ...getProductsearchProps('')
         },
         {
             title: 'Category',
@@ -130,44 +141,52 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
         },
         {
             title: 'Price',
-            // dataIndex: 'products',
-            render: product => `Price: ${product.price.$numberDecimal} Discount: ${product.discountRate}`,
+            dataIndex: '',
+            sorter: {
+                multiple:1
+            },
+            key: 'price',
+            render: product => `Price: ${product.price.$numberDecimal} Discount Rate: ${product.discountRate}`,
             width: '15%',
         },
         {
             title: 'Status',
-            // dataIndex: 'status',
+            dataIndex: '',
+            key: 'status',
             filterMultiple: false,
             filters: [
                 { text: 'All', value: 'undefined' },
                 { text: 'Verified', value: 'verified' },
-                { text: 'Unverified', value: 'unverified' },
-                { text: 'Deleted', value: 'deleted' },
-                { text: 'Not deleted', value: 'notdeleted' },
-                { text: 'Out of stock', value: 'outofstock' },
+                { text: 'Unverified', value: 'unverified' }
             ],
             render: product => {
-                if (product.isVerified) return (<span className="badge badge-pill badge-info">verified</span>)
-                if (product.isVerified) return (<span className="badge badge-pill badge-info">verified</span>)
-                if (!product.isVerified) return (<span className="badge badge-pill badge-secondary">unverified</span>)
-
-                let badgeClass = status.currentStatus === 'verified' ? "badge badge-pill badge-info" :
-                    status.currentStatus === 'unverified' ? "badge badge-pill badge-secondary" :
-                            status.currentStatus === 'deleted' ? "badge badge-pill badge-danger" :
-                                status.currentStatus === 'notdeleted' ? "badge badge-pill badge-success" :
-                                        "badge badge-pill badge-dark"
-                return (<span className={badgeClass}>{status.currentStatus}</span>)
+                if (product.isVerified) return (<span className="badge badge-pill badge-success">verified</span>)
+                if (!product.isVerified) return (<span className="badge badge-pill badge-danger">unverified</span>)
             },
             width: '5%',
         },
         {
             title: 'Qty',
-            dataIndex: 'quantity',
+            dataIndex: '',
+            key: 'qty',
+            filterMultiple: false,
+            filters: [
+                { text: 'All', value: 'undefined' },
+                { text: 'Out of Stock', value: 'yes' },
+            ],
+            render: product => {
+                if (product.quantity<1) return (<span className="badge badge-pill badge-dark">Out of Stock</span>)
+                return `${product.quantity}`
+            },
             width: '5%',
         },
         {
-            title: 'Date',
+            title: 'createdAt',
             dataIndex: 'createdAt',
+            sorter: {
+                multiple:2
+            },
+            key: 'createdAt',
             width: '10%',
             render: date => `${moment(date).format("MMM Do YYYY")}`
         },
@@ -208,7 +227,6 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
                 closable={false}
                 onClose={() => setIsDrawerOpen(false)}
                 visible={isDrawerOpen}
-                closable
                 closeIcon={<i className="fas fa-times btn btn-danger"></i>}
             >
             'sdcsdv'
@@ -237,9 +255,9 @@ Table.propTypes = {
 }
 const mapStateToProps = (state) => ({
     user: state.auth.user,
-    products: state.order.products,
-    multiLoading: state.order.multiLoading,
-    totalCount: state.order.totalCount,
+    products: state.product.products,
+    multiLoading: state.product.multiLoading,
+    totalCount: state.product.totalCount,
 })
 
 export default connect(mapStateToProps, { getProducts, getProduct })(Table)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, Fragment } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Table as AntdTable, Input, Button, Space, Modal , Avatar, Drawer} from 'antd';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
@@ -18,10 +18,6 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
     // const [searchedColumn, setSearchedColumn] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const searchInput = useRef(null);
-    useEffect(() => {
-        user && getOrders(user._id, pagination.current, pagination.pageSize)
-    }, [user])
-
     const pagination = useMemo(()=>{
         return {
             // current: 1,
@@ -29,6 +25,10 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
             total:totalCount
         }
     },[totalCount])
+    useEffect(() => {
+        user && getOrders(user._id, pagination.current, pagination.pageSize)
+    }, [user])
+
 
     // useEffect(() => {
     //     setPagination({ ...pagination, total: totalCount })
@@ -223,7 +223,6 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         closable={false}
         onClose={()=>setIsDrawerOpen(false)}
         visible={isDrawerOpen}
-        closable
         closeIcon={<i className="fas fa-times btn btn-danger"></i>}
     >
         <OrderDetail isOrderDetailOpen={isDrawerOpen} />
