@@ -6,7 +6,10 @@ import { debounce } from "lodash";
 import Constants from "../../constants/Constants";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { getSearchKeywords, searchProducts } from "../../../redux/actions/searchActions";
+import {
+  getSearchKeywords,
+  searchProducts,
+} from "../../../redux/actions/searchActions";
 
 const searchKeywords = [
   { id: 1, name: "One Plus 8T" },
@@ -16,7 +19,7 @@ const searchKeywords = [
 
 const SeachScreen = (props) => {
   const dispatch = useDispatch();
-  const {searchKeywords} = useSelector(state => state.listing)
+  const { searchKeywords } = useSelector((state) => state.listing);
   const [searchQuery, setSearchQuery] = useState("");
   const [history, setHistory] = useState([]);
 
@@ -50,24 +53,28 @@ const SeachScreen = (props) => {
     searchKeyWordsFromQuery(term);
   }, 300);
 
-  const handleGo = async () => {
+  const handleGo = async (itemName) => {
     let newItemsArr = [];
-    try {
-      let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
-      if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
+    if (!itemName) {
+      try {
+        let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
+        if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
 
-      searchQuery && newItemsArr.unshift(searchQuery);
-      newItemsArr = newItemsArr.map((item) => item.trim());
-      let uniqueItems = [...new Set(newItemsArr)];
+        searchQuery && newItemsArr.unshift(searchQuery);
+        newItemsArr = newItemsArr.map((item) => item.trim());
+        let uniqueItems = [...new Set(newItemsArr)];
 
-      await AsyncStorage.setItem(
-        "@uzzStore:history",
-        JSON.stringify(uniqueItems)
-      );
-    } catch (error) {
-      // Error saving data
+        await AsyncStorage.setItem(
+          "@uzzStore:history",
+          JSON.stringify(uniqueItems)
+        );
+      } catch (error) {
+        // Error saving data
+      }
     }
-    dispatch(searchProducts(`?page=1&perPage=10`, {keyword: searchQuery}))
+    dispatch(
+      searchProducts(`?page=1&perPage=10`, { keyword: itemName || searchQuery })
+    );
     props.navigation.navigate("Products");
   };
 
@@ -105,7 +112,7 @@ const SeachScreen = (props) => {
         <View style={{ flex: 1, backgroundColor: Constants.headerTintColor }}>
           {searchKeywords.map((item, i) => {
             return (
-              <View
+              <TouchableRipple
                 style={{
                   borderColor: "#000",
                   borderBottomWidth: 1,
@@ -115,14 +122,20 @@ const SeachScreen = (props) => {
                   flexDirection: "row",
                 }}
                 key={i}
+                onPress={() => {
+                  setSearchQuery(item);
+                  handleGo(item);
+                }}
               >
-                <View style={{ flex: 0.9, marginLeft: 5 }}>
-                  <Text style={{ fontWeight: "bold" }}>{item}</Text>
-                </View>
-                <TouchableRipple onPress={() => setSearchQuery(item)}>
-                  <Feather name="arrow-up-left" size={20} color="gray" />
-                </TouchableRipple>
-              </View>
+                <>
+                  <View style={{ flex: 0.9, marginLeft: 5 }}>
+                    <Text style={{ fontWeight: "bold" }}>{item}</Text>
+                  </View>
+                  <TouchableRipple onPress={() => setSearchQuery(item)}>
+                    <Feather name="arrow-up-left" size={20} color="gray" />
+                  </TouchableRipple>
+                </>
+              </TouchableRipple>
             );
           })}
         </View>
@@ -155,7 +168,7 @@ const SeachScreen = (props) => {
           >
             {history.map((item, i) => (
               <TouchableRipple
-                onPress={() => setSearchQuery(item)}
+                onPress={() => onChangeSearch(item)}
                 style={{
                   flexBasis: "28%",
                   height: 40,
