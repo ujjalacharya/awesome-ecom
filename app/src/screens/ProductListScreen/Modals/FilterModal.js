@@ -20,7 +20,10 @@ const FilterModal = (props) => {
   const [brand, setBrand] = useState([]);
   const [rating, setRating] = useState(null);
   const [warranty, setWarranty] = useState([]);
-  const [price, setPrice] = useState(null);
+  const [price, setPrice] = useState({
+    min_price: null,
+    max_price: null,
+  });
   const [color, setColor] = useState([]);
   const [size, setSize] = useState([]);
 
@@ -43,16 +46,22 @@ const FilterModal = (props) => {
     let uniqueWarranty = uniqueItemMaker(warranty, war);
     setWarranty(uniqueWarranty);
   };
-  const handlePrice = (pr) => {
-    setPrice(pr);
+  const handlePrice = (pr, index) => {
+    let min_price = index === 0 ? pr : price.min_price;
+    let max_price = index === 1 ? pr : price.max_price;
+    setPrice({
+      ...price,
+      min_price,
+      max_price,
+    });
   };
   const handleColor = (col) => {
     let uniqueColor = uniqueItemMaker(color, col);
     setColor(uniqueColor);
   };
   const handleSize = (siz) => {
-    let uniqueSize = uniqueItemMaker(size, siz);
-    setSize(uniqueSize);
+    // const uniqueSize = new Set([...size, siz])
+    setSize([siz]);
   };
 
   const checkedStyle = (item, type) => {
@@ -73,7 +82,9 @@ const FilterModal = (props) => {
       brand,
       warranty,
       color,
-      size,
+      sizes: size && size[0],
+      price,
+      rating
     });
   };
 
@@ -175,6 +186,7 @@ const FilterModal = (props) => {
                     placeholder={item}
                     keyboardType="number-pad"
                     key={i}
+                    onChangeText={(text) => handlePrice(text, i)}
                   />
                 ))}
               </View>
