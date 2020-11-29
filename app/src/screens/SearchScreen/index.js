@@ -6,7 +6,7 @@ import { debounce } from "lodash";
 import Constants from "../../constants/Constants";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { getSearchKeywords } from "../../../redux/actions/searchActions";
+import { getSearchKeywords, searchProducts } from "../../../redux/actions/searchActions";
 
 const searchKeywords = [
   { id: 1, name: "One Plus 8T" },
@@ -23,8 +23,6 @@ const SeachScreen = (props) => {
   useEffect(() => {
     fetchHistoryFromAsyncStorage();
   }, []);
-
-  console.log(searchKeywords)
 
   const fetchHistoryFromAsyncStorage = async () => {
     try {
@@ -69,6 +67,7 @@ const SeachScreen = (props) => {
     } catch (error) {
       // Error saving data
     }
+    dispatch(searchProducts(`?page=1&perPage=10`, {keyword: searchQuery}))
     props.navigation.navigate("Products");
   };
 

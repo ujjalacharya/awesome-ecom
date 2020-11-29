@@ -16,20 +16,21 @@ export const getSearchKeywords = (query) => {
   };
 };
 
-// const searchProducts = (query, body) => {
-//   return async (dispatch) => {
-//     const searchService = new SearchService();
-//     const response = await searchService.searchProducts(query, body);
-//     if (response.isSuccess) {
-//       dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
-//     } else if (!response.isSuccess) {
-//       dispatch({
-//         type: GLOBAL_ERROR,
-//         payload: response.errorMessage,
-//       });
-//     }
-//   };
-// };
+export const searchProducts = (query, body) => {
+  return async (dispatch) => {
+    dispatch({ type: SEARCH_PRODUCTS_LOADING });
+    const searchService = new SearchService();
+    const response = await searchService.searchProducts(query, body);
+    if (response.isSuccess) {
+      dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 export const getProductsByCategory = ({_id, slug}) => {
   const query = `?page=1&perPage=10&cat_id=${_id}&cat_slug=${slug}`
