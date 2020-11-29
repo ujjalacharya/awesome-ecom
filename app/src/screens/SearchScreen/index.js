@@ -55,9 +55,11 @@ const SeachScreen = (props) => {
 
   const handleGo = async (itemName) => {
     let newItemsArr = [];
+    let searchQueryForSearch;
     if (!itemName) {
       try {
         let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
+        searchQueryForSearch = searchQuery
         if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
 
         searchQuery && newItemsArr.unshift(searchQuery);
@@ -71,9 +73,11 @@ const SeachScreen = (props) => {
       } catch (error) {
         // Error saving data
       }
+    }else{
+      searchQueryForSearch = searchQuery
     }
     dispatch(
-      searchProducts(`?page=1&perPage=10`, { keyword: itemName || searchQuery })
+      searchProducts(`?page=1&perPage=10`, { keyword: searchQueryForSearch })
     );
     props.navigation.navigate("Products");
   };
@@ -102,7 +106,7 @@ const SeachScreen = (props) => {
           </View>
           <TouchableRipple
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-            onPress={handleGo}
+            onPress={searchQuery && handleGo}
           >
             <Text style={{ fontWeight: "bold" }}>{`Go`}</Text>
           </TouchableRipple>
