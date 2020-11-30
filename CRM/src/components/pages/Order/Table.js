@@ -220,7 +220,7 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         title="Order Details"
         placement="right"
         width={800}
-        closable={false}
+        closable
         onClose={()=>setIsDrawerOpen(false)}
         visible={isDrawerOpen}
         closeIcon={<i className="fas fa-times btn btn-danger"></i>}

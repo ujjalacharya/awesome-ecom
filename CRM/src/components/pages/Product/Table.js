@@ -6,7 +6,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getProducts, getProduct } from '../../../redux/actions/product_actions'
-// import OrderDetail from './OrderDetail';
+import ProductDetail from './ProductDetail';
 
 const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, user }) => {
     // const [pagination, setPagination] = useState({
@@ -40,10 +40,10 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
         }
 
         let price = sorter.find(s=>s.columnKey==='price')
-        price = price?.order? price.order==='ascend'?'ace':'desc':''
+        price = price?.order? price.order==='ascend'?'asc':'desc':''
 
         let createdAt = sorter.find(s=>s.columnKey==='createdAt')
-        createdAt = createdAt?.order? createdAt.order==='ascend'?'ace':'desc':''
+        createdAt = createdAt?.order? createdAt.order==='ascend'?'asc':'desc':''
 
         user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt, updatedAt:'', status:filters.status?.[0], price, outofstock:filters.qty?.[0]})
     }
@@ -115,9 +115,10 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
 
     })
 
-    const openOrder = (order) => {
+    const openProduct = (product) => {
+        console.log(product);
         setIsDrawerOpen(true)
-        getProduct(order.soldBy, order._id)
+        getProduct(product.slug)
     }
 
     const columns = useMemo(() => [
@@ -146,7 +147,9 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
                 multiple:1
             },
             key: 'price',
-            render: product => `Price: ${product.price.$numberDecimal} Discount Rate: ${product.discountRate}`,
+            render: product => {
+                return <h4 style={{ fontSize: '1.1rem' }}>{`Rs ${product.price.$numberDecimal}`}<span className="period" style={{ fontSize: '0.7rem' }}>{`/${product.discountRate}% discount`}</span></h4>
+            },
             width: '15%',
         },
         {
@@ -193,13 +196,16 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
         {
             title: 'Action',
             dataIndex: '',
-            width: '5%',
-            render: action => <button className="btn btn-info"><i className="fas fa-eye"></i></button>,
-            onCell: order => {
-                return {
-                    onClick: e => openOrder(order)
-                }
-            }
+            width: '8%',
+            render: action => <>
+                <button onClick={()=>openProduct(action)} className="btn btn-info"><i className="fas fa-eye"></i></button>
+                <button className="btn btn-warning"><i className="fas fa-marker"></i></button>
+                </>,
+            // onCell: order => {
+            //     return {
+            //         onClick: e => openProduct(order)
+            //     }
+            // }
         },
     ], []);
 
@@ -216,21 +222,20 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
                 size='small'
             // onRow={ order => {
             //     return {
-            //         onClick:e => openOrder(order)
+            //         onClick:e => openProduct(order)
             //     }
             // }}
             />
             <Drawer
-                title="Order Details"
+                title="Product Detail"
                 placement="right"
                 width={800}
-                closable={false}
+                closable
                 onClose={() => setIsDrawerOpen(false)}
                 visible={isDrawerOpen}
                 closeIcon={<i className="fas fa-times btn btn-danger"></i>}
             >
-            'sdcsdv'
-                {/* <OrderDetail isOrderDetailOpen={isDrawerOpen} /> */}
+                <ProductDetail isOrderDetailOpen={isDrawerOpen} />
             </Drawer>
             {/* <Modal
         title="Order Detail"
@@ -240,7 +245,7 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
         onCancel={() => setIsDrawerOpen(false)}
         width={1000}
     >
-        <OrderDetail order={order}/>
+        <ProductDetail order={order}/>
     </Modal> */}
         </>)
 }

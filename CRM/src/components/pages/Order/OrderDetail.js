@@ -88,7 +88,7 @@ const OrderDetail = ({ order ,singleLoading ,  isOrderDetailOpen }) => {
                         <div className="mb-2">
                             <h6>Transaction Details</h6>
                         </div>
-                        <div className="row mb-4">
+                        <div className="row mb-10">
                             <div className="col-md-6">
                             <strong>
 

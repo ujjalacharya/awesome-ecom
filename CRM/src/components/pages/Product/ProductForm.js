@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Menu } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
-import Select from 'react-select';
+import { connect } from 'react-redux'
+import Layout from '../../core/Layout';
+import Categories from './Categories'
+import { getCategories } from '../../../redux/actions/product_actions'
 
-const { SubMenu } = Menu;
-
-const ProductForm = props => {
-    const [isMenuOpen,setIsMenuOpen] = useState(false)
-    const openMenu = () => setIsMenuOpen(!isMenuOpen)
-    // const closeMenu = () => setIsMenuOpen(false)
-    const handleClick = e => console.log(e.target);
+const ProductForm = ({getCategories}) => {
+    
+    useEffect(() => {
+        getCategories()
+    }, [])
+    
     return (
+        <Layout>        
         <div className="col-md-12" >
             <div className="card">
                 <div className="card-header">
@@ -30,38 +31,7 @@ const ProductForm = props => {
                                 <input type="password" className="form-control" id="inputPassword4" placeholder="Password" />
                             </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="inputAddress">Address</label>
-                            <input type="text" onClick={openMenu} className="form-control" id="inputAddress" placeholder="1234 Main St" />
-                            {
-                                isMenuOpen && <Menu onClick={handleClick} style={{ width: 256 }} mode="vertical">
-                                    <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">
-                                        <Menu.ItemGroup title="Item 1">
-                                            <Menu.Item key="1">Option 1</Menu.Item>
-                                            <Menu.Item key="2">Option 2</Menu.Item>
-                                        </Menu.ItemGroup>
-                                        <Menu.ItemGroup title="Iteom 2">
-                                            <Menu.Item key="3">Option 3</Menu.Item>
-                                            <Menu.Item key="4">Option 4</Menu.Item>
-                                        </Menu.ItemGroup>
-                                    </SubMenu>
-                                    <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Navigation Two">
-                                        <Menu.Item key="5">Option 5</Menu.Item>
-                                        <Menu.Item key="6">Option 6</Menu.Item>
-                                        <SubMenu key="sub3" title="Submenu">
-                                            <Menu.Item key="7">Option 7</Menu.Item>
-                                            <Menu.Item key="8">Option 8</Menu.Item>
-                                        </SubMenu>
-                                    </SubMenu>
-                                    <SubMenu key="sub4" icon={<SettingOutlined />} title="Navigation Three">
-                                        <Menu.Item key="9">Option 9</Menu.Item>
-                                        <Menu.Item key="10">Option 10</Menu.Item>
-                                        <Menu.Item key="11">Option 11</Menu.Item>
-                                        <Menu.Item key="12">Option 12</Menu.Item>
-                                    </SubMenu>
-                                </Menu>
-                            }
-                        </div>
+                        <Categories/>
                         <div className="form-group">
                             <label htmlFor="inputAddress2">Address 2</label>
                             <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
@@ -74,7 +44,7 @@ const ProductForm = props => {
                             <div className="form-group col-md-4">
                                 <label htmlFor="inputState">State</label>
                                 <select id="inputState" className="form-control">
-                                    <option selected>Choose...</option>
+                                    <option >Choose...</option>
                                     <option>...</option>
                                 </select>
                             </div>
@@ -94,11 +64,19 @@ const ProductForm = props => {
                 </div>
             </div>
         </div>
+        </Layout>
     )
 }
-
 ProductForm.propTypes = {
-
+    getCategories: PropTypes.func,
 }
 
-export default ProductForm
+const mapStateToProps = (state) => ({
+    
+})
+
+const mapDispatchToProps = {
+    getCategories
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(ProductForm))

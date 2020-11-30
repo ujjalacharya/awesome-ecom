@@ -190,9 +190,9 @@ exports.getProducts = async (req, res) => {
   const {createdAt,updatedAt,price, status, keyword,outofstock} = req.query
   
   let sortFactor = {createdAt:'desc'} ;
-  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
-  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
-  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
+  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {...sortFactor, createdAt}
+  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor,updatedAt}
+  if(price && (price==='asc' || price==='desc')) sortFactor = {...sortFactor, 'price.$numberDecimal':price}
   let query = { soldBy: req.profile._id }
   if(keyword) query = {
     ...query,
@@ -218,7 +218,7 @@ exports.getProducts = async (req, res) => {
     ...query,
     quantity:0
   }
-
+console.log(sortFactor);
   let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
