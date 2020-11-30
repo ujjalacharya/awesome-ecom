@@ -6,21 +6,23 @@ import {
 } from "../types";
 import { isTokenExpired } from "../../utils/common";
 import { AuthService } from "../services/authService";
+import { AsyncStorage } from "react-native";
 
-// gets token from the api and stores it in the redux store and in cookie
-const authenticate = (body, type, redirectUrl) => {
+// gets token from the api and stores it in the redux store and in asyncstorage
+export const authenticate = (body, type, redirectUrl) => {
   return async (dispatch) => {
+    dispatch({ type: AUTHENTICATE, payload: "response.data.token" });
     // const authService = new AuthService();
     // const response = await authService.loginUser(body);
 
     // if (response.isSuccess) {
-    //   setCookie("token", response.data.accessToken);
+    //   await AsyncStorage.setItem("token", response.data.accessToken);
     //   dispatch({ type: AUTHENTICATE, payload: response.data.token });
       
-    //   const redirectUrl = window.location.search
-    //     ? window.location.search.split("=")[1]
-    //     : "/";
-    //   window.location.href = redirectUrl;
+      // const redirectUrl = window.location.search
+      //   ? window.location.search.split("=")[1]
+      //   : "/";
+      // window.location.href = redirectUrl;
     // } else if (!response.isSuccess) {
     //   dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     // }

@@ -1,7 +1,7 @@
 import { AUTHENTICATE, DEAUTHENTICATE, AUTHENTICATE_ERROR } from "../types";
 
 const initialState = {
-  token: "null",
+  token: null,
   tokenError: null
 };
 

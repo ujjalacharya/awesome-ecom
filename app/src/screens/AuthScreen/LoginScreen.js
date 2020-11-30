@@ -1,20 +1,21 @@
-import React, { memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import Background from '../../components/Background';
-import Logo from '../../components/Logo';
-import Header from '../../components/Header';
-import Button from '../../components/Button';
-import TextInput from '../../components/TextInput';
-import BackButton from '../../components/BackButton';
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { memo, useState } from "react";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import Background from "../../components/Background";
+import Logo from "../../components/Logo";
+import Header from "../../components/Header";
+import Button from "../../components/Button";
+import TextInput from "../../components/TextInput";
+import BackButton from "../../components/BackButton";
+import { useDispatch } from "react-redux";
+import { authenticate } from "../../../redux/actions/authActions";
 
 // import { signIn } from "../../store/actions/user_actions";
 // import { emailValidator, passwordValidator } from '../core/utils';
 
 const LoginScreen = ({ navigation, ...props }) => {
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState({ value: "", error: "" });
+  const [password, setPassword] = useState({ value: "", error: "" });
 
   const _onLoginPressed = () => {
     // const emailError = emailValidator(email.value);
@@ -28,7 +29,7 @@ const LoginScreen = ({ navigation, ...props }) => {
 
     // navigation.navigate('Dashboard');
     // props.signIn("fdf");
-
+    dispatch(authenticate());
   };
 
   return (
@@ -43,7 +44,7 @@ const LoginScreen = ({ navigation, ...props }) => {
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={text => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -56,16 +57,14 @@ const LoginScreen = ({ navigation, ...props }) => {
         label="Password"
         returnKeyType="done"
         value={password.value}
-        onChangeText={text => setPassword({ value: text, error: '' })}
+        onChangeText={(text) => setPassword({ value: text, error: "" })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
       />
 
       <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ForgotPassword')}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
           <Text style={styles.label}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
@@ -76,7 +75,7 @@ const LoginScreen = ({ navigation, ...props }) => {
 
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>
@@ -86,31 +85,21 @@ const LoginScreen = ({ navigation, ...props }) => {
 
 const styles = StyleSheet.create({
   forgotPassword: {
-    width: '100%',
-    alignItems: 'flex-end',
+    width: "100%",
+    alignItems: "flex-end",
     marginBottom: 24,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 4,
   },
   label: {
     color: "orange",
   },
   link: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: "red",
   },
 });
 
-function mapStateToProps(state) {
-  return {
-    isAuth: state.authentication,
-  };
-}
-
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators({ signIn }, dispatch);
-// }
-
-export default connect(mapStateToProps, null)(LoginScreen);
+export default LoginScreen;
