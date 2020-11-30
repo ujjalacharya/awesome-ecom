@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { View } from "react-native";
 
@@ -9,8 +10,11 @@ import FilterModal from "./Modals/FilterModal";
 import ProductListHeader from "./ProductListHeader";
 import Filters from "./Filters";
 import Skeleton from "../../components/shared/Skeleton";
+import { searchProducts } from "../../../redux/actions/searchActions";
 
 const ProductListScreen = (props) => {
+  const dispatch = useDispatch()
+
   const [state, setState] = useState({
     progressBar: 0,
     intervalId: "",
@@ -37,6 +41,11 @@ const ProductListScreen = (props) => {
     }));
   };
 
+  const handleApplyFilter = (filters) => {
+    dispatch(searchProducts(`?page=1&perPage=10`, filters))
+    handleFilterModalVisibility()
+  }
+
   return (
     <>
       <SortModal
@@ -46,6 +55,7 @@ const ProductListScreen = (props) => {
       <FilterModal
         handleFilterModalVisibility={handleFilterModalVisibility}
         showFilterModal={state.showFilterModal}
+        handleApplyFilter={handleApplyFilter}
       />
       <View style={{ flex: 1 }}>
         <ScrollView

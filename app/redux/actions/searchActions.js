@@ -55,7 +55,7 @@ export const searchFilter = (query) => {
     const searchService = new SearchService();
     const response = await searchService.searchFilter(query);
     if (response.isSuccess) {
-      dispatch({ type: SEARCH_FILTER, payload: response.data });
+      dispatch({ type: SEARCH_FILTER, payload: {...response.data, query} });
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,

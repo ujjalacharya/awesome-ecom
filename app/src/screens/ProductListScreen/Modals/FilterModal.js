@@ -60,12 +60,14 @@ const FilterModal = (props) => {
     setColor(uniqueColor);
   };
   const handleSize = (siz) => {
-    // const uniqueSize = new Set([...size, siz])
-    setSize([siz]);
+    if (siz === size[0]) {
+      setSize([]);
+    } else {
+      setSize([siz]);
+    }
   };
 
   const checkedStyle = (item, type) => {
-    // console.log(type.includes(item))
     return type.includes(item)
       ? {
           color: Constants.chosenFilterColor,
@@ -77,15 +79,26 @@ const FilterModal = (props) => {
         };
   };
 
-  const handleApplyFilter = () => {
-    console.log({
-      brand,
-      warranty,
-      color,
+  const applyFilter = () => {
+    let filterObject = {
+      brands: brand,
+      warranties: warranty,
+      colors: color,
       sizes: size && size[0],
-      price,
-      rating
-    });
+      min_price: price.min_price,
+      max_price: price.max_price,
+      ratings: rating,
+      keyword: getSearchFilter?.query?.keyword,
+    };
+
+    // remove key from object that doesnot hold value i.e null or empty array
+    Object.keys(filterObject).forEach(
+      (key) =>
+        (filterObject[key] == null || !filterObject[key].length) &&
+        delete filterObject[key]
+    );
+
+    props.handleApplyFilter(filterObject);
   };
 
   return (
@@ -133,7 +146,7 @@ const FilterModal = (props) => {
                     <Text
                       style={{
                         fontSize: 12,
-                        color: checkedStyle(index, brand).color,
+                        color: checkedStyle(item._id, brand).color,
                       }}
                     >
                       {item.brandName}
@@ -181,6 +194,7 @@ const FilterModal = (props) => {
                       width: "47%",
                       backgroundColor: "white",
                     }}
+                    value={i ? price.max_price : price.min_price}
                     underlineColor="transparent"
                     mode="outlined"
                     placeholder={item}
@@ -210,7 +224,7 @@ const FilterModal = (props) => {
                     <Text
                       style={{
                         fontSize: 12,
-                        color: checkedStyle(index, warranty).color,
+                        color: checkedStyle(item, warranty).color,
                       }}
                     >
                       {item}
@@ -238,7 +252,7 @@ const FilterModal = (props) => {
                     <Text
                       style={{
                         fontSize: 12,
-                        color: checkedStyle(index, color).color,
+                        color: checkedStyle(item, color).color,
                       }}
                     >
                       {item}
@@ -265,7 +279,7 @@ const FilterModal = (props) => {
                     <Text
                       style={{
                         fontSize: 12,
-                        color: checkedStyle(index, size).color,
+                        color: checkedStyle(item, size).color,
                       }}
                     >
                       {item}
@@ -310,7 +324,7 @@ const FilterModal = (props) => {
               }}
               labelStyle={{ color: "white" }}
               // onPress={getSearchFilter && props.handleFilterModalVisibility}
-              onPress={getSearchFilter && handleApplyFilter}
+              onPress={getSearchFilter && applyFilter}
             >
               Apply Filter
             </Button>
