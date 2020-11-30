@@ -43,12 +43,12 @@ const reauthenticate = (token) => {
 };
 
 // removing the token
-const deauthenticate = (route = "/") => {
-  // return (dispatch) => {
-  //   removeCookie("token");
-  //   Router.push(route);
-  //   dispatch({ type: DEAUTHENTICATE });
-  // };
+export const deauthenticate = (route = "/") => {
+  return (dispatch) => {
+    // removeCookie("token");
+    // Router.push(route);
+    dispatch({ type: DEAUTHENTICATE });
+  };
 };
 
 export default {
