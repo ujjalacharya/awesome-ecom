@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Text, StyleSheet, AsyncStorage } from "react-native";
+import { View, Text, StyleSheet, AsyncStorage, TouchableWithoutFeedback } from "react-native";
 import { Searchbar, TouchableRipple, Button } from "react-native-paper";
 import { debounce } from "lodash";
 import Constants from "../../constants/Constants";
@@ -11,12 +11,6 @@ import {
   searchFilter,
   searchProducts,
 } from "../../../redux/actions/searchActions";
-
-const searchKeywords = [
-  { id: 1, name: "One Plus 8T" },
-  { id: 2, name: "One on One" },
-  { id: 3, name: "Car One plus" },
-];
 
 const SeachScreen = (props) => {
   const dispatch = useDispatch();
@@ -137,7 +131,7 @@ const SeachScreen = (props) => {
                   <View style={{ flex: 0.9, marginLeft: 5 }}>
                     <Text style={{ fontWeight: "bold" }}>{item}</Text>
                   </View>
-                  <TouchableRipple onPress={() => setSearchQuery(item)}>
+                  <TouchableRipple onPress={() => setSearchQuery(item)} style={{ flex: 0.1 }}>
                     <Feather name="arrow-up-left" size={20} color="gray" />
                   </TouchableRipple>
                 </>
