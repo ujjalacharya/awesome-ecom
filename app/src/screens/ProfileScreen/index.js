@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Appbar } from "react-native-paper";
 
 import Constants from "../../constants/Constants";
@@ -8,40 +8,27 @@ import Constants from "../../constants/Constants";
 import UserInfo from "./UserInfo";
 import MyActions from "./MyActions";
 import { ScrollView } from "react-native";
+import { deauthenticate } from "../../../redux/actions/authActions";
 
-class ProfileScreen extends Component {
-  handleLogout = async () => {
-    // this.props.signOut();
+const ProfileScreen = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    dispatch(deauthenticate());
   };
 
-  render() {
-    return (
-      <>
-        <Appbar.Header statusBarHeight={0}>
-          <Appbar.Content title="Profile" color={Constants.headerTintColor} />
-          <Appbar.Action
-            icon="logout"
-            color="white"
-            onPress={this.handleLogout}
-          />
-        </Appbar.Header>
-        <ScrollView>
-          <UserInfo />
-          <MyActions />
-        </ScrollView>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Appbar.Header statusBarHeight={0}>
+        <Appbar.Content title="Profile" color={Constants.headerTintColor} />
+        <Appbar.Action icon="logout" color="white" onPress={handleLogout} />
+      </Appbar.Header>
+      <ScrollView>
+        <UserInfo />
+        <MyActions />
+      </ScrollView>
+    </>
+  );
+};
 
-function mapStateToProps(state) {
-  return {
-    isAuth: state,
-  };
-}
-
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators({ signOut }, dispatch);
-// }
-
-export default connect(mapStateToProps, null)(ProfileScreen);
+export default ProfileScreen;

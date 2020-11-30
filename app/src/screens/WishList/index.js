@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import { Button } from "react-native-paper";
 import Constants from "../../constants/Constants";
@@ -7,30 +7,30 @@ import { productData } from "../../utils/mock";
 import SnackbarView from "../../components/SnackBarView";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 import ListingScreen from "../../components/ListingScreen";
+import { withAuth } from "../../components/shared/withAuth";
 
-export class WishListScreen extends Component {
-  state = {
+const WishListScreen = (props) => {
+  const [state, setState] = useState({
     visible: false,
     visibilityProduct: undefined,
-  };
+  });
 
-  setVisible = (product) => {
-    if (product && this.state.visibilityProduct !== product.id) {
-      this.setState((prevState) => ({
+ const setVisible = (product) => {
+    if (product && state.visibilityProduct !== product.id) {
+      setState((prevState) => ({
+        ...prevState,
         visible: true,
         visibilityProduct: product.id,
       }));
     } else if (!product) {
-      this.setState((prevState) => ({
+      setState((prevState) => ({
+        ...prevState,
         visible: false,
         visibilityProduct: product.id,
       }));
     }
   };
-  _goBack = () => {
-    this.props.navigation.pop();
-  };
-  render() {
+
     return (
       <>
         <ListingScreen title="Wish List">
@@ -38,10 +38,10 @@ export class WishListScreen extends Component {
             {productData.map((product, i) => (
               <SearchedSingleProduct
                 product={product}
-                setVisible={this.setVisible}
+                setVisible={setVisible}
                 key={i}
                 type="wishlist"
-                {...this.props}
+                {...props}
               />
             ))}
             <View style={{ height: 200 }}>
@@ -61,7 +61,7 @@ export class WishListScreen extends Component {
                 justifyContent: "center",
               }}
               labelStyle={{ color: "white" }}
-              onPress={this.setVisible}
+              onPress={setVisible}
             >
               Add all to Cart
             </Button>
@@ -69,8 +69,8 @@ export class WishListScreen extends Component {
         </View>
 
         <SnackbarView
-          visible={this.state.visible}
-          setVisible={this.setVisible}
+          visible={state.visible}
+          setVisible={setVisible}
           message="Added to Cart!"
           label="GO TO CART"
           link="CartStack"
@@ -78,6 +78,5 @@ export class WishListScreen extends Component {
       </>
     );
   }
-}
 
-export default WishListScreen;
+export default withAuth(WishListScreen);

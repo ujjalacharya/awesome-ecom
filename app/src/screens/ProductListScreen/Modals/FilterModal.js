@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { View, Text, Modal, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
@@ -10,36 +11,64 @@ import {
 } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../../constants/Constants";
+import Skeleton from "../../../components/shared/Skeleton";
 
 const FilterModal = (props) => {
-  const [brand, setBrand] = useState(null);
-  const [rating, setRating] = useState(null);
-  const [warrenty, setWarrenty] = useState(null);
-  const [price, setPrice] = useState(null);
-  const [color, setColor] = useState(null);
-  const [size, setSize] = useState(null);
+  const dispatch = useDispatch();
+  const { getSearchFilter } = useSelector((state) => state.listing);
 
-  const handleBrand = (brand) => {
-    setBrand(brand);
+  const [brand, setBrand] = useState([]);
+  const [rating, setRating] = useState(null);
+  const [warranty, setWarranty] = useState([]);
+  const [price, setPrice] = useState({
+    min_price: null,
+    max_price: null,
+  });
+  const [color, setColor] = useState([]);
+  const [size, setSize] = useState([]);
+
+  const uniqueItemMaker = (type, newItem) => {
+    // add new item while toggling the existing item
+    let uniqueItem = [...type].filter((item) => item !== newItem);
+    uniqueItem =
+      uniqueItem.length === type.length ? [...uniqueItem, newItem] : uniqueItem;
+    return uniqueItem;
+  };
+
+  const handleBrand = (newBrand) => {
+    let uniqueBrand = uniqueItemMaker(brand, newBrand);
+    setBrand(uniqueBrand);
   };
   const handleRating = (rate) => {
     setRating(rate);
   };
-  const handleWarrenty = (war) => {
-    setWarrenty(war);
+  const handleWarranty = (war) => {
+    let uniqueWarranty = uniqueItemMaker(warranty, war);
+    setWarranty(uniqueWarranty);
   };
-  const handlePrice = (pr) => {
-    setPrice(pr);
+  const handlePrice = (pr, index) => {
+    let min_price = index === 0 ? pr : price.min_price;
+    let max_price = index === 1 ? pr : price.max_price;
+    setPrice({
+      ...price,
+      min_price,
+      max_price,
+    });
   };
   const handleColor = (col) => {
-    setColor(col);
+    let uniqueColor = uniqueItemMaker(color, col);
+    setColor(uniqueColor);
   };
   const handleSize = (siz) => {
-    setSize(siz);
+    if (siz === size[0]) {
+      setSize([]);
+    } else {
+      setSize([siz]);
+    }
   };
 
-  const checkedStyle = (index, type) => {
-    return index === type
+  const checkedStyle = (item, type) => {
+    return type.includes(item)
       ? {
           color: Constants.chosenFilterColor,
           backgroundColor: Constants.chosenFilterBackgroundColor,
@@ -50,6 +79,28 @@ const FilterModal = (props) => {
         };
   };
 
+  const applyFilter = () => {
+    let filterObject = {
+      brands: brand,
+      warranties: warranty,
+      colors: color,
+      sizes: size && size[0],
+      min_price: price.min_price,
+      max_price: price.max_price,
+      ratings: rating,
+      keyword: getSearchFilter?.query?.keyword,
+    };
+
+    // remove key from object that doesnot hold value i.e null or empty array
+    Object.keys(filterObject).forEach(
+      (key) =>
+        (filterObject[key] == null || !filterObject[key].length) &&
+        delete filterObject[key]
+    );
+
+    props.handleApplyFilter(filterObject);
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -57,185 +108,193 @@ const FilterModal = (props) => {
       visible={props.showFilterModal}
       onRequestClose={props.handleFilterModalVisibility}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View
-          style={{ height: 40, flexDirection: "row", alignItems: "center" }}
-        >
-          <View style={{ flex: 0.99, marginLeft: 20 }}>
-            <Text style={{ fontSize: 18 }}>Filters</Text>
-          </View>
-          <View>
-            <Button
-              icon={() => (
-                <AntDesign
-                  name="close"
-                  size={15}
-                  // color={Constants.primaryGreen}
-                />
-              )}
-              onPress={props.handleFilterModalVisibility}
-            ></Button>
-          </View>
-        </View>
-        <Card style={styles.cardStyle}>
-          <Card.Title title="Brands" />
-          <Card.Content style={styles.cardContentStyle}>
-            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2, 3, 4].map((item, index) => (
-                <Button
-                  style={{
-                    ...styles.filterButton,
-                    backgroundColor: checkedStyle(index, brand).backgroundColor,
-                  }}
-                  key={index}
-                  onPress={() => handleBrand(index)}
-                >
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: checkedStyle(index, brand).color,
-                    }}
-                  >
-                    Samsung
-                  </Text>
-                </Button>
-              ))}
+      {getSearchFilter ? (
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View
+            style={{ height: 40, flexDirection: "row", alignItems: "center" }}
+          >
+            <View style={{ flex: 0.99, marginLeft: 20 }}>
+              <Text style={{ fontSize: 18 }}>Filters</Text>
             </View>
-          </Card.Content>
-        </Card>
-        <Divider />
-        <Card style={styles.cardStyle}>
-          <Card.Title title="Ratings" />
-          <Card.Content style={styles.cardContentStyle}>
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <>
-                {[1, 2, 3, 4, 5].map((star, index) => (
-                  <TouchableRipple
-                    onPress={() => handleRating(star)}
+            <View>
+              <Button
+                icon={() => (
+                  <AntDesign
+                    name="close"
+                    size={15}
+                    // color={Constants.primaryGreen}
+                  />
+                )}
+                onPress={props.handleFilterModalVisibility}
+              ></Button>
+            </View>
+          </View>
+          <Card style={styles.cardStyle}>
+            <Card.Title title="Brands" />
+            <Card.Content style={styles.cardContentStyle}>
+              <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+                {getSearchFilter.brands.map((item, index) => (
+                  <Button
+                    style={{
+                      ...styles.filterButton,
+                      backgroundColor: checkedStyle(item._id, brand)
+                        .backgroundColor,
+                    }}
                     key={index}
+                    onPress={() => handleBrand(item._id)}
                   >
-                    <AntDesign
-                      name={rating > index ? "star" : "staro"}
-                      size={20}
-                      color={Constants.primaryGreen}
-                      style={{ marginRight: 8 }}
-                    />
-                  </TouchableRipple>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: checkedStyle(item._id, brand).color,
+                      }}
+                    >
+                      {item.brandName}
+                    </Text>
+                  </Button>
                 ))}
-                <Text>and Up</Text>
-              </>
-            </View>
-          </Card.Content>
-        </Card>
-        <Divider />
+              </View>
+            </Card.Content>
+          </Card>
+          <Divider />
+          <Card style={styles.cardStyle}>
+            <Card.Title title="Ratings" />
+            <Card.Content style={styles.cardContentStyle}>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <>
+                  {[1, 2, 3, 4, 5].map((star, index) => (
+                    <TouchableRipple
+                      onPress={() => handleRating(star)}
+                      key={index}
+                    >
+                      <AntDesign
+                        name={rating > index ? "star" : "staro"}
+                        size={20}
+                        color={Constants.primaryGreen}
+                        style={{ marginRight: 8 }}
+                      />
+                    </TouchableRipple>
+                  ))}
+                  <Text>and Up</Text>
+                </>
+              </View>
+            </Card.Content>
+          </Card>
+          <Divider />
 
-        <Card style={styles.cardStyle}>
-          <Card.Title title="Price" />
-          <Card.Content style={styles.cardContentStyle}>
-            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {["Min", "Max"].map((item, i) => (
-                <TextInput
-                  style={{
-                    marginRight: 10,
-                    height: 40,
-                    width: "47%",
-                    backgroundColor: "white",
-                  }}
-                  underlineColor="transparent"
-                  mode="outlined"
-                  placeholder={item}
-                  keyboardType="number-pad"
-                  key={i}
-                />
-              ))}
-            </View>
-          </Card.Content>
-        </Card>
-        <Divider />
-        <Card style={styles.cardStyle}>
-          <Card.Title title="Warrenties" />
-          <Card.Content style={styles.cardContentStyle}>
-            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2].map((item, index) => (
-                <Button
-                  style={{
-                    ...styles.filterButton,
-                    backgroundColor: checkedStyle(index, warrenty)
-                      .backgroundColor,
-                  }}
-                  key={index}
-                  onPress={() => handleWarrenty(index)}
-                >
-                  <Text
+          <Card style={styles.cardStyle}>
+            <Card.Title title="Price" />
+            <Card.Content style={styles.cardContentStyle}>
+              <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+                {["Min", "Max"].map((item, i) => (
+                  <TextInput
                     style={{
-                      fontSize: 12,
-                      color: checkedStyle(index, warrenty).color,
+                      marginRight: 10,
+                      height: 40,
+                      width: "47%",
+                      backgroundColor: "white",
                     }}
-                  >
-                    {item} year(s)
-                  </Text>
-                </Button>
-              ))}
-            </View>
-          </Card.Content>
-        </Card>
-        <Divider />
-        <Card style={styles.cardStyle}>
-          <Card.Title title="Colors" />
-          <Card.Content style={styles.cardContentStyle}>
-            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2, 3, 4].map((_, index) => (
-                <Button
-                  style={{
-                    ...styles.filterButton,
-                    backgroundColor: checkedStyle(index, color).backgroundColor,
-                  }}
-                  key={index}
-                  onPress={() => handleColor(index)}
-                >
-                  <Text
+                    value={i ? price.max_price : price.min_price}
+                    underlineColor="transparent"
+                    mode="outlined"
+                    placeholder={item}
+                    keyboardType="number-pad"
+                    key={i}
+                    onChangeText={(text) => handlePrice(text, i)}
+                  />
+                ))}
+              </View>
+            </Card.Content>
+          </Card>
+          <Divider />
+          <Card style={styles.cardStyle}>
+            <Card.Title title="Warrenties" />
+            <Card.Content style={styles.cardContentStyle}>
+              <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+                {getSearchFilter.warranties.map((item, index) => (
+                  <Button
                     style={{
-                      fontSize: 12,
-                      color: checkedStyle(index, color).color,
+                      ...styles.filterButton,
+                      backgroundColor: checkedStyle(item, warranty)
+                        .backgroundColor,
                     }}
+                    key={index}
+                    onPress={() => handleWarranty(item)}
                   >
-                    White
-                  </Text>
-                </Button>
-              ))}
-            </View>
-          </Card.Content>
-        </Card>
-        <Divider />
-        <Card style={styles.cardStyle}>
-          <Card.Title title="Sizes" />
-          <Card.Content style={styles.cardContentStyle}>
-            <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
-              {[1, 2, 3, 4].map((_, index) => (
-                <Button
-                  style={{
-                    ...styles.filterButton,
-                    backgroundColor: checkedStyle(index, size).backgroundColor,
-                  }}
-                  key={index}
-                  onPress={() => handleSize(index)}
-                >
-                  <Text
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: checkedStyle(item, warranty).color,
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </Button>
+                ))}
+              </View>
+            </Card.Content>
+          </Card>
+          <Divider />
+          <Card style={styles.cardStyle}>
+            <Card.Title title="Colors" />
+            <Card.Content style={styles.cardContentStyle}>
+              <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+                {getSearchFilter.colors.map((item, index) => (
+                  <Button
                     style={{
-                      fontSize: 12,
-                      color: checkedStyle(index, size).color,
+                      ...styles.filterButton,
+                      backgroundColor: checkedStyle(item, color)
+                        .backgroundColor,
                     }}
+                    key={index}
+                    onPress={() => handleColor(item)}
                   >
-                    Medium
-                  </Text>
-                </Button>
-              ))}
-            </View>
-          </Card.Content>
-        </Card>
-        <Divider />
-        <View style={{ marginBottom: 50 }}></View>
-      </ScrollView>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: checkedStyle(item, color).color,
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </Button>
+                ))}
+              </View>
+            </Card.Content>
+          </Card>
+          <Divider />
+          <Card style={styles.cardStyle}>
+            <Card.Title title="Sizes" />
+            <Card.Content style={styles.cardContentStyle}>
+              <View style={{ flex: 1, flexWrap: "wrap", flexDirection: "row" }}>
+                {getSearchFilter.sizes.map((item, index) => (
+                  <Button
+                    style={{
+                      ...styles.filterButton,
+                      backgroundColor: checkedStyle(item, size).backgroundColor,
+                    }}
+                    key={index}
+                    onPress={() => handleSize(item)}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: checkedStyle(item, size).color,
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </Button>
+                ))}
+              </View>
+            </Card.Content>
+          </Card>
+          <Divider />
+          <View style={{ marginBottom: 50 }}></View>
+        </ScrollView>
+      ) : (
+        <Skeleton />
+      )}
       <View style={styles.productFooter}>
         <View
           style={{
@@ -264,7 +323,8 @@ const FilterModal = (props) => {
                 justifyContent: "center",
               }}
               labelStyle={{ color: "white" }}
-              onPress={props.handleFilterModalVisibility}
+              // onPress={getSearchFilter && props.handleFilterModalVisibility}
+              onPress={getSearchFilter && applyFilter}
             >
               Apply Filter
             </Button>
