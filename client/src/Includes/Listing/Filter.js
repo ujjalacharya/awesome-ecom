@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Checkbox, Input } from "antd";
 import { Radio, Row, Col } from "antd";
+import { Rate } from "antd";
 import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
 const radioStyle = {
@@ -83,42 +84,7 @@ class Filter extends Component {
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Ratings</div>
           <div className="type-list">
-            {data &&
-              data.ratings &&
-              data.ratings.length > 0 &&
-              data.ratings.map((rate, i) => {
-                return (
-                  <div
-                    key={i}
-                    className="rate-stars"
-                    onClick={() => this.props.onHandleRatings(rate)}
-                  >
-                    {Array(rate)
-                      .fill(0)
-                      .map((num, j) => {
-                        return (
-                          <i
-                            className="fa fa-star"
-                            aria-hidden="true"
-                            key={j}
-                          ></i>
-                        );
-                      })}
-                    {Array(5 - rate)
-                      .fill(0)
-                      .map((num, k) => {
-                        return (
-                          <i
-                            className="fa fa-star fade-star"
-                            aria-hidden="true"
-                            key={k}
-                          ></i>
-                        );
-                      })}
-                    {rate !== 5 && <span>And Up</span>}
-                  </div>
-                );
-              })}
+            <Rate onChange={(rating) => this.props.onHandleRatings(rating)}/>
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
