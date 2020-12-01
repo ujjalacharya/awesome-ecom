@@ -54,12 +54,14 @@ class MenuDrawer extends Component {
                           return (
                             <li
                               key={i}
-                              onClick={(e) =>
+                              onClick={(e) => {
                                 this.searchProducts(
                                   e,
                                   subCate.slug,
                                   subCate._id
-                                )
+                                );
+                                this.props.onCloseDrawer()
+                              }
                               }
                             >
                               <div className="title sub-title">
@@ -79,12 +81,14 @@ class MenuDrawer extends Component {
                                     return (
                                       <li
                                         key={i}
-                                        onClick={(e) =>
+                                        onClick={(e) => {
                                           this.searchProducts(
                                             e,
                                             newSubCate.slug,
                                             newSubCate._id
-                                          )
+                                          );
+                                          this.props.onCloseDrawer()
+                                        }
                                         }
                                       >
                                         <div className="title sub-sub-title">

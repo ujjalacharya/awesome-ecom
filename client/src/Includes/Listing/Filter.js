@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Checkbox, Input } from "antd";
 import { Radio, Row, Col } from "antd";
+import { Rate } from "antd";
 import { getBrandOptions, getColorOptions } from "../../../utils/common";
 
 const radioStyle = {
@@ -31,12 +32,6 @@ class Filter extends Component {
   render() {
     const { data } = this.props;
     let brandOptions = getBrandOptions(data);
-
-    const priceOptions = [
-      { label: "Rs. 179 to Rs. 1977", value: "179-1977" },
-      { label: "Rs. 1977 to Rs. 3775", value: "1977-3775" },
-      { label: "Rs. 3775 to Rs. 5179", value: "3775-5179" },
-    ];
 
     let colorOptions = getColorOptions(data);
 
@@ -72,6 +67,7 @@ class Filter extends Component {
               onChange={(e) => this.props.changePrice(e.target.value, "max")}
             />
             <button
+              className={this.props.removeThisTitle}
               onClick={() =>
                 this.props.searchPrice(this.props.minPrice, this.props.maxPrice)
               }
@@ -83,42 +79,7 @@ class Filter extends Component {
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Ratings</div>
           <div className="type-list">
-            {data &&
-              data.ratings &&
-              data.ratings.length > 0 &&
-              data.ratings.map((rate, i) => {
-                return (
-                  <div
-                    key={i}
-                    className="rate-stars"
-                    onClick={() => this.props.onHandleRatings(rate)}
-                  >
-                    {Array(rate)
-                      .fill(0)
-                      .map((num, j) => {
-                        return (
-                          <i
-                            className="fa fa-star"
-                            aria-hidden="true"
-                            key={j}
-                          ></i>
-                        );
-                      })}
-                    {Array(5 - rate)
-                      .fill(0)
-                      .map((num, k) => {
-                        return (
-                          <i
-                            className="fa fa-star fade-star"
-                            aria-hidden="true"
-                            key={k}
-                          ></i>
-                        );
-                      })}
-                    {rate !== 5 && <span>And Up</span>}
-                  </div>
-                );
-              })}
+            <Rate value={this.props.currentRating} onChange={(rating) => this.props.onHandleRatings(rating)} />
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
@@ -177,7 +138,7 @@ class Filter extends Component {
             <Col span={12}>
               <div
                 className="filter-type apply-type removeBorder"
-                onClick={this.props.closeThisFilter}
+                onClick={() => { this.props.applyFilter(); this.props.closeThisFilter() }}
               >
                 <span>APPLY</span>
               </div>
