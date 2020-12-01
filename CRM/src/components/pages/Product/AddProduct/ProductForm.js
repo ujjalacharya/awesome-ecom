@@ -1,150 +1,178 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { Steps, Button, message, Form, Input, Checkbox , Cascader, Select } from 'antd';
-import Categories from './Categories'
-import { getCategories } from '../../../../redux/actions/product_actions'
-const {Option} = Select
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import {
+  Steps,
+  Button,
+  message,
+  Form,
+  Input,
+  Checkbox,
+  Cascader,
+  Select,
+} from "antd";
+import Categories from "./Categories";
+import { getCategories } from "../../../../redux/actions/product_actions";
+const { Option } = Select;
+
 const layout = {
-    labelCol: {
-        span: 4,
-    },
-    wrapperCol: {
-        span: 16,
-    },
-    style: {
-        marginTop:'2%'
-    }
+  labelCol: {
+    span: 4,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+  style: {
+    marginTop: "2%",
+  },
 };
 const tailLayout = {
-    wrapperCol: {
-        offset: 8,
-        span: 16,
-    },
+  wrapperCol: {
+    offset: 8,
+    span: 16,
+  },
 };
-
 
 const { Step } = Steps;
 
 const steps = [
-    {
-        title: 'Basic Information',
-    },
-    {
-        title: 'Detail Description',
-    },
-    {
-        title: 'Price & Stock',
-    },
+  {
+    title: "Basic Information",
+  },
+  {
+    title: "Detail Description",
+  },
+  {
+    title: "Price & Stock",
+  },
 ];
 
-const ProductForm = ({getCategories}) => {
-    const [current, setCurrent] = React.useState(0);
-    
-    useEffect(() => {
-        getCategories()
-    }, [])
-    const next = () => {
-        setCurrent(current + 1);
-    };
+const ProductForm = ({ getCategories }) => {
+  const [current, setCurrent] = React.useState(0);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
-    const prev = () => {
-        setCurrent(current - 1);
-    };
-    
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
+  const handleClick = (e) => {
+    let isAlreadyAdded = selectedCategories.includes(e.key);
+    return isAlreadyAdded
+      ? null
+      : setSelectedCategories([...selectedCategories, e.key]);
+  };
+  const handleDeselect = (value) => {
+    return setSelectedCategories(
+      selectedCategories.filter((cat) => cat !== value)
+    );
+  };
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
+  useEffect(() => {
+    getCategories();
+  }, []);
+  const next = () => {
+    setCurrent(current + 1);
+  };
 
-    const BasicInformation = () =>{
-        return (<>
-            <Form.Item
-                label="Product Name"
-                name="name"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input your product name!',
-                    },
-                ]}
-            >
-                <Input />
-            </Form.Item>
+  const prev = () => {
+    setCurrent(current - 1);
+  };
 
-            <Form.Item
-                label="Categories"
-                name="categories"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input product categories!',
-                    },
-                ]}
-            >
-                <Categories/>
-            </Form.Item>
-            <Form.Item
-                label="Video URL"
-                name="videoURL"
-                rules={[
-                    {
-                        required: false,
-                        // message: 'Please input product categories!',
-                    },
-                ]}
-            >
-                <Input />
-            </Form.Item>
-            </>
-        )
-    }
+  const onFinish = (values) => {
+    console.log("Success:", values);
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  const BasicInformation = () => {
     return (
-            <>
-                <Steps current={current}>
-                    {steps.map(item => (
-                        <Step key={item.title} title={item.title} />
-                    ))}
-                </Steps>
-                <Form
-                    {...layout}
-                    name="basic"
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                >
-                    {
-                        current===0 && <BasicInformation/>
-                    }
-                    {/* <Form.Item {...tailLayout}>
+      <>
+        <Form.Item
+          label="Product Name"
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: "Please input your product name!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Categories"
+          name="categories"
+          rules={[
+            {
+              required: true,
+              message: "Please input product categories!",
+            },
+          ]}
+        >
+          <Categories
+            selectedCategories={selectedCategories}
+            handleClick={handleClick}
+            handleDeselect={handleDeselect}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Video URL"
+          name="videoURL"
+          rules={[
+            {
+              required: false,
+              // message: 'Please input product categories!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+      </>
+    );
+  };
+  return (
+    <>
+      <Steps current={current}>
+        {steps.map((item) => (
+          <Step key={item.title} title={item.title} />
+        ))}
+      </Steps>
+      <Form
+        {...layout}
+        name="basic"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+      >
+        {current === 0 && <BasicInformation />}
+        {/* <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
                     </Form.Item> */}
-                </Form>
-                <div className="steps-action">
-                    {current < steps.length - 1 && (
-                        <Button type="primary" onClick={() => next()}>
-                            Next
-                        </Button>
-                    )}
-                    {current === steps.length - 1 && (
-                        <Button type="primary" onClick={() => message.success('Processing complete!')}>
-                            Done
-                        </Button>
-                    )}
-                    {current > 0 && (
-                        <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                            Previous
-                        </Button>
-                    )}
-                </div>
-        {/* <div className="col-md-12" >
+      </Form>
+      <div className="steps-action">
+        {current < steps.length - 1 && (
+          <Button type="primary" onClick={() => next()}>
+            Next
+          </Button>
+        )}
+        {current === steps.length - 1 && (
+          <Button
+            type="primary"
+            onClick={() => message.success("Processing complete!")}
+          >
+            Done
+          </Button>
+        )}
+        {current > 0 && (
+          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+            Previous
+          </Button>
+        )}
+      </div>
+      {/* <div className="col-md-12" >
             <div className="card">
                 <div className="card-header">
                     <h5 className="card-title">Form row</h5>
@@ -195,19 +223,20 @@ const ProductForm = ({getCategories}) => {
                 </div>
             </div>
         </div> */}
-            </>     
-    )
-}
+    </>
+  );
+};
 ProductForm.propTypes = {
-    getCategories: PropTypes.func,
-}
+  getCategories: PropTypes.func,
+};
 
-const mapStateToProps = (state) => ({
-    
-})
+const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {
-    getCategories
-}
+  getCategories,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(ProductForm))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(React.memo(ProductForm));
