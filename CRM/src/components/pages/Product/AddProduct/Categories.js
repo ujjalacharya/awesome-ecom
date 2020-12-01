@@ -2,15 +2,20 @@ import React,{useState} from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Select } from 'antd';
 import { connect } from 'react-redux'
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
+// import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 const { SubMenu } = Menu;
-const { Option, OptGroup } = Select;
+// const { Option, OptGroup } = Select;
 
 
 export const Categories = ({ categories}) => {
-    const handleClick = e => console.log(e);
-    const handleChange = value => {
-        console.log(value);
+    const [openMenu, setOpenMenu] = useState(false)
+    const [selectedCategories, setSelectedCategories] = useState([])
+    const handleClick = e => {
+        let isAlreadyAdded = selectedCategories.includes(e.key)
+        return isAlreadyAdded ? null : setSelectedCategories([...selectedCategories, e.key])
+    };
+    const handleDeselect = value => {
+        return setSelectedCategories(selectedCategories.filter(cat=>cat!==value))
     }
     
     // let catHasNoChild = cat =>{
@@ -22,7 +27,7 @@ export const Categories = ({ categories}) => {
     //         <Menu onClick={handleClick} style={{ width: 256 }} mode="vertical">
     //             {
     //             categories.map(cat=>{
-    //                 return cat.parent===undefined && (<SubMenu key={cat.systemName} icon={<AppstoreOutlined />} title={cat.displayName}>
+    //                 return cat.parent===undefined && (<SubMenu key={cat.systemName} title={cat.displayName}>
     //                 {
     //                     categories.map(cat2=>{
     //                         return (cat2.parent === cat._id && catHasNoChild(cat2._id)) ? (<Menu.Item key={cat2.systemName} > {cat2.displayName}</Menu.Item>)
@@ -47,19 +52,20 @@ export const Categories = ({ categories}) => {
         {
             categories.map(cat1=>{
                 return (
-                    <SubMenu onTitleClick={handleClick} key={cat1._id} icon={<AppstoreOutlined />} title={cat1.displayName}>
+                    <SubMenu key={cat1.slug} title={cat1.displayName}>
                         {
                             cat1.childCate.map(cat2=>{
                                 return (
-                                    <SubMenu onTitleClick={handleClick} key={cat2._id} icon={<AppstoreOutlined />} title={cat2.displayName}>
+                                        cat2.childCate.length ?
+                                    <SubMenu onTitleClick={handleClick} key={cat2.slug} title={cat2.displayName}>
                                         {
                                             cat2.childCate.map(cat3=>{
                                                 return (
-                                                    <Menu.Item  key={cat3._id}>{cat3.displayName}</Menu.Item>
+                                                    <Menu.Item  key={cat3.slug}>{cat3.displayName}</Menu.Item>
                                                 )
                                             })
                                         }
-                                    </SubMenu>
+                                            </SubMenu> : <Menu.Item key={cat2.slug}>{cat2.displayName}</Menu.Item>
                                 )
                             })
                         }
@@ -71,21 +77,21 @@ export const Categories = ({ categories}) => {
     }
 
     return (
-        <div className="form-group">
-            <label htmlFor="inputAddress">Categories</label>
-            {/* <input type="text" onClick={openMenu} className="form-control" id="inputAddress" placeholder="1234 Main St" /> */}
+        <>
             <Select
+                onClick={()=>setOpenMenu(!openMenu)}
+                value={selectedCategories}
                 open={false}    
                 id="inputAddress"
                 mode="multiple"
                 allowClear
                 style={{ width: '100%' }}
                 placeholder="Select Categories"
-                onChange={handleChange}
+                onDeselect={handleDeselect}
             >
             </Select>
-            {categories && megaMenu(categories)}
-        </div>
+            {openMenu && megaMenu(categories)}
+            </>
     )
 }
 
