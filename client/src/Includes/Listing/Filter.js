@@ -73,6 +73,7 @@ class Filter extends Component {
               onChange={(e) => this.props.changePrice(e.target.value, "max")}
             />
             <button
+              className={this.props.removeThisTitle}
               onClick={() =>
                 this.props.searchPrice(this.props.minPrice, this.props.maxPrice)
               }
@@ -84,7 +85,7 @@ class Filter extends Component {
         <div className="filter-types last-child-fi-type">
           <div className="type-title">Ratings</div>
           <div className="type-list">
-            <Rate onChange={(rating) => this.props.onHandleRatings(rating)}/>
+            <Rate value={this.props.currentRating} onChange={(rating) => this.props.onHandleRatings(rating)} />
           </div>
         </div>
         <div className="filter-types last-child-fi-type">
@@ -143,7 +144,7 @@ class Filter extends Component {
             <Col span={12}>
               <div
                 className="filter-type apply-type removeBorder"
-                onClick={this.props.closeThisFilter}
+                onClick={() => { this.props.applyFilter(); this.props.closeThisFilter() }}
               >
                 <span>APPLY</span>
               </div>

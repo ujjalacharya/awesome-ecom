@@ -17,6 +17,8 @@ class ProductList extends Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    // console.log(nextProps)
+    // console.log(prevState)
     if (
       nextProps.currentFilter.max_price !== prevState.max_price ||
       nextProps.currentFilter.min_price !== prevState.min_price
@@ -62,7 +64,7 @@ class ProductList extends Component {
             {Math.ceil(data && data.totalCount / this.props.perPage)}
           </div>
         </div>
-        {!_.isEmpty(currentFilter) && _.size(currentFilter) > 1 && (
+        {!_.isEmpty(currentFilter) && _.size(currentFilter) > 1 && this.props.filterApplied && (
           <div className="filtered-by">
             <span className="title">Filtered By:</span>
             {currentFilter.brands &&
@@ -114,7 +116,7 @@ class ProductList extends Component {
                 <i className="fa fa-times" aria-hidden="true"></i>
               </span>
             )}
-
+  
             {(this.state.max_price || this.state.min_price) && (
               <span
                 className="filter-tags"
@@ -158,17 +160,19 @@ class ProductList extends Component {
           </div>
         )}
         <div className="card-list">
-          <Row gutter={30}>
-            {data && data.products.length > 0
-              ? data.products.map((data, i) => {
+          {
+            data && data.products.length > 0 ?
+              (<Row gutter={30}>
+                {data.products.map((data, i) => {
                   return (
                     <Col lg={6} sm={12} xs={24} key={i}>
                       <ProductCard data={data} />
                     </Col>
                   );
-                })
+                })}
+              </Row>)
               : "No Products Available"}
-          </Row>
+
         </div>
       </div>
     );

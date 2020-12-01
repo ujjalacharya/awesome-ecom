@@ -29,6 +29,7 @@
         margin: 0;
         padding: 0;
         border: 0;
+        margin-top: 20px;
       }
     }
   }
@@ -38,5 +39,9 @@
     font-weight: bold;
     padding-left: 30px;
     padding-bottom: 7px;
+    @media screen and (max-width: 480px) {
+      padding-left: 0;
+      padding-bottom: 0;
+    }
   }
 }

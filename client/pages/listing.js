@@ -23,10 +23,21 @@ class Listing extends Component {
     minPrice: "",
     maxPrice: "",
     selectedWarrenty: "",
+    filterApplied: false,
+    currentRating: 0
   };
 
   static getInitialProps(ctx) {
     initialize(ctx);
+  }
+
+  componentDidUpdate(prevprops) {
+    if (this.props.router.asPath !== prevprops.router.asPath) {
+      this.setState({
+        filterBody: {}, filterApplied: false,
+        currentRating: 0
+      })
+    }
   }
 
   showDrawerFiter = () => {
@@ -47,11 +58,11 @@ class Listing extends Component {
     });
   };
 
-  onCheckBrands = (checkedValues) => {
-    this.setState({
-      checkedBrands: checkedValues,
-    });
-  };
+  // onCheckBrands = (checkedValues) => {
+  //   this.setState({
+  //     checkedBrands: checkedValues,
+  //   });
+  // };
 
   onCloseSort = (sortTitle) => {
     this.setState({
@@ -82,8 +93,6 @@ class Listing extends Component {
       checkedBrands: brands,
     });
 
-    let pathName = this.props.router.pathname.split("/")[1];
-
     let body = {};
 
     body = getFilterAppendBody(
@@ -97,10 +106,13 @@ class Listing extends Component {
       filterBody: body,
     });
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
-      body
-    );
+    if (!this.state.visibleFilter) {
+      this.props.searchProducts(
+        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+        body
+      );
+      this.setState({ filterApplied: true })
+    }
   };
 
   onChangeColors = (colors) => {
@@ -121,10 +133,13 @@ class Listing extends Component {
       filterBody: body,
     });
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
-      body
-    );
+    if (!this.state.visibleFilter) {
+      this.props.searchProducts(
+        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+        body
+      );
+      this.setState({ filterApplied: true })
+    }
   };
 
   onHandleRatings = (rating) => {
@@ -145,10 +160,13 @@ class Listing extends Component {
       filterBody: body,
     });
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
-      body
-    );
+    if (!this.state.visibleFilter) {
+      this.props.searchProducts(
+        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+        body
+      );
+      this.setState({ filterApplied: true })
+    }
   };
 
   changePrice = (price, type) => {
@@ -156,10 +174,31 @@ class Listing extends Component {
       this.setState({
         minPrice: price,
       });
+
+      // if (this.state.visibleFilter) {
+      //   let body = {};
+      //   body = getFilterAppendBody(
+      //     this.state.filterBody,
+      //     this.props,
+      //     price + "",
+      //     "min_price"
+      //   );
+      //   this.setState({
+      //     filterBody: body,
+      //   });
+      // }
     } else {
       this.setState({
         maxPrice: price,
       });
+
+      // if (this.state.visibleFilter) {
+      //   let body = {};
+      //   body = getFilterAppendBody(body, this.props, price + "", "max_price");
+      //   this.setState({
+      //     filterBody: body,
+      //   });
+      // }
     }
   };
 
@@ -179,10 +218,14 @@ class Listing extends Component {
       filterBody: body,
     });
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
-      body
-    );
+    if (!this.state.visibleFilter) {
+      this.props.searchProducts(
+        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+        body
+      );
+      this.setState({ filterApplied: true })
+    }
+
   };
 
   onChangeWarrenty = (warrenty) => {
@@ -205,10 +248,13 @@ class Listing extends Component {
       filterBody: body,
     });
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
-      body
-    );
+    if (!this.state.visibleFilter) {
+      this.props.searchProducts(
+        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+        body
+      );
+      this.setState({ filterApplied: true })
+    }
   };
 
   onChangeSize = (size) => {
@@ -229,10 +275,13 @@ class Listing extends Component {
       filterBody: body,
     });
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
-      body
-    );
+    if (!this.state.visibleFilter) {
+      this.props.searchProducts(
+        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+        body
+      );
+      this.setState({ filterApplied: true })
+    }
   };
 
   removeBrand = (brand) => {
@@ -272,7 +321,42 @@ class Listing extends Component {
   removeSize = () => {
     this.onChangeSize("");
   };
+
+  applyFilter = async () => {
+    this.setState({
+      filterApplied: true
+    })
+
+    let newFilterBody = this.state.filterBody
+    if (this.state.minPrice) {
+      let body = {};
+      newFilterBody = getFilterAppendBody(
+        newFilterBody,
+        this.props,
+        this.state.minPrice + "",
+        "min_price"
+      );
+      // this.setState({
+      //   filterBody: body,
+      // });
+    }
+
+    if (this.state.maxPrice) {
+      let body = {};
+      newFilterBody = getFilterAppendBody(newFilterBody, this.props, this.state.maxPrice + "", "max_price");
+    }
+    this.setState({
+      filterBody: newFilterBody,
+    });
+
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      newFilterBody
+    );
+  }
+
   render() {
+    console.log(this.state.filterBody)
     return (
       <div className="wrapper">
         <section className="listing">
@@ -295,6 +379,7 @@ class Listing extends Component {
                   selectedWarrenty={this.state.selectedWarrenty}
                   onChangeSize={this.onChangeSize}
                   selectedSize={this.state.selectedSize}
+                  currentRating={this.state.currentRating}
                 />
               </Col>
               <Col lg={20} xs={24} md={18} className="right-listing">
@@ -311,6 +396,7 @@ class Listing extends Component {
                   removePrice={this.removePrice}
                   removeWarrenty={this.removeWarrenty}
                   removeSize={this.removeSize}
+                  filterApplied={this.state.filterApplied}
                 />
                 <div className="pagination">
                   <div className="page-status">
@@ -340,7 +426,7 @@ class Listing extends Component {
               <Col span={12}>
                 <div
                   className="filter-type removeBorder"
-                  onClick={this.showDrawerFiter}
+                  onClick={() => { this.showDrawerFiter(); }}
                 >
                   <i className="fa fa-filter" aria-hidden="true"></i>
                   {" "}<span>Filter</span>
@@ -375,6 +461,8 @@ class Listing extends Component {
               onChangeSize={this.onChangeSize}
               selectedSize={this.state.selectedSize}
               closeThisFilter={this.onCloseFilter}
+              applyFilter={this.applyFilter}
+              currentRating={this.state.currentRating}
             />
           </Drawer>
           <Drawer

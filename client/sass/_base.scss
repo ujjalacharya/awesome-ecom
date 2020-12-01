@@ -188,9 +188,9 @@ input[type="number"] {
   padding-left: 40px;
   padding-top: 15px;
   @media screen and (max-width: 480px) {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 10px;
+    padding-top: 0px;
+    padding-bottom: 10px;
+    padding-left: 0;
   }
   .title {
     margin-right: 10px;
@@ -375,7 +375,8 @@ input.inputfile + label {
 }
 
 .table-wrapper {
-  table thead tr th:first-child, table tbody tr td:first-child {
+  table thead tr th:first-child,
+  table tbody tr td:first-child {
     @media (min-width: 1023px) {
       display: none;
     }
