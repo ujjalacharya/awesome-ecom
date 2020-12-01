@@ -109,8 +109,8 @@
         display: block;
       }
       .qty-btn {
-        display: "flex";
-        align-items: "center";
+        display: flex;
+        align-items: center;
         @media screen and (max-width: 480px) {
           display: block;
         }
