@@ -7,39 +7,35 @@ import { SERVER_BASE_URL } from "../../../redux/services/productService";
 
 const ProductDetailHeader = ({ navigation, productDetails }) => (
   <View style={styles.container}>
-    {!productDetails ? (
-      <Skeleton />
-    ) : (
-      <ImageBackground
-        source={{
-          uri:
-            SERVER_BASE_URL +
-            "/uploads/" +
-            productDetails?.product.images[0].large,
-        }}
-        style={styles.image}
-      >
-        <Appbar.BackAction
-          color={Constants.initialColor}
-          style={styles.backButton}
-          onPress={() => navigation.pop()}
-        />
-        <Appbar.Action
-          style={[styles.heartIcon]}
-          color="orange"
-          icon="heart"
-          onPress={() => navigation.navigate("WishList")}
-        />
-        <Avatar.Text
-          size={24}
-          label={`${productDetails?.product.images.length || "No"} photos`}
-          color="black"
-          backgroundColor={Constants.initialColor}
-          width={90}
-          style={styles.totalPhotos}
-        />
-      </ImageBackground>
-    )}
+    <ImageBackground
+      source={{
+        uri:
+          SERVER_BASE_URL +
+          "/uploads/" +
+          productDetails?.product.images[0].large,
+      }}
+      style={styles.image}
+    >
+      <Appbar.BackAction
+        color={Constants.initialColor}
+        style={styles.backButton}
+        onPress={() => navigation.pop()}
+      />
+      <Appbar.Action
+        style={[styles.heartIcon]}
+        color="orange"
+        icon="heart"
+        onPress={() => navigation.navigate("WishList")}
+      />
+      <Avatar.Text
+        size={24}
+        label={`${productDetails?.product.images.length || "No"} photos`}
+        color="black"
+        backgroundColor={Constants.initialColor}
+        width={90}
+        style={styles.totalPhotos}
+      />
+    </ImageBackground>
   </View>
 );
 

@@ -1,6 +1,6 @@
 // import authActions from './authActions';
 import productActions from './productActions';
-// import searchActions from './searchActions';
+import searchActions from './searchActions';
 // import userActions from './userActions';
 import otherActions from './otherActions';
 // import cartActions from './cartActions';
@@ -10,7 +10,7 @@ import otherActions from './otherActions';
 export default {
   // ...authActions,
   ...productActions,
-  // ...searchActions,
+  ...searchActions,
   // ...userActions,
   ...otherActions,
   // ...cartActions,

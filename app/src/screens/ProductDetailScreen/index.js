@@ -12,6 +12,7 @@ import ProductDetailFooter from "./ProductDetailFooter";
 import ProductDescription from "./ProductDescription";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 import { SERVER_BASE_URL } from "../../../redux/services/productService";
+import Skeleton from "../../components/shared/Skeleton";
 
 const ProductDetailScreen = (props) => {
   const { productDetails, productDetailsLoading } = useSelector(
@@ -37,6 +38,10 @@ const ProductDetailScreen = (props) => {
       uri: `${SERVER_BASE_URL + "/uploads/" + prod.large}`,
     },
   }));
+
+  if (productDetailsLoading){
+    return <Skeleton />
+  }
 
   return (
     <View style={{ flex: 1 }}>

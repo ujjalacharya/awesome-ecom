@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, AsyncStorage } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { View, Text, StyleSheet, AsyncStorage, TouchableWithoutFeedback } from "react-native";
 import { Searchbar, TouchableRipple, Button } from "react-native-paper";
+import { debounce } from "lodash";
 import Constants from "../../constants/Constants";
 
 import { AntDesign, Feather } from "@expo/vector-icons";
-
-const searchData = [
-  { id: 1, name: "One Plus 8T" },
-  { id: 2, name: "One on One" },
-  { id: 3, name: "Car One plus" },
-];
+import {
+  getSearchKeywords,
+  searchFilter,
+  searchProducts,
+} from "../../../redux/actions/searchActions";
 
 const SeachScreen = (props) => {
+  const dispatch = useDispatch();
+  const { searchKeywords } = useSelector((state) => state.listing);
   const [searchQuery, setSearchQuery] = useState("");
   const [history, setHistory] = useState([]);
 
@@ -32,25 +35,46 @@ const SeachScreen = (props) => {
     }
   };
 
-  const onChangeSearch = (query) => setSearchQuery(query);
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    keywordSearch(query);
+  };
 
-  const handleGo = async () => {
+  const searchKeyWordsFromQuery = (query) => {
+    dispatch(getSearchKeywords(query));
+  };
+
+  const keywordSearch = debounce((term) => {
+    searchKeyWordsFromQuery(term);
+  }, 300);
+
+  const handleGo = async (itemName) => {
     let newItemsArr = [];
-    try {
-      let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
-      if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
+    let searchQueryForSearch;
+    if (!itemName) {
+      try {
+        let asyncItems = await AsyncStorage.getItem("@uzzStore:history");
+        searchQueryForSearch = searchQuery;
+        if (asyncItems) newItemsArr = [...JSON.parse(asyncItems)];
 
-      searchQuery && newItemsArr.unshift(searchQuery);
-      newItemsArr = newItemsArr.map(item => item.trim())
-      let uniqueItems = [...new Set(newItemsArr)];
+        searchQuery && newItemsArr.unshift(searchQuery);
+        newItemsArr = newItemsArr.map((item) => item.trim());
+        let uniqueItems = [...new Set(newItemsArr)];
 
-      await AsyncStorage.setItem(
-        "@uzzStore:history",
-        JSON.stringify(uniqueItems)
-      );
-    } catch (error) {
-      // Error saving data
+        await AsyncStorage.setItem(
+          "@uzzStore:history",
+          JSON.stringify(uniqueItems)
+        );
+      } catch (error) {
+        // Error saving data
+      }
+    } else {
+      searchQueryForSearch = searchQuery;
     }
+
+    dispatch(searchProducts(`?page=1&perPage=10`, { keyword: searchQueryForSearch }));
+    dispatch(searchFilter({ keyword: searchQueryForSearch }));
+
     props.navigation.navigate("Products");
   };
 
@@ -78,7 +102,7 @@ const SeachScreen = (props) => {
           </View>
           <TouchableRipple
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-            onPress={handleGo}
+            onPress={searchQuery && handleGo}
           >
             <Text style={{ fontWeight: "bold" }}>{`Go`}</Text>
           </TouchableRipple>
@@ -86,9 +110,9 @@ const SeachScreen = (props) => {
       </View>
       {searchQuery ? (
         <View style={{ flex: 1, backgroundColor: Constants.headerTintColor }}>
-          {searchData.map((item, i) => {
+          {searchKeywords.map((item, i) => {
             return (
-              <View
+              <TouchableRipple
                 style={{
                   borderColor: "#000",
                   borderBottomWidth: 1,
@@ -98,14 +122,20 @@ const SeachScreen = (props) => {
                   flexDirection: "row",
                 }}
                 key={i}
+                onPress={() => {
+                  setSearchQuery(item);
+                  handleGo(item);
+                }}
               >
-                <View style={{ flex: 0.9, marginLeft: 5 }}>
-                  <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
-                </View>
-                <TouchableRipple onPress={() => setSearchQuery(item.name)}>
-                  <Feather name="arrow-up-left" size={20} color="gray" />
-                </TouchableRipple>
-              </View>
+                <>
+                  <View style={{ flex: 0.9, marginLeft: 5 }}>
+                    <Text style={{ fontWeight: "bold" }}>{item}</Text>
+                  </View>
+                  <TouchableRipple onPress={() => setSearchQuery(item)} style={{ flex: 0.1 }}>
+                    <Feather name="arrow-up-left" size={20} color="gray" />
+                  </TouchableRipple>
+                </>
+              </TouchableRipple>
             );
           })}
         </View>
@@ -138,7 +168,7 @@ const SeachScreen = (props) => {
           >
             {history.map((item, i) => (
               <TouchableRipple
-                onPress={() => setSearchQuery(item)}
+                onPress={() => onChangeSearch(item)}
                 style={{
                   flexBasis: "28%",
                   height: 40,

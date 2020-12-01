@@ -10,6 +10,7 @@ import AdminRoute from './AdminRoute'
 import Home from "../components/pages/Home";
 import Profile from "../components/pages/Profile";
 import Product from '../components/pages/Product'
+import ProductForm from '../components/pages/Product/ProductForm'
 import Order from '../components/pages/Order'
 
 const MainRouter = (props) => {
@@ -17,8 +18,9 @@ const MainRouter = (props) => {
     <Switch>
       <AdminRoute exact path="/" component={Home} />;
       <AdminRoute exact path="/profile" component={Profile} />
-      <AdminRoute exact path="/add-product" component={Product} />
-      <AdminRoute exact path="/order" component={Order} />
+      <AdminRoute exact path="/manage-products" component={Product} />
+      <AdminRoute exact path="/add-product" component={ProductForm} />
+      <AdminRoute exact path="/order" component= {Order} />
       <SuperAdminRoute exact path="/superadmin" component={() => <h1>Sup SuperAdmin</h1>}/>
     </Switch>
   );
