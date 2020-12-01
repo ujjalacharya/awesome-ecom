@@ -356,7 +356,6 @@ class Listing extends Component {
   }
 
   render() {
-    console.log(this.state.filterBody)
     return (
       <div className="wrapper">
         <section className="listing">

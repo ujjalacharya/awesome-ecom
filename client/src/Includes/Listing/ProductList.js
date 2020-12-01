@@ -17,8 +17,6 @@ class ProductList extends Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    // console.log(nextProps)
-    // console.log(prevState)
     if (
       nextProps.currentFilter.max_price !== prevState.max_price ||
       nextProps.currentFilter.min_price !== prevState.min_price

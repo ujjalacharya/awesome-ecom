@@ -33,12 +33,6 @@ class Filter extends Component {
     const { data } = this.props;
     let brandOptions = getBrandOptions(data);
 
-    const priceOptions = [
-      { label: "Rs. 179 to Rs. 1977", value: "179-1977" },
-      { label: "Rs. 1977 to Rs. 3775", value: "1977-3775" },
-      { label: "Rs. 3775 to Rs. 5179", value: "3775-5179" },
-    ];
-
     let colorOptions = getColorOptions(data);
 
     return (
