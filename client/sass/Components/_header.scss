@@ -2,8 +2,14 @@
   padding: 10px 20px;
   box-shadow: $box-shadow;
   position: relative;
-  @media screen and (max-width: 480px) {
+  @media screen and (max-width: 576px) {
     display: none;
+  }
+  .auto-search{
+    width: 400px;
+    @media screen and (min-width: 577px) and (max-width: 680px) {
+      width: 300px;
+    }
   }
   .menu-logo {
     .logo {
@@ -22,7 +28,7 @@
       max-width: 500px;
       @media screen and (max-width: 912px) {
         max-width: 360px;
-        margin-left: 10px;
+        padding-left: 25px;
       }
       .menu-list {
         // position: relative;
