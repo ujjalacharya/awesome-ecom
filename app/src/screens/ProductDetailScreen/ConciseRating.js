@@ -5,8 +5,7 @@ import Constants from "../../constants/Constants";
 import { AntDesign } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-class ConcideRating extends React.Component {
-  render() {
+const ConcideRating = ({token}) => {
     return (
       <Card>
         <Card.Title title="Ratings and Reviews (4)" subtitle="View All" />
@@ -71,13 +70,14 @@ class ConcideRating extends React.Component {
           }}
           onPress={() => console.warn("View all")}
         >
-          <Text style={{ fontWeight: "bold", textDecorationLine: "underline" }}>
+          {
+            token && <Text style={{ fontWeight: "bold", textDecorationLine: "underline" }}>
             {"Review the product"}
           </Text>
+          }
         </TouchableWithoutFeedback>
       </Card>
     );
-  }
 }
 
 export default ConcideRating;

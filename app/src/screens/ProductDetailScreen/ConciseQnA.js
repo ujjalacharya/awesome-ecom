@@ -7,7 +7,7 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 import { useNavigation } from "@react-navigation/native";
 
-const ConciseQnA = ({ viewAll }) => {
+const ConciseQnA = ({ viewAll, token }) => {
   const navigation = useNavigation();
   return (
     <Card>
@@ -82,14 +82,18 @@ const ConciseQnA = ({ viewAll }) => {
             marginBottom: 10,
           }}
           onPress={() =>
-            navigation.navigate('QnA', {
+            navigation.navigate("QnA", {
               askQuestion: true,
             })
           }
         >
-          <Text style={{ fontWeight: "bold", textDecorationLine: "underline" }}>
-            {"Ask Question"}
-          </Text>
+          {token && (
+            <Text
+              style={{ fontWeight: "bold", textDecorationLine: "underline" }}
+            >
+              {"Ask Question"}
+            </Text>
+          )}
         </TouchableWithoutFeedback>
       )}
     </Card>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Text, View } from "react-native";
 import { Card, Paragraph, Divider, Avatar } from "react-native-paper";
 import Constants from "../../constants/Constants";
@@ -6,11 +7,12 @@ import ConcideRating from "./ConciseRating";
 import HighlightedInfo from "./HighlightedInfo";
 import ConciseQnA from "./ConciseQnA";
 import YoutubePlayer from "./YoutubePlayer";
-import Skeleton from "../../components/shared/Skeleton";
 
 const ProductDescription = ({ productDetails }) => {
- 
+  const { token } = useSelector((state) => state.authentication);
+
   const { product } = productDetails;
+
   return (
     <>
       <Card>
@@ -23,7 +25,7 @@ const ProductDescription = ({ productDetails }) => {
                   fontWeight: "bold",
                 }}
               >
-                {product.price.$numberDecimal}
+                Rs {product.price.$numberDecimal}
               </Text>
             }
             subtitle={
@@ -34,26 +36,24 @@ const ProductDescription = ({ productDetails }) => {
                     textDecorationStyle: "solid",
                   }}
                 >
-                  {"Rs 265"}
+                  {`Rs ${product.price.$numberDecimal - product.discountRate}`}
                 </Text>
                 <Text
                   style={{
                     color: "green",
                   }}
                 >
-                  {" 6% off"}
+                  {` ${product.discountRate}% off`}
                 </Text>
               </>
             }
           />
         </View>
         <Card.Content>
-          <Paragraph>
-            {product.description}
-          </Paragraph>
+          <Paragraph>{product.description}</Paragraph>
           <Avatar.Text
             size={24}
-            label="Rating: 4/5"
+            label={`Rating: ${product.stars.averageStar}/5`}
             color="white"
             backgroundColor={Constants.primaryGreen}
             width={90}
@@ -66,22 +66,28 @@ const ProductDescription = ({ productDetails }) => {
         <Card.Title title="Additional Information" />
 
         <Card.Content>
-          <Paragraph style={{ fontWeight: "bold" }}>Weight: {product.weight.map(w => w).join(" ")}</Paragraph>
+          <Paragraph style={{ fontWeight: "bold" }}>
+            Weight: {product.weight.map((w) => w).join(" ")}
+          </Paragraph>
           {/* <Paragraph style={{ fontWeight: "bold" }}>
             Dimension: 1080x2340
           </Paragraph> */}
-          <Paragraph style={{ fontWeight: "bold" }}>Color: {product.color.map(c => c).join(" ")}</Paragraph>
-          <Paragraph style={{ fontWeight: "bold" }}>Warrenty: {product.warranty}</Paragraph>
+          <Paragraph style={{ fontWeight: "bold" }}>
+            Color: {product.color.map((c) => c).join(" ")}
+          </Paragraph>
+          <Paragraph style={{ fontWeight: "bold" }}>
+            Warrenty: {product.warranty}
+          </Paragraph>
         </Card.Content>
       </Card>
       <Divider />
-      <HighlightedInfo {...product}/>
+      <HighlightedInfo {...product} />
       <Divider />
       <YoutubePlayer />
       <Divider />
-      <ConcideRating />
+      <ConcideRating token={token} />
       <Divider />
-      <ConciseQnA />
+      <ConciseQnA token={token}/>
       <Divider />
     </>
   );
