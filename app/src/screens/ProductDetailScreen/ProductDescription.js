@@ -87,7 +87,7 @@ const ProductDescription = ({ productDetails }) => {
       <Divider />
       <ConcideRating token={token} {...product}/>
       <Divider />
-      <ConciseQnA token={token}/>
+      <ConciseQnA token={token} {...product}/>
       <Divider />
     </>
   );

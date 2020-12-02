@@ -7,11 +7,12 @@ import {
   GLOBAL_ERROR,
   LATEST_LOADING,
   PRODUCT_QA,
+  PRODUCT_QA_INIT,
   POST_QUESTION,
   PRODUCT_REVIEWS,
   PRODUCT_REVIEWS_INIT,
   POST_PRODUCT_REVIEWS,
-  MENU_CATEGORIES_LOADING
+  MENU_CATEGORIES_LOADING,
 } from "../types";
 // import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -40,7 +41,7 @@ export const categoriesLoading = () => {
 
 export const getLatestProducts = () => {
   return async (dispatch) => {
-    dispatch({type: LATEST_LOADING, payload: []})
+    dispatch({ type: LATEST_LOADING, payload: [] });
     const productService = new ProductService();
     const response = await productService.getLatestProducts();
     if (response.isSuccess) {
@@ -70,20 +71,21 @@ export const getProductDetails = (slug) => {
   };
 };
 
-// const getQandA = (query) => {
-//   return async (dispatch) => {
-//     const productService = new ProductService();
-//     const response = await productService.getQandA(query);
-//     if (response.isSuccess) {
-//       dispatch({ type: PRODUCT_QA, payload: response.data });
-//     } else if (!response.isSuccess) {
-//       dispatch({
-//         type: GLOBAL_ERROR,
-//         payload: response.errorMessage,
-//       });
-//     }
-//   };
-// };
+export const getQandA = (query) => {
+  return async (dispatch) => {
+    dispatch({ type: PRODUCT_QA_INIT });
+    const productService = new ProductService();
+    const response = await productService.getQandA(query);
+    if (response.isSuccess) {
+      dispatch({ type: PRODUCT_QA, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 // const postQuestion = (query, body) => {
 //   return async (dispatch) => {

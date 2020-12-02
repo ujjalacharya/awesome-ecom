@@ -4,6 +4,7 @@ import {
   PRODUCT_DETAILS_LOADING,
   LATEST_LOADING,
   PRODUCT_QA,
+  PRODUCT_QA_INIT,
   POST_QUESTION,
   PRODUCT_REVIEWS,
   PRODUCT_REVIEWS_INIT,
@@ -54,6 +55,8 @@ export default (state = initialState, action) => {
       };
     case PRODUCT_QA:
       return { ...state, productQA: action.payload, hasError: false };
+    case PRODUCT_QA_INIT:
+      return { ...state, productQA: null, hasError: false };
     case POST_QUESTION:
       return { ...state, postQnsResp: action.payload, hasError: false };
     case PRODUCT_REVIEWS:
