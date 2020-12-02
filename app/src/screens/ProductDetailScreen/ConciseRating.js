@@ -1,16 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Text, View } from "react-native";
 import { Card, Button } from "react-native-paper";
+import Moment from "moment";
 import Constants from "../../constants/Constants";
 import { AntDesign } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { getProductReviews } from "../../../redux/actions/productActions";
 
-const ConcideRating = ({token}) => {
-    return (
-      <Card>
-        <Card.Title title="Ratings and Reviews (4)" subtitle="View All" />
+const ConcideRating = ({ token, slug }) => {
+  const dispatch = useDispatch();
 
-        {[0, 0, 0].map((data, i) => (
+  const { productReviews } = useSelector((state) => state.products);
+
+  useEffect(() => {
+    dispatch(getProductReviews(slug + "?page=1&perPage=10"));
+  }, [dispatch]);
+
+  let conciseReview;
+
+  if (productReviews) {
+    conciseReview =
+      productReviews.reviews.length > 3
+        ? productReviews.reviews.slice(0, 3)
+        : productReviews.reviews;
+  }
+
+  return (
+    <Card>
+      <Card.Title
+        title={`Ratings and Reviews (${productReviews?.totalCount})`}
+        subtitle="View All"
+      />
+
+      {productReviews?.reviews &&
+        (conciseReview || productReviews?.reviews).map((data, i) => (
           <Card.Content style={{ marginBottom: 20 }} key={i}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View
@@ -21,14 +45,16 @@ const ConcideRating = ({token}) => {
                 }}
               >
                 <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                  {"Gyanendra Shahi"}
+                  {data.user.name}
                 </Text>
-                <Text>{"2 days ago"}</Text>
+                <Text>
+                  {Moment(data.createdAt).startOf('hour').fromNow()}
+                </Text>
               </View>
               <View
                 style={{ flex: 0.3, flexDirection: "row", marginRight: 10 }}
               >
-                {[0, 0].map((star, i) => (
+                {Array.from(Array(data.star)).map((star, i) => (
                   <View style={{ flex: 1 }} key={i}>
                     <Button
                       icon={() => (
@@ -41,7 +67,7 @@ const ConcideRating = ({token}) => {
                     ></Button>
                   </View>
                 ))}
-                {[0, 0, 0].map((star, i) => (
+                {Array.from(Array(5-data.star)).map((star, i) => (
                   <View style={{ flex: 1 }} key={i}>
                     <Button
                       icon={() => (
@@ -57,27 +83,27 @@ const ConcideRating = ({token}) => {
               </View>
             </View>
             <View>
-              <Text>{"Thikai xa, khassai man chai parena"}</Text>
+              <Text>{data.comment}</Text>
             </View>
           </Card.Content>
         ))}
-        <TouchableWithoutFeedback
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            margin: 10,
-          }}
-          onPress={() => console.warn("View all")}
-        >
-          {
-            token && <Text style={{ fontWeight: "bold", textDecorationLine: "underline" }}>
+      <TouchableWithoutFeedback
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          margin: 10,
+        }}
+        onPress={() => console.warn("View all")}
+      >
+        {token && (
+          <Text style={{ fontWeight: "bold", textDecorationLine: "underline" }}>
             {"Review the product"}
           </Text>
-          }
-        </TouchableWithoutFeedback>
-      </Card>
-    );
-}
+        )}
+      </TouchableWithoutFeedback>
+    </Card>
+  );
+};
 
 export default ConcideRating;

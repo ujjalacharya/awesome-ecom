@@ -85,7 +85,7 @@ const ProductDescription = ({ productDetails }) => {
       <Divider />
       <YoutubePlayer />
       <Divider />
-      <ConcideRating token={token} />
+      <ConcideRating token={token} {...product}/>
       <Divider />
       <ConciseQnA token={token}/>
       <Divider />

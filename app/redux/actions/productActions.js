@@ -99,20 +99,20 @@ export const getProductDetails = (slug) => {
 //   };
 // };
 
-// const getProductReviews = (query) => {
-//   return async (dispatch) => {
-//     const productService = new ProductService();
-//     const response = await productService.getProductReviews(query);
-//     if (response.isSuccess) {
-//       dispatch({ type: PRODUCT_REVIEWS, payload: response.data });
-//     } else if (!response.isSuccess) {
-//       dispatch({
-//         type: GLOBAL_ERROR,
-//         payload: response.errorMessage,
-//       });
-//     }
-//   };
-// };
+export const getProductReviews = (query) => {
+  return async (dispatch) => {
+    const productService = new ProductService();
+    const response = await productService.getProductReviews(query);
+    if (response.isSuccess) {
+      dispatch({ type: PRODUCT_REVIEWS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
 
 // const postReviews = (query, body) => {
 //   return async (dispatch) => {

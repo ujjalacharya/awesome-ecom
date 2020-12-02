@@ -24,7 +24,7 @@
     "expo-permissions": "^9.3.0",
     "expo-status-bar": "^1.0.2",
     "lodash": "^4.17.20",
-    "moment": "^2.25.1",
+    "moment": "^2.29.1",
     "query-string": "^6.13.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
