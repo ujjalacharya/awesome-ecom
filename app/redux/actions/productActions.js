@@ -9,6 +9,7 @@ import {
   PRODUCT_QA,
   POST_QUESTION,
   PRODUCT_REVIEWS,
+  PRODUCT_REVIEWS_INIT,
   POST_PRODUCT_REVIEWS,
   MENU_CATEGORIES_LOADING
 } from "../types";
@@ -101,6 +102,7 @@ export const getProductDetails = (slug) => {
 
 export const getProductReviews = (query) => {
   return async (dispatch) => {
+    dispatch({ type: PRODUCT_REVIEWS_INIT });
     const productService = new ProductService();
     const response = await productService.getProductReviews(query);
     if (response.isSuccess) {

@@ -6,6 +6,7 @@ import {
   PRODUCT_QA,
   POST_QUESTION,
   PRODUCT_REVIEWS,
+  PRODUCT_REVIEWS_INIT,
   POST_PRODUCT_REVIEWS,
 } from "../types";
 
@@ -57,6 +58,8 @@ export default (state = initialState, action) => {
       return { ...state, postQnsResp: action.payload, hasError: false };
     case PRODUCT_REVIEWS:
       return { ...state, productReviews: action.payload, hasError: false };
+    case PRODUCT_REVIEWS_INIT:
+      return { ...state, productReviews: null, hasError: false };
     case POST_PRODUCT_REVIEWS:
       return { ...state, postReviewResp: action.payload, hasError: false };
     default:
