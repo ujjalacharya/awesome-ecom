@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import Background from "../../components/Background";
 import Logo from "../../components/Logo";
@@ -15,8 +15,10 @@ import { emailValidator, passwordValidator } from "../../utils/common";
 
 const LoginScreen = ({ navigation, ...props }) => {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState({ value: "", error: "" });
-  const [password, setPassword] = useState({ value: "", error: "" });
+  const {authLoading} = useSelector(state => state.authentication)
+
+  const [email, setEmail] = useState({ value: "Tek@gmail.com", error: "" });
+  const [password, setPassword] = useState({ value: "helloworld1", error: "" });
 
   const _onLoginPressed = () => {
     const emailError = emailValidator(email.value);
@@ -30,7 +32,7 @@ const LoginScreen = ({ navigation, ...props }) => {
 
     // navigation.navigate('Dashboard');
     // props.signIn("fdf");
-    dispatch(authenticate());
+    dispatch(authenticate({email: email.value, password: password.value}));
   };
 
   return (
@@ -70,7 +72,7 @@ const LoginScreen = ({ navigation, ...props }) => {
         </TouchableOpacity>
       </View>
 
-      <Button mode="contained" onPress={_onLoginPressed}>
+      <Button mode="contained" onPress={_onLoginPressed} loading={authLoading} disabled={authLoading}>
         Login
       </Button>
 
