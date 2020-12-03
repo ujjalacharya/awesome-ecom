@@ -7,13 +7,14 @@ import {
   message,
   Form,
   Input,
-  Checkbox,
+  AutoComplete,
   Cascader,
   Select,
 } from "antd";
 import Categories from "./Categories";
-import { getCategories } from "../../../../redux/actions/product_actions";
+import { getCategories, getBrands } from "../../../../redux/actions/product_actions";
 const { Option } = Select;
+const { Option:AutoCompleteOption } = AutoComplete;
 
 const layout = {
   labelCol: {
@@ -47,9 +48,17 @@ const steps = [
   },
 ];
 
-const ProductForm = ({ getCategories }) => {
+const ProductForm = ({ getCategories, getBrands, brands }) => {
   const [current, setCurrent] = React.useState(0);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [result, setResult] = useState([]);
+
+    const handleSearch = (value) => {
+        let newResult = result.filter(r => {
+            if (r.slug.toUpperCase().indexOf(value.toUpperCase()) !== -1) return r
+        })
+        setResult([...newResult])
+    };
 
   const handleClick = (e) => {
     let isAlreadyAdded = selectedCategories.includes(e.key);
@@ -65,7 +74,13 @@ const ProductForm = ({ getCategories }) => {
 
   useEffect(() => {
     getCategories();
+    getBrands();
   }, []);
+
+    useEffect(() => {
+        setResult([...brands])
+    }, [brands]);
+  
   const next = () => {
     setCurrent(current + 1);
   };
@@ -126,6 +141,31 @@ const ProductForm = ({ getCategories }) => {
         >
           <Input />
         </Form.Item>
+            <Form.Item
+                label="Brand"
+                name="brand"
+                rules={[
+                    {
+                        required: false,
+                        // message: 'Please input product categories!',
+                    },
+                ]}
+            >
+                <AutoComplete
+                    style={{
+                        width: 200,
+                    }}
+                    onSearch={handleSearch}
+                    placeholder="input here"
+                >
+                    {result.map((brand) => (
+                        <AutoCompleteOption key={brand._id} value={brand.slug}>
+                            {brand.brandName}
+                        </AutoCompleteOption>
+                    ))}
+                    <Input/>
+                </AutoComplete>
+            </Form.Item>
       </>
     );
   };
@@ -228,12 +268,17 @@ const ProductForm = ({ getCategories }) => {
 };
 ProductForm.propTypes = {
   getCategories: PropTypes.func,
+  getBrands: PropTypes.func,
+  brands: PropTypes.array,
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+    brands: state.product.brands
+});
 
 const mapDispatchToProps = {
   getCategories,
+  getBrands
 };
 
 export default connect(

@@ -211,6 +211,12 @@ exports.createOrder = async (req, res) => {
       error = `Product ${product.name} is out of the stock.`
       break;
     }
+    if (products.find(p => {
+      if(p.quantity===undefined || +p.quantity < 1) return p
+    })) {
+      error = `Quantity is required of product ${product.name}`
+      break;
+    }
 
     if (product.quantity < products.find(p => p.p_slug === product.slug).quantity) {
       error = `There are only ${product.quantity} quantity of product ${product.name} available.`
@@ -277,7 +283,6 @@ exports.createOrder = async (req, res) => {
       .update(thisProduct, updateProduct)
       .options({ viaSave: true })
       .run({ useMongoose: true });
-    //  console.log(newOrder,newPayent,updateProduct);
     return { order: results[0], payment: results[1] }
   })
 
