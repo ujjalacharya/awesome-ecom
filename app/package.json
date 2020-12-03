@@ -19,6 +19,7 @@
     "expo": "~38.0.8",
     "expo-constants": "^9.2.0",
     "expo-image-picker": "^9.1.1",
+    "expo-jwt": "^1.4.0",
     "expo-local-authentication": "~9.1.1",
     "expo-notifications": "^0.7.2",
     "expo-permissions": "^9.3.0",

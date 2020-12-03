@@ -19,7 +19,7 @@ export const authenticate = (body, type, redirectUrl) => {
     if (response.isSuccess) {
       await AsyncStorage.setItem("token", response.data.accessToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.accessToken });
-      
+
       // const redirectUrl = window.location.search
       //   ? window.location.search.split("=")[1]
       //   : "/";
@@ -32,16 +32,16 @@ export const authenticate = (body, type, redirectUrl) => {
 };
 
 // gets the token from the cookie and saves it in the store
-const reauthenticate = (token) => {
-  // if (isTokenExpired(token)) {
-  //   return (dispatch) => {
-  //     removeCookie("token");
-  //     dispatch({ type: DEAUTHENTICATE });
-  //   };
-  // }
-  // return (dispatch) => {
-  //   dispatch({ type: AUTHENTICATE, payload: token });
-  // };
+export const reauthenticate = (token) => {
+  if (isTokenExpired(token)) {
+    return async (dispatch) => {
+      await AsyncStorage.removeItem("token");
+      dispatch({ type: DEAUTHENTICATE });
+    };
+  }
+  return (dispatch) => {
+    dispatch({ type: AUTHENTICATE, payload: token });
+  };
 };
 
 // removing the token
