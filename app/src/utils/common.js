@@ -4,7 +4,7 @@ import Colors from "../constants/Constants";
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 
-export const headerOptions = (headerTitle = "DHAN-GAADI") => ({
+export const headerOptions = () => ({
   title: null,
   headerStyle: {
     // backgroundColor: Colors.tintColor,
@@ -25,3 +25,13 @@ export const getPhoneDetails = () => {
     width,
   };
 };
+
+export const emailValidator = (email) => {
+  if (!email) return "Email is required";
+  return false;
+}
+
+export const passwordValidator = (password) => {
+  if (!password) return "Password is required";
+  return false;
+}
