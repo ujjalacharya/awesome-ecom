@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { View, Platform, Text } from "react-native";
 import { Avatar, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
+import { SERVER_BASE_URL } from "../../../../redux/services/productService";
+import { updateProfilePicture } from "../../../../redux/actions/userActions";
 
-const EditAvatar = () => {
+const EditAvatar = ({ userProfile }) => {
+  const dispatch = useDispatch();
   const [image, setImage] = useState(null);
 
   useEffect(() => {
@@ -31,6 +35,9 @@ const EditAvatar = () => {
 
     if (!result.cancelled) {
       setImage(result.uri);
+      // let formData = new FormData();
+      // formData.append("photo", result);
+      // dispatch(updateProfilePicture(formData));
     }
   };
 
@@ -48,7 +55,9 @@ const EditAvatar = () => {
       ) : (
         <Avatar.Image
           size={100}
-          source={require("../../../../assets/avatar.jpg")}
+          source={{
+            uri: SERVER_BASE_URL + "/uploads/" + userProfile.photo,
+          }}
         />
       )}
       <Button

@@ -4,7 +4,7 @@ import {
   DEAUTHENTICATE,
   AUTHENTICATE_ERROR,
   GLOBAL_ERROR,
-  USER_PROFILE_INIT
+  USER_PROFILE_INIT,
 } from "../types";
 import { decodeToken, isTokenExpired } from "../../utils/common";
 import { AuthService } from "../services/authService";
@@ -24,7 +24,6 @@ export const authenticate = (body, type, redirectUrl) => {
       dispatch({ type: AUTHENTICATE, payload: response.data.accessToken });
       const _id = decodeToken(response.data.accessToken);
       dispatch(getUserProfile(_id));
-
     } else if (!response.isSuccess) {
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
       dispatch({ type: AUTHENTICATE_ERROR, payload: response.errorMessage });
@@ -42,6 +41,8 @@ export const reauthenticate = (token) => {
   }
   return (dispatch) => {
     dispatch({ type: AUTHENTICATE, payload: token });
+    const _id = decodeToken(token);
+    dispatch(getUserProfile(_id));
   };
 };
 

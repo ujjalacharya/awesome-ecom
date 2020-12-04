@@ -64,6 +64,7 @@ const toggleActiveAddress = (query) => {
 const updateProfilePicture = (body) => {
   return async (dispatch) => {
     const userService = new UserService();
+    debugger;
     const response = await userService.updateProfilePicture(body);
     if (response.isSuccess) {
       dispatch({ type: UPDATE_PROFILE_PICTURE, payload: response.data });

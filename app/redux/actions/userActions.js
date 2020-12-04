@@ -61,10 +61,11 @@ const toggleActiveAddress = (query) => {
   };
 };
 
-const updateProfilePicture = (body) => {
+export const updateProfilePicture = (body) => {
   return async (dispatch) => {
     const userService = new UserService();
     const response = await userService.updateProfilePicture(body);
+    console.log({response})
     if (response.isSuccess) {
       dispatch({ type: UPDATE_PROFILE_PICTURE, payload: response.data });
     } else if (!response.isSuccess) {

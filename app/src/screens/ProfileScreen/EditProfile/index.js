@@ -1,4 +1,5 @@
 import React from "react";
+import {useSelector} from "react-redux";
 import { View } from "react-native";
 import { Card, Divider, TextInput, Button } from "react-native-paper";
 
@@ -6,6 +7,9 @@ import ListingScreen from "../../../components/ListingScreen";
 import EditAvatar from "./EditAvatar";
 
 const EditProfile = () => {
+
+  const { userProfile } = useSelector((state) => state.user);
+
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
   const [phone, setPhone] = React.useState("");
@@ -14,7 +18,7 @@ const EditProfile = () => {
   return (
     <ListingScreen title="Edit Profile">
       <Card>
-        <EditAvatar />
+        <EditAvatar userProfile={userProfile}/>
       </Card>
       <Divider />
       <Card>

@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Text, View, StyleSheet } from "react-native";
 import { Card, Avatar, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -11,11 +11,19 @@ import { SERVER_BASE_URL } from "../../../redux/services/productService";
 const UserInfo = () => {
   const navigation = useNavigation();
 
-  const { userProfile } = useSelector((state) => state.user);
+  const { userProfile } = useSelector(
+    (state) => state.user
+  );
 
   if (!userProfile) {
     return <Skeleton />;
   }
+
+  // useEffect(() => {
+  //   if (userProfile && profilePictureResp) {
+  //     dispatch(getUserProfile(userProfile._id));
+  //   }
+  // }, [profilePictureResp]);
 
   return (
     <View>
@@ -30,7 +38,6 @@ const UserInfo = () => {
           >
             <Avatar.Image
               size={85}
-              source={require("../../../assets/avatar.jpg")}
               source={{
                 uri: SERVER_BASE_URL + "/uploads/" + userProfile.photo,
               }}
@@ -80,27 +87,35 @@ const UserInfo = () => {
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
             <View style={{ flex: 0.45, marginLeft: 10 }}>
               <Text style={styles.fadedTitle}>Mobile Number</Text>
-                <Text>{userProfile.phoneno}</Text>
+              <Text>{userProfile.phoneno}</Text>
             </View>
             <View style={{ flex: 0.55 }}>
               <Text style={styles.fadedTitle}>Joined Since</Text>
-              <Text>{Moment(userProfile.createdAt).startOf("hour").fromNow()}</Text>
+              <Text>
+                {Moment(userProfile.createdAt).startOf("hour").fromNow()}
+              </Text>
             </View>
           </View>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
             <View style={{ flex: 0.45, marginLeft: 10 }}>
               <Text style={styles.fadedTitle}>Date Of Birth</Text>
-                <Text>{userProfile.dob}</Text>
+              <Text>{userProfile.dob}</Text>
             </View>
             <View style={{ flex: 0.55 }}>
               <Text style={styles.fadedTitle}>Gender</Text>
-                <Text>{userProfile.gender}</Text>
+              <Text>{userProfile.gender}</Text>
             </View>
           </View>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
             <View style={{ flex: 0.45, marginLeft: 10 }}>
               <Text style={styles.fadedTitle}>Address</Text>
-              <Text>New Baneswor</Text>
+              <Text>
+                {
+                  userProfile.location?.filter(
+                    (location) => location.isActive !== null
+                  )[0].address
+                }
+              </Text>
             </View>
             <View style={{ flex: 0.55 }}>
               <Text style={styles.fadedTitle}>Occupation</Text>
