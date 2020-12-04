@@ -97,7 +97,7 @@ class OrderSummary extends Component {
       totalCheckoutItems = this.props.checkoutItems.totalAmount;
     }
 
-    let deliveryCharges = this.props.shippingCharge
+    let deliveryCharges = (this.props.shippingCharge && this.props.checkoutItems.length)
       ? this.props.shippingCharge
       : 0;
 
