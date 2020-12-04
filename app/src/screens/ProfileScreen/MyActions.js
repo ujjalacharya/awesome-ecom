@@ -4,14 +4,16 @@ import { Card } from "react-native-paper";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const MyActions = ({ myReviews }) => {
+const MyActions = ({ myReviews, wishlistItems }) => {
   const navigation = useNavigation();
 
   const cards = [
     { id: 1, name: "My Orders", value: myReviews },
     { id: 2, name: "My Reviews", value: myReviews },
-    { id: 3, name: "My Wishlists", value: myReviews },
+    { id: 3, name: "My Wishlists", value: wishlistItems },
   ];
+
+  console.log(wishlistItems)
 
   return (
     <>

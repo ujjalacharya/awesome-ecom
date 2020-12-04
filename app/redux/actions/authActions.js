@@ -5,6 +5,7 @@ import {
   AUTHENTICATE_ERROR,
   GLOBAL_ERROR,
   USER_PROFILE_INIT,
+  USER_INITIAL_STATE,
 } from "../types";
 import { decodeToken, isTokenExpired } from "../../utils/common";
 import { AuthService } from "../services/authService";
@@ -49,6 +50,7 @@ export const reauthenticate = (token) => {
 export const deauthenticate = () => {
   return async (dispatch) => {
     await AsyncStorage.removeItem("token");
+    dispatch({ type: USER_INITIAL_STATE });
     dispatch({ type: DEAUTHENTICATE });
   };
 };

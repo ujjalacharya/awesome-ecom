@@ -32,6 +32,7 @@ export const SEARCH_ERROR = "SEARCH_ERROR"
 export const SEARCH_KEYWORD = "SEARCH_KEYWORD"
 
 // user
+export const USER_INITIAL_STATE = "USER_INITIAL_STATE"
 export const USER_PROFILE_INIT = "USER_PROFILE_INIT"
 export const USER_PROFILE = "USER_PROFILE"
 export const ADD_ADDRESS = "ADD_ADDRESS"
