@@ -14,7 +14,7 @@ const { Option } = Select;
 class MyOrders extends Component {
   state = {
     myOrders: [],
-    orderStatuses: [],
+    orderStatuses: [{}],
     currentStatus: "",
     appendUrl: "page=1",
     currentPage: 1,
@@ -220,6 +220,7 @@ class MyOrders extends Component {
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
+              <Option value=''>All</Option>
               {this.state.orderStatuses?.map((status, i) => {
                 return (
                   <Option value={status} key={i}>
