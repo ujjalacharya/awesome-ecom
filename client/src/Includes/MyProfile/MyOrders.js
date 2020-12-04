@@ -7,6 +7,7 @@ import { withRouter } from "next/router";
 import Link from "next/link";
 import _ from "lodash";
 import { scrollToTop } from "../../../utils/common";
+import moment from 'moment'
 
 const { Search } = Input;
 const { Option } = Select;
@@ -115,6 +116,14 @@ class MyOrders extends Component {
         ),
       },
       {
+        title: "Order Date",
+        dataIndex: "orderDate",
+        key: "orderDate",
+        render: (text, record) => (
+          moment(record.orderDate).format('YYYY/MM/DD')
+        ),
+      },
+      {
         title: "Status",
         key: "status",
         dataIndex: "status",
@@ -193,6 +202,7 @@ class MyOrders extends Component {
         qty: order.quantity,
         price: order.product.price.$numberDecimal,
         slug: order.product.slug,
+        orderDate: order.updatedAt
       };
       data.push(ele);
     });
