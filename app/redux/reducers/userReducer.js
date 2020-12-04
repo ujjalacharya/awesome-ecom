@@ -14,7 +14,7 @@ const initialState = {
   addAddressResp: null,
   toggleActiveAddResp: null,
   profilePictureResp: null,
-  myReviews: null
+  myReviews: null,
 };
 
 export default (state = initialState, action) => {

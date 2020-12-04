@@ -37,9 +37,9 @@ export class UserService {
     return data;
   }
 
-  async getMyReviews(query) {
+  async getMyReviews(query, token) {
     let url = `${SERVER_BASE_URL}/api/review-qna/my-reviews?${query}&perPage=5`;
-    let data = uploadImageService(url, "GET");
+    let data = uploadImageService(url, "GET", null, token);
     return data;
   }
 }

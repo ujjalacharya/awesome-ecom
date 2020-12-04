@@ -34,9 +34,8 @@ export const authenticate = (body, type, redirectUrl) => {
 // gets the token from the cookie and saves it in the store
 export const reauthenticate = (token) => {
   if (isTokenExpired(token)) {
-    return async (dispatch) => {
-      await AsyncStorage.removeItem("token");
-      dispatch({ type: DEAUTHENTICATE });
+    return (dispatch) => {
+      dispatch(deauthenticate());
     };
   }
   return (dispatch) => {
@@ -47,10 +46,9 @@ export const reauthenticate = (token) => {
 };
 
 // removing the token
-export const deauthenticate = (route = "/") => {
-  return (dispatch) => {
-    // removeCookie("token");
-    // Router.push(route);
+export const deauthenticate = () => {
+  return async (dispatch) => {
+    await AsyncStorage.removeItem("token");
     dispatch({ type: DEAUTHENTICATE });
   };
 };

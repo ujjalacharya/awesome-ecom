@@ -87,10 +87,10 @@ export const updateProfilePicture = (body, token) => {
   };
 };
 
-const getMyReviews = (query) => {
+export const getMyReviews = (query, token) => {
   return async (dispatch) => {
     const userService = new UserService();
-    const response = await userService.getMyReviews(query);
+    const response = await userService.getMyReviews(query, token);
     if (response.isSuccess) {
       dispatch({ type: MY_PROFILE_REVIEWS, payload: response.data });
     } else if (!response.isSuccess) {

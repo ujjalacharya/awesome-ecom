@@ -4,21 +4,27 @@ import { Card } from "react-native-paper";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const MyActions = () => {
+const MyActions = ({ myReviews }) => {
   const navigation = useNavigation();
+
+  const cards = [
+    { id: 1, name: "My Orders", value: myReviews },
+    { id: 2, name: "My Reviews", value: myReviews },
+    { id: 3, name: "My Wishlists", value: myReviews },
+  ];
 
   return (
     <>
-      {["My Orders", "My Reviews", "My Wishlists"].map((item, index) => (
+      {cards.map((item, index) => (
         <Card
           style={{ margin: 10, height: 80, flex: 1 }}
           key={index}
-          onPress={() => navigation.navigate(item)}
+          onPress={() => navigation.navigate(item.name)}
         >
           <View style={{ flex: 1, flexDirection: "row", padding: 10 }}>
             <View style={{ flex: 0.7, justifyContent: "center", margin: 10 }}>
-              <Text style={{ fontSize: 30 }}>0</Text>
-              <Text>{item}</Text>
+              <Text style={{ fontSize: 30 }}>{item.value.totalCount}</Text>
+              <Text>{item.name}</Text>
             </View>
             <View
               style={{
