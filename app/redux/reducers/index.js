@@ -3,7 +3,7 @@ import productReducer from './productReducer';
 import authReducer from './authReducer';
 import menuReducer from './menuReducer';
 import listingReducer from './listingReducer';
-// import userReducer from './userReducer';
+import userReducer from './userReducer';
 import globalErrorReducer from './globalErrorReducer';
 import otherReducer from './otherReducer';
 // import cartReducer from './cartReducer';
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   products: productReducer,
   menu: menuReducer,
   listing: listingReducer,
-  // user: userReducer,
+  user: userReducer,
   globalError: globalErrorReducer,
   other: otherReducer,
   // cart: cartReducer,

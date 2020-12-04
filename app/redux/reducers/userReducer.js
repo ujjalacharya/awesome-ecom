@@ -1,5 +1,6 @@
 import {
   USER_PROFILE,
+  USER_PROFILE_INIT,
   EDIT_ADDRESS,
   ADD_ADDRESS,
   TOGGLE_ACTIVE_ADDRESS,
@@ -20,6 +21,8 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case USER_PROFILE:
       return { ...state, userProfile: action.payload, hasError: false };
+    case USER_PROFILE_INIT:
+      return { ...state, userProfile: null, hasError: false };
     case UPDATE_PROFILE_PICTURE:
       return { ...state, profilePictureResp: action.payload, hasError: false };
     case ADD_ADDRESS:

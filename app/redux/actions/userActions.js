@@ -1,7 +1,7 @@
 import { USER_PROFILE, GLOBAL_ERROR, EDIT_ADDRESS, ADD_ADDRESS, TOGGLE_ACTIVE_ADDRESS, UPDATE_PROFILE_PICTURE, MY_PROFILE_REVIEWS } from "../types";
 import { UserService } from "../services/userService";
 
-const getUserProfile = (id) => {
+export const getUserProfile = (id) => {
   return async (dispatch) => {
     const userService = new UserService();
     const response = await userService.getUserProfile(id);

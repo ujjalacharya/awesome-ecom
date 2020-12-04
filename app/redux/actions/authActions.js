@@ -4,26 +4,27 @@ import {
   DEAUTHENTICATE,
   AUTHENTICATE_ERROR,
   GLOBAL_ERROR,
+  USER_PROFILE_INIT
 } from "../types";
-import { isTokenExpired } from "../../utils/common";
+import { decodeToken, isTokenExpired } from "../../utils/common";
 import { AuthService } from "../services/authService";
 import { AsyncStorage } from "react-native";
+import { getUserProfile } from "./userActions";
 
 // gets token from the api and stores it in the redux store and in asyncstorage
 export const authenticate = (body, type, redirectUrl) => {
   return async (dispatch) => {
     dispatch({ type: AUTHENTICATE_INIT });
+    dispatch({ type: USER_PROFILE_INIT });
     const authService = new AuthService();
     const response = await authService.loginUser(body);
 
     if (response.isSuccess) {
       await AsyncStorage.setItem("token", response.data.accessToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.accessToken });
+      const _id = decodeToken(response.data.accessToken);
+      dispatch(getUserProfile(_id));
 
-      // const redirectUrl = window.location.search
-      //   ? window.location.search.split("=")[1]
-      //   : "/";
-      // window.location.href = redirectUrl;
     } else if (!response.isSuccess) {
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
       dispatch({ type: AUTHENTICATE_ERROR, payload: response.errorMessage });
