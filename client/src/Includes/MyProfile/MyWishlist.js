@@ -20,7 +20,8 @@ class MyWishlist extends Component {
   state = {
     allWishlistItems: { wishlists: [], totalCount: 0 },
     currentPage: 1,
-    loading: false
+    loading: false,
+    searchKeyword: ''
   };
 
   componentDidMount() {
@@ -85,7 +86,16 @@ class MyWishlist extends Component {
     //   keyword: this.props.router.query.slug,
     // };
     this.props.getWishListItems(
-      `page=${page.current}&perPage=10`
+      `page=${page.current}&perPage=10&keyword=${this.state.searchKeyword}`
+    );
+  };
+
+  getSearch = (val) => {
+    this.setState({ searchKeyword: val, loading: true }, () =>
+      // this.initialRequest()
+      this.props.getWishListItems(
+        `page=${this.state.currentPage}&perPage=10&keyword=${val}`
+      )
     );
   };
 
@@ -197,7 +207,7 @@ class MyWishlist extends Component {
           <Col lg={8} xs={24}>
             <Search
               placeholder="Search By Item Name"
-              onSearch={(value) => console.log(value)}
+              onSearch={(value) => this.getSearch(value)}
               className="order-search"
             />
           </Col>
