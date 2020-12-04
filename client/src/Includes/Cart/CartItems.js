@@ -137,7 +137,7 @@ class CartItems extends Component {
           </div>
         </div>
 
-        {this.state.noStockProducts.carts.length > 0 && (
+        {this.state.noStockProducts?.carts?.length > 0 && (
           <div className="bag-items">
             <div className="title">
               <h4>

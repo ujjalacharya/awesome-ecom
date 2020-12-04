@@ -262,11 +262,19 @@ class Header extends Component {
               <div className="list-icon">
                 <img src="/images/bag.png" />
               </div>
-              <Link href="/cart">
-                <a>
-                  <div className="list-text">Cart</div>
-                </a>
-              </Link>
+              {
+                loginToken ? (
+                  <Link href="/cart">
+                    <a>
+                      <div className="list-text">Cart</div>
+                    </a>
+                  </Link>
+                ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
+                    <a>
+                      <div className="list-text">Cart</div>
+                    </a>
+                  </Link>
+              }
             </div>
             {loginToken && (
               <div
