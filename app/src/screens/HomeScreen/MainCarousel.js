@@ -5,7 +5,7 @@ import { View, Image, StyleSheet } from "react-native";
 import Swiper from "react-native-swiper";
 import Constants from "../../constants/Constants";
 import { getBannerImages } from "../../../redux/actions/otherActions";
-import { SERVER_BASE_URL } from "../../../redux/services/productService";
+import { SERVER_BASE_URL } from "../../../utils/common";
 
 const MainCarousel = () => {
   const dispatch = useDispatch();

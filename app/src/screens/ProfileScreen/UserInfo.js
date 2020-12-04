@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import Moment from "moment";
 import Constants from "../../constants/Constants";
 import Skeleton from "../../components/shared/Skeleton";
-import { SERVER_BASE_URL } from "../../../redux/services/productService";
+import { SERVER_BASE_URL } from "../../../utils/common";
 
 const UserInfo = () => {
   const navigation = useNavigation();

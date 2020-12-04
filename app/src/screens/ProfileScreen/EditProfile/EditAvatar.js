@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { View, Platform, Text } from "react-native";
 import { Avatar, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
-import { SERVER_BASE_URL } from "../../../../redux/services/productService";
 import { updateProfilePicture } from "../../../../redux/actions/userActions";
+import { SERVER_BASE_URL } from "../../../../utils/common";
 
 const EditAvatar = ({ userProfile }) => {
   const dispatch = useDispatch();
