@@ -32,9 +32,9 @@ export class UserService {
     return data;
   }
 
-  async updateProfilePicture(body) {
+  async updateProfilePicture(body, token) {
     let url = `${SERVER_BASE_URL}/api/user`;
-    let data = uploadImageService(url, "PATCH", body);
+    let data = uploadImageService(url, "PATCH", body, token);
     return data;
   }
 

@@ -1,4 +1,12 @@
-import { USER_PROFILE, GLOBAL_ERROR, EDIT_ADDRESS, ADD_ADDRESS, TOGGLE_ACTIVE_ADDRESS, UPDATE_PROFILE_PICTURE, MY_PROFILE_REVIEWS } from "../types";
+import {
+  USER_PROFILE,
+  GLOBAL_ERROR,
+  EDIT_ADDRESS,
+  ADD_ADDRESS,
+  TOGGLE_ACTIVE_ADDRESS,
+  UPDATE_PROFILE_PICTURE,
+  MY_PROFILE_REVIEWS,
+} from "../types";
 import { UserService } from "../services/userService";
 
 const getUserProfile = (id) => {
@@ -92,12 +100,11 @@ const getMyReviews = (query) => {
   };
 };
 
-
 export default {
-    getUserProfile,
-    editAddress,
-    addAddress,
-    toggleActiveAddress,
-    updateProfilePicture,
-    getMyReviews
+  getUserProfile,
+  editAddress,
+  addAddress,
+  toggleActiveAddress,
+  updateProfilePicture,
+  getMyReviews,
 };

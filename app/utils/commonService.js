@@ -117,36 +117,36 @@ export const getService = async (url) => {
   }
 };
 
-// export const uploadImageService = async (url, method, formData) => {
-//   try {
-//     const resp = await fetch(url, {
-//       method,
-//       headers: {
-//         // "Content-Type": "multipart/form-data",
-//         "x-auth-token": cookie.get("token"),
-//       },
-//       body: formData,
-//     });
+export const uploadImageService = async (url, method, formData, token) => {
+  try {
+    const resp = await fetch(url, {
+      method,
+      headers: {
+        // "Content-Type": "multipart/form-data",
+        "x-auth-token": token,
+      },
+      body: formData,
+    });
 
-//     const data = await resp.json();
+    const data = await resp.json();
 
-//     if (resp.status >= 200 && resp.status < 300) {
-//       return {
-//         isSuccess: true,
-//         data,
-//       };
-//     } else {
-//       return {
-//         isSuccess: false,
-//         errorMessage: data.error,
-//       };
-//     }
-//   } catch (err) {
-//     return {
-//       isSuccess: false,
-//       errorMessage: err,
-//     };
-//   }
-// };
+    if (resp.status >= 200 && resp.status < 300) {
+      return {
+        isSuccess: true,
+        data,
+      };
+    } else {
+      return {
+        isSuccess: false,
+        errorMessage: data.error,
+      };
+    }
+  } catch (err) {
+    return {
+      isSuccess: false,
+      errorMessage: err,
+    };
+  }
+};
 
 
