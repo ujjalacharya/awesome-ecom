@@ -12,6 +12,7 @@ import { deauthenticate } from "../../../redux/actions/authActions";
 import { getMyReviews } from "../../../redux/actions/userActions";
 import Skeleton from "../../components/shared/Skeleton";
 import { getWishListItems } from "../../../redux/actions/wishlistActions";
+import { getOrders } from "../../../redux/actions/orderActions";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -21,10 +22,14 @@ const ProfileScreen = () => {
   const { wishlistItems } = useSelector((state) => ({
     wishlistItems: state.wishlist.getWishlistItems
   }));
+  const { myOrders } = useSelector((state) => ({
+    myOrders: state.order.getOrders
+  }));
 
   useEffect(() => {
     dispatch(getMyReviews(`page=1`, token));
     dispatch(getWishListItems(`page=1&perPage=10`, token));
+    dispatch(getOrders(`page=1`, token));
   }, []);
 
   const handleLogout = async () => {
@@ -39,7 +44,7 @@ const ProfileScreen = () => {
       </Appbar.Header>
       <ScrollView>
         <UserInfo />
-        {(!myReviews || !wishlistItems) ? <Skeleton /> : <MyActions myReviews={myReviews} wishlistItems={wishlistItems}/>}
+        {(!myReviews || !wishlistItems || !myOrders) ? <Skeleton /> : <MyActions myReviews={myReviews} wishlistItems={wishlistItems} myOrders={myOrders}/>}
       </ScrollView>
     </>
   );

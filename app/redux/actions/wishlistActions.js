@@ -10,7 +10,6 @@ export const getWishListItems = (query, token) => {
   return async (dispatch) => {
     const wishlistService = new WishlistService();
     const response = await wishlistService.getWishListItems(query, token);
-    console.log(response)
     if (response.isSuccess) {
       dispatch({ type: GET_WISHLIST_ITEMS, payload: response.data });
     } else if (!response.isSuccess) {
