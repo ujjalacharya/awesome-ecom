@@ -1,14 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Layout from '../../core/Layout'
-import Table from './Table'
+import ProductForm from './ProductForm'
+import Layout from '../../../core/Layout'
 
 export const index = () => {
     return (
         <Layout>
-        <Table/>
-        {/* <ProductForm/> */}
+            <ProductForm/>
         </Layout>
 
     )

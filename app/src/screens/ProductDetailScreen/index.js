@@ -19,6 +19,8 @@ const ProductDetailScreen = (props) => {
     ({ products }) => products
   );
 
+  const { token } = useSelector(({ authentication }) => authentication);
+
   const [state, setState] = useState({
     showGallery: false,
   });
@@ -39,8 +41,8 @@ const ProductDetailScreen = (props) => {
     },
   }));
 
-  if (productDetailsLoading){
-    return <Skeleton />
+  if (productDetailsLoading) {
+    return <Skeleton />;
   }
 
   return (
@@ -75,7 +77,7 @@ const ProductDetailScreen = (props) => {
               style={{ height: 250 }}
               onPress={handleGalleryToggle}
             >
-              <ProductDetailHeader {...newProps} />
+              <ProductDetailHeader {...newProps} token={token} />
             </TouchableRipple>
             <ProductDescription {...newProps} />
             <View style={{ height: 250, marginTop: 0 }}>

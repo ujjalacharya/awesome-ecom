@@ -65,7 +65,6 @@ export const getCategories = () => async (dispatch) => {
             let parentCateEle = { ...newChild, childCate: newallCates };
             parentCate.push(parentCateEle);
         });
-        console.log(parentCate);
 
         dispatch({
             type: GET_CATEGORIES,

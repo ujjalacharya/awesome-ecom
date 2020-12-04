@@ -1,3 +1,6 @@
+import jwt from "expo-jwt";
+import { AsyncStorage } from "react-native";
+
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];
   parentCategory.forEach((parentCate) => {
@@ -24,4 +27,16 @@ export const nameWithTripleDots = (title = "") => {
   }
 
   return title;
+};
+
+export const isTokenExpired = (token) => {
+  if (token) {
+    const { exp } = jwt.decode(token, "console.log('signin')");
+
+    if (exp < (new Date().getTime() + 1) / 1000) {
+      return true;
+    }
+    return false;
+  }
+  return false;
 };
