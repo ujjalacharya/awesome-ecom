@@ -83,9 +83,9 @@ class MenuDetails extends Component {
             <TabPane tab="My Address" key="2">
               <AddressDetails userData = {this.state.userData} />
             </TabPane>
-            <TabPane tab="Recent Orders" key="3">
+            {/* <TabPane tab="Recent Orders" key="3">
               <RecentOrders />
-            </TabPane>
+            </TabPane> */}
           </Tabs>
         </StickyContainer>
       </div>
