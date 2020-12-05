@@ -86,8 +86,10 @@ exports.order = async (req, res, next) => {
   next();
 };
 
-exports.userOrder = (req, res) => {
+exports.userOrder = async(req, res) => {
+  
   let order = req.order;
+
   if (order.user._id.toString() !== req.user._id.toString()) {
     return res.status(401).json({ error: "Unauthorized User." });
   }
