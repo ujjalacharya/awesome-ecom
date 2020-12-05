@@ -96,7 +96,6 @@ class ProductSpecs extends Component {
         description = product.description;
       }
     }
-    console.log(product)
     let loginToken = this.props.authentication.token;
     return (
       <div className="product-specs">
