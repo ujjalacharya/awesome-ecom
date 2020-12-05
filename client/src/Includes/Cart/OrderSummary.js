@@ -91,7 +91,6 @@ class OrderSummary extends Component {
       orderID: shortid.generate(),
       method: "Cash on Delivery"
     };
-    console.log('hey')
     this.setState({
       loading: true
     }, () => {
@@ -100,7 +99,6 @@ class OrderSummary extends Component {
   };
 
   render() {
-    console.log(this.props)
     let { activeLocation, userData } = this.state;
 
     let totalCheckoutItems = 0;
