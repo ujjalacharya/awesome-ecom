@@ -96,7 +96,7 @@ class ProductSpecs extends Component {
         description = product.description;
       }
     }
-
+    console.log(product)
     let loginToken = this.props.authentication.token;
     return (
       <div className="product-specs">
@@ -131,7 +131,7 @@ class ProductSpecs extends Component {
           <div className="price-wish">
             <div className="old-new-price">
               {
-                product?.price.discountRate &&
+                product?.discountRate > 0 &&
                 <div className="old-price">
                   <span>Rs {product.price.$numberDecimal}</span>
                 </div>
@@ -145,7 +145,7 @@ class ProductSpecs extends Component {
                       100)}
                 </span>
                 {
-                  product?.price.discountRate &&
+                  product?.discountRate > 0 &&
                   <span className="discount">
                     (Save Rs {(product?.price.$numberDecimal *
                       product?.discountRate) /
