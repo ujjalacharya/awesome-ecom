@@ -5,6 +5,7 @@ import ListingScreen from "../../../components/ListingScreen";
 import { productData } from "../../../utils/mock";
 import FeaturedProducts from "../../HomeScreen/FeaturedProducts";
 import SearchedSingleProduct from "../../ProductListScreen/SearchedSingleProduct";
+import Skeleton from "../../../components/shared/Skeleton";
 
 const MyWishlists = (props) => {
   const { wishlistItems } = useSelector((state) => ({

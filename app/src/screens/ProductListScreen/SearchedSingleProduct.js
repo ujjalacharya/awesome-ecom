@@ -135,9 +135,17 @@ const SearchedSingleProduct = (props) => {
                   {props.product.price && <Paragraph> Rs
                     {` ${props.product.price.$numberDecimal || props.product.price}`}
                   </Paragraph>}
-                  {props.type !== "myorders" && <Avatar.Text
+                  {(props.type !== "myorders" && props.type !== "searched") && <Avatar.Text
                     size={24}
                     label={(props.item.stars ? Math.ceil(props.item.stars.averageStar) : props.item.star) + "/5 stars"}
+                    color={Constants.headerTintColor}
+                    backgroundColor="green"
+                    width={90}
+                    style={{ marginTop: 10 }}
+                  />}
+                  {props.type === "searched" && <Avatar.Text
+                    size={24}
+                    label={(props.product.averageRating.$numberDecimal) + "/5 stars"}
                     color={Constants.headerTintColor}
                     backgroundColor="green"
                     width={90}
