@@ -17,11 +17,11 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 
 import Constants from "../../constants/Constants";
-import { SERVER_BASE_URL } from "../../../redux/services/productService";
 import { getProductDetails } from "../../../redux/actions/productActions";
+import { SERVER_BASE_URL } from "../../../utils/common";
 
 const SearchedSingleProduct = (props) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const renderActionButtonComponent = (type, product) => {
     switch (type) {
       case "searched":
@@ -84,7 +84,14 @@ const SearchedSingleProduct = (props) => {
                 color="red"
               />
             </Button>
-            <Button onPress={() => console.warn("details")} style={{ flex: 1 }}>
+            <Button
+              onPress={() => {
+                props.product &&
+                  dispatch(getProductDetails(props.product.slug));
+                props.navigation.navigate("Detail");
+              }}
+              style={{ flex: 1 }}
+            >
               <Text style={{ color: Constants.tintColor }}>{"Details "}</Text>
               <AntDesign
                 name="eye"
@@ -103,8 +110,8 @@ const SearchedSingleProduct = (props) => {
     <TouchableWithoutFeedback>
       <Card
         onPress={() => {
-        props.product && dispatch(getProductDetails(props.product.slug));
-          props.navigation.navigate("Detail")
+          props.product && dispatch(getProductDetails(props.product.slug));
+          props.navigation.navigate("Detail");
         }}
         style={{ marginBottom: 5 }}
       >
@@ -125,17 +132,17 @@ const SearchedSingleProduct = (props) => {
               <View style={{ flex: 2 }}>
                 <>
                   <Title>{props.product.title || props.product.name}</Title>
-                  <Paragraph>
-                    {props.product.price.$numberDecimal || props.product.price}
-                  </Paragraph>
-                  <Avatar.Text
+                  {props.product.price && <Paragraph> Rs
+                    {` ${props.product.price.$numberDecimal || props.product.price}`}
+                  </Paragraph>}
+                  {props.type !== "myorders" && <Avatar.Text
                     size={24}
-                    label="4/5 stars"
+                    label={(props.item.stars ? Math.ceil(props.item.stars.averageStar) : props.item.star) + "/5 stars"}
                     color={Constants.headerTintColor}
                     backgroundColor="green"
                     width={90}
                     style={{ marginTop: 10 }}
-                  />
+                  />}
                 </>
               </View>
             </View>
