@@ -21,6 +21,7 @@ class OrderSummary extends Component {
     userData: [],
     activeLocation: {},
     showEditAddressModal: false,
+    loading: false
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -44,6 +45,17 @@ class OrderSummary extends Component {
       showEditAddressModal: false,
     });
   };
+
+  componentDidUpdate(prevProps){
+    if (
+      this.props.orderResp !== prevProps.orderResp &&
+      this.props.orderResp
+    ) {
+      this.setState({
+        loading: false
+      })
+    }
+  }
 
   placeOrderItems = () => {
 
@@ -79,11 +91,16 @@ class OrderSummary extends Component {
       orderID: shortid.generate(),
       method: "Cash on Delivery"
     };
-
-    this.props.placeOrder(body)
+    console.log('hey')
+    this.setState({
+      loading: true
+    }, () => {
+      this.props.placeOrder(body)
+    })
   };
 
   render() {
+    console.log(this.props)
     let { activeLocation, userData } = this.state;
 
     let totalCheckoutItems = 0;
@@ -191,6 +208,7 @@ class OrderSummary extends Component {
                 <Button
                   className={"btn " + this.props.diableOrderBtn}
                   onClick={this.placeOrderItems}
+                  disabled={this.state.loading}
                 >
                   {this.props.orderTxt}
                 </Button>
@@ -211,7 +229,7 @@ class OrderSummary extends Component {
                       <Button
                         className={"btn " + this.props.diableOrderBtn}
                         disabled={
-                          this.props.diableOrderBtn === "disableBtn"
+                          (this.props.diableOrderBtn === "disableBtn")
                             ? true
                             : false
                         }
@@ -231,6 +249,7 @@ class OrderSummary extends Component {
 
 const mapStatesToProps = (state) => ({
   shippingCharge: state.order.getShippingChargeResp,
+  orderResp: state.order.placeOrderResp
 });
 
 const mapDispatchToProps = (dispatch) => ({

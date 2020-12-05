@@ -1,5 +1,6 @@
 import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE } from "../types";
 import { OrderService } from "../services/orderService";
+import { openNotification } from "../../utils/common";
 
 const getOrders = (query) => {
   return async (dispatch) => {
@@ -36,7 +37,9 @@ const placeOrder = (body) => {
     const orderService = new OrderService();
     const response = await orderService.placeOrder(body);
     if (response.isSuccess) {
-      dispatch({ type: PLACE_ORDER, payload: response.data });
+      await dispatch({ type: PLACE_ORDER, payload: response.data });
+      openNotification("Success", "Order placed successfully");
+      window.location.href = "/myprofile";
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,

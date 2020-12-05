@@ -62,13 +62,13 @@ class CartItems extends Component {
     ) {
       scrollToTop();
     }
-    if (
-      this.props.order.placeOrderResp !== prevProps.order.placeOrderResp &&
-      this.props.order.placeOrderResp
-    ) {
-      openNotification("Success", "Order placed successfully");
-      window.location.href = "/myprofile";
-    }
+    // if (
+    //   this.props.order.placeOrderResp !== prevProps.order.placeOrderResp &&
+    //   this.props.order.placeOrderResp
+    // ) {
+    //   openNotification("Success", "Order placed successfully");
+    //   window.location.href = "/myprofile";
+    // }
   }
 
   onChangePageInStock = (page) => {
