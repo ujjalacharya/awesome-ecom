@@ -35,8 +35,6 @@ class ProductListView extends Component {
       showQtySection: this.props.showQtySection,
     });
 
-    console.log(this.props)
-
     if (this.props.showCheckbox === 'noCheckbox') {
 
       let p_slugs = this.props.cart.checkoutItems?.carts.map((newItems) => {
@@ -130,11 +128,9 @@ class ProductListView extends Component {
   };
 
   render() {
-    console.log(this.props)
     return (
       <>
         {this.state.productsData?.carts?.map((items, i) => {
-          console.log(items)
           return (
             <div className="product-list-view">
               <Row>

@@ -80,7 +80,6 @@ class CheckoutItems extends Component {
   };
 
   render() {
-    console.log(this.props)
     return (
       <div className="cart-items">
         <div className="delivery-status">

@@ -252,6 +252,20 @@ class Header extends Component {
                 </div>
               </a>
             </Link>
+            {!loginToken &&
+              <Link href="/register">
+                <a>
+                  <div className="menu-right-items">
+                    <div className="list-icon">
+                      <img src="/images/user.png" />
+                    </div>
+                    <div className="list-text">
+                      Register
+                    </div>
+                  </div>
+                </a>
+              </Link>
+            }
             {/* <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/wishlist.png" />
