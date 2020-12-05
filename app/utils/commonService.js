@@ -33,34 +33,34 @@
 //   }
 // };
 
-// export const getTokenService = async (url, method, ctx) => {
-//   try {
-//     const resp = await fetch(url, {
-//       method,
-//       headers: {
-//         "x-auth-token": getCookie("token", ctx?.req),
-//       },
-//     });
+export const getTokenService = async (url, method, token) => {
+  try {
+    const resp = await fetch(url, {
+      method,
+      headers: {
+        "x-auth-token": token
+      },
+    });
 
-//     const data = await resp.json();
-//     if (resp.status >= 200 && resp.status < 300) {
-//       return {
-//         isSuccess: true,
-//         data,
-//       };
-//     } else {
-//       return {
-//         isSuccess: false,
-//         errorMessage: data.error,
-//       };
-//     }
-//   } catch (err) {
-//     return {
-//       isSuccess: false,
-//       errorMessage: err,
-//     };
-//   }
-// };
+    const data = await resp.json();
+    if (resp.status >= 200 && resp.status < 300) {
+      return {
+        isSuccess: true,
+        data,
+      };
+    } else {
+      return {
+        isSuccess: false,
+        errorMessage: data.error,
+      };
+    }
+  } catch (err) {
+    return {
+      isSuccess: false,
+      errorMessage: err,
+    };
+  }
+};
 
 export const postService = async (url, method, body) => {
   try {
@@ -117,36 +117,36 @@ export const getService = async (url) => {
   }
 };
 
-// export const uploadImageService = async (url, method, formData) => {
-//   try {
-//     const resp = await fetch(url, {
-//       method,
-//       headers: {
-//         // "Content-Type": "multipart/form-data",
-//         "x-auth-token": cookie.get("token"),
-//       },
-//       body: formData,
-//     });
+export const uploadImageService = async (url, method, formData, token) => {
+  try {
+    const resp = await fetch(url, {
+      method,
+      headers: {
+        // "Content-Type": "multipart/form-data",
+        "x-auth-token": token,
+      },
+      body: formData,
+    });
 
-//     const data = await resp.json();
+    const data = await resp.json();
 
-//     if (resp.status >= 200 && resp.status < 300) {
-//       return {
-//         isSuccess: true,
-//         data,
-//       };
-//     } else {
-//       return {
-//         isSuccess: false,
-//         errorMessage: data.error,
-//       };
-//     }
-//   } catch (err) {
-//     return {
-//       isSuccess: false,
-//       errorMessage: err,
-//     };
-//   }
-// };
+    if (resp.status >= 200 && resp.status < 300) {
+      return {
+        isSuccess: true,
+        data,
+      };
+    } else {
+      return {
+        isSuccess: false,
+        errorMessage: data.error,
+      };
+    }
+  } catch (err) {
+    return {
+      isSuccess: false,
+      errorMessage: err,
+    };
+  }
+};
 
 

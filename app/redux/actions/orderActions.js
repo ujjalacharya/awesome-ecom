@@ -1,10 +1,11 @@
 import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE } from "../types";
 import { OrderService } from "../services/orderService";
 
-const getOrders = (query) => {
+export const getOrders = (query, token) => {
   return async (dispatch) => {
     const orderService = new OrderService();
-    const response = await orderService.getOrders(query);
+    const response = await orderService.getOrders(query, token);
+    console.log({order: response})
     if (response.isSuccess) {
       dispatch({ type: GET_ORDERS, payload: response.data });
     } else if (!response.isSuccess) {

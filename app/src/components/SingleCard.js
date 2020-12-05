@@ -6,8 +6,7 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Constants from "../constants/Constants";
-import { SERVER_BASE_URL } from "../../redux/services/productService";
-import { nameWithTripleDots } from "../../utils/common";
+import { nameWithTripleDots, SERVER_BASE_URL } from "../../utils/common";
 import { getProductDetails } from "../../redux/actions/productActions";
 
 const SingleCard = ({ product }) => {

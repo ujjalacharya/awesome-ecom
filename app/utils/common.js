@@ -1,3 +1,7 @@
+import jwt from "expo-jwt";
+
+export const SERVER_BASE_URL = "http://192.168.1.68:3001";
+
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];
   parentCategory.forEach((parentCate) => {
@@ -25,3 +29,20 @@ export const nameWithTripleDots = (title = "") => {
 
   return title;
 };
+
+export const isTokenExpired = (token) => {
+  if (token) {
+    const { exp } = jwt.decode(token, "console.log('signin')");
+
+    if (exp < (new Date().getTime() + 1) / 1000) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+};
+
+export const decodeToken = (token) => {
+  const {_id} = jwt.decode(token, "console.log('signin')");
+  return _id;
+}

@@ -1,5 +1,5 @@
 import { getService, getTokenService, postTokenService } from "../../utils/commonService";
-export const SERVER_BASE_URL = "http://192.168.1.68:3001"
+import { SERVER_BASE_URL } from "../../utils/common";
 
 export class ProductService {
   getLatestProducts() {
@@ -21,7 +21,7 @@ export class ProductService {
   }
 
   async getQandA(query) {
-    let url = `${SERVER_BASE_URL}/api/review-qna/qna/${query}&perPage=5`
+    let url = `${SERVER_BASE_URL}/api/review-qna/qna/${query}`
     let data = getService(url, 'GET');
     return data;
   }

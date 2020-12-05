@@ -1,4 +1,5 @@
 import React, { memo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import Background from "../../components/Background";
 import Logo from "../../components/Logo";
@@ -6,30 +7,32 @@ import Header from "../../components/Header";
 import Button from "../../components/Button";
 import TextInput from "../../components/TextInput";
 import BackButton from "../../components/BackButton";
-import { useDispatch } from "react-redux";
 import { authenticate } from "../../../redux/actions/authActions";
+import { emailValidator, passwordValidator } from "../../utils/common";
 
 // import { signIn } from "../../store/actions/user_actions";
 // import { emailValidator, passwordValidator } from '../core/utils';
 
 const LoginScreen = ({ navigation, ...props }) => {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState({ value: "", error: "" });
-  const [password, setPassword] = useState({ value: "", error: "" });
+  const {authLoading} = useSelector(state => state.authentication)
+
+  const [email, setEmail] = useState({ value: "Tek@gmail.com", error: "" });
+  const [password, setPassword] = useState({ value: "helloworld1", error: "" });
 
   const _onLoginPressed = () => {
-    // const emailError = emailValidator(email.value);
-    // const passwordError = passwordValidator(password.value);
+    const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
 
-    // if (emailError || passwordError) {
-    //   setEmail({ ...email, error: emailError });
-    //   setPassword({ ...password, error: passwordError });
-    //   return;
-    // }
+    if (emailError || passwordError) {
+      setEmail({ ...email, error: emailError });
+      setPassword({ ...password, error: passwordError });
+      return;
+    }
 
     // navigation.navigate('Dashboard');
     // props.signIn("fdf");
-    dispatch(authenticate());
+    dispatch(authenticate({email: email.value, password: password.value}));
   };
 
   return (
@@ -69,7 +72,7 @@ const LoginScreen = ({ navigation, ...props }) => {
         </TouchableOpacity>
       </View>
 
-      <Button mode="contained" onPress={_onLoginPressed}>
+      <Button mode="contained" onPress={_onLoginPressed} loading={authLoading} disabled={authLoading}>
         Login
       </Button>
 

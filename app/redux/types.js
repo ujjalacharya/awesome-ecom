@@ -1,5 +1,6 @@
 // auth types
 export const AUTHENTICATE = 'authenticate';
+export const AUTHENTICATE_INIT = 'AUTHENTICATE_INIT';
 export const AUTHENTICATE_ERROR = 'AUTHENTICATE_ERROR';
 
 export const DEAUTHENTICATE = 'deauthenticate';
@@ -16,8 +17,10 @@ export const GET_BRANDS = "GET_BRANDS"
 export const PRODUCT_ERROR = "PRODUCT_ERROR"
 export const PRODUCT_BY_CATEGORY = "PRODUCT_BY_CATEGORY"
 export const PRODUCT_QA = "PRODUCT_QA"
+export const PRODUCT_QA_INIT = "PRODUCT_QA_INIT"
 export const POST_QUESTION = "POST_QUESTION"
 export const PRODUCT_REVIEWS = "PRODUCT_REVIEWS"
+export const PRODUCT_REVIEWS_INIT = "PRODUCT_REVIEWS_INIT"
 export const POST_PRODUCT_REVIEWS = "POST_PRODUCT_REVIEWS"
 
 // search
@@ -29,6 +32,8 @@ export const SEARCH_ERROR = "SEARCH_ERROR"
 export const SEARCH_KEYWORD = "SEARCH_KEYWORD"
 
 // user
+export const USER_INITIAL_STATE = "USER_INITIAL_STATE"
+export const USER_PROFILE_INIT = "USER_PROFILE_INIT"
 export const USER_PROFILE = "USER_PROFILE"
 export const ADD_ADDRESS = "ADD_ADDRESS"
 export const EDIT_ADDRESS = "EDIT_ADDRESS"

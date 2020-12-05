@@ -1,11 +1,11 @@
 import React from "react";
 import { Appbar, Avatar } from "react-native-paper";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import {isEmpty} from "lodash"
 import Constants from "../../constants/Constants";
-import Skeleton from "../../components/shared/Skeleton";
-import { SERVER_BASE_URL } from "../../../redux/services/productService";
+import { SERVER_BASE_URL } from "../../../utils/common";
 
-const ProductDetailHeader = ({ navigation, productDetails }) => (
+const ProductDetailHeader = ({ navigation, productDetails, token }) => (
   <View style={styles.container}>
     <ImageBackground
       source={{
@@ -23,9 +23,11 @@ const ProductDetailHeader = ({ navigation, productDetails }) => (
       />
       <Appbar.Action
         style={[styles.heartIcon]}
-        color="orange"
+        color={isEmpty(productDetails.hasOnWishlist) ? "gray" : "orange"}
         icon="heart"
-        onPress={() => navigation.navigate("WishList")}
+        onPress={() => {
+          token ? navigation.navigate("WishList") : navigation.navigate("Profile")
+        }}
       />
       <Avatar.Text
         size={24}
