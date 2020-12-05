@@ -46,19 +46,20 @@ class OrderSummary extends Component {
   };
 
   placeOrderItems = () => {
-    
+
     let { checkoutItems, userData } = this.props;
-    
+
     let products = checkoutItems.carts.map((item) => {
+      
       return {
         p_slug: item.product.slug,
-        quantity: item.product.quantity,
+        quantity: checkoutItems.totalQty || item.quantity,
       };
     });
-
+    
     let activeAddress = {}
     userData.location.map((loc) => {
-      if(loc.isActive){
+      if (loc.isActive) {
         activeAddress = loc
       }
     });
@@ -96,8 +97,8 @@ class OrderSummary extends Component {
     } else {
       totalCheckoutItems = this.props.checkoutItems.totalAmount;
     }
-
-    let deliveryCharges = (this.props.shippingCharge && this.props.checkoutItems.length)
+    
+    let deliveryCharges = this.props.showShippingAddress === 'showDisplay' ? this.props.shippingCharge : (this.props.shippingCharge && this.props.checkoutItems.length)
       ? this.props.shippingCharge
       : 0;
 
@@ -195,32 +196,32 @@ class OrderSummary extends Component {
                 </Button>
               </div>
             ) : (
-              <div
-                className="order-procced"
-                onClick={() =>
-                  this.props.saveCheckoutItems({
-                    carts: this.props.checkoutItems,
-                    totalCount: this.props.checkoutItems.length,
-                    totalAmount: totalCheckoutItems,
-                  })
-                }
-              >
-                <Link href="/checkout">
-                  <a>
-                    <Button
-                      className={"btn " + this.props.diableOrderBtn}
-                      disabled={
-                        this.props.diableOrderBtn === "disableBtn"
-                          ? true
-                          : false
-                      }
-                    >
-                      {this.props.orderTxt}
-                    </Button>
-                  </a>
-                </Link>
-              </div>
-            )}
+                <div
+                  className="order-procced"
+                  onClick={() =>
+                    this.props.saveCheckoutItems({
+                      carts: this.props.checkoutItems,
+                      totalCount: this.props.checkoutItems.length,
+                      totalAmount: totalCheckoutItems,
+                    })
+                  }
+                >
+                  <Link href="/checkout">
+                    <a>
+                      <Button
+                        className={"btn " + this.props.diableOrderBtn}
+                        disabled={
+                          this.props.diableOrderBtn === "disableBtn"
+                            ? true
+                            : false
+                        }
+                      >
+                        {this.props.orderTxt}
+                      </Button>
+                    </a>
+                  </Link>
+                </div>
+              )}
           </div>
         </div>
       </div>

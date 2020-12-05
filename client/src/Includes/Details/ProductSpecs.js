@@ -8,6 +8,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import StarRatings from "react-star-ratings";
 import _ from 'lodash'
+import { STORE_CART_ITEMS, STORE_CHECKOUT_ITEMS } from "../../../redux/types";
 
 class ProductSpecs extends Component {
   state = {
@@ -26,7 +27,7 @@ class ProductSpecs extends Component {
 
     if (
       this.props.wishlist.wishlistItemsResp !==
-        prevProps.wishlist.wishlistItemsResp &&
+      prevProps.wishlist.wishlistItemsResp &&
       this.props.wishlist.wishlistItemsResp
     ) {
       openNotification("Success", "Product added to wishlist successfully");
@@ -35,7 +36,7 @@ class ProductSpecs extends Component {
 
     if (
       this.props.wishlist.removeFromWishlistResp !==
-        prevProps.wishlist.removeFromWishlistResp &&
+      prevProps.wishlist.removeFromWishlistResp &&
       this.props.wishlist.removeFromWishlistResp
     ) {
       openNotification("Success", "Product removed from wishlist successfully");
@@ -44,7 +45,7 @@ class ProductSpecs extends Component {
 
     if (
       this.props.cart.removeFromCartResp !==
-        prevProps.cart.removeFromCartResp &&
+      prevProps.cart.removeFromCartResp &&
       this.props.cart.removeFromCartResp
     ) {
       openNotification("Success", "Product removed from cart successfully");
@@ -129,20 +130,30 @@ class ProductSpecs extends Component {
           </div>
           <div className="price-wish">
             <div className="old-new-price">
-              <div className="old-price">
-                <span>Rs {product.price.$numberDecimal}</span>
-              </div>
+              {
+                product?.price.discountRate &&
+                <div className="old-price">
+                  <span>Rs {product.price.$numberDecimal}</span>
+                </div>
+              }
               <div className="new-price">
                 <span className="price">
                   Rs{" "}
-                  {product.price.$numberDecimal -
-                    (product.price.$numberDecimal * 2) / 100}
+                  {product?.price.$numberDecimal -
+                    ((product?.price.$numberDecimal *
+                      product?.discountRate) /
+                      100)}
                 </span>
-                <span className="discount">
-                  (Save Rs {(product.price.$numberDecimal * 2) / 100} |{" "}
-                  {product.discountRate}
+                {
+                  product?.price.discountRate &&
+                  <span className="discount">
+                    (Save Rs {(product?.price.$numberDecimal *
+                      product?.discountRate) /
+                      100} |{" "}
+                    {product.discountRate}
                   %)
                 </span>
+                }
               </div>
             </div>
             <div className="wish-btn">
@@ -167,19 +178,19 @@ class ProductSpecs extends Component {
                     </a>
                   </Popconfirm>
                 ) : (
-                  <img
-                    data-tip="Add to Wishlist"
-                    src="/images/heart.png"
-                    onClick={() => this.props.addWishListItems(product.slug)}
-                  />
-                )
+                    <img
+                      data-tip="Add to Wishlist"
+                      src="/images/heart.png"
+                      onClick={() => this.props.addWishListItems(product.slug)}
+                    />
+                  )
               ) : (
-                <Link href={`/login?origin=${this.props.router.asPath}`}>
-                  <a>
-                    <img data-tip="Add to Wishlist" src="/images/heart.png" />
-                  </a>
-                </Link>
-              )}
+                  <Link href={`/login?origin=${this.props.router.asPath}`}>
+                    <a>
+                      <img data-tip="Add to Wishlist" src="/images/heart.png" />
+                    </a>
+                  </Link>
+                )}
             </div>
           </div>
         </div>
@@ -198,92 +209,118 @@ class ProductSpecs extends Component {
         </div>
         <div className="qty-cart-btn">
           <div className="qty-cart">
-            {loginToken ? (
-              !product.hasOnCart ? (
-                <>
-                  <div className="qty">
-                    <span className="qty-title">Qty:</span>
-                    <span className="qty-inc-dcs">
-                      <i
-                        aria-hidden="true"
-                        onClick={() => this.changePdValue(-1)}
-                        className={
-                          "fa fa-minus " +
-                          (this.state.pdQty === 1 ? "disabled" : "")
-                        }
-                      />
-                      <Input
-                        defaultValue={this.state.pdQty}
-                        value={this.state.pdQty}
-                        onChange={(e) => {
-                          this.setState({ pdQty: e.target.value });
-                        }}
-                      />
-                      <i
-                        className="fa fa-plus"
-                        aria-hidden="true"
-                        onClick={() => this.changePdValue(1)}
-                      />
-                    </span>
-                  </div>
+            {product.quantity ? (
+              loginToken ? (
+                !product.hasOnCart ? (
+                  <>
+                    <div className="qty">
+                      <span className="qty-title">Qty:</span>
+                      <span className="qty-inc-dcs">
+                        <i
+                          aria-hidden="true"
+                          onClick={() => this.changePdValue(-1)}
+                          className={
+                            "fa fa-minus " +
+                            (this.state.pdQty === 1 ? "disabled" : "")
+                          }
+                        />
+                        <Input
+                          defaultValue={this.state.pdQty}
+                          value={this.state.pdQty}
+                          onChange={(e) => {
+                            this.setState({ pdQty: e.target.value });
+                          }}
+                        />
+                        <i
+                          className="fa fa-plus"
+                          aria-hidden="true"
+                          onClick={() => this.changePdValue(1)}
+                        />
+                      </span>
+                    </div>
 
-                  <Button className="primary" onClick={this.addToCart}>
-                    Add to Cart
-                  </Button>
-                </>
+                    <Button className="primary" onClick={this.addToCart}>
+                      Add to Cart
+                    </Button>
+                    <Link href="/checkout">
+                      <Button
+                        onClick={() =>
+                          this.props.saveCheckoutItems({
+                            carts: [{ product }],
+                            totalCount: 1,
+                            totalAmount: ((product?.price.$numberDecimal -
+                              ((product?.price.$numberDecimal *
+                                product?.discountRate) /
+                                100)) * this.state.pdQty),
+                            removeAddQty: true,
+                            totalQty: this.state.pdQty
+                          })
+                          // this.props.saveCartItems({
+                          //   carts: product,
+                          //   totalCount: 1,
+                          //   totalAmount: (product.price.$numberDecimal -
+                          //     (product.price.$numberDecimal * 2) / 100),
+                          //     inStockProducts: {carts: [{product}], totalAmount: (product.price.$numberDecimal -
+                          //       (product.price.$numberDecimal * 2) / 100), totalCount: 1},
+                          //     noStockProducts: {carts: [], totalAmount: 0, totalCount: 0}
+                          // })
+                        }>Buy Now</Button>
+                    </Link>
+                  </>
+                ) : (
+                    <div className="delete-product">
+                      <Popconfirm
+                        title="Are you sure you want to remove this from cart?"
+                        onConfirm={() =>
+                          this.props.removeCart(product.hasOnCart._id)
+                        }
+                        // onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <a>
+                          <Button className="btn">
+                            <DeleteOutlined />
+                            <span className="txt">REMOVE FROM CART</span>
+                          </Button>
+                        </a>
+                      </Popconfirm>
+                    </div>
+                  )
               ) : (
-                <div className="delete-product">
-                  <Popconfirm
-                    title="Are you sure you want to remove this from cart?"
-                    onConfirm={() =>
-                      this.props.removeCart(product.hasOnCart._id)
-                    }
-                    // onCancel={cancel}
-                    okText="Yes"
-                    cancelText="No"
-                  >
-                    <a>
-                      <Button className="btn">
-                        <DeleteOutlined />
-                        <span className="txt">REMOVE FROM CART</span>
-                      </Button>
-                    </a>
-                  </Popconfirm>
-                </div>
-              )
-            ) : (
-              <Link href={`/login?origin=${this.props.router.asPath}`}>
-                <a className="qty-btn">
-                  <div className="qty">
-                    <span className="qty-title">Qty:</span>
-                    <span className="qty-inc-dcs">
-                      <i
-                        aria-hidden="true"
-                        // onClick={() => this.changePdValue(-1)}
-                        className={
-                          "fa fa-minus " +
-                          (this.state.pdQty === 1 ? "disabled" : "")
-                        }
-                      />
-                      <Input
-                        defaultValue={this.state.pdQty}
-                        value={this.state.pdQty}
-                        onChange={(e) => {
-                          this.setState({ pdQty: e.target.value });
-                        }}
-                      />
-                      <i
-                        className="fa fa-plus"
-                        aria-hidden="true"
-                        // onClick={() => this.changePdValue(1)}
-                      />
-                    </span>
-                  </div>
+                  <Link href={`/login?origin=${this.props.router.asPath}`}>
+                    <a className="qty-btn">
+                      <div className="qty">
+                        <span className="qty-title">Qty:</span>
+                        <span className="qty-inc-dcs">
+                          <i
+                            aria-hidden="true"
+                            // onClick={() => this.changePdValue(-1)}
+                            className={
+                              "fa fa-minus " +
+                              (this.state.pdQty === 1 ? "disabled" : "")
+                            }
+                          />
+                          <Input
+                            defaultValue={this.state.pdQty}
+                            value={this.state.pdQty}
+                            onChange={(e) => {
+                              this.setState({ pdQty: e.target.value });
+                            }}
+                          />
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                          // onClick={() => this.changePdValue(1)}
+                          />
+                        </span>
+                      </div>
 
-                  <Button className="primary">Add to Cart</Button>
-                </a>
-              </Link>
-            )}
+                      <Button className="primary">Add to Cart</Button>
+                    </a>
+                  </Link>
+                )
+            ) : <b>No Stocks Available</b>}
           </div>
           <div className="wish-comp-btn">
             <div className="comp-btn">
@@ -318,4 +355,25 @@ class ProductSpecs extends Component {
   }
 }
 
-export default connect((state) => state, actions)(withRouter(ProductSpecs));
+const mapDispatchToProps = (dispatch) => ({
+  // saveCartItems: (cartItems) => {
+  //   console.log(cartItems)
+  //   dispatch({ type: STORE_CART_ITEMS, payload: cartItems });
+  // },
+  saveCheckoutItems: (checkoutItems) => {
+    dispatch({ type: STORE_CHECKOUT_ITEMS, payload: checkoutItems });
+  },
+  placeOrder: (body) => {
+    dispatch(actions.placeOrder(body))
+  },
+  addToCart: (slug, body) => {
+    dispatch(actions.addToCart(slug, body))
+  },
+  getProductDetails: (slug) => {
+    dispatch(actions.getProductDetails(slug))
+  },
+  removeCart: (id) => {
+    dispatch(actions.removeCart(id))
+  },
+});
+export default connect((state) => state, mapDispatchToProps)(withRouter(ProductSpecs));

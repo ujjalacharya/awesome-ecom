@@ -80,7 +80,7 @@ class CheckoutItems extends Component {
   };
 
   render() {
-    
+    console.log(this.props)
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -112,7 +112,7 @@ class CheckoutItems extends Component {
           <div className="title">
             <h4>My Cart ({this.state.listItems?.totalCount} Items)</h4>
             <div className="price">
-              Total: Rs {this.state.listItems?.totalAmount?.toFixed(2)}
+              Total: Rs {this.props.cart.checkoutItems?.totalAmount || this.state.listItems?.totalAmount?.toFixed(2)}
             </div>
           </div>
           <div className="items-list">

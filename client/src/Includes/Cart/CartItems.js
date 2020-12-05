@@ -36,7 +36,7 @@ class CartItems extends Component {
         allnoStockProducts: nextProps.cartData.noStockProducts,
         noStockProducts: {
           ...nextProps.cartData.noStockProducts,
-          carts: [...nextProps.cartData.noStockProducts.carts].slice(
+          carts: nextProps.cartData.noStockProducts?.carts && [...nextProps.cartData.noStockProducts.carts].slice(
             0,
             prevState.perPage
           ),
@@ -44,7 +44,7 @@ class CartItems extends Component {
         allinStockProducts: nextProps.cartData.inStockProducts,
         inStockProducts: {
           ...nextProps.cartData.inStockProducts,
-          carts: [...nextProps.cartData.inStockProducts.carts].slice(
+          carts: nextProps.cartData.inStockProducts.carts && [...nextProps.cartData.inStockProducts.carts].slice(
             0,
             prevState.perPage
           ),
