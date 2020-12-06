@@ -27,9 +27,16 @@ exports.addCart = async (req, res) => {
     if (req.query.quantity < 1) {
         return res.status(403).json({ error: 'Quantity is required' })
     }
-    let cart = await Cart.findOne({user:req.user._id, product: product._id, isDeleted: null})
-    if (cart) {
+    let cart = await Cart.findOne({user:req.user._id, product: product._id})
+    if (cart && cart.isDeleted===null) {
         return res.status(403).json({error:'Cart already exist.'})
+    }
+    if (cart.isDeleted) {
+        cart.isDeleted = null
+        cart.quantity = req.body.quantity
+        cart.productAttributes = req.body.productAttributes
+        await cart.save()
+        return res.json(cart)
     }
     let newCart = {
         user: req.user._id,
@@ -43,7 +50,7 @@ exports.addCart = async (req, res) => {
 }
 
 const searchCarts = async (keyword = '', id, populateImages,populateSoldBy) => {
-    let carts = await Cart.find({ user: id })
+    let carts = await Cart.find({ user: id, isDeleted: null })
         .populate(populateImages)
         .populate({
             path: 'product',
@@ -54,7 +61,6 @@ const searchCarts = async (keyword = '', id, populateImages,populateSoldBy) => {
             populate: populateSoldBy
         })
         .lean()
-
     carts = carts.filter(c => c.product !== null)
     let totalCount = carts.length
     // carts = _.drop(carts, perPage * page - perPage)
@@ -140,9 +146,15 @@ exports.addWishlist = async (req, res) => {
         return res.status(403).json({ error: 'Quantity is required' })
     }
     
-    let wishlist = await Wishlist.findOne({user:req.user._id, product: product._id ,isDeleted:null})
-    if (wishlist) {
+    let wishlist = await Wishlist.findOne({user:req.user._id, product: product._id })
+    if (wishlist && wishlist.isDeleted===null) {
         return res.status(403).json({ error: 'Wishlist already exist.' })
+    }
+    if (wishlist.isDeleted) {
+        wishlist.isDeleted = null
+        wishlist.quantity = req.body.quantity
+        await wishlist.save()
+        return res.json(wishlist)
     }
     let newWishlist = {
         user: req.user._id,
