@@ -310,7 +310,7 @@ class MyOrders extends Component {
           className="showSortDrawer"
           width="auto"
         >
-          <OrderDetails orderId={this.state.selectedOrderId} openCloseOrder={this.onOpenCloseOrder} />
+          <OrderDetails visibleOrder={this.state.visibleOrder} orderId={this.state.selectedOrderId} openCloseOrder={this.onOpenCloseOrder} />
         </Drawer>
 
         {

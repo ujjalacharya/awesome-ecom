@@ -24,10 +24,17 @@ const OrderDetails = (props) => {
     }, [props.orderId])
 
     useEffect(() => {
+        if(props.visibleOrder === false){
+            setShowCancelForm(false)
+        }
+    }, [props.visibleOrder])
+
+    useEffect(() => {
         if (deleteCancelOrder.success) {
             dispatch(actions.getOrders('page=1'))
             form.resetFields()
             props.openCloseOrder()
+            setShowCancelForm(false)
             setDeleteCancelOrder({ ...data, loading: false, success: false })
         }
     }, [deleteCancelOrder])
@@ -41,7 +48,7 @@ const OrderDetails = (props) => {
     };
 
     let { getOrderByIdResp: orderDetails } = store.order
-
+    
     return (
         <div className="order-details">
             {
