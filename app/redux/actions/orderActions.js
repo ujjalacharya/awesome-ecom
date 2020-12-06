@@ -1,13 +1,24 @@
-import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE } from "../types";
+import {
+  GLOBAL_ERROR,
+  GET_ORDERS,
+  GET_ORDERS_NEXT,
+  GET_ORDERS_STATUSES,
+  PLACE_ORDER,
+  GET_SHIPPING_CHARGE,
+} from "../types";
 import { OrderService } from "../services/orderService";
 
 export const getOrders = (query, token) => {
   return async (dispatch) => {
     const orderService = new OrderService();
-    const response = await orderService.getOrders(query, token);
-    console.log({order: response})
+    let response = await orderService.getOrders(query, token);
+
     if (response.isSuccess) {
-      dispatch({ type: GET_ORDERS, payload: response.data });
+      if (+query.split("=")[1] === 1) {
+        dispatch({ type: GET_ORDERS, payload: response.data });
+      } else {
+        dispatch({ type: GET_ORDERS_NEXT, payload: response.data });
+      }
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -66,5 +77,5 @@ export default {
   getOrders,
   getOrdersStatuses,
   placeOrder,
-  getShippingCharge
+  getShippingCharge,
 };
