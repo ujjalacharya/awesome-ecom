@@ -243,6 +243,7 @@ class ProductSpecs extends Component {
                     </Button>
                     <Link href="/checkout">
                       <Button
+                        className="buy-now secondary"
                         onClick={() =>
                           this.props.saveCheckoutItems({
                             carts: [{ product }],
@@ -254,15 +255,6 @@ class ProductSpecs extends Component {
                             removeAddQty: true,
                             totalQty: this.state.pdQty
                           })
-                          // this.props.saveCartItems({
-                          //   carts: product,
-                          //   totalCount: 1,
-                          //   totalAmount: (product.price.$numberDecimal -
-                          //     (product.price.$numberDecimal * 2) / 100),
-                          //     inStockProducts: {carts: [{product}], totalAmount: (product.price.$numberDecimal -
-                          //       (product.price.$numberDecimal * 2) / 100), totalCount: 1},
-                          //     noStockProducts: {carts: [], totalAmount: 0, totalCount: 0}
-                          // })
                         }>Buy Now</Button>
                     </Link>
                   </>
