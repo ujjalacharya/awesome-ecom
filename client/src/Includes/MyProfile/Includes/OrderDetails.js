@@ -1,22 +1,42 @@
 import { render } from 'nprogress';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import actions from '../../../../redux/actions';
 import _ from 'lodash';
-import { Button } from 'antd';
 import Link from 'next/link'
 import moment from 'moment'
+import { Form, Button } from "antd";
+import TextArea from 'antd/lib/input/TextArea';
+import { data } from 'jquery';
 
 const OrderDetails = (props) => {
+
     let store = useSelector(state => state)
     let dispatch = useDispatch();
-    console.log(store)
+
+    let [deleteCancelOrder, setDeleteCancelOrder] = useState({ loading: false, success: false, data: {} })
+    let [showCancelForm, setShowCancelForm] = useState(false)
+
     useEffect(() => {
         dispatch(actions.getOrderById(props.orderId))
     }, [props.orderId])
 
+    useEffect(() => {
+        if (deleteCancelOrder.success) {
+            dispatch(actions.getOrders('page=1'))
+            props.openCloseOrder()
+            setDeleteCancelOrder({...data, loading: false, success: false})
+        }
+    }, [deleteCancelOrder])
+
+    const onFinish = (values) => {
+        let body = {
+            remark: values.remarks,
+        };
+        dispatch(actions.cancelOrder(props.orderId, body, deleteCancelOrder, setDeleteCancelOrder))
+    };
+
     let { getOrderByIdResp: orderDetails } = store.order
-    console.log(orderDetails)
 
     return (
         <div className="order-details">
@@ -51,7 +71,7 @@ const OrderDetails = (props) => {
                             <div className="title">Method</div>
                             <div className="sum-value">{orderDetails.payment.method}</div>
                         </div>
-                        <div className="summary-detail" style={{border: 0, padding:0}}>
+                        <div className="summary-detail" style={{ border: 0, padding: 0 }}>
                         </div>
                     </div>
                     <div className="total-summary">
@@ -77,8 +97,55 @@ const OrderDetails = (props) => {
                                 </a>
                             </Link>
                         </Button>
-                        <Button className="danger">Cancel Order</Button>
+                        {
+                            orderDetails.status.currentStatus !== 'cancel' ?
+                                (
+                                    <Button className="danger" onClick={() => setShowCancelForm(true)}>Cancel Order</Button>
+                                ) : (
+                                    <Button disabled >Cancelled Order</Button>
+                                )
+                        }
                     </div>
+
+                    {
+                        showCancelForm &&
+                        <div className="cancel-order-form">
+                            <div className="cancel-title">Cancel Order Remarks</div>
+                            <Form
+                                name="cancel_order"
+                                className="login-form"
+                                initialValues={{ remember: true }}
+                                onFinish={onFinish}
+                            >
+                                <Form.Item
+                                    name="remarks"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please input your remarks!",
+                                        },
+                                    ]}
+                                >
+                                    <TextArea
+                                        // prefix={<UserOutlined className="site-form-item-icon" />}
+                                        placeholder="Remarks"
+                                        autoComplete="off"
+                                    />
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <div className="cancel-create">
+                                        <Button disabled={deleteCancelOrder.loading} htmlType="submit" className="primary cancel-submit">
+                                            Submit
+                                        </Button>
+                                        <Button onClick={() => setShowCancelForm(false)}>
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </Form.Item>
+                            </Form>
+                        </div>
+                    }
                 </>
             }
         </div>

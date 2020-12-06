@@ -302,16 +302,17 @@ class MyOrders extends Component {
               </table>
           }}
         />
+        {this.state.myOrders?.totalCount === 0 && <div>No orders Available</div>}
         <Drawer
             title="Order Details"
             placement="right"
-            closable={false}
+            closable={true}
             onClose={this.onOpenCloseOrder}
             visible={this.state.visibleOrder}
             className="showSortDrawer"
             width="auto"
           >
-            <OrderDetails orderId={this.state.selectedOrderId} />
+            <OrderDetails orderId={this.state.selectedOrderId} openCloseOrder = {this.onOpenCloseOrder} />
           </Drawer>
       </div>
     );

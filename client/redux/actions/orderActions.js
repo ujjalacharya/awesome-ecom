@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE, GET_ORDER_BY_ID } from "../types";
+import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE, GET_ORDER_BY_ID, CANCEL_ORDER } from "../types";
 import { OrderService } from "../services/orderService";
 import { openNotification } from "../../utils/common";
 
@@ -64,6 +64,24 @@ const placeOrder = (body) => {
   };
 };
 
+const cancelOrder = (id, body, data, setData) => {
+  return async (dispatch) => {
+    setData({ ...data, loading: true });
+    const orderService = new OrderService();
+    const response = await orderService.cancelOrder(id, body);
+    if (response.isSuccess) {
+      setData({ ...data, loading: false, success: true, data: response.data });
+      await dispatch({ type: CANCEL_ORDER, payload: response.data });
+      openNotification("Success", "Order cancelled successfully");
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
 const getShippingCharge = (body) => {
   return async (dispatch) => {
     const orderService = new OrderService();
@@ -84,5 +102,6 @@ export default {
   getOrdersStatuses,
   placeOrder,
   getShippingCharge,
-  getOrderById
+  getOrderById,
+  cancelOrder
 };

@@ -25,6 +25,13 @@ export class OrderService {
     return data;
   }
 
+  cancelOrder(id, body) {
+    let url = `${process.env.SERVER_BASE_URL}/api/order/cancel-order/${id}`;
+    let data = postTokenService(url, "PATCH", body);
+    return data;
+  }
+
+
   getShippingCharge(body) {
     let url = `${process.env.SERVER_BASE_URL}/api/order/shipping-charge`;
     let data = postTokenService(url, "POST", body);

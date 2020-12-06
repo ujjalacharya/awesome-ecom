@@ -199,4 +199,18 @@
     margin-top: 10px;
     justify-content: space-between;
   }
+  .cancel-order-form {
+    margin-top: 10px;
+    .cancel-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .cancel-create{
+      text-align: right;
+      .cancel-submit{
+        margin-right: 8px;
+      }
+    }
+  }
 }
