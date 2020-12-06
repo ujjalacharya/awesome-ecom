@@ -31,7 +31,7 @@ exports.addCart = async (req, res) => {
     if (cart && cart.isDeleted===null) {
         return res.status(403).json({error:'Cart already exist.'})
     }
-    if (cart.isDeleted) {
+    if (cart && cart.isDeleted) {
         cart.isDeleted = null
         cart.quantity = req.body.quantity
         cart.productAttributes = req.body.productAttributes
@@ -150,7 +150,7 @@ exports.addWishlist = async (req, res) => {
     if (wishlist && wishlist.isDeleted===null) {
         return res.status(403).json({ error: 'Wishlist already exist.' })
     }
-    if (wishlist.isDeleted) {
+    if (wishlist && wishlist.isDeleted) {
         wishlist.isDeleted = null
         wishlist.quantity = req.body.quantity
         await wishlist.save()
