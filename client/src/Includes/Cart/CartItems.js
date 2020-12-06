@@ -149,7 +149,7 @@ class CartItems extends Component {
             </div>
             <div className="items-list">
               <ProductListView
-                showCheckbox="noCheckbox"
+                showCheckboxForOutOfStock="noCheckbox"
                 productsData={this.state.noStockProducts}
                 showQtySection="displayNone"
               />
