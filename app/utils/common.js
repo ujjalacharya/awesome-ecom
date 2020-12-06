@@ -1,6 +1,7 @@
 import jwt from "expo-jwt";
 
 export const SERVER_BASE_URL = "http://192.168.1.68:3001";
+export const BASE_URL = "http://192.168.1.68";
 
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];
@@ -45,4 +46,9 @@ export const isTokenExpired = (token) => {
 export const decodeToken = (token) => {
   const {_id} = jwt.decode(token, "console.log('signin')");
   return _id;
+}
+
+export const getDiscountedAmount = (amount, rate) => {
+  return Math.ceil(amount - (rate/100)*amount)
+  // 120 - 50/100*120
 }

@@ -55,11 +55,11 @@ export const getLatestProducts = () => {
   };
 };
 
-export const getProductDetails = (slug) => {
+export const getProductDetails = (slug, token) => {
   return async (dispatch) => {
     dispatch({ type: PRODUCT_DETAILS_LOADING });
     const productService = new ProductService();
-    const response = await productService.getProductDetails(slug);
+    const response = await productService.getProductDetails(slug, token);
     if (response.isSuccess) {
       dispatch({ type: PRODUCT_DETAILS, payload: response.data });
     } else if (!response.isSuccess) {

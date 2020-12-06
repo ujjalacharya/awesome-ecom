@@ -7,6 +7,7 @@ import ConcideRating from "./ConciseRating";
 import HighlightedInfo from "./HighlightedInfo";
 import ConciseQnA from "./ConciseQnA";
 import YoutubePlayer from "./YoutubePlayer";
+import { getDiscountedAmount } from "../../../utils/common";
 
 const ProductDescription = ({ productDetails }) => {
   const { token } = useSelector((state) => state.authentication);
@@ -25,7 +26,7 @@ const ProductDescription = ({ productDetails }) => {
                   fontWeight: "bold",
                 }}
               >
-                Rs {product.price.$numberDecimal}
+                Rs {getDiscountedAmount(product.price.$numberDecimal, product.discountRate)}
               </Text>
             }
             subtitle={
@@ -36,7 +37,7 @@ const ProductDescription = ({ productDetails }) => {
                     textDecorationStyle: "solid",
                   }}
                 >
-                  {`Rs ${product.price.$numberDecimal - product.discountRate}`}
+                  {`Rs ${product.price.$numberDecimal}`}
                 </Text>
                 <Text
                   style={{
@@ -53,7 +54,7 @@ const ProductDescription = ({ productDetails }) => {
           <Paragraph>{product.description}</Paragraph>
           <Avatar.Text
             size={24}
-            label={`Rating: ${product.stars.averageStar}/5`}
+            label={`Rating: ${Math.ceil(product.stars.averageStar)}/5`}
             color="white"
             backgroundColor={Constants.primaryGreen}
             width={90}

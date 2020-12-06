@@ -15,15 +15,16 @@ import { getWishListItems } from "../../../redux/actions/wishlistActions";
 
 const WishListScreen = (props) => {
   const dispatch = useDispatch();
-  const { wishlistItems } = useSelector((state) => ({
+  const { wishlistItems, removeFromWishlistResp } = useSelector((state) => ({
     wishlistItems: state.wishlist.getWishlistItems,
+    removeFromWishlistResp: state.wishlist.removeFromWishlistResp,
   }));
 
   const { token } = useSelector((state) => state.authentication);
 
   useEffect(() => {
     dispatch(getWishListItems(`page=1&perPage=10`, token));
-  }, [dispatch]);
+  }, [dispatch, removeFromWishlistResp]);
 
   const [state, setState] = useState({
     visible: false,
@@ -52,7 +53,7 @@ const WishListScreen = (props) => {
 
   return (
     <>
-      <MyWishlists />
+      <MyWishlists {...props}/>
 
       <View style={{ backgroundColor: Constants.headerTintColor, height: 50 }}>
         <View style={{ flex: 1, flexDirection: "row" }}>
