@@ -57,6 +57,7 @@ export const GET_WISHLIST_ITEMS = 'GET_WISHLIST_ITEMS'
 
 //orders
 export const GET_ORDERS = 'GET_ORDERS'
+export const GET_ORDERS_START = 'GET_ORDERS_START'
 export const GET_ORDER_BY_ID = 'GET_ORDER_BY_ID'
 export const CANCEL_ORDER = 'CANCEL_ORDER'
 export const GET_ORDERS_STATUSES = 'GET_ORDERS_STATUSES'

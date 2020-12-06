@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Input, Row, Col, Select } from "antd";
-import { Table, Tag, Drawer } from "antd";
+import { Table, Tag, Drawer, Spin } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
@@ -118,9 +118,9 @@ class MyOrders extends Component {
         key: "itemName",
         render: (text, record) => (
           // <Link href="/products/[slug]" as={`/products/${record.slug}`}>
-            <a className="item-title" onClick={() => {this.onOpenCloseOrder(); this.setState({selectedOrderId: record.key})}}>
-              <span>{text}</span>
-            </a>
+          <a className="item-title" onClick={() => { this.onOpenCloseOrder(); this.setState({ selectedOrderId: record.key }) }}>
+            <span>{text}</span>
+          </a>
           // </Link>
         ),
       },
@@ -304,16 +304,20 @@ class MyOrders extends Component {
         />
         {this.state.myOrders?.totalCount === 0 && <div>No orders Available</div>}
         <Drawer
-            title="Order Details"
-            placement="right"
-            closable={true}
-            onClose={this.onOpenCloseOrder}
-            visible={this.state.visibleOrder}
-            className="showSortDrawer"
-            width="auto"
-          >
-            <OrderDetails orderId={this.state.selectedOrderId} openCloseOrder = {this.onOpenCloseOrder} />
-          </Drawer>
+          title="Order Details"
+          placement="right"
+          closable={true}
+          onClose={this.onOpenCloseOrder}
+          visible={this.state.visibleOrder}
+          className="showSortDrawer"
+          width="auto"
+        >
+          <OrderDetails orderId={this.state.selectedOrderId} openCloseOrder={this.onOpenCloseOrder} />
+        </Drawer>
+
+        {
+          this.props.order.loading && <div className="loader-overlay"><Spin className="spinner" /></div>
+        }
       </div>
     );
   }

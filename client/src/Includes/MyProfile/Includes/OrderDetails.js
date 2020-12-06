@@ -10,11 +10,13 @@ import TextArea from 'antd/lib/input/TextArea';
 import { data } from 'jquery';
 
 const OrderDetails = (props) => {
+    let [form] = Form.useForm()
 
     let store = useSelector(state => state)
     let dispatch = useDispatch();
 
-    let [deleteCancelOrder, setDeleteCancelOrder] = useState({ loading: false, success: false, data: {} })
+    let [deleteCancelOrder, setDeleteCancelOrder] = useState({ loading: false, success: false, data: {} });
+
     let [showCancelForm, setShowCancelForm] = useState(false)
 
     useEffect(() => {
@@ -24,8 +26,9 @@ const OrderDetails = (props) => {
     useEffect(() => {
         if (deleteCancelOrder.success) {
             dispatch(actions.getOrders('page=1'))
+            form.resetFields()
             props.openCloseOrder()
-            setDeleteCancelOrder({...data, loading: false, success: false})
+            setDeleteCancelOrder({ ...data, loading: false, success: false })
         }
     }, [deleteCancelOrder])
 
@@ -33,6 +36,7 @@ const OrderDetails = (props) => {
         let body = {
             remark: values.remarks,
         };
+
         dispatch(actions.cancelOrder(props.orderId, body, deleteCancelOrder, setDeleteCancelOrder))
     };
 
@@ -114,8 +118,9 @@ const OrderDetails = (props) => {
                             <Form
                                 name="cancel_order"
                                 className="login-form"
-                                initialValues={{ remember: true }}
+                                // initialValues={{ remember: true }}
                                 onFinish={onFinish}
+                                form={form}
                             >
                                 <Form.Item
                                     name="remarks"
@@ -127,9 +132,9 @@ const OrderDetails = (props) => {
                                     ]}
                                 >
                                     <TextArea
-                                        // prefix={<UserOutlined className="site-form-item-icon" />}
-                                        placeholder="Remarks"
+                                        placeholder="Your Remarks"
                                         autoComplete="off"
+                                        rows="4"
                                     />
                                 </Form.Item>
 

@@ -1,9 +1,10 @@
-import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE, GET_ORDER_BY_ID, CANCEL_ORDER } from "../types";
+import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE, GET_ORDER_BY_ID, CANCEL_ORDER, GET_ORDERS_START } from "../types";
 import { OrderService } from "../services/orderService";
 import { openNotification } from "../../utils/common";
 
 const getOrders = (query) => {
   return async (dispatch) => {
+    await dispatch({ type: GET_ORDERS_START });
     const orderService = new OrderService();
     const response = await orderService.getOrders(query);
     if (response.isSuccess) {
@@ -19,6 +20,7 @@ const getOrders = (query) => {
 
 const getOrderById = (id) => {
   return async (dispatch) => {
+    await dispatch({ type: GET_ORDERS_START });
     const orderService = new OrderService();
     const response = await orderService.getOrderById(id);
     if (response.isSuccess) {
