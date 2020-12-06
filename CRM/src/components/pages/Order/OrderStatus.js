@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import {Switch,Popconfirm} from 'antd'
+import {Switch,Popconfirm, Tooltip} from 'antd'
 import { connect } from 'react-redux'
 import { toggleOrderApproval, toggletobeReturnOrder } from '../../../redux/actions/order_actions'
 
-const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggletobeReturnOrder, isOrderDetailOpen}) => {
+const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggletobeReturnOrder, remainingProductQty, isOrderDetailOpen}) => {
     const [defaultCheckApprove, setdefaultCheckApprove] = useState(false)
     const [defaultCheckComplete, setdefaultCheckComplete] = useState(false)
     const [switchClass, setSwitchClass] = useState('')
@@ -87,8 +87,15 @@ const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggleto
 
 
     //rendering..
-    //for status active and approve we have toggle feature so we need switch
-    if (status === 'active' || status === 'approve') return <Switch className={switchClass} onClick={toggleApproval} loading={loading} checkedChildren='active' unCheckedChildren='approve' checked={defaultCheckApprove} />
+    //for status active is qty is out of stock we have to disable toggle feature so we need switch
+    if (status === 'active'&& remainingProductQty < 1) return <Tooltip title="Product is out of stock, cannot approve.">
+    <span>
+    <Switch className={switchClass} disabled onClick={toggleApproval} loading={loading} checkedChildren='active' unCheckedChildren='approve' checked={defaultCheckApprove} />
+    </span>
+    </Tooltip>
+
+    //for status approve and active we have toggle feature so we need switch
+    if (status === 'approve' || status === 'active') return <Switch className={switchClass} onClick={toggleApproval} loading={loading} checkedChildren='active' unCheckedChildren='approve' checked={defaultCheckApprove} />
     //for status complete 
     if (status === 'complete') {
         return <Popconfirm

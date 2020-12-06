@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
   Button,
@@ -19,10 +19,14 @@ import { AntDesign } from "@expo/vector-icons";
 import Constants from "../../constants/Constants";
 import { getProductDetails } from "../../../redux/actions/productActions";
 import { SERVER_BASE_URL } from "../../../utils/common";
+import { removeFromWishList } from "../../../redux/actions/wishlistActions";
 
 const SearchedSingleProduct = (props) => {
   const dispatch = useDispatch();
-  const renderActionButtonComponent = (type, product) => {
+
+  const { token } = useSelector((state) => state.authentication);
+
+  const renderActionButtonComponent = (type, product, item) => {
     switch (type) {
       case "searched":
         return (
@@ -48,7 +52,12 @@ const SearchedSingleProduct = (props) => {
       case "wishlist":
         return (
           <View style={styles.rowFlex}>
-            <Button onPress={() => console.warn("Wifi")} style={{ flex: 1 }}>
+            <Button
+              onPress={() => {
+                dispatch(removeFromWishList(item._id, product.slug, token));
+              }}
+              style={{ flex: 1 }}
+            >
               <Text style={{ color: "red" }}>{"Remove "}</Text>
               <AntDesign
                 name="delete"
@@ -76,7 +85,12 @@ const SearchedSingleProduct = (props) => {
       case "mywishlists":
         return (
           <View style={styles.rowFlex}>
-            <Button onPress={() => console.warn("Wifi")} style={{ flex: 1 }}>
+            <Button
+              onPress={() => {
+                dispatch(removeFromWishList(item._id, product.slug, token));
+              }}
+              style={{ flex: 1 }}
+            >
               <Text style={{ color: "red" }}>{"Remove "}</Text>
               <AntDesign
                 name="delete"
@@ -87,7 +101,7 @@ const SearchedSingleProduct = (props) => {
             <Button
               onPress={() => {
                 props.product &&
-                  dispatch(getProductDetails(props.product.slug));
+                  dispatch(getProductDetails(props.product.slug, token));
                 props.navigation.navigate("Detail");
               }}
               style={{ flex: 1 }}
@@ -110,7 +124,8 @@ const SearchedSingleProduct = (props) => {
     <TouchableWithoutFeedback>
       <Card
         onPress={() => {
-          props.product && dispatch(getProductDetails(props.product.slug));
+          props.product &&
+            dispatch(getProductDetails(props.product.slug, token));
           props.navigation.navigate("Detail");
         }}
         style={{ marginBottom: 5 }}
@@ -132,25 +147,42 @@ const SearchedSingleProduct = (props) => {
               <View style={{ flex: 2 }}>
                 <>
                   <Title>{props.product.title || props.product.name}</Title>
-                  {props.product.price && <Paragraph> Rs
-                    {` ${props.product.price.$numberDecimal || props.product.price}`}
-                  </Paragraph>}
-                  {(props.type !== "myorders" && props.type !== "searched") && <Avatar.Text
-                    size={24}
-                    label={(props.item.stars ? Math.ceil(props.item.stars.averageStar) : props.item.star) + "/5 stars"}
-                    color={Constants.headerTintColor}
-                    backgroundColor="green"
-                    width={90}
-                    style={{ marginTop: 10 }}
-                  />}
-                  {props.type === "searched" && <Avatar.Text
-                    size={24}
-                    label={(props.product.averageRating.$numberDecimal) + "/5 stars"}
-                    color={Constants.headerTintColor}
-                    backgroundColor="green"
-                    width={90}
-                    style={{ marginTop: 10 }}
-                  />}
+                  {props.product.price && (
+                    <Paragraph>
+                      {" "}
+                      Rs
+                      {` ${
+                        props.product.price.$numberDecimal ||
+                        props.product.price
+                      }`}
+                    </Paragraph>
+                  )}
+                  {props.type !== "myorders" && props.type !== "searched" && (
+                    <Avatar.Text
+                      size={24}
+                      label={
+                        (props.item.stars
+                          ? Math.ceil(props.item.stars.averageStar)
+                          : props.item.star) + "/5 stars"
+                      }
+                      color={Constants.headerTintColor}
+                      backgroundColor="green"
+                      width={90}
+                      style={{ marginTop: 10 }}
+                    />
+                  )}
+                  {props.type === "searched" && (
+                    <Avatar.Text
+                      size={24}
+                      label={
+                        props.product.averageRating.$numberDecimal + "/5 stars"
+                      }
+                      color={Constants.headerTintColor}
+                      backgroundColor="green"
+                      width={90}
+                      style={{ marginTop: 10 }}
+                    />
+                  )}
                 </>
               </View>
             </View>
@@ -162,7 +194,7 @@ const SearchedSingleProduct = (props) => {
             marginTop: 5,
           }}
         >
-          {renderActionButtonComponent(props.type, props.product)}
+          {renderActionButtonComponent(props.type, props.product, props.item)}
         </Card.Actions>
       </Card>
     </TouchableWithoutFeedback>

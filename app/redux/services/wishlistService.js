@@ -8,15 +8,15 @@ export class WishlistService {
     return data;
   }
 
-  async addWishListItems(slug) {
+  async addWishListItems(slug, token) {
     let url = `${SERVER_BASE_URL}/api/cart-wishlist/wishlist/${slug}`
-    let data = postTokenService(url, 'POST');
+    let data = postTokenService(url, 'POST', null, token);
     return data;
   }
 
-  async removeFromWishList(id) {
+  async removeFromWishList(id, token) {
     let url = `${SERVER_BASE_URL}/api/cart-wishlist/delete-wishlist/${id}`
-    let data = postTokenService(url, 'PATCH');
+    let data = postTokenService(url, 'PATCH', null, token);
     return data;
   }
 }
