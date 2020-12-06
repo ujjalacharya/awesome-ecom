@@ -1,5 +1,5 @@
+import { SERVER_BASE_URL } from "../../utils/common";
 import { getService } from "../../utils/commonService";
-import { SERVER_BASE_URL } from "./productService";
 
 export class OtherService {
   getBannerImages() {

@@ -1,6 +1,6 @@
-import { getService, postService } from "../../utils/commonService";
 import queryString from "query-string";
-export const SERVER_BASE_URL = "http://192.168.1.68:3001";
+import { getService, postService } from "../../utils/commonService";
+import { SERVER_BASE_URL } from "../../utils/common";
 
 export class SearchService {
   async getSearchKeywords(query) {

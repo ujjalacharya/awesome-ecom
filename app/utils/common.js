@@ -1,5 +1,6 @@
 import jwt from "expo-jwt";
-import { AsyncStorage } from "react-native";
+
+export const SERVER_BASE_URL = "http://192.168.1.68:3001";
 
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];
@@ -40,3 +41,8 @@ export const isTokenExpired = (token) => {
   }
   return false;
 };
+
+export const decodeToken = (token) => {
+  const {_id} = jwt.decode(token, "console.log('signin')");
+  return _id;
+}

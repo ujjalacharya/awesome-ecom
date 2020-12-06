@@ -3,8 +3,7 @@ import { Appbar, Avatar } from "react-native-paper";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import {isEmpty} from "lodash"
 import Constants from "../../constants/Constants";
-import Skeleton from "../../components/shared/Skeleton";
-import { SERVER_BASE_URL } from "../../../redux/services/productService";
+import { SERVER_BASE_URL } from "../../../utils/common";
 
 const ProductDetailHeader = ({ navigation, productDetails, token }) => (
   <View style={styles.container}>

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { View, Platform, Text } from "react-native";
 import { Avatar, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
+import { updateProfilePicture } from "../../../../redux/actions/userActions";
+import { SERVER_BASE_URL } from "../../../../utils/common";
 
-const EditAvatar = () => {
+const EditAvatar = ({ userProfile }) => {
+  const dispatch = useDispatch();
+  const {token} = useSelector(state => state.authentication)
   const [image, setImage] = useState(null);
 
   useEffect(() => {
@@ -27,10 +32,32 @@ const EditAvatar = () => {
       quality: 1,
     });
 
-    console.warn(result);
+    // console.warn(result);
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      // setImage(result.uri);
+      // let formData = new FormData();
+      // formData.append("photo", result);
+      // let formdata = new FormData();
+      // formdata.append("photo", {
+      //   name: result.uri,
+      //   type: "image/jpeg",
+      // });
+
+      // for (var pair of formdata.entries()) {
+      //   console.log(pair);
+      // }
+
+      let localUri = result.uri;
+      let filename = localUri.split('/').pop();
+    
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+    
+      let formData = new FormData();
+      formData.append('photo', { uri: localUri, name: filename, type });
+
+      dispatch(updateProfilePicture(formData, token));
     }
   };
 
@@ -48,7 +75,9 @@ const EditAvatar = () => {
       ) : (
         <Avatar.Image
           size={100}
-          source={require("../../../../assets/avatar.jpg")}
+          source={{
+            uri: SERVER_BASE_URL + "/uploads/" + userProfile.photo,
+          }}
         />
       )}
       <Button

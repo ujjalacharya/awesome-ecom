@@ -11,8 +11,8 @@ import Constants from "../../constants/Constants";
 import ProductDetailFooter from "./ProductDetailFooter";
 import ProductDescription from "./ProductDescription";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
-import { SERVER_BASE_URL } from "../../../redux/services/productService";
 import Skeleton from "../../components/shared/Skeleton";
+import { SERVER_BASE_URL } from "../../../utils/common";
 
 const ProductDetailScreen = (props) => {
   const { productDetails, productDetailsLoading } = useSelector(

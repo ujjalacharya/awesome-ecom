@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Menu, Select } from "antd";
+import { Menu, Select, Input, Form } from "antd";
 import { connect } from "react-redux";
 const { SubMenu } = Menu;
+const {Option} = Select
 
 export const Categories = ({
   categories,
   selectedCategories,
   handleClick,
-  handleDeselect,
+  handleDeselect
 }) => {
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -43,9 +44,20 @@ export const Categories = ({
       </Menu>
     );
   };
-
+  
   return (
     <>
+    {selectedCategories}
+      <Form.Item
+        label="Categories"
+        name="categories"
+        rules={[
+          {
+            // required: true,
+            message: "Please input product categories!",
+          },
+        ]}
+      >
       <Select
         onClick={() => setOpenMenu(!openMenu)}
         value={selectedCategories}
@@ -56,8 +68,13 @@ export const Categories = ({
         style={{ width: "100%" }}
         placeholder="Select Categories"
         onDeselect={handleDeselect}
-      ></Select>
+      >
+        {selectedCategories.map(cat => (
+          <Option key={cat}>{cat}</Option>
+        ))}
+      </Select>
       {openMenu && megaMenu(categories)}
+      </Form.Item>      
     </>
   );
 };
