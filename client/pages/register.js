@@ -23,7 +23,7 @@ class Register extends Component {
                 email: values.email,
                 password: values.password,
                 name: values.fullName,
-                phoneNumber: values.phoneNumber
+                // phoneNumber: values.phoneNumber
             };
             this.props.register(body);
         };
@@ -95,7 +95,7 @@ class Register extends Component {
                                             autoComplete={false}
                                         />
                                     </Form.Item>
-                                    <Form.Item
+                                    {/* <Form.Item
                                         name="phoneNumber"
                                         rules={[
                                             {
@@ -112,7 +112,7 @@ class Register extends Component {
                                             placeholder="Phone Number"
                                             autoComplete={false}
                                         />
-                                    </Form.Item>
+                                    </Form.Item> */}
 
                                     <Form.Item>
                                         <div className="login-create">
