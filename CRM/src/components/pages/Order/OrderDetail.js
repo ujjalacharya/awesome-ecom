@@ -62,6 +62,8 @@ const OrderDetail = ({ order ,singleLoading ,  isOrderDetailOpen }) => {
                                 <div className="col-md-6 text-md-right">
                                     <div className="text-muted">Name</div>
                                 <strong>{order?.product?.name}</strong>
+                                <div className="text-muted">Qty</div>
+                                <strong>{order?.product?.quantity}</strong>
                                 </div>
                             </div>
                             <hr className="my-4" />
@@ -79,7 +81,7 @@ const OrderDetail = ({ order ,singleLoading ,  isOrderDetailOpen }) => {
                                 <div className="col-md-6 text-md-right">
                                     <p>
                                     {order?.orderID} <br />
-                                        <OrderStatus isOrderDetailOpen={isOrderDetailOpen} status={order?.status?.currentStatus} order_id={order?._id} admin_id={order?.soldBy} />
+                                    <OrderStatus isOrderDetailOpen={isOrderDetailOpen} status={order?.status?.currentStatus} order_id={order?._id} admin_id={order?.soldBy} remainingProductQty={order?.product?.quantity-order?.quantity} />
                                     <br /> {order?.quantity} <br /> {order && moment(order?.createdAt).format("dddd, MMMM Do YYYY, h:mm:ss a")} <br />
                                     </p>
                                 </div>

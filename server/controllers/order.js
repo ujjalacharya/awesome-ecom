@@ -278,7 +278,6 @@ exports.createOrder = async (req, res) => {
 
     //if product is in cart remove from it
     let cart = await Cart.findOne({ product:thisProduct._id, user: req.user._id, isDeleted: null })
-    console.log(cart,'dsdsfvdvdfvdfvdfv');
     if (cart) {
       let updateCart = cart.toObject()
       updateCart.isDeleted = Date.now()
@@ -295,7 +294,6 @@ exports.createOrder = async (req, res) => {
       // .update(thisProduct, updateProduct)
       // .options({ viaSave: true })
        .run({ useMongoose: true });
-       console.log('results',results);
     return { order: results[1], payment: results[2] }
   })
 
@@ -439,6 +437,9 @@ exports.toggleOrderApproval = async (req, res) => {
     updateOrder.status.currentStatus = "approve";
     updateOrder.status.approvedDate = Date.now();
     updateProduct.quantity = updateProduct.quantity-order.quantity
+    if (updateProduct.quantity<1) {
+      return res.status(403).json({error:"Cannot approve!, product is out of stock."})
+    }
     const results = await task
       .update(neworder, updateOrder)
       .options({ viaSave: true })
