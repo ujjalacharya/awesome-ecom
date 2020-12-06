@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES} from "../types";
+import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS} from "../types";
 import api from "../../utils/api";
 
 export const getProducts = ({id, page, perPage, keyword = '', createdAt = '', updatedAt='' , status='',price='', outofstock=''}) => async (dispatch) => {
@@ -72,6 +72,19 @@ export const getCategories = () => async (dispatch) => {
         });
     } catch (err) {
         console.log("****product_actions/getCategories****", err);
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+    }
+};
+
+export const getBrands = () => async (dispatch) => {
+    try {
+        const res = await api.get(`/superadmin/product-brands`);
+        dispatch({
+            type: GET_BRANDS,
+            payload: res.data,
+        });
+    } catch (err) {
+        console.log("****product_actions/getBrands****", err);
         dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
     }
 };

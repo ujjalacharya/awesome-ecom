@@ -1,4 +1,4 @@
-import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES } from "../types";
+import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS } from "../types";
 
 
 const initialState = {
@@ -7,7 +7,8 @@ const initialState = {
     multiLoading: true,
     singleLoading: true,
     totalCount: 0,
-    categories:[]
+    categories:[],
+    brands:[]
 }
 
 export default function (state = initialState, action) {
@@ -40,6 +41,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 categories: payload
+            }
+        case GET_BRANDS:
+            return {
+                ...state,
+                brands: payload
             }
         default:
             return state;
