@@ -22,6 +22,12 @@ body {
   }
 }
 
+.body-wrap {
+  @media screen and (max-width: 577px) {
+    margin-top: 50px;
+  }
+}
+
 .action-btn {
   border: 1px solid;
   padding: 5px;
@@ -63,6 +69,7 @@ body {
   padding-left: 15px;
   @media screen and (max-width: 480px) {
     margin: 0px;
+    padding-left: 0px;
   }
 }
 
@@ -420,8 +427,8 @@ input.inputfile + label {
   }
 }
 
-.no-data-table{
-  @media (max-width: 1023px){
+.no-data-table {
+  @media (max-width: 1023px) {
     display: none;
   }
 }

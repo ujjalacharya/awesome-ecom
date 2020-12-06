@@ -214,7 +214,7 @@ class Header extends Component {
               </Col>
             </Row>
           </Col>
-          <Col lg={6} sm={11} className="search">
+          <Col lg={6} sm={9} className="search">
             <form onSubmit={this.handleSubmit}>
               <AutoComplete
                 value={this.state.searchValue}
@@ -239,7 +239,7 @@ class Header extends Component {
               {/* <img src="/images/search-icon.png" /> */}
             </form>
           </Col>
-          <Col lg={4} sm={3} className="menu-right">
+          <Col lg={4} sm={5} className="menu-right">
             <Link href="/myprofile">
               <a>
                 <div className="menu-right-items">
