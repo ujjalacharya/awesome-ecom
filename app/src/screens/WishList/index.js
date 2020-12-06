@@ -52,7 +52,7 @@ const WishListScreen = (props) => {
 
   return (
     <>
-      <MyWishlists />
+      <MyWishlists {...props}/>
 
       <View style={{ backgroundColor: Constants.headerTintColor, height: 50 }}>
         <View style={{ flex: 1, flexDirection: "row" }}>

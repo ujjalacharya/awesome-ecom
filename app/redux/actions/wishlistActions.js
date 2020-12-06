@@ -5,6 +5,7 @@ import {
   REMOVE_FROM_WISHLIST,
   GET_WISHLIST_ITEMS,
 } from "../types";
+import { getProductDetails } from "./productActions";
 
 export const getWishListItems = (query, token) => {
   return async (dispatch) => {
@@ -21,12 +22,13 @@ export const getWishListItems = (query, token) => {
   };
 };
 
-const addWishListItems = (slug) => {
+export const addWishListItems = (slug, token) => {
   return async (dispatch) => {
     const wishlistService = new WishlistService();
-    const response = await wishlistService.addWishListItems(slug);
+    const response = await wishlistService.addWishListItems(slug, token);
     if (response.isSuccess) {
       dispatch({ type: ADD_WISHLIST_ITEMS, payload: response.data });
+      dispatch(getProductDetails(slug, token));
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -36,12 +38,13 @@ const addWishListItems = (slug) => {
   };
 };
 
-const removeFromWishList = (id) => {
+export const removeFromWishList = (id, slug, token) => {
   return async (dispatch) => {
     const wishlistService = new WishlistService();
-    const response = await wishlistService.removeFromWishList(id);
+    const response = await wishlistService.removeFromWishList(id, token);
     if (response.isSuccess) {
       dispatch({ type: REMOVE_FROM_WISHLIST, payload: response.data });
+      dispatch(getProductDetails(slug, token));
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
