@@ -33,6 +33,14 @@ button{
             border-color: $secondary-color;
         }
     }
+    &.danger{
+        background-color: $danger-color;
+        color: #fff;
+        &:hover{
+            color: $danger-color;
+            border-color: $danger-color;
+        }
+    }
     &.no-color{
         background-color: #fff;
         color: #000;

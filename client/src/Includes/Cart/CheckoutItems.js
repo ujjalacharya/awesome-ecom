@@ -46,13 +46,13 @@ class CheckoutItems extends Component {
     ) {
       scrollToTop();
     }
-    if (
-      this.props.order.placeOrderResp !== prevProps.order.placeOrderResp &&
-      this.props.order.placeOrderResp
-    ) {
-      openNotification("Success", "Order placed successfully");
-      window.location.href = "/myprofile";
-    }
+    // if (
+    //   this.props.order.placeOrderResp !== prevProps.order.placeOrderResp &&
+    //   this.props.order.placeOrderResp
+    // ) {
+    //   openNotification("Success", "Order placed successfully");
+    //   window.location.href = "/myprofile";
+    // }
   }
 
   onChangePageInStock = (page) => {
@@ -80,7 +80,6 @@ class CheckoutItems extends Component {
   };
 
   render() {
-    
     return (
       <div className="cart-items">
         <div className="delivery-status">
@@ -112,7 +111,7 @@ class CheckoutItems extends Component {
           <div className="title">
             <h4>My Cart ({this.state.listItems?.totalCount} Items)</h4>
             <div className="price">
-              Total: Rs {this.state.listItems?.totalAmount?.toFixed(2)}
+              Total: Rs {this.props.cart.checkoutItems?.totalAmount || this.state.listItems?.totalAmount?.toFixed(2)}
             </div>
           </div>
           <div className="items-list">

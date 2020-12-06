@@ -4,6 +4,7 @@ const Payment = require("../models/Payment");
 const Dispatcher = require("../models/Dispatcher");
 const Address = require("../models/Address");
 const Remark = require("../models/Remark");
+const Cart = require("../models/Cart")
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const ProductBrand = require("../models/ProductBrand");
@@ -87,7 +88,6 @@ exports.order = async (req, res, next) => {
 };
 
 exports.userOrder = async(req, res) => {
-  
   let order = req.order;
 
   if (order.user._id.toString() !== req.user._id.toString()) {
@@ -183,6 +183,11 @@ exports.createOrder = async (req, res) => {
   if (Products.length !== p_slugs.length) {
     return res.status(404).json({ error: 'Products not found.' })
   }
+  if (products.find(p => {
+    if (p.quantity === undefined || +p.quantity < 1) return p
+  })) {
+    return res.status(403).json({ error: 'Product quantity is required.' })
+  }
 
   //validate each product
   let error
@@ -209,16 +214,11 @@ exports.createOrder = async (req, res) => {
       error = `Seller is on holiday of product ${product.name}. Please order manually ` 
       break;
     }
-    if (product.quantity === 0) {
-      error = `Product ${product.name} is out of the stock.`
-      break;
-    }
-    if (products.find(p => {
-      if(p.quantity===undefined || +p.quantity < 1) return p
-    })) {
-      error = `Quantity is required of product ${product.name}`
-      break;
-    }
+    // if (product.quantity === 0) {
+    //   error = `Product ${product.name} is out of the stock.`
+    //   break;
+    // }
+    
 
     if (product.quantity < products.find(p => p.p_slug === product.slug).quantity) {
       error = `There are only ${product.quantity} quantity of product ${product.name} available.`
@@ -272,20 +272,29 @@ exports.createOrder = async (req, res) => {
         (thisProduct.price - thisProduct.price * (thisProduct.discountRate / 100)) *
           newOrder.quantity
       ),
-      from: req.user.phone,
+      from: req.user.phone,//esewa type
     });
     newOrder.payment = newPayent._id;
-  
+
+    //if product is in cart remove from it
+    let cart = await Cart.findOne({ product:thisProduct._id, user: req.user._id, isDeleted: null })
+    if (cart) {
+      let updateCart = cart.toObject()
+      updateCart.isDeleted = Date.now()
+      task.update(cart, updateCart)
+        .options({ viaSave: true })
+      
+    }
     // update thisProduct
-    const updateProduct = thisProduct.toObject();
-    updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
+    // const updateProduct = thisProduct.toObject();
+    // updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
     const results = await task
       .save(newOrder)
       .save(newPayent)
-      .update(thisProduct, updateProduct)
-      .options({ viaSave: true })
-      .run({ useMongoose: true });
-    return { order: results[0], payment: results[1] }
+      // .update(thisProduct, updateProduct)
+      // .options({ viaSave: true })
+       .run({ useMongoose: true });
+    return { order: results[1], payment: results[2] }
   })
 
   Products = await Promise.all(Products)
@@ -418,17 +427,48 @@ exports.toggleOrderApproval = async (req, res) => {
       error: `This order cannot be approve or activate. Order current status is ${order.status.currentStatus}`,
     });
   }
+  const product = await Product.findById(order.product)
+  const updateProduct = product.toObject()
+
+  let neworder = await Order.findById(order._id)
+  let updateOrder = neworder.toObject()
+
   if (order.status.currentStatus === "active") {
-    order.status.currentStatus = "approve";
-    order.status.approvedDate = Date.now();
-    await order.save();
+    updateOrder.status.currentStatus = "approve";
+    updateOrder.status.approvedDate = Date.now();
+    updateProduct.quantity = updateProduct.quantity-order.quantity
+    if (updateProduct.quantity<1) {
+      return res.status(403).json({error:"Cannot approve!, product is out of stock."})
+    }
+    const results = await task
+      .update(neworder, updateOrder)
+      .options({ viaSave: true })
+      .update(product, updateProduct)
+      .options({ viaSave: true })
+      .run({ useMongoose: true });
+    // return { order: results[0] }
+    // await order.save();
+    //for response
+    order.status.currentStatus = updateOrder.status.currentStatus
+    order.status.approvedDate = updateOrder.status.approvedDate
     order.soldBy = order.soldBy._id
     return res.json(order);
   }
   if (order.status.currentStatus === "approve") {
-    order.status.currentStatus = "active";
-    order.status.approvedDate = null;
-    await order.save();
+    updateOrder.status.currentStatus = "active";
+    updateOrder.status.approvedDate = null;
+    updateProduct.quantity = updateProduct.quantity + order.quantity
+    const results = await task
+      .update(neworder, updateOrder)
+      .options({ viaSave: true })
+      .update(product, updateProduct)
+      .options({ viaSave: true })
+      .run({ useMongoose: true });
+    // return { order: results[0] }
+    // await order.save();
+    //for response
+    order.status.currentStatus = updateOrder.status.currentStatus
+    order.status.approvedDate = updateOrder.status.approvedDate
     order.soldBy = order.soldBy._id
     return res.json(order);
   }

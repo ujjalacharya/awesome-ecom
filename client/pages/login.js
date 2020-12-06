@@ -2,19 +2,11 @@ import React, { Component } from "react";
 import Layout from "../src/Components/Layout";
 import { connect } from "react-redux";
 import actions from "../redux/actions";
-import initialize from "../utils/initialize";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import withUnAuth from "../utils/auth/withUnAuth";
 import { withRouter } from "next/router";
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
+import Link from "next/link";
 
 class Login extends Component {
   render() {
@@ -101,7 +93,7 @@ class Login extends Component {
                       <Button htmlType="submit" className="secondary">
                         Login Now
                       </Button>
-                      <Button className="no-color">Create Account</Button>
+                      <Button className="no-color"><Link href="/register">Create Account</Link></Button>
                     </div>
                   </Form.Item>
                 </Form>

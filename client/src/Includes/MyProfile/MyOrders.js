@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Input, Row, Col, Select } from "antd";
-import { Table, Tag, Space } from "antd";
+import { Input, Row, Col, Select, Table, Tag, Drawer, Spin, Empty } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
-import Link from "next/link";
 import _ from "lodash";
 import { scrollToTop } from "../../../utils/common";
+import moment from 'moment'
+import OrderDetails from "./Includes/OrderDetails";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -14,12 +14,14 @@ const { Option } = Select;
 class MyOrders extends Component {
   state = {
     myOrders: [],
-    orderStatuses: [],
+    orderStatuses: [{}],
     currentStatus: "",
     appendUrl: "page=1",
     currentPage: 1,
     searchKeyword: "",
     loading: false,
+    visibleOrder: false,
+    selectedOrderId: ''
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -57,6 +59,12 @@ class MyOrders extends Component {
       this.initialRequest()
     );
   };
+
+  onOpenCloseOrder = () => {
+    this.setState({
+      visibleOrder: !this.state.visibleOrder
+    })
+  }
 
   initialRequest = () => {
     let appendUrl = "";
@@ -107,11 +115,19 @@ class MyOrders extends Component {
         dataIndex: "itemName",
         key: "itemName",
         render: (text, record) => (
-          <Link href="/products/[slug]" as={`/products/${record.slug}`}>
-            <a className="item-title">
-              <span>{text}</span>
-            </a>
-          </Link>
+          // <Link href="/products/[slug]" as={`/products/${record.slug}`}>
+          <a className="item-title" onClick={() => { this.onOpenCloseOrder(); this.setState({ selectedOrderId: record.key }) }}>
+            <span>{text}</span>
+          </a>
+          // </Link>
+        ),
+      },
+      {
+        title: "Order Date",
+        dataIndex: "orderDate",
+        key: "orderDate",
+        render: (text, record) => (
+          moment(record.orderDate).format('YYYY/MM/DD')
         ),
       },
       {
@@ -193,6 +209,7 @@ class MyOrders extends Component {
         qty: order.quantity,
         price: order.product.price.$numberDecimal,
         slug: order.product.slug,
+        orderDate: order.updatedAt
       };
       data.push(ele);
     });
@@ -220,6 +237,7 @@ class MyOrders extends Component {
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
+              <Option value=''>All</Option>
               {this.state.orderStatuses?.map((status, i) => {
                 return (
                   <Option value={status} key={i}>
@@ -282,6 +300,22 @@ class MyOrders extends Component {
               </table>
           }}
         />
+        {this.state.myOrders?.totalCount === 0 && <div className="no-data-table"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>}
+        <Drawer
+          title="Order Details"
+          placement="right"
+          closable={true}
+          onClose={this.onOpenCloseOrder}
+          visible={this.state.visibleOrder}
+          className="showSortDrawer"
+          width="auto"
+        >
+          <OrderDetails orderId={this.state.selectedOrderId} openCloseOrder={this.onOpenCloseOrder} />
+        </Drawer>
+
+        {
+          this.props.order.loading && <div className="loader-overlay"><Spin className="spinner" /></div>
+        }
       </div>
     );
   }

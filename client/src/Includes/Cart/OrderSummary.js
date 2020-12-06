@@ -21,6 +21,7 @@ class OrderSummary extends Component {
     userData: [],
     activeLocation: {},
     showEditAddressModal: false,
+    loading: false
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -45,20 +46,32 @@ class OrderSummary extends Component {
     });
   };
 
+  componentDidUpdate(prevProps){
+    if (
+      this.props.orderResp !== prevProps.orderResp &&
+      this.props.orderResp
+    ) {
+      this.setState({
+        loading: false
+      })
+    }
+  }
+
   placeOrderItems = () => {
-    
+
     let { checkoutItems, userData } = this.props;
-    
+
     let products = checkoutItems.carts.map((item) => {
+      
       return {
         p_slug: item.product.slug,
-        quantity: item.product.quantity,
+        quantity: checkoutItems.totalQty || item.quantity,
       };
     });
-
+    
     let activeAddress = {}
     userData.location.map((loc) => {
-      if(loc.isActive){
+      if (loc.isActive) {
         activeAddress = loc
       }
     });
@@ -78,8 +91,11 @@ class OrderSummary extends Component {
       orderID: shortid.generate(),
       method: "Cash on Delivery"
     };
-
-    this.props.placeOrder(body)
+    this.setState({
+      loading: true
+    }, () => {
+      this.props.placeOrder(body)
+    })
   };
 
   render() {
@@ -96,8 +112,8 @@ class OrderSummary extends Component {
     } else {
       totalCheckoutItems = this.props.checkoutItems.totalAmount;
     }
-
-    let deliveryCharges = this.props.shippingCharge
+    
+    let deliveryCharges = this.props.showShippingAddress === 'showDisplay' ? this.props.shippingCharge : (this.props.shippingCharge && this.props.checkoutItems.length)
       ? this.props.shippingCharge
       : 0;
 
@@ -190,37 +206,38 @@ class OrderSummary extends Component {
                 <Button
                   className={"btn " + this.props.diableOrderBtn}
                   onClick={this.placeOrderItems}
+                  disabled={this.state.loading}
                 >
                   {this.props.orderTxt}
                 </Button>
               </div>
             ) : (
-              <div
-                className="order-procced"
-                onClick={() =>
-                  this.props.saveCheckoutItems({
-                    carts: this.props.checkoutItems,
-                    totalCount: this.props.checkoutItems.length,
-                    totalAmount: totalCheckoutItems,
-                  })
-                }
-              >
-                <Link href="/checkout">
-                  <a>
-                    <Button
-                      className={"btn " + this.props.diableOrderBtn}
-                      disabled={
-                        this.props.diableOrderBtn === "disableBtn"
-                          ? true
-                          : false
-                      }
-                    >
-                      {this.props.orderTxt}
-                    </Button>
-                  </a>
-                </Link>
-              </div>
-            )}
+                <div
+                  className="order-procced"
+                  onClick={() =>
+                    this.props.saveCheckoutItems({
+                      carts: this.props.checkoutItems,
+                      totalCount: this.props.checkoutItems.length,
+                      totalAmount: totalCheckoutItems,
+                    })
+                  }
+                >
+                  <Link href="/checkout">
+                    <a>
+                      <Button
+                        className={"btn " + this.props.diableOrderBtn}
+                        disabled={
+                          (this.props.diableOrderBtn === "disableBtn")
+                            ? true
+                            : false
+                        }
+                      >
+                        {this.props.orderTxt}
+                      </Button>
+                    </a>
+                  </Link>
+                </div>
+              )}
           </div>
         </div>
       </div>
@@ -230,6 +247,7 @@ class OrderSummary extends Component {
 
 const mapStatesToProps = (state) => ({
   shippingCharge: state.order.getShippingChargeResp,
+  orderResp: state.order.placeOrderResp
 });
 
 const mapDispatchToProps = (dispatch) => ({
