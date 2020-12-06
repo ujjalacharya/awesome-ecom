@@ -174,6 +174,11 @@
   .ship-to {
     border: 1px solid #eee;
     padding: 5px 10px;
+    .ship-title {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+    }
   }
   .total-summary {
     border: 1px solid #eee;
@@ -206,9 +211,9 @@
       font-size: 16px;
       margin-bottom: 5px;
     }
-    .cancel-create{
+    .cancel-create {
       text-align: right;
-      .cancel-submit{
+      .cancel-submit {
         margin-right: 8px;
       }
     }
