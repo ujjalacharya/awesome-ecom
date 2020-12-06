@@ -1,6 +1,7 @@
 import {
   GLOBAL_ERROR,
   GET_ORDERS,
+  GET_ORDERS_LOADING,
   GET_ORDERS_NEXT,
   GET_ORDERS_STATUSES,
   PLACE_ORDER,
@@ -10,8 +11,11 @@ import { OrderService } from "../services/orderService";
 
 export const getOrders = (query, token) => {
   return async (dispatch) => {
+    dispatch({ type: GET_ORDERS_LOADING });
     const orderService = new OrderService();
     let response = await orderService.getOrders(query, token);
+
+    // if(!response.data.orders.length) return ;
 
     if (response.isSuccess) {
       if (+query.split("=")[1] === 1) {

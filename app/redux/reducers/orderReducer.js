@@ -4,10 +4,12 @@ import {
   PLACE_ORDER,
   GET_SHIPPING_CHARGE,
   GET_ORDERS_NEXT,
+  GET_ORDERS_LOADING,
 } from "../types";
 
 const initialState = {
   getOrders: null,
+  getOrdersLoading: false,
   getOrdersStatus: null,
   placeOrderResp: null,
   getShippingChargeResp: null,
@@ -15,8 +17,19 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case GET_ORDERS_LOADING:
+      return {
+        ...state,
+        hasError: false,
+        getOrdersLoading: true,
+      };
     case GET_ORDERS:
-      return { ...state, getOrders: action.payload, hasError: false };
+      return {
+        ...state,
+        getOrders: action.payload,
+        hasError: false,
+        getOrdersLoading: false,
+      };
     case GET_ORDERS_NEXT:
       let orders = action.payload.orders.length
         ? [...state.getOrders.orders, ...action.payload.orders]
@@ -28,6 +41,7 @@ export default (state = initialState, action) => {
           totalCount: state.getOrders.totalCount,
         },
         hasError: false,
+        getOrdersLoading: false,
       };
     case GET_ORDERS_STATUSES:
       return { ...state, getOrdersStatus: action.payload, hasError: false };
