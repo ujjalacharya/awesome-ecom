@@ -23,7 +23,7 @@ const ProductDetailHeader = ({ navigation, productDetails, token }) => (
       />
       <Appbar.Action
         style={[styles.heartIcon]}
-        color={isEmpty(productDetails.hasOnWishlist) ? "gray" : "orange"}
+        color={isEmpty(productDetails.product.hasOnWishlist) ? "gray" : "orange"}
         icon="heart"
         onPress={() => {
           token ? navigation.navigate("WishList") : navigation.navigate("Profile")

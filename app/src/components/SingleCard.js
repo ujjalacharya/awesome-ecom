@@ -13,12 +13,14 @@ const SingleCard = ({ product }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  const {token} = useSelector(state => state.authentication)
+
   return (
     <TouchableWithoutFeedback
       key={product.id}
       style={styles.cardContainer}
       onPress={() => {
-        product && dispatch(getProductDetails(product.slug));
+        product && dispatch(getProductDetails(product.slug, token));
         navigation.navigate("Detail");
       }}
     >

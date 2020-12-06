@@ -46,3 +46,8 @@ export const decodeToken = (token) => {
   const {_id} = jwt.decode(token, "console.log('signin')");
   return _id;
 }
+
+export const getDiscountedAmount = (amount, rate) => {
+  return Math.ceil(amount - (rate/100)*amount)
+  // 120 - 50/100*120
+}

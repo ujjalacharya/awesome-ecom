@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
   Button,
@@ -22,6 +22,10 @@ import { SERVER_BASE_URL } from "../../../utils/common";
 
 const SearchedSingleProduct = (props) => {
   const dispatch = useDispatch();
+
+  const {token} = useSelector(state => state.authentication)
+
+
   const renderActionButtonComponent = (type, product) => {
     switch (type) {
       case "searched":
@@ -87,7 +91,7 @@ const SearchedSingleProduct = (props) => {
             <Button
               onPress={() => {
                 props.product &&
-                  dispatch(getProductDetails(props.product.slug));
+                  dispatch(getProductDetails(props.product.slug, token));
                 props.navigation.navigate("Detail");
               }}
               style={{ flex: 1 }}
@@ -110,7 +114,7 @@ const SearchedSingleProduct = (props) => {
     <TouchableWithoutFeedback>
       <Card
         onPress={() => {
-          props.product && dispatch(getProductDetails(props.product.slug));
+          props.product && dispatch(getProductDetails(props.product.slug, token));
           props.navigation.navigate("Detail");
         }}
         style={{ marginBottom: 5 }}

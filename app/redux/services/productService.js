@@ -1,5 +1,6 @@
 import { getService, getTokenService, postTokenService } from "../../utils/commonService";
 import { SERVER_BASE_URL } from "../../utils/common";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export class ProductService {
   getLatestProducts() {
@@ -14,9 +15,9 @@ export class ProductService {
     return data;
   }
 
-  getProductDetails(slug) {
+  getProductDetails(slug, token) {
     let url = `${SERVER_BASE_URL}/api/product/${slug}`
-    let data = getService(url, 'GET');
+    let data = token ? getTokenService(url, 'GET', token) : getService(url, 'GET');
     return data;
   }
 
