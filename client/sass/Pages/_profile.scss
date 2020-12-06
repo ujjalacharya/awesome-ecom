@@ -189,6 +189,15 @@
       padding-bottom: 5px;
       margin-bottom: 5px;
     }
+    .timeline{
+      margin-top: 15px;
+      .ant-timeline-item-content{
+        p{
+          font-size: 14px;
+          margin-bottom: 0px;
+        }
+      }
+    }
     .summary-detail {
       display: flex;
       justify-content: space-between;

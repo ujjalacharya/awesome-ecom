@@ -5,7 +5,7 @@ import actions from '../../../../redux/actions';
 import _ from 'lodash';
 import Link from 'next/link'
 import moment from 'moment'
-import { Form, Button } from "antd";
+import { Timeline, Form, Button } from "antd";
 import TextArea from 'antd/lib/input/TextArea';
 import { data } from 'jquery';
 
@@ -76,6 +76,46 @@ const OrderDetails = (props) => {
                             <div className="sum-value">{orderDetails.payment.method}</div>
                         </div>
                         <div className="summary-detail" style={{ border: 0, padding: 0 }}>
+                        </div>
+                    </div>
+                    <div className="total-summary">
+                        <div className="summart-title">Order Status</div>
+                        <div className="timeline">
+                            <Timeline>
+                                {
+                                    orderDetails.status.activeDate &&
+                                    <Timeline.Item color="blue">
+                                        <strong>Active</strong>
+                                        <p>
+                                            {moment(orderDetails.status.activeDate).format('YYYY/MM/DD hh:mm A')}
+                                        </p>
+                                    </Timeline.Item>
+                                }
+                                {
+                                    orderDetails.status.approvedDate &&
+                                    <Timeline.Item color="green">
+                                        <strong>Approved</strong>
+                                        <p>
+                                            {moment(orderDetails.status.approvedDate).format('YYYY/MM/DD hh:mm A')}
+                                        </p>
+                                    </Timeline.Item>
+                                }
+                                {
+                                    orderDetails.status.cancelledDetail.cancelledDate &&
+                                    <Timeline.Item color="gray">
+                                        <strong>Cancelled</strong>
+                                        <p>
+                                            By: {orderDetails.status.cancelledDetail.cancelledBy.name}
+                                        </p>
+                                        <p>
+                                            Remark: {orderDetails.status.cancelledDetail.remark.comment}
+                                        </p>
+                                        <p>
+                                            {moment(orderDetails.status.cancelledDetail.cancelledDate).format('YYYY/MM/DD hh:mm A')}
+                                        </p>
+                                    </Timeline.Item>
+                                }
+                            </Timeline>
                         </div>
                     </div>
                     <div className="total-summary">
