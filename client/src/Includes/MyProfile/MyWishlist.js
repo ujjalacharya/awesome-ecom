@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Input, Row, Col, Select, Popconfirm } from "antd";
-import { Table, Tag, Space } from "antd";
+import { Input, Row, Col, Table, Popconfirm, Empty } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import withPrivate from "../../../utils/auth/withPrivate";
@@ -292,6 +291,8 @@ class MyWishlist extends Component {
               </table>
           }}
         />
+        
+        {this.state.allWishlistItems?.totalCount === 0 && <div className="no-data-table"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>}
       </div>
     );
   }

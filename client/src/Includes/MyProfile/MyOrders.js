@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Input, Row, Col, Select } from "antd";
-import { Table, Tag, Drawer, Spin } from "antd";
+import { Input, Row, Col, Select, Table, Tag, Drawer, Spin, Empty } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
-import Link from "next/link";
 import _ from "lodash";
 import { scrollToTop } from "../../../utils/common";
 import moment from 'moment'
@@ -302,7 +300,7 @@ class MyOrders extends Component {
               </table>
           }}
         />
-        {this.state.myOrders?.totalCount === 0 && <div>No orders Available</div>}
+        {this.state.myOrders?.totalCount === 0 && <div className="no-data-table"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>}
         <Drawer
           title="Order Details"
           placement="right"
