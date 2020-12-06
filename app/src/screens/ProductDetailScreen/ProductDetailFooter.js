@@ -5,6 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import Constants from "../../constants/Constants";
 import SnackbarView from "../../components/SnackBarView";
+import { BASE_URL } from "../../../utils/common";
 
 export default class ProductDetailFooter extends Component {
   state = {
@@ -19,7 +20,7 @@ export default class ProductDetailFooter extends Component {
   onShare = async () => {
     try {
       const result = await Share.share({
-        message: "https://www.ujjalacharya.com.np",
+        message: `${BASE_URL}:3002/products/${this.props.productDetails.product.slug}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
