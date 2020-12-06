@@ -34,7 +34,7 @@ class ProductListView extends Component {
       productsData: this.props.productsData,
       showQtySection: this.props.showQtySection,
     });
-    console.log(this.props)
+    
     if (this.props.showCheckbox === 'noCheckbox') {
 
       let p_slugs = this.props.cart.checkoutItems?.carts.map((newItems) => {
