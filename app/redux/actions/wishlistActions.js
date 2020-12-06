@@ -4,11 +4,13 @@ import {
   ADD_WISHLIST_ITEMS,
   REMOVE_FROM_WISHLIST,
   GET_WISHLIST_ITEMS,
+  GET_WISHLIST_ITEMS_INIT,
 } from "../types";
 import { getProductDetails } from "./productActions";
 
 export const getWishListItems = (query, token) => {
   return async (dispatch) => {
+    dispatch({ type: GET_WISHLIST_ITEMS_INIT });
     const wishlistService = new WishlistService();
     const response = await wishlistService.getWishListItems(query, token);
     if (response.isSuccess) {
