@@ -5,7 +5,7 @@
       border: 0px;
     }
   }
-  .profile-right-menu{
+  .profile-right-menu {
     padding: 0 10px;
   }
   .profile-menu {
@@ -21,7 +21,7 @@
         &:hover {
           color: $secondary-color;
         }
-        &.active{
+        &.active {
           color: $primary-color;
         }
       }
@@ -91,7 +91,7 @@
       @media screen and (max-width: 480px) {
         margin: 0;
       }
-      .ant-form-item{
+      .ant-form-item {
         @media screen and (max-width: 480px) {
           margin: 0 0 5px;
         }
@@ -110,14 +110,14 @@
     .orders-table {
       margin-top: 20px;
     }
-    .order-search{
+    .order-search {
       width: 400px;
       @media screen and (max-width: 480px) {
         width: 100%;
         margin-bottom: 10px;
       }
     }
-    .order-select{
+    .order-select {
       width: 200px;
       @media screen and (max-width: 480px) {
         width: 100%;
@@ -132,7 +132,7 @@
     .orders-table {
       margin-top: 20px;
     }
-    .order-search{
+    .order-search {
       width: 400px;
       @media screen and (max-width: 480px) {
         width: 100%;
@@ -166,5 +166,37 @@
         }
       }
     }
+  }
+}
+
+.order-details {
+  padding: 10px;
+  .ship-to {
+    border: 1px solid #eee;
+    padding: 5px 10px;
+  }
+  .total-summary {
+    border: 1px solid #eee;
+    padding: 5px 10px;
+    margin-top: 10px;
+    .summart-title {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+    }
+    .summary-detail {
+      display: flex;
+      justify-content: space-between;
+      &:last-child {
+        border-top: 1px solid #eee;
+        padding-top: 5px;
+        margin-top: 5px;
+      }
+    }
+  }
+  .order-btns {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
   }
 }

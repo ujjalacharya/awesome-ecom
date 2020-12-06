@@ -7,6 +7,12 @@ export class OrderService {
     return data;
   }
 
+  getOrderById(id) {
+    let url = `${process.env.SERVER_BASE_URL}/api/order/user-order/${id}`;
+    let data = getTokenService(url, "GET");
+    return data;
+  }
+
   getOrdersStatuses() {
     let url = `${process.env.SERVER_BASE_URL}/api/order/get-order-status`;
     let data = getTokenService(url, "GET");

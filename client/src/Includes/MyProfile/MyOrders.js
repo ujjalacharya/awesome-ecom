@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Input, Row, Col, Select } from "antd";
-import { Table, Tag, Space } from "antd";
+import { Table, Tag, Drawer } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import _ from "lodash";
 import { scrollToTop } from "../../../utils/common";
 import moment from 'moment'
+import OrderDetails from "./Includes/OrderDetails";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -21,6 +22,8 @@ class MyOrders extends Component {
     currentPage: 1,
     searchKeyword: "",
     loading: false,
+    visibleOrder: false,
+    selectedOrderId: ''
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -58,6 +61,12 @@ class MyOrders extends Component {
       this.initialRequest()
     );
   };
+
+  onOpenCloseOrder = () => {
+    this.setState({
+      visibleOrder: !this.state.visibleOrder
+    })
+  }
 
   initialRequest = () => {
     let appendUrl = "";
@@ -108,11 +117,11 @@ class MyOrders extends Component {
         dataIndex: "itemName",
         key: "itemName",
         render: (text, record) => (
-          <Link href="/products/[slug]" as={`/products/${record.slug}`}>
-            <a className="item-title">
+          // <Link href="/products/[slug]" as={`/products/${record.slug}`}>
+            <a className="item-title" onClick={() => {this.onOpenCloseOrder(); this.setState({selectedOrderId: record.key})}}>
               <span>{text}</span>
             </a>
-          </Link>
+          // </Link>
         ),
       },
       {
@@ -293,6 +302,17 @@ class MyOrders extends Component {
               </table>
           }}
         />
+        <Drawer
+            title="Order Details"
+            placement="right"
+            closable={false}
+            onClose={this.onOpenCloseOrder}
+            visible={this.state.visibleOrder}
+            className="showSortDrawer"
+            width="auto"
+          >
+            <OrderDetails orderId={this.state.selectedOrderId} />
+          </Drawer>
       </div>
     );
   }
