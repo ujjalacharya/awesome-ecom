@@ -1,3 +1,4 @@
+import { openNotification } from "../../utils/common";
 import { WishlistService } from "../services/wishlistService";
 import {
   GLOBAL_ERROR,
@@ -26,6 +27,7 @@ const addWishListItems = (slug) => {
     const wishlistService = new WishlistService();
     const response = await wishlistService.addWishListItems(slug);
     if (response.isSuccess) {
+      openNotification("Success", "Product added to wishlist successfully");
       dispatch({ type: ADD_WISHLIST_ITEMS, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
@@ -41,6 +43,7 @@ const removeFromWishList = (id) => {
     const wishlistService = new WishlistService();
     const response = await wishlistService.removeFromWishList(id);
     if (response.isSuccess) {
+      openNotification("Success", "Product removed from wishlist successfully");
       dispatch({ type: REMOVE_FROM_WISHLIST, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({

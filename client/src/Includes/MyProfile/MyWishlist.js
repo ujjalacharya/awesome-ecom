@@ -50,7 +50,6 @@ class MyWishlist extends Component {
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
     ) {
-      openNotification("Success", "Product added to cart successfully");
       this.props.getWishListItems("page=1&perPage=10");
     }
 
@@ -59,7 +58,6 @@ class MyWishlist extends Component {
       prevProps.wishlist.removeFromWishlistResp &&
       this.props.wishlist.removeFromWishlistResp
     ) {
-      openNotification("Success", "Product removed from wishlist successfully");
       this.props.getWishListItems("page=1&perPage=10");
     }
 

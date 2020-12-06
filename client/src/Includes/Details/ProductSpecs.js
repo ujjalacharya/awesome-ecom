@@ -21,7 +21,6 @@ class ProductSpecs extends Component {
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
     ) {
-      openNotification("Success", "Product added to cart successfully");
       this.props.getProductDetails(this.props.router.query.slug);
     }
 
@@ -30,7 +29,6 @@ class ProductSpecs extends Component {
       prevProps.wishlist.wishlistItemsResp &&
       this.props.wishlist.wishlistItemsResp
     ) {
-      openNotification("Success", "Product added to wishlist successfully");
       this.props.getProductDetails(this.props.router.query.slug);
     }
 
@@ -39,7 +37,6 @@ class ProductSpecs extends Component {
       prevProps.wishlist.removeFromWishlistResp &&
       this.props.wishlist.removeFromWishlistResp
     ) {
-      openNotification("Success", "Product removed from wishlist successfully");
       this.props.getProductDetails(this.props.router.query.slug);
     }
 
@@ -48,7 +45,6 @@ class ProductSpecs extends Component {
       prevProps.cart.removeFromCartResp &&
       this.props.cart.removeFromCartResp
     ) {
-      openNotification("Success", "Product removed from cart successfully");
       this.props.getProductDetails(this.props.router.query.slug);
     }
   }
