@@ -277,15 +277,15 @@ exports.createOrder = async (req, res) => {
     newOrder.payment = newPayent._id;
 
     //if product is in cart remove from it
-    let cart = await Cart.find({ product:thisProduct._id, user: req.user._id })
+    let cart = await Cart.findOne({ product:thisProduct._id, user: req.user._id, isDeleted: null })
     console.log(cart,'dsdsfvdvdfvdfvdfv');
-    // if (cart) {
-    //   let updateCart = cart.toObject()
-    //   updateCart.isDeleted = Date.now()
-    //   task.update(cart, updateCart)
-    //     .options({ viaSave: true })
+    if (cart) {
+      let updateCart = cart.toObject()
+      updateCart.isDeleted = Date.now()
+      task.update(cart, updateCart)
+        .options({ viaSave: true })
       
-    // }
+    }
     // update thisProduct
     // const updateProduct = thisProduct.toObject();
     // updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
@@ -294,7 +294,7 @@ exports.createOrder = async (req, res) => {
       .save(newPayent)
       // .update(thisProduct, updateProduct)
       // .options({ viaSave: true })
-      //  .run({ useMongoose: true });
+       .run({ useMongoose: true });
        console.log('results',results);
     return { order: results[1], payment: results[2] }
   })
