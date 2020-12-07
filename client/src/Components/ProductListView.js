@@ -67,7 +67,6 @@ class ProductListView extends Component {
       prevProps.cart.removeFromCartResp &&
       this.props.cart.removeFromCartResp
     ) {
-      openNotification("Success", "Removed from cart successfully");
       this.props.getCartProducts("page=1");
     }
 
@@ -75,8 +74,7 @@ class ProductListView extends Component {
       this.props.cart.editCartQtyResp !== prevProps.cart.editCartQtyResp &&
       this.props.cart.editCartQtyResp
     ) {
-      // openNotification("Success", "Removed from cart successfully");
-      // this.props.getCartProducts("page=1");
+      this.props.getCartProducts("page=1");
     }
   }
 
