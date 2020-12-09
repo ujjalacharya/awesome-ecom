@@ -4,6 +4,7 @@ import {
   REMOVE_FROM_CART,
   EDIT_CART_QTY,
   STORE_CHECKOUT_ITEMS,
+  STORE_CART_ITEMS,
 } from "../types";
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   removeFromCartResp: null,
   editCartQtyResp: null,
   checkoutItems: null,
+  directBuyItems: null
 };
 
 export default (state = initialState, action) => {
@@ -26,6 +28,8 @@ export default (state = initialState, action) => {
       return { ...state, editCartQtyResp: action.payload, hasError: false };
     case STORE_CHECKOUT_ITEMS:
       return { ...state, checkoutItems: action.payload, hasError: false };
+    case STORE_CART_ITEMS:
+      return { ...state, directBuyItems: action.payload, hasError: false };
     default:
       return state;
   }

@@ -6,8 +6,25 @@ import {
   GLOBAL_ERROR,
 } from "../types";
 import { setCookie, removeCookie } from "../../utils/cookie";
-import { isTokenExpired } from "../../utils/common";
+import { isTokenExpired, openNotification } from "../../utils/common";
 import { AuthService } from "../services/authService";
+
+//register the user
+const register = (body) => {
+  return async (dispatch) => {
+    const authService = new AuthService();
+    const response = await authService.registerUser(body);
+
+    if (response.isSuccess) {
+      openNotification("Success", "User registered successfully");
+      // dispatch({ type: AUTHENTICATE, payload: response.data.token });
+      
+      window.location.href = '/login';
+    } else if (!response.isSuccess) {
+      dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
+    }
+  };
+};
 
 // gets token from the api and stores it in the redux store and in cookie
 const authenticate = (body, type, redirectUrl) => {
@@ -55,4 +72,5 @@ export default {
   authenticate,
   reauthenticate,
   deauthenticate,
+  register
 };

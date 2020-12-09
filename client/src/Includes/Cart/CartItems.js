@@ -36,7 +36,7 @@ class CartItems extends Component {
         allnoStockProducts: nextProps.cartData.noStockProducts,
         noStockProducts: {
           ...nextProps.cartData.noStockProducts,
-          carts: [...nextProps.cartData.noStockProducts.carts].slice(
+          carts: nextProps.cartData.noStockProducts?.carts && [...nextProps.cartData.noStockProducts.carts].slice(
             0,
             prevState.perPage
           ),
@@ -44,7 +44,7 @@ class CartItems extends Component {
         allinStockProducts: nextProps.cartData.inStockProducts,
         inStockProducts: {
           ...nextProps.cartData.inStockProducts,
-          carts: [...nextProps.cartData.inStockProducts.carts].slice(
+          carts: nextProps.cartData.inStockProducts.carts && [...nextProps.cartData.inStockProducts.carts].slice(
             0,
             prevState.perPage
           ),
@@ -62,13 +62,13 @@ class CartItems extends Component {
     ) {
       scrollToTop();
     }
-    if (
-      this.props.order.placeOrderResp !== prevProps.order.placeOrderResp &&
-      this.props.order.placeOrderResp
-    ) {
-      openNotification("Success", "Order placed successfully");
-      window.location.href = "/myprofile";
-    }
+    // if (
+    //   this.props.order.placeOrderResp !== prevProps.order.placeOrderResp &&
+    //   this.props.order.placeOrderResp
+    // ) {
+    //   openNotification("Success", "Order placed successfully");
+    //   window.location.href = "/myprofile";
+    // }
   }
 
   onChangePageInStock = (page) => {
@@ -137,7 +137,7 @@ class CartItems extends Component {
           </div>
         </div>
 
-        {this.state.noStockProducts.carts.length > 0 && (
+        {this.state.noStockProducts?.carts?.length > 0 && (
           <div className="bag-items">
             <div className="title">
               <h4>
@@ -149,7 +149,7 @@ class CartItems extends Component {
             </div>
             <div className="items-list">
               <ProductListView
-                showCheckbox="noCheckbox"
+                showCheckboxForOutOfStock="noCheckbox"
                 productsData={this.state.noStockProducts}
                 showQtySection="displayNone"
               />

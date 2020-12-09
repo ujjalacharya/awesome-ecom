@@ -12,7 +12,7 @@ import actions from "../redux/actions";
 
 class Cart extends Component {
   state = {
-    checkoutItems : []
+    checkoutItems: []
   }
 
   static async getInitialProps(ctx) {
@@ -32,7 +32,6 @@ class Cart extends Component {
       checkoutItems: items
     })
   }
-
   render() {
     return (
       <Layout title="Cart">
@@ -41,10 +40,11 @@ class Cart extends Component {
             <Row>
               <Col md={0} xs={0}></Col>
               <Col md={16} xs={24}>
-                <CartItems getCheckoutItems={this.getCheckoutItems} cartData={this.props.cart.getCartProducts} />
+                <CartItems getCheckoutItems={this.getCheckoutItems} cartData={this.props.cart.directBuyItems || this.props.cart.getCartProducts}
+                  showCheckbox="" />
               </Col>
               <Col md={8} xs={24}>
-                <OrderSummary orderTxt="PROCCED TO CHECKOUT" checkoutItems={this.state.checkoutItems} />
+                <OrderSummary orderTxt="PROCCED TO CHECKOUT" checkoutItems={this.state.checkoutItems} diableOrderBtn={!this.state.checkoutItems.length && 'disableBtn'} />
               </Col>
               <Col md={0} xs={0}></Col>
             </Row>

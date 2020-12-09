@@ -34,6 +34,15 @@ class ProductListView extends Component {
       productsData: this.props.productsData,
       showQtySection: this.props.showQtySection,
     });
+    
+    if (this.props.showCheckbox === 'noCheckbox') {
+
+      let p_slugs = this.props.cart.checkoutItems?.carts.map((newItems) => {
+        return newItems.product.slug;
+      });
+
+      this.props.getShippingCharge({ p_slugs });
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -55,10 +64,9 @@ class ProductListView extends Component {
 
     if (
       this.props.cart.removeFromCartResp !==
-        prevProps.cart.removeFromCartResp &&
+      prevProps.cart.removeFromCartResp &&
       this.props.cart.removeFromCartResp
     ) {
-      openNotification("Success", "Removed from cart successfully");
       this.props.getCartProducts("page=1");
     }
 
@@ -66,8 +74,7 @@ class ProductListView extends Component {
       this.props.cart.editCartQtyResp !== prevProps.cart.editCartQtyResp &&
       this.props.cart.editCartQtyResp
     ) {
-      // openNotification("Success", "Removed from cart successfully");
-      // this.props.getCartProducts("page=1");
+      this.props.getCartProducts("page=1");
     }
   }
 
@@ -119,7 +126,6 @@ class ProductListView extends Component {
   };
 
   render() {
-    
     return (
       <>
         {this.state.productsData?.carts?.map((items, i) => {
@@ -130,7 +136,7 @@ class ProductListView extends Component {
                   <Checkbox
                     value={items}
                     onChange={this.onCheckItems}
-                    className={this.props.showCheckbox}
+                    className={this.props.showCheckboxForOutOfStock || this.props.showCheckbox}
                   ></Checkbox>
                 </Col>
                 <Col lg={6} xs={24} key={i}>
@@ -180,71 +186,74 @@ class ProductListView extends Component {
                             Rs {items.product?.price.$numberDecimal}
                           </div>
                         ) : (
-                          <>
-                            <div className="new-price">
-                              <span className="old-price">
-                                Rs {items.product?.price.$numberDecimal}
-                              </span>
+                            <>
+                              <div className="new-price">
+                                <span className="old-price">
+                                  Rs {items.product?.price.$numberDecimal}
+                                </span>
                               Rs{" "}
-                              {items.product?.price.$numberDecimal -
-                                (items.product?.price.$numberDecimal *
-                                  items.product?.discountRate) /
+                                {items.product?.price.$numberDecimal -
+                                  (items.product?.price.$numberDecimal *
+                                    items.product?.discountRate) /
                                   100}{" "}
-                            </div>
-                            <div className="price-disc">
-                              <span className="disc">
-                                {items.product?.discountRate}% OFF
+                              </div>
+                              <div className="price-disc">
+                                <span className="disc">
+                                  {items.product?.discountRate}% OFF
                               </span>
-                            </div>
-                          </>
-                        )}
+                              </div>
+                            </>
+                          )}
                       </div>
                     </div>
                     <div className={"qty " + this.state.showQtySection}>
                       <span className="qty-title">Qty:</span>
-                      <span className="qty-inc-dcs">
-                        <i
-                          aria-hidden="true"
-                          onClick={() => this.changePdValue(-1, i, items._id)}
-                          className={
-                            "fa fa-minus " +
-                            (this.state["pdQtyInStock" + i] === 1
-                              ? "disabled"
-                              : "")
-                          }
-                        />
-                        <Input
-                          type="number"
-                          defaultValue={this.state.pdQty}
-                          value={this.state["pdQtyInStock" + i]}
-                          onChange={(e) => {
-                            if (items.product.quantity <= e.target.value) {
-                              openNotification(
-                                "Alert",
-                                "Maximum product quantity excceded"
-                              );
-                              this.setState({
-                                ["pdQtyInStock" + i]: items.product.quantity,
-                              });
-                            } else {
-                              this.setState({
-                                ["pdQtyInStock" + i]: e.target.value,
-                              });
-                            }
-                          }}
-                        />
-                        <i
-                          className={
-                            "fa fa-plus " +
-                            (items.product.quantity <=
-                            this.state["pdQtyInStock" + i]
-                              ? "disabled clickDisable"
-                              : "")
-                          }
-                          aria-hidden="true"
-                          onClick={() => this.changePdValue(1, i, items._id)}
-                        />
-                      </span>
+                      {
+                        this.props.showCheckbox === 'noCheckbox' ?
+                          this.state.productsData?.totalQty || items.quantity
+                          : <span className="qty-inc-dcs">
+                            <i
+                              aria-hidden="true"
+                              onClick={() => this.changePdValue(-1, i, items._id)}
+                              className={
+                                "fa fa-minus " +
+                                (this.state["pdQtyInStock" + i] === 1
+                                  ? "disabled"
+                                  : "")
+                              }
+                            />
+                            <Input
+                              type="number"
+                              defaultValue={this.state.pdQty}
+                              value={this.state["pdQtyInStock" + i]}
+                              onChange={(e) => {
+                                if (items.product.quantity <= e.target.value) {
+                                  openNotification(
+                                    "Alert",
+                                    "Maximum product quantity excceded"
+                                  );
+                                  this.setState({
+                                    ["pdQtyInStock" + i]: items.product.quantity,
+                                  });
+                                } else {
+                                  this.setState({
+                                    ["pdQtyInStock" + i]: e.target.value,
+                                  });
+                                }
+                              }}
+                            />
+                            <i
+                              className={
+                                "fa fa-plus " +
+                                (items.product.quantity <=
+                                  this.state["pdQtyInStock" + i]
+                                  ? "disabled clickDisable"
+                                  : "")
+                              }
+                              aria-hidden="true"
+                              onClick={() => this.changePdValue(1, i, items._id)}
+                            />
+                          </span>}
                     </div>
                     {items.product.quantity <= 5 &&
                       !this.state.showQtySection && (

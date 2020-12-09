@@ -118,7 +118,7 @@ class Header extends Component {
     return (
       <div className="main-header">
         <Row>
-          <Col lg={14} md={13}>
+          <Col lg={14} sm={10}>
             <Row className="menu-logo">
               <Col span={2} className="logo">
                 <Link href="/">
@@ -214,14 +214,15 @@ class Header extends Component {
               </Col>
             </Row>
           </Col>
-          <Col lg={6} md={6} className="search">
+          <Col lg={6} sm={9} className="search">
             <form onSubmit={this.handleSubmit}>
               <AutoComplete
                 value={this.state.searchValue}
                 options={this.state.searchOptions}
-                style={{
-                  width: 400,
-                }}
+                // style={{
+                //   width: 400,
+                // }}
+                className="auto-search"
                 onSelect={(select) => {
                   Router.push("/search/[slug]", "/search/" + select);
                   this.setState({ searchValue: select });
@@ -238,7 +239,7 @@ class Header extends Component {
               {/* <img src="/images/search-icon.png" /> */}
             </form>
           </Col>
-          <Col lg={4} md={5} className="menu-right">
+          <Col lg={4} sm={5} className="menu-right">
             <Link href="/myprofile">
               <a>
                 <div className="menu-right-items">
@@ -251,6 +252,20 @@ class Header extends Component {
                 </div>
               </a>
             </Link>
+            {!loginToken &&
+              <Link href="/register">
+                <a>
+                  <div className="menu-right-items">
+                    <div className="list-icon">
+                      <img src="/images/user.png" />
+                    </div>
+                    <div className="list-text">
+                      Register
+                    </div>
+                  </div>
+                </a>
+              </Link>
+            }
             {/* <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/wishlist.png" />
@@ -261,11 +276,19 @@ class Header extends Component {
               <div className="list-icon">
                 <img src="/images/bag.png" />
               </div>
-              <Link href="/cart">
-                <a>
-                  <div className="list-text">Cart</div>
-                </a>
-              </Link>
+              {
+                loginToken ? (
+                  <Link href="/cart">
+                    <a>
+                      <div className="list-text">Cart</div>
+                    </a>
+                  </Link>
+                ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
+                    <a>
+                      <div className="list-text">Cart</div>
+                    </a>
+                  </Link>
+              }
             </div>
             {loginToken && (
               <div

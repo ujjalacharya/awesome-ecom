@@ -1,12 +1,30 @@
-import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE } from "../types";
+import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPING_CHARGE, GET_ORDER_BY_ID, CANCEL_ORDER, GET_ORDERS_START } from "../types";
 import { OrderService } from "../services/orderService";
+import { openNotification } from "../../utils/common";
 
 const getOrders = (query) => {
   return async (dispatch) => {
+    await dispatch({ type: GET_ORDERS_START });
     const orderService = new OrderService();
     const response = await orderService.getOrders(query);
     if (response.isSuccess) {
       dispatch({ type: GET_ORDERS, payload: response.data });
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
+const getOrderById = (id) => {
+  return async (dispatch) => {
+    await dispatch({ type: GET_ORDERS_START });
+    const orderService = new OrderService();
+    const response = await orderService.getOrderById(id);
+    if (response.isSuccess) {
+      dispatch({ type: GET_ORDER_BY_ID, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -36,7 +54,27 @@ const placeOrder = (body) => {
     const orderService = new OrderService();
     const response = await orderService.placeOrder(body);
     if (response.isSuccess) {
-      dispatch({ type: PLACE_ORDER, payload: response.data });
+      await dispatch({ type: PLACE_ORDER, payload: response.data });
+      openNotification("Success", "Order placed successfully");
+      window.location.href = "/myprofile";
+    } else if (!response.isSuccess) {
+      dispatch({
+        type: GLOBAL_ERROR,
+        payload: response.errorMessage,
+      });
+    }
+  };
+};
+
+const cancelOrder = (id, body, data, setData) => {
+  return async (dispatch) => {
+    setData({ ...data, loading: true });
+    const orderService = new OrderService();
+    const response = await orderService.cancelOrder(id, body);
+    if (response.isSuccess) {
+      setData({ ...data, loading: false, success: true, data: response.data });
+      await dispatch({ type: CANCEL_ORDER, payload: response.data });
+      openNotification("Success", "Order cancelled successfully");
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -65,5 +103,7 @@ export default {
   getOrders,
   getOrdersStatuses,
   placeOrder,
-  getShippingCharge
+  getShippingCharge,
+  getOrderById,
+  cancelOrder
 };

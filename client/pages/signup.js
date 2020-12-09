@@ -3,15 +3,11 @@ import { connect } from 'react-redux';
 import actions from '../redux/actions';
 import initialize from '../utils/initialize';
 import Layout from '../src/Components/Layout';
-
-class Signup extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: ''
-    };
-  }
+class SignUp extends React.Component {
+  state = {
+    email: 'Prakash@gmail.com',
+    password: 'helloworld1'
+  };
 
   static getInitialProps(ctx) {
     initialize(ctx);
@@ -21,14 +17,14 @@ class Signup extends React.Component {
     e.preventDefault();
     this.props.authenticate(
       { email: this.state.email, password: this.state.password },
-      'signup'
+      'signin'
     );
   }
 
   render() {
     return (
       <Layout title="Sign Up">
-        <h3 className="title is-3">Sign Up</h3>
+        <h3 className="title is-3">Sign In</h3>
         <form
           onSubmit={this.handleSubmit.bind(this)}
           className="container"
@@ -83,4 +79,4 @@ class Signup extends React.Component {
 export default connect(
   state => state,
   actions
-)(Signup);
+)(SignUp);

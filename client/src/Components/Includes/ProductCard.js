@@ -99,6 +99,11 @@ class ProductCard extends Component {
                         src="/images/bag.png"
                         alt="bag.jpg"
                         title="Add to Cart"
+                        onClick={() => {
+                          this.props.addToCart(productData.slug, {
+                            quantity: 1,
+                          });
+                        }}
                       />
                     </Tooltip>
                   ) : (
@@ -118,7 +123,7 @@ class ProductCard extends Component {
                             arrowPointAtCenter
                           >
                             <img
-                              src="/images/bag.png"
+                              src="/images/bag-blue.png"
                               alt="bag.jpg"
                               title="Remove from Cart"
                             />

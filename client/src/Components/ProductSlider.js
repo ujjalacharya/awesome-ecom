@@ -43,12 +43,10 @@ class ProductSlider extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    
     if (
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
     ) {
-      openNotification("Success", "Product added to cart successfully");
       this.props.getLatestProducts();
     }
 
@@ -57,7 +55,6 @@ class ProductSlider extends Component {
         prevProps.wishlist.wishlistItemsResp?.updatedAt &&
       this.props.wishlist.wishlistItemsResp
     ) {
-      openNotification("Success", "Product added to wishlist successfully");
       this.props.getLatestProducts();
     }
 
@@ -66,7 +63,6 @@ class ProductSlider extends Component {
         prevProps.wishlist.removeFromWishlistResp?.updatedAt &&
       this.props.wishlist.removeFromWishlistResp
     ) {
-      openNotification("Success", "Product removed from wishlist successfully");
       this.props.getLatestProducts();
     }
 
@@ -75,7 +71,6 @@ class ProductSlider extends Component {
         prevProps.cart.removeFromCartResp &&
       this.props.cart.removeFromCartResp
     ) {
-      openNotification("Success", "Product removed from cart successfully");
       this.props.getLatestProducts();
     }
   }

@@ -6,16 +6,16 @@ import {
   EDIT_CART_QTY,
 } from "../types";
 import { CartService } from "../services/cartService";
-import { getDiscountedPrice } from "../../utils/common";
+import { getDiscountedAmount } from "../../utils/common";
 
-const getCartProducts = (query, ctx) => {
+export const getCartProducts = (query, token) => {
   return async (dispatch) => {
     const cartService = new CartService();
-    const response = await cartService.getCartProducts(query, ctx);
+    const response = await cartService.getCartProducts(query, token);
     if (response.isSuccess) {
       let noStockCarts = [];
       let inStockCarts = [];
-      response.data.carts.map((item, i) => {
+      response.data.carts.forEach((item, i) => {
         if (item.product.quantity === 0) {
           noStockCarts.push(item);
         } else {
@@ -25,7 +25,7 @@ const getCartProducts = (query, ctx) => {
 
       let inStockCartsTotalAmount = 0;
       inStockCarts.map((item, i) => {
-        inStockCartsTotalAmount += getDiscountedPrice(
+        inStockCartsTotalAmount += getDiscountedAmount(
           item.product.price.$numberDecimal,
           item.product.discountRate
         );
@@ -33,7 +33,7 @@ const getCartProducts = (query, ctx) => {
 
       let noStockCartsTotalAmount = 0;
       noStockCarts.map((item, i) => {
-        noStockCartsTotalAmount += getDiscountedPrice(
+        noStockCartsTotalAmount += getDiscountedAmount(
           item.product.price.$numberDecimal,
           item.product.discountRate
         );

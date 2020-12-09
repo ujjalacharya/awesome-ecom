@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Input, Row, Col, Select, Popconfirm } from "antd";
-import { Table, Tag, Space } from "antd";
+import { Input, Row, Col, Table, Popconfirm, Empty } from "antd";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import withPrivate from "../../../utils/auth/withPrivate";
@@ -20,7 +19,8 @@ class MyWishlist extends Component {
   state = {
     allWishlistItems: { wishlists: [], totalCount: 0 },
     currentPage: 1,
-    loading: false
+    loading: false,
+    searchKeyword: ''
   };
 
   componentDidMount() {
@@ -50,7 +50,6 @@ class MyWishlist extends Component {
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
     ) {
-      openNotification("Success", "Product added to cart successfully");
       this.props.getWishListItems("page=1&perPage=10");
     }
 
@@ -59,7 +58,6 @@ class MyWishlist extends Component {
       prevProps.wishlist.removeFromWishlistResp &&
       this.props.wishlist.removeFromWishlistResp
     ) {
-      openNotification("Success", "Product removed from wishlist successfully");
       this.props.getWishListItems("page=1&perPage=10");
     }
 
@@ -85,7 +83,16 @@ class MyWishlist extends Component {
     //   keyword: this.props.router.query.slug,
     // };
     this.props.getWishListItems(
-      `page=${page.current}&perPage=10`
+      `page=${page.current}&perPage=10&keyword=${this.state.searchKeyword}`
+    );
+  };
+
+  getSearch = (val) => {
+    this.setState({ searchKeyword: val, loading: true }, () =>
+      // this.initialRequest()
+      this.props.getWishListItems(
+        `page=${this.state.currentPage}&perPage=10&keyword=${val}`
+      )
     );
   };
 
@@ -197,7 +204,7 @@ class MyWishlist extends Component {
           <Col lg={8} xs={24}>
             <Search
               placeholder="Search By Item Name"
-              onSearch={(value) => console.log(value)}
+              onSearch={(value) => this.getSearch(value)}
               className="order-search"
             />
           </Col>
@@ -282,6 +289,8 @@ class MyWishlist extends Component {
               </table>
           }}
         />
+        
+        {this.state.allWishlistItems?.totalCount === 0 && <div className="no-data-table"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>}
       </div>
     );
   }

@@ -22,6 +22,12 @@ body {
   }
 }
 
+.body-wrap {
+  @media screen and (max-width: 577px) {
+    margin-top: 50px;
+  }
+}
+
 .action-btn {
   border: 1px solid;
   padding: 5px;
@@ -63,6 +69,7 @@ body {
   padding-left: 15px;
   @media screen and (max-width: 480px) {
     margin: 0px;
+    padding-left: 0px;
   }
 }
 
@@ -420,6 +427,28 @@ input.inputfile + label {
   }
 }
 
+.no-data-table {
+  @media (max-width: 1023px) {
+    display: none;
+  }
+}
+
 .ant-table-row-expand-icon {
   height: 17px !important;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  .spinner {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
 }
