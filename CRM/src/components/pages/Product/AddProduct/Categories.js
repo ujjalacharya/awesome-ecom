@@ -47,13 +47,13 @@ export const Categories = ({
   
   return (
     <>
-    {selectedCategories}
       <Form.Item
         label="Categories"
         name="categories"
         rules={[
           {
-            // required: true,
+            type:'array',
+            required: true,
             message: "Please input product categories!",
           },
         ]}

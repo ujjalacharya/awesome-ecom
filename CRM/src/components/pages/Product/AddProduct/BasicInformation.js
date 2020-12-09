@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Button,
     Form,
@@ -42,6 +41,10 @@ const BasicInformation = ({brands, layout, tailLayout}) => {
     };
     const handleCategory = (e) => {
         let isAlreadyAdded = selectedCategories.includes(e.key);
+        if(!isAlreadyAdded) {
+            form.setFieldsValue({
+                categories: [...selectedCategories, e.key],
+        })}
         return isAlreadyAdded
             ? null
             : setSelectedCategories([...selectedCategories, e.key]);
@@ -59,6 +62,7 @@ const BasicInformation = ({brands, layout, tailLayout}) => {
                 name="basic"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
+                form={form}
             >
                 <Form.Item
                     label="Product Name"
@@ -77,32 +81,8 @@ const BasicInformation = ({brands, layout, tailLayout}) => {
                         selectedCategories={selectedCategories}
                         handleClick={handleCategory}
                         handleDeselect={handleDeselectCategory}
-                    />
-                <Form.List name="videoURL" label="Video URL">
-                    {(fields, { add, remove }) => (
-                        <>
-                            {fields.map(field => (
-                                <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                    <Form.Item
-                                        {...field}
-                                        name={[field.name, 'first']}
-                                        label={`${field.name + 1} url`}
-                                        fieldKey={[field.fieldKey, 'first']}
-                                        rules={[{ type: 'url' }]}
-                                    >
-                                        <Input placeholder='https://www.youtube.com/watch?v=CICUUy22JpY&list' style={{ width: '100%' }} />
-                                    </Form.Item>
-                                    <MinusCircleOutlined onClick={() => remove(field.name)} />
-                                </Space>
-                            ))}
-                            <Form.Item label="Video Url">
-                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                    Add
-              </Button>
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
+                />
+                
                 <Form.Item
                     label="Brand"
                     name="brand"
@@ -130,7 +110,7 @@ const BasicInformation = ({brands, layout, tailLayout}) => {
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
-                    </Form.Item>
+                </Form.Item>
             </Form>
         </>
 

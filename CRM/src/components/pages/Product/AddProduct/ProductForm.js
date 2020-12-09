@@ -44,12 +44,12 @@ const steps = [
 
 const ProductForm = ({ getCategories, getBrands, brands }) => {
   const [current, setCurrent] = React.useState(0);
-  
+
   useEffect(() => {
     getCategories();
     getBrands();
-  }, []);  
-  
+  }, []);
+
   const next = () => {
     setCurrent(current + 1);
   };
@@ -57,7 +57,7 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
   const prev = () => {
     setCurrent(current - 1);
   };
-  
+
   return (
     <>
       <Steps current={current}>
@@ -66,39 +66,36 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
         ))}
       </Steps>
       <Form.Provider
-        onFormFinish={(name,info) => {
-          if (name === 'basic') {
+        onFormFinish={name => {
+          if (name === 'form1') {
             // Do something...
-            console.log(info)
           }
         }}
       >
-      
-        {current === 0 && <BasicInformation layout={layout} tailLayout={tailLayout} brands={brands}/>}
+
+        {current === 0 && <BasicInformation layout={layout} tailLayout={tailLayout} brands={brands} />}
         {current === 1 && <DetailInformation layout={layout} tailLayout={tailLayout} />}
-       
-      
       </Form.Provider>
-      <div className="steps-action">
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => message.success("Processing complete!")}
-          >
-            Done
-          </Button>
-        )}
-        {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-            Previous
-          </Button>
-        )}
-      </div>
+        <div className="steps-action">
+          {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+              Next
+            </Button>
+          )}
+          {current === steps.length - 1 && (
+            <Button
+              type="primary"
+              onClick={() => message.success("Processing complete!")}
+            >
+              Done
+            </Button>
+          )}
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Previous
+            </Button>
+          )}
+        </div>
     </>
   );
 };
@@ -109,7 +106,7 @@ ProductForm.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    brands: state.product.brands
+  brands: state.product.brands
 });
 
 const mapDispatchToProps = {

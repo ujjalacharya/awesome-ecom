@@ -24,7 +24,17 @@ exports.product = async (req, res, next) => {
     .populate("images", "-createdAt -updatedAt -__v")
     .populate("soldBy", "shopName address holidayMode")
     .populate("brand")
-    .populate("category");
+    .populate({
+      path:'category',
+      populate:{
+        path:'parent',
+        model:'category',
+        populate:{
+          path: 'parent',
+          model: 'category'
+        }
+      }
+    });
   if (!product) {
     return res.status(404).json({ error: "Product not found." });
   }

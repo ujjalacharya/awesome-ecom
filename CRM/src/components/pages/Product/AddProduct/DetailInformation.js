@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from "react";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Button,
@@ -7,8 +9,8 @@ import {
     AutoComplete,
     Space
 } from "antd";
-const {TextArea} = Input
 const DetailInformation = ({ layout, tailLayout}) => {
+    const [form] = Form.useForm()
     const onFinish = (values) => {
         console.log("Success:", values);
     };
@@ -21,22 +23,37 @@ const DetailInformation = ({ layout, tailLayout}) => {
         <>
             <Form
                 {...layout}
-                name="detail    "
+                name="detail"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
+                form={form}
             >
                 <Form.Item
                     label="Description"
-                    name="descrption"
+                    name="description"
                     rules={[
                         {
-                            type: 'string',
+                            
                             required: true,
                             message: "Please input your product description!",
                         },
                     ]}
                 >
-                    <TextArea rows={4}/>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        config={{
+                            toolbar: {
+                                // items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                            },
+                            placeholder:"Product full descrption here.."
+                        }}
+                        onChange={(event, editor) => {
+                            const data = editor.getData();
+                            form.setFieldsValue({
+                                description: data,
+                            })
+                        }}
+                    />
                 </Form.Item>
 
                 <Form.Item
@@ -44,14 +61,52 @@ const DetailInformation = ({ layout, tailLayout}) => {
                     name="highlights"
                     rules={[
                         {
-                            type: 'string',
                             required: true,
                             message: "Please input highlights of the product!",
                         },
                     ]}
                 >
-                   <Input/>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        config={{
+                            toolbar: {
+                                // items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                            },
+                            placeholder:'Product Highlights here..'
+                            }}
+                        onChange={(event, editor) => {
+                            const data = editor.getData();
+                            form.setFieldsValue({
+                                highlights: data,
+                            })
+                        }}
+                    />
                 </Form.Item>
+                <Form.List name="videoURL" label="Video URL">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {fields.map(field => (
+                                <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                    <Form.Item
+                                        {...field}
+                                        name={[field.name, 'first']}
+                                        label={`${field.name + 1} url`}
+                                        fieldKey={[field.fieldKey, 'first']}
+                                        rules={[{ type: 'url' }]}
+                                    >
+                                        <Input placeholder='https://www.youtube.com/watch?v=CICUUy22JpY&list' style={{ width: '100%' }} />
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={() => remove(field.name)} />
+                                </Space>
+                            ))}
+                            <Form.Item label="Video Url">
+                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                    Add
+              </Button>
+                            </Form.Item>
+                        </>
+                    )}
+                </Form.List>
                 <Form.Item
                     label="Warranty"
                     name="warranty"
