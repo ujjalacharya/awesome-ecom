@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -44,7 +44,8 @@ const steps = [
 
 const ProductForm = ({ getCategories, getBrands, brands }) => {
   const [current, setCurrent] = React.useState(0);
-
+  const basicFormRef = useRef(null);
+  const detailFormRef = useRef(null);
   useEffect(() => {
     getCategories();
     getBrands();
@@ -53,7 +54,13 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
   const next = () => {
     setCurrent(current + 1);
   };
-
+  const submitBasicForm = () => {
+    // console.log(basicFormRef.current);
+    basicFormRef.current.submit()
+  }
+  const submitDetailForm = () => {
+    detailFormRef.current.submit()
+  }
   const prev = () => {
     setCurrent(current - 1);
   };
@@ -73,15 +80,21 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
         }}
       >
 
-        {current === 0 && <BasicInformation layout={layout} tailLayout={tailLayout} brands={brands} />}
-        {current === 1 && <DetailInformation layout={layout} tailLayout={tailLayout} />}
+        {current === 0 && <BasicInformation ref={basicFormRef} next={next} layout={layout} tailLayout={tailLayout} brands={brands} />}
+        {current === 1 && <DetailInformation ref={detailFormRef} next={next} layout={layout} tailLayout={tailLayout} />}
+        {current === 2 && 'done'}
       </Form.Provider>
         <div className="steps-action">
-          {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()}>
+          {current === 0 && (
+            <Button type="primary" onClick={() => submitBasicForm()}>
               Next
             </Button>
           )}
+        {current === 1 && (
+          <Button type="primary" onClick={() => submitDetailForm()}>
+            Next
+          </Button>
+        )}
           {current === steps.length - 1 && (
             <Button
               type="primary"

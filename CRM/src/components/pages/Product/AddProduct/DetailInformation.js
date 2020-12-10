@@ -9,10 +9,11 @@ import {
     AutoComplete,
     Space
 } from "antd";
-const DetailInformation = ({ layout, tailLayout}) => {
+const DetailInformation = React.forwardRef(({ layout, tailLayout, next},ref) => {
     const [form] = Form.useForm()
     const onFinish = (values) => {
         console.log("Success:", values);
+        next()
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -27,6 +28,7 @@ const DetailInformation = ({ layout, tailLayout}) => {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 form={form}
+                ref={ref}
             >
                 <Form.Item
                     label="Description"
@@ -120,15 +122,15 @@ const DetailInformation = ({ layout, tailLayout}) => {
                 >
                 <Input/>
                 </Form.Item>
-                <Form.Item {...tailLayout}>
+                {/* <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
-                    </Form.Item>
+                    </Form.Item> */}
             </Form>
         </>
 
     );
-};
+});
 
 export default DetailInformation

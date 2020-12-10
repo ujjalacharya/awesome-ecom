@@ -7,7 +7,7 @@ import {
     Space
 } from "antd";
 import Categories from "./Categories";
-const BasicInformation = ({brands, layout, tailLayout}) => {
+const BasicInformation = React.forwardRef(({brands, layout, tailLayout, next}, ref) => {
     const [form] = Form.useForm()
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [_brands, set_brands] = useState([]);
@@ -21,10 +21,11 @@ const BasicInformation = ({brands, layout, tailLayout}) => {
 
     const onFinish = (values) => {
         console.log("Success:", values);
+        next()
     };
 
     const onFinishFailed = (errorInfo) => {
-        console.log("Failed:", errorInfo);
+        // console.log("Failed:", errorInfo);
     };
     const handleBrandChange = (value) => {
         let new_brands=[]
@@ -63,6 +64,7 @@ const BasicInformation = ({brands, layout, tailLayout}) => {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 form={form}
+                ref={ref}
             >
                 <Form.Item
                     label="Product Name"
@@ -106,15 +108,15 @@ const BasicInformation = ({brands, layout, tailLayout}) => {
                         <Input />
                     </AutoComplete>
                 </Form.Item>
-                <Form.Item {...tailLayout}>
+                {/* <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
-                </Form.Item>
+                </Form.Item> */}
             </Form>
         </>
 
     );
-};
+});
 
 export default BasicInformation
