@@ -47,7 +47,7 @@ class ProductList extends Component {
           <div className="view-sort">
             <div className="type-icon">
               <AppstoreOutlined className="list-icon" />
-              <BarsOutlined className="list-icon" />
+              {/* <BarsOutlined className="list-icon" /> */}
             </div>
             <Select
               style={{ width: 200 }}
