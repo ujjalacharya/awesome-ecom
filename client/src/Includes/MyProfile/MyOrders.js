@@ -257,7 +257,7 @@ class MyOrders extends Component {
           dataSource={data}
           pagination={{ total: this.state.myOrders?.totalCount }}
           onChange={this.onChangePage}
-          loading={this.state.loading}
+          loading={false}
           expandable={{
             expandedRowRender: (record) =>
               <table className="expanded-table">
