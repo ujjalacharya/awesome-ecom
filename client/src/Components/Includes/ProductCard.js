@@ -204,7 +204,7 @@ class ProductCard extends Component {
                     </Link>
                   )}
               </div>
-              <div className="card-items">
+              {/* <div className="card-items">
                 <Tooltip
                   placement="topLeft"
                   title="Add to Compare"
@@ -212,7 +212,7 @@ class ProductCard extends Component {
                 >
                   <img src="/images/sliders.png" alt="slider.jpg" />
                 </Tooltip>
-              </div>
+              </div> */}
             </div>
             <Link
               href={`/products/[slug]`}

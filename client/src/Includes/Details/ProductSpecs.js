@@ -309,12 +309,12 @@ class ProductSpecs extends Component {
                 )
             ) : <b>No Stocks Available</b>}
           </div>
-          <div className="wish-comp-btn">
+          {/* <div className="wish-comp-btn">
             <div className="comp-btn">
               <img data-tip="Add to Compare" src="/images/sliders.png" />
               <span>Add to Compare</span>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="prod-cate-specs">
           <div className="tags">
