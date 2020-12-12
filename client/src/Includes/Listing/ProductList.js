@@ -14,6 +14,7 @@ class ProductList extends Component {
   state = {
     min_price: "",
     max_price: "",
+    sortBy: 'ace'
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -52,9 +53,11 @@ class ProductList extends Component {
               style={{ width: 200 }}
               placeholder="SORT BY"
               className="sortyBy-select"
+              onChange={(val) => this.props.sortProducts(val)}
+              defaultValue="asc"
             >
-              <Option value="ascending">Ascending</Option>
-              <Option value="descending">Descending</Option>
+              <Option value="asc">Ascending</Option>
+              <Option value="desc">Descending</Option>
             </Select>
           </div>
           <div className="page-status">
@@ -131,6 +134,7 @@ class ProductList extends Component {
                 <i className="fa fa-times" aria-hidden="true"></i>
               </span>
             )}
+            
 
             {!_.isEmpty(currentFilter.warranties) &&
               currentFilter.warranties.map((warenty, i) => {
