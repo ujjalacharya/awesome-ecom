@@ -100,7 +100,7 @@ class CartItems extends Component {
 
             {this.props.order?.getShippingChargeResp ? (
               <>
-                <span className="delivery-date">Get By: 25 - 28 Aug 2019</span>
+                {/* <span className="delivery-date">Get By: 25 - 28 Aug 2019</span> */}
                 <span className="price">
                   Cost: Rs {this.props.order?.getShippingChargeResp}
                 </span>
