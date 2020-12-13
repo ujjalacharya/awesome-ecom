@@ -2,7 +2,7 @@ import Router from "next/router";
 import {
   AUTHENTICATE,
   DEAUTHENTICATE,
-  AUTHENTICATE_ERROR,
+  AUTHENTICATE_START,
   GLOBAL_ERROR,
 } from "../types";
 import { setCookie, removeCookie } from "../../utils/cookie";
@@ -29,6 +29,8 @@ const register = (body) => {
 // gets token from the api and stores it in the redux store and in cookie
 const authenticate = (body, type, redirectUrl) => {
   return async (dispatch) => {
+    await dispatch({ type: AUTHENTICATE_START });
+
     const authService = new AuthService();
     const response = await authService.loginUser(body);
 

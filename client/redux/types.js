@@ -1,5 +1,6 @@
 // auth types
 export const AUTHENTICATE = 'authenticate';
+export const AUTHENTICATE_START = 'AUTHENTICATE_START';
 export const AUTHENTICATE_ERROR = 'AUTHENTICATE_ERROR';
 
 export const DEAUTHENTICATE = 'deauthenticate';

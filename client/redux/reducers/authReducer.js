@@ -1,4 +1,4 @@
-import { AUTHENTICATE, DEAUTHENTICATE, AUTHENTICATE_ERROR } from "../types";
+import { AUTHENTICATE, DEAUTHENTICATE, AUTHENTICATE_ERROR, AUTHENTICATE_START } from "../types";
 
 const initialState = {
   token: null,
@@ -7,8 +7,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case AUTHENTICATE_START:
+      return { ...state, hasError: false, loading: true };
     case AUTHENTICATE:
-      return { ...state, token: action.payload, hasError: false };
+      return { ...state, token: action.payload, hasError: false, loading: false };
     case DEAUTHENTICATE:
       return { ...state, token: null, hasError: false };
     case AUTHENTICATE_ERROR:
