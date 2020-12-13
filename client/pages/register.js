@@ -2,19 +2,20 @@ import React, { Component } from "react";
 import Layout from "../src/Components/Layout";
 import { connect } from "react-redux";
 import actions from "../redux/actions";
-import initialize from "../utils/initialize";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import withUnAuth from "../utils/auth/withUnAuth";
 import { withRouter } from "next/router";
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-};
-const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-};
+// const layout = {
+//     labelCol: { span: 8 },
+//     wrapperCol: { span: 16 },
+// };
+// const tailLayout = {
+//     wrapperCol: { offset: 8, span: 16 },
+// };
 
 class Register extends Component {
     render() {
@@ -28,6 +29,7 @@ class Register extends Component {
             this.props.register(body);
         };
 
+        const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
         return (
             <Layout title="Register">
                 <div className="container">
@@ -116,10 +118,10 @@ class Register extends Component {
 
                                     <Form.Item>
                                         <div className="login-create">
-                                            <Button htmlType="submit" className="secondary">
-                                                Sign Up
-                      </Button>
-                                            <Button className="no-color">Login</Button>
+                                            <Button disabled={this.props.authentication.loading} htmlType="submit" className="secondary">
+                                                {this.props.authentication.loading && <Spin indicator={antIcon} />} Sign Up
+                                            </Button>
+                                            <Button disabled={this.props.authentication.loading} className="no-color">Login</Button>
                                         </div>
                                     </Form.Item>
                                 </Form>

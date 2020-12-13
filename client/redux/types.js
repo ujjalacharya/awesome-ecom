@@ -2,6 +2,8 @@
 export const AUTHENTICATE = 'authenticate';
 export const AUTHENTICATE_START = 'AUTHENTICATE_START';
 export const AUTHENTICATE_ERROR = 'AUTHENTICATE_ERROR';
+export const REGISTER_START = 'REGISTER_START';
+export const REGISTER_FINISH = 'REGISTER_FINISH';
 
 export const DEAUTHENTICATE = 'deauthenticate';
 

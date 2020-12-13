@@ -92,10 +92,10 @@ class Login extends Component {
 
                   <Form.Item>
                     <div className="login-create">
-                      <Button  disabled={this.props.authentication.loading} htmlType="submit" className="secondary">
+                      <Button disabled={this.props.authentication.loading} htmlType="submit" className="secondary">
                         {this.props.authentication.loading && <Spin indicator={antIcon} />} Login Now
                       </Button>
-                      <Button className="no-color"><Link href="/register">Create Account</Link></Button>
+                      <Button disabled={this.props.authentication.loading} className="no-color"><Link href="/register">Create Account</Link></Button>
                     </div>
                   </Form.Item>
                 </Form>
