@@ -390,5 +390,8 @@ const mapDispatchToProps = (dispatch) => ({
   removeFromWishList: (id) => {
     dispatch(actions.removeFromWishList(id))
   },
+  addWishListItems: (id) => {
+    dispatch(actions.addWishListItems(id))
+  },
 });
 export default connect((state) => state, mapDispatchToProps)(withRouter(ProductSpecs));
