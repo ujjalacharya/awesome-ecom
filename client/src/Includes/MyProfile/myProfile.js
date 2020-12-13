@@ -39,8 +39,6 @@ class MyProfile extends Component {
         });
     };
 
-    if
-
     render() {
 
         return (
