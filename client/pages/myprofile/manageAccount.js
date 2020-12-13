@@ -6,7 +6,7 @@ import _ from "lodash";
 //includes
 import ProfileDetails from "../../src/Includes/MyProfile/Includes/ProfileDetails";
 import AddressDetails from "../../src/Includes/MyProfile/Includes/AddressDetails";
-import MyProfile from "./index";
+import MyProfile from "../../src/Includes/MyProfile/myProfile";
 import { connect } from "react-redux";
 import withPrivate from "../../utils/auth/withPrivate";
 import actions from "../../redux/actions";
@@ -60,7 +60,7 @@ class ManageAccount extends Component {
   render() {
 
     return (
-      <MyProfile>
+      <MyProfile title="My Account">
         <div className="menu-details">
           <h3>Manage My Account</h3>
           <StickyContainer>

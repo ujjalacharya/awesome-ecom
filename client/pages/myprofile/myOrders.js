@@ -7,7 +7,7 @@ import _ from "lodash";
 import { scrollToTop } from "../../utils/common";
 import moment from 'moment'
 import OrderDetails from "../../src/Includes/MyProfile/Includes/OrderDetails";
-import MyProfile from "./index";
+import MyProfile from "../../src/Includes/MyProfile/myProfile";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -224,7 +224,7 @@ class MyOrders extends Component {
         });
 
         return (
-            <MyProfile>
+            <MyProfile title="My Orders">
                 <div className="my-orders">
                     <h3>My Orders</h3>
                     <Row gutter={10}>

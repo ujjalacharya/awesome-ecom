@@ -3,7 +3,7 @@ import actions from "../../redux/actions";
 import { connect } from "react-redux";
 import { Pagination, Spin } from "antd";
 import withPrivate from "../../utils/auth/withPrivate";
-import MyProfile from "./";
+import MyProfile from "../../src/Includes/MyProfile/myProfile";
 
 class MyReviews extends Component {
     state = {
@@ -30,7 +30,7 @@ class MyReviews extends Component {
         let { myReviews } = this.state.myReviews;
         return (
             <>
-                <MyProfile>
+                <MyProfile title="My Reviews">
                     <div className="my-reviews">
                         <h3>My Reviews</h3>
                         {myReviews?.map((review, i) => {

@@ -9,7 +9,7 @@ import {
     scrollToTop,
 } from "../../utils/common";
 import Link from "next/link";
-import MyProfile from "./";
+import MyProfile from "../../src/Includes/MyProfile/myProfile";
 
 const { Search } = Input;
 
@@ -184,7 +184,7 @@ class MyWishlist extends Component {
         });
 
         return (
-            <MyProfile>
+            <MyProfile title="My Wishlist">
                 <div className="my-wishlist">
                     <h3>My Wishlist</h3>
                     <Row>
