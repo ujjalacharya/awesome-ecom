@@ -162,6 +162,7 @@ class ProductSpecs extends Component {
                   }
                 </div>
               </div>
+              {console.log(this.props)}
               <div className="wish-btn">
                 {loginToken ? (
                   !_.isEmpty(product.hasOnWishlist) ? (
@@ -385,6 +386,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   removeCart: (id) => {
     dispatch(actions.removeCart(id))
+  },
+  removeFromWishList: (id) => {
+    dispatch(actions.removeFromWishList(id))
   },
 });
 export default connect((state) => state, mapDispatchToProps)(withRouter(ProductSpecs));
