@@ -27,16 +27,20 @@
           margin-right: 9px;
           display: inline-block;
         }
-        &:last-child{
+        &:last-child {
           @media screen and (max-width: 992px) {
             border-right: 0px;
           }
         }
-        &:hover {
-          color: $secondary-color;
+        a {
+          &:hover {
+            color: $secondary-color;
+          }
         }
         &.active {
-          color: $primary-color;
+          a {
+            color: $primary-color;
+          }
         }
       }
     }

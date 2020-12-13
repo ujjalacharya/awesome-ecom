@@ -1,27 +1,31 @@
 import Link from "next/link";
+import { withRouter } from "next/router";
 import React, { Component } from "react";
 
 class Menu extends Component {
   render() {
+    let { pathname } = this.props.router
+    let currentTab = pathname.split('/').pop()
+    
     return (
       <div className="profile-menu">
         <ul>
           <li
-            className={this.props.currentMenu === 'manage-account' ? 'active' : ''}
+            className={currentTab === 'manageAccount' ? 'active' : ''}
           >
             <Link href="/myprofile/manageAccount">
               <a>Manage My Account</a>
             </Link>
           </li>
           <li
-            className={this.props.currentMenu === 'my-orders' ? 'active' : ''}
+            className={currentTab === 'myOrders' ? 'active' : ''}
           >
             <Link href="/myprofile/myOrders">
               <a>My Orders</a>
             </Link>
           </li>
           <li
-            className={this.props.currentMenu === 'my-reviews' ? 'active' : ''}
+            className={currentTab === 'myReviews' ? 'active' : ''}
           >
             <Link href="/myprofile/myReviews">
               <a>
@@ -30,7 +34,7 @@ class Menu extends Component {
             </Link>
           </li>
           <li
-            className={this.props.currentMenu === 'my-whishlist' ? 'active' : ''}
+            className={currentTab === 'myWishlist' ? 'active' : ''}
           >
             <Link href="/myprofile/myWishlist">
               <a>
@@ -38,11 +42,11 @@ class Menu extends Component {
               </a>
             </Link>
           </li>
-          {/* <li className={this.props.currentMenu === 'sell-on-daraz' ? 'active' : ''} onClick={() => this.props.changeMenuTab('sell-on-daraz')}>Sell on our site</li> */}
+          {/* <li className={currentTab === 'sell-on-daraz' ? 'active' : ''} onClick={() => this.props.changeMenuTab('sell-on-daraz')}>Sell on our site</li> */}
         </ul>
       </div>
     );
   }
 }
 
-export default Menu;
+export default withRouter(Menu);
