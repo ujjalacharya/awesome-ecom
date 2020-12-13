@@ -217,15 +217,15 @@ class MyOrders extends Component {
     return (
       <div className="my-orders">
         <h3>My Orders</h3>
-        <Row>
-          <Col lg={10} xs={24}>
+        <Row gutter={10}>
+          <Col lg={10} xs={24} sm={10}>
             <Search
               placeholder="Search By Item Name"
               onSearch={(value) => this.getSearch(value)}
               className="order-search"
             />
           </Col>
-          <Col lg={8} xs={24}>
+          <Col lg={8} xs={24} sm={8}>
             <Select
               showSearch
               className="order-select"
@@ -251,13 +251,14 @@ class MyOrders extends Component {
           </Col>
           <Col span={6}></Col>
         </Row>
+        
         <Table
           className="orders-table table-wrapper"
           columns={columns}
           dataSource={data}
           pagination={{ total: this.state.myOrders?.totalCount }}
           onChange={this.onChangePage}
-          loading={false}
+          loading={this.state.loading && !this.props.order.loading}
           expandable={{
             expandedRowRender: (record) =>
               <table className="expanded-table">
