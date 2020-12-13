@@ -6,6 +6,7 @@ import {
   TOGGLE_ACTIVE_ADDRESS,
   UPDATE_PROFILE_PICTURE,
   MY_PROFILE_REVIEWS,
+  GET_REVIEWS_START
 } from "../types";
 import { UserService } from "../services/userService";
 
@@ -87,6 +88,7 @@ const updateProfilePicture = (body) => {
 
 const getMyReviews = (query) => {
   return async (dispatch) => {
+    await dispatch({ type: GET_REVIEWS_START });
     const userService = new UserService();
     const response = await userService.getMyReviews(query);
     if (response.isSuccess) {
