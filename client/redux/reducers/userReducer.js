@@ -5,7 +5,8 @@ import {
   TOGGLE_ACTIVE_ADDRESS,
   UPDATE_PROFILE_PICTURE,
   MY_PROFILE_REVIEWS,
-  GET_REVIEWS_START
+  GET_REVIEWS_START,
+  GET_USER_PROFILE_START
 } from "../types";
 
 const initialState = {
@@ -21,8 +22,10 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case GET_REVIEWS_START:
       return { ...state, hasError: false, reviewLoading: true };
+    case GET_USER_PROFILE_START:
+      return { ...state, hasError: false, userProfileLoading: true };
     case USER_PROFILE:
-      return { ...state, userProfile: action.payload, hasError: false, loading: false };
+      return { ...state, userProfile: action.payload, hasError: false, loading: false, userProfileLoading: false };
     case UPDATE_PROFILE_PICTURE:
       return { ...state, profilePictureResp: action.payload, hasError: false, loading: false };
     case ADD_ADDRESS:
