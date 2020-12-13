@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { Row, Col, Pagination, Drawer } from "antd";
+import _ from 'lodash'
 
 // includes
-import ProductList from "../../../src/Includes/Listing/ProductList";
 import Layout from "../../../src/Components/Layout";
 import initialize from "../../../utils/initialize";
 import actions from "../../../redux/actions";
-import Filter from "../../../src/Includes/Listing/Filter";
 import Listing from "../../listing";
 import { connect } from "react-redux";
 import { withRouter } from "next/router";
@@ -17,7 +15,7 @@ class Search extends Component {
   };
   static async getInitialProps(ctx) {
     initialize(ctx);
-
+    console.log(ctx)
     const {
       query: { slug },
     } = ctx;
@@ -33,8 +31,10 @@ class Search extends Component {
   }
 
   render() {
+    let { query } = this.props.router
+    let title = _.capitalize(query.slug.split('-').join(' '))
     return (
-      <Layout>
+      <Layout title={title}>
         <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />
       </Layout>
     );
