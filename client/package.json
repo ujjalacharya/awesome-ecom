@@ -28,7 +28,6 @@
     "react": "16.13.1",
     "react-cookie": "^4.0.3",
     "react-dom": "16.13.1",
-    "react-helmet": "^6.1.0",
     "react-image-magnify": "^2.7.4",
     "react-magnifier": "^3.0.4",
     "react-redux": "^7.2.0",

@@ -315,6 +315,7 @@ class ProductSpecs extends Component {
                         </div>
 
                         <Button className="primary">Add to Cart</Button>
+                        <Button className="buy-now secondary">Buy Now</Button>
                       </a>
                     </Link>
                   )
@@ -353,7 +354,7 @@ class ProductSpecs extends Component {
                   quote={"CampersTribe - World is yours to explore"}
                   hashtag="#camperstribe"
                 >
-                <i className="fa fa-twitter" aria-hidden="true"></i>
+                  <i className="fa fa-twitter" aria-hidden="true"></i>
                 </TwitterShareButton>
               </span>
             </div>
