@@ -32,10 +32,10 @@ const searchProducts = (query, body) => {
   };
 };
 
-const getProductsByCategory = (query) => {
+const getProductsByCategory = (query, ctx) => {
   return async (dispatch) => {
     const searchService = new SearchService();
-    const response = await searchService.getProductsByCategory(query);
+    const response = await searchService.getProductsByCategory(query, ctx);
     if (response.isSuccess) {
       dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
     } else if (!response.isSuccess) {

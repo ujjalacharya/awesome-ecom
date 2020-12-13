@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React, { Component } from 'react'
-import Helmet from 'react-helmet'
 
 
 class AllHelmet extends Component{
