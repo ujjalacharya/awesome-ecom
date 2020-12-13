@@ -5,6 +5,8 @@ import {
   EDIT_CART_QTY,
   STORE_CHECKOUT_ITEMS,
   STORE_CART_ITEMS,
+  CART_START,
+  CART_FINISH,
 } from "../types";
 
 const initialState = {
@@ -18,6 +20,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case CART_START:
+      return { ...state, loading: true, hasError: false };
+    case CART_FINISH:
+      return { ...state, loading: false, hasError: false };
     case CART_PRODUCTS:
       return { ...state, getCartProducts: action.payload, hasError: false };
     case ADD_TO_CART:

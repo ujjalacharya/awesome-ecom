@@ -4,6 +4,8 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   EDIT_CART_QTY,
+  CART_START,
+  CART_FINISH
 } from "../types";
 import { CartService } from "../services/cartService";
 import { getDiscountedPrice, openNotification } from "../../utils/common";
@@ -65,8 +67,10 @@ const getCartProducts = (query, ctx) => {
 
 const addToCart = (query, body) => {
   return async (dispatch) => {
+    await dispatch({ type: CART_START });
     const cartService = new CartService();
     const response = await cartService.addToCart(query, body);
+    await dispatch({ type: CART_FINISH });
     if (response.isSuccess) {
       openNotification("Success", "Product added to cart successfully");
       dispatch({ type: ADD_TO_CART, payload: response.data });
@@ -81,8 +85,10 @@ const addToCart = (query, body) => {
 
 const removeCart = (query) => {
   return async (dispatch) => {
+    await dispatch({ type: CART_START });
     const cartService = new CartService();
     const response = await cartService.removeCart(query);
+    await dispatch({ type: CART_FINISH });
     if (response.isSuccess) {
       openNotification("Success", "Product removed from cart successfully");
       dispatch({ type: REMOVE_FROM_CART, payload: response.data });
