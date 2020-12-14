@@ -88,3 +88,16 @@ export const getBrands = () => async (dispatch) => {
         dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
     }
 };
+
+export const uploadImages = id => async (dispatch) => {
+    try {
+        const res = await api.post(`/product/images/${id}`);
+        dispatch({
+            type: GET_BRANDS,
+            payload: res.data,
+        });
+    } catch (err) {
+        console.log("****product_actions/uploadimages****", err);
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+    }
+};

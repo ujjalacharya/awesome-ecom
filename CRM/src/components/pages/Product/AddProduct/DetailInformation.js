@@ -6,14 +6,18 @@ import {
     Button,
     Form,
     Input,
-    AutoComplete,
-    Space
+    Select,
+    Col,
+    Row
 } from "antd";
-const DetailInformation = ({ layout, tailLayout}) => {
+const DetailInformation = ({ layout, tailLayout, next, prev}) => {
     const [form] = Form.useForm()
     const onFinish = (values) => {
-        console.log("Success:", values);
+        next()
     };
+    const onSubmit = () => {
+        form.submit()
+    }
 
     const onFinishFailed = (errorInfo) => {
         console.log("Failed:", errorInfo);
@@ -43,7 +47,7 @@ const DetailInformation = ({ layout, tailLayout}) => {
                         editor={ClassicEditor}
                         config={{
                             toolbar: {
-                                // items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                                items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
                             },
                             placeholder:"Product full descrption here.."
                         }}
@@ -70,7 +74,7 @@ const DetailInformation = ({ layout, tailLayout}) => {
                         editor={ClassicEditor}
                         config={{
                             toolbar: {
-                                // items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+                                items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
                             },
                             placeholder:'Product Highlights here..'
                             }}
@@ -82,50 +86,113 @@ const DetailInformation = ({ layout, tailLayout}) => {
                         }}
                     />
                 </Form.Item>
-                <Form.List name="videoURL" label="Video URL">
-                    {(fields, { add, remove }) => (
-                        <>
-                            {fields.map(field => (
-                                <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                    <Form.Item
-                                        {...field}
-                                        name={[field.name, 'first']}
-                                        label={`${field.name + 1} url`}
-                                        fieldKey={[field.fieldKey, 'first']}
-                                        rules={[{ type: 'url' }]}
-                                    >
-                                        <Input placeholder='https://www.youtube.com/watch?v=CICUUy22JpY&list' style={{ width: '100%' }} />
-                                    </Form.Item>
-                                    <MinusCircleOutlined onClick={() => remove(field.name)} />
-                                </Space>
-                            ))}
-                            <Form.Item label="Video Url">
-                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                    Add
-              </Button>
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
                 <Form.Item
-                    label="Warranty"
-                    name="warranty"
+                    label="Video Url"
+                    name="videoURL"
                     rules={[
                         {
-                            type: 'string',
-                            required: true,
-                            message: 'Please input product warranty!',
-                        },
+                            type: 'url',
+                        }
                     ]}
                 >
-                <Input/>
+                    <Input style={{ width: '100%' }} placeholder="https://www.youtube.com/watch?v=CICUUy22JpY&list" />
                 </Form.Item>
-                <Form.Item {...tailLayout}>
+                <Row justify="center" gutter={16}>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{ padding: '8px 0' }}>
+                            <Form.Item
+                                label="Color"
+                                name="color"
+                                rules={[
+                                    {
+                                        type: 'array',
+                                    }
+                                ]}
+                            >
+                                <Select open={false} mode="tags" style={{ width: '100%' }} placeholder="Black, Red" />
+                            </Form.Item>
+                        </div>
+                    </Col>
+                    <Col className="gutter-row" span={10}>
+                        <div style={{ padding: '8px 0' }}>
+                            <Form.Item
+                                label="Warranty"
+                                name="warranty"
+                                rules={[
+                                    {
+                                        type: 'string',
+                                        required: true,
+                                        message: 'Please input product warranty!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </div>
+                    </Col>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{ padding: '8px 0' }}>
+                            <Form.Item
+                                label="Weight"
+                                name="weight"
+                                rules={[
+                                    {
+                                        type: 'array',
+                                    }
+                                ]}
+                            >
+                                <Select open={false} mode="tags" style={{ width: '100%' }} />
+                            </Form.Item>
+                        </div>
+                    </Col>
+                </Row>
+                <Row justify="center" gutter={16}>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{ padding: '8px 0' }}>
+                            <Form.Item
+                                label="Return"
+                                name="return"
+                                rules={[
+                                    {
+                                        type: 'string',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </div>
+                    </Col>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{ padding: '8px 0' }}>
+                            <Form.Item
+                                label="Size"
+                                name="size"
+                                rules={[
+                                    {
+                                        type: 'array',
+                                    }
+                                ]}
+                            >
+                                <Select open={false} mode="tags" style={{ width: '100%' }}/>
+                            </Form.Item>
+                        </div>
+                    </Col>
+                </Row>
+
+                {/* <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
-                    </Form.Item>
+                    </Form.Item> */}
             </Form>
+            <div className="steps-action">
+                <Button type="primary" onClick={onSubmit}>
+                    Next
+                </Button>
+                <Button style={{ margin: "0 8px" }} onClick={prev}>
+                    Previous
+            </Button>
+            </div>
         </>
 
     );

@@ -103,8 +103,8 @@ exports.socialLogin = async (req, res) => {
         let refreshToken = {refreshToken:jwt.sign(payload, process.env.REFRESH_TOKEN_KEY)}
         refreshToken = new RefreshToken(refreshToken)
         await refreshToken.save()
-        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-        return res.json({ accessToken });
+        // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
     } else {
         // update existing user with new social info and login
         if (user.isBlocked) {
@@ -128,8 +128,8 @@ exports.socialLogin = async (req, res) => {
         let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
         refreshToken = new RefreshToken(refreshToken)
         await refreshToken.save()
-        res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-        return res.json({ accessToken });
+        // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
     }
 
 };
