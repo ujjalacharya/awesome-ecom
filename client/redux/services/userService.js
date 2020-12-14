@@ -1,7 +1,7 @@
 import { postTokenService, getTokenService, uploadImageService } from "../../utils/commonService";
 
 export class UserService {
-  async getUserProfile(id) {
+  async getUserProfile(id, ctx) {
     let url = `${process.env.SERVER_BASE_URL}/api/user/${id}`
     let data = getTokenService(url, 'GET', ctx);
     return data;

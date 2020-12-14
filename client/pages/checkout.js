@@ -24,8 +24,8 @@ class CheckoutCart extends Component {
     let userInfo = getUserInfo(loginToken);
 
     if (userInfo?._id) {
-      const userProfile = await ctx.store.dispatch(
-        actions.getUserProfile(userInfo._id)
+      await ctx.store.dispatch(
+        actions.getUserProfile(userInfo._id, ctx)
       );
     }
 
