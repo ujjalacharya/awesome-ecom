@@ -1,51 +1,47 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Form,
     Input,
-    AutoComplete,
-    Space
+    Select,
+    Col,
+    Row
 } from "antd";
 import Categories from "./Categories";
-const BasicInformation = React.forwardRef(({brands, layout, tailLayout, next}, ref) => {
+const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) => {
     const [form] = Form.useForm()
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [_brands, set_brands] = useState([]);
     useEffect(() => {
         set_brands(brands.map(b => ({
-            lable: b.slug,
-            value: b.brandName,
-            key: b._id
+            label: b.brandName,
+            value: b.slug
         })))
     }, [brands]);
 
+    useEffect(() => {
+        const { name, category, brand, tags, model } = basicFormData
+        form.setFieldsValue({ name, category, brand, tags, model })
+        setSelectedCategories([...selectedCategories, ...category])
+    }, [basicFormData])
+
     const onFinish = (values) => {
-        console.log("Success:", values);
         next()
     };
 
     const onFinishFailed = (errorInfo) => {
         // console.log("Failed:", errorInfo);
     };
-    const handleBrandChange = (value) => {
-        let new_brands=[]
-         brands.forEach(r => {
-            if (r.brandName.toUpperCase().trim().indexOf(value.toUpperCase().trim()) !== -1){
-                return new_brands.push({
-                lable: r.slug,
-                value: r.brandName,
-                key: r._id
-            })}
-        })
-        // console.log(new_brands);
-        set_brands(new_brands)
-    };
+    const onSubmit = () => {
+        form.submit()
+    }
     const handleCategory = (e) => {
         let isAlreadyAdded = selectedCategories.includes(e.key);
-        if(!isAlreadyAdded) {
+        if (!isAlreadyAdded) {
             form.setFieldsValue({
-                categories: [...selectedCategories, e.key],
-        })}
+                category: [...selectedCategories, e.key],
+            })
+        }
         return isAlreadyAdded
             ? null
             : setSelectedCategories([...selectedCategories, e.key]);
@@ -55,7 +51,6 @@ const BasicInformation = React.forwardRef(({brands, layout, tailLayout, next}, r
             selectedCategories.filter((cat) => cat !== value)
         );
     };
-
     return (
         <>
             <Form
@@ -64,7 +59,6 @@ const BasicInformation = React.forwardRef(({brands, layout, tailLayout, next}, r
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 form={form}
-                ref={ref}
             >
                 <Form.Item
                     label="Product Name"
@@ -77,46 +71,81 @@ const BasicInformation = React.forwardRef(({brands, layout, tailLayout, next}, r
                         },
                     ]}
                 >
-                    <Input />
+                    <Input style={{ width: '100%' }} placeholder="product name" />
                 </Form.Item>
                 <Categories
-                        selectedCategories={selectedCategories}
-                        handleClick={handleCategory}
-                        handleDeselect={handleDeselectCategory}
-                />
+                    selectedCategories={selectedCategories}
+                    handleClick={handleCategory}
+                    handleDeselect={handleDeselectCategory}
+                />                
+                <Row justify="center" gutter={16}>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{padding: '8px 0'}}>
+                            <Form.Item
+                                label="Model"
+                                name="model"
+                                rules={[
+                                    {
+                                        type: 'string',
+                                    }
+                                ]}
+                            >
+                                <Input style={{ width: '100%' }} placeholder="product model" />
+                            </Form.Item>
+                        </div>
+                    </Col>
+                    <Col className="gutter-row" span={7}>
+                        <div style={{ padding: '8px 0' }}>
+                            <Form.Item
+                                label="Brand"
+                                name="brand"
+                                rules={[
+                                    {
+                                        type: 'string',
+                                        required: true,
+                                        message: 'Please input product brand!',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    showSearch
+                                    style={{ width: 200 }}
+                                    placeholder="Select a brand"
+                                    optionFilterProp="children"
+                                    options={_brands}
+                                    filterOption={(input, option) =>
+                                        option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    } />
+                            </Form.Item>
+                        </div>
+                    </Col>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{padding: '8px 0'}}>
+                            <Form.Item
+                                label="Tags"
+                                name="tags"
+                                rules={[
+                                    {
+                                        type: 'array',
+                                    }
+                                ]}
+                            >
+                                <Select open={false} mode="tags" style={{ width: '100%' }} placeholder="Add Tags" />
+                            </Form.Item>
+                        </div>
+                    </Col>
+                </Row>
                 
-                <Form.Item
-                    label="Brand"
-                    name="brand"
-                    rules={[
-                        {
-                            type: 'string',
-                            required: true,
-                            message: 'Please input product brand!',
-                        },
-                    ]}
-                >
-                    <AutoComplete
-                        style={{
-                            width: 200,
-                        }}
-                        onChange={handleBrandChange}
-                        placeholder="brand name"
-                        options={_brands}
-                        
-                    >
-                        <Input />
-                    </AutoComplete>
-                </Form.Item>
-                {/* <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                </Form.Item> */}
+                
             </Form>
+            <div className="steps-action">
+                <Button type="primary" onClick={onSubmit}>
+                    Next
+                </Button>
+            </div>
         </>
 
     );
-});
+};
 
-export default BasicInformation
+export default React.memo(BasicInformation)

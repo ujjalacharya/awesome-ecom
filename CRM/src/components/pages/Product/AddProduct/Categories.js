@@ -49,16 +49,17 @@ export const Categories = ({
     <>
       <Form.Item
         label="Categories"
-        name="categories"
+        name="category"
         rules={[
           {
             type:'array',
             required: true,
-            message: "Please input product categories!",
+            message: "Please input product category!",
           },
         ]}
       >
       <Select
+        onBlur={()=>setTimeout(()=>setOpenMenu(!openMenu),200)}
         onClick={() => setOpenMenu(!openMenu)}
         value={selectedCategories}
         open={false}
@@ -68,11 +69,7 @@ export const Categories = ({
         style={{ width: "100%" }}
         placeholder="Select Categories"
         onDeselect={handleDeselect}
-      >
-        {selectedCategories.map(cat => (
-          <Option key={cat}>{cat}</Option>
-        ))}
-      </Select>
+      />
       {openMenu && megaMenu(categories)}
       </Form.Item>      
     </>

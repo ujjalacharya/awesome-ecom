@@ -43,9 +43,26 @@ const steps = [
 ];
 
 const ProductForm = ({ getCategories, getBrands, brands }) => {
-  const [current, setCurrent] = React.useState(0);
-  const basicFormRef = useRef(null);
-  const detailFormRef = useRef(null);
+  const [current, setCurrent] = useState(0);
+  const [basicFormData, setBasicFormData] = useState({
+    name:'',
+    category:[],
+    brand:'',
+    tags:[],
+    model:''
+  })
+  const [detailFormData, setDetailFormData] = useState({
+    warranty: '',
+    color: [],
+    description: '',
+    size: [],
+    highlights: '',
+    videoURL:'',
+    weight:[],
+    return:'',
+    images:[]
+  })
+
   useEffect(() => {
     getCategories();
     getBrands();
@@ -54,13 +71,6 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
   const next = () => {
     setCurrent(current + 1);
   };
-  const submitBasicForm = () => {
-    // console.log(basicFormRef.current);
-    basicFormRef.current.submit()
-  }
-  const submitDetailForm = () => {
-    detailFormRef.current.submit()
-  }
   const prev = () => {
     setCurrent(current - 1);
   };
@@ -73,18 +83,33 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
         ))}
       </Steps>
       <Form.Provider
-        onFormFinish={name => {
-          if (name === 'form1') {
-            // Do something...
+        onFormFinish={(name,data) => {
+          if (name === 'basic') {
+           setBasicFormData({
+             ...basicFormData,
+             name:data.values.name,
+             category:data.values.category,
+             brand:data.values.brand,
+             tags:data.values.tags,
+             model:data.values.model
+           })
+          }
+          if (name === 'detail') {
+            // setDetailFormData({
+            //   ...basicFormData,
+            //   name: data.values.name,
+            //   category: data.values.category,
+            //   brand: data.values.brand
+            // })
           }
         }}
       >
 
-        {current === 0 && <BasicInformation ref={basicFormRef} next={next} layout={layout} tailLayout={tailLayout} brands={brands} />}
-        {current === 1 && <DetailInformation ref={detailFormRef} next={next} layout={layout} tailLayout={tailLayout} />}
+        {current === 0 && <BasicInformation basicFormData={basicFormData} next={next} layout={layout} tailLayout={tailLayout} brands={brands} />}
+        {current === 1 && <DetailInformation next={next} prev={prev} layout={layout} tailLayout={tailLayout} />}
         {current === 2 && 'done'}
       </Form.Provider>
-        <div className="steps-action">
+        {/* <div className="steps-action">
           {current === 0 && (
             <Button type="primary" onClick={() => submitBasicForm()}>
               Next
@@ -108,7 +133,7 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
               Previous
             </Button>
           )}
-        </div>
+        </div> */}
     </>
   );
 };
