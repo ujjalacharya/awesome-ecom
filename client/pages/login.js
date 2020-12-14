@@ -7,6 +7,8 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import withUnAuth from "../utils/auth/withUnAuth";
 import { withRouter } from "next/router";
 import Link from "next/link";
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 class Login extends Component {
   render() {
@@ -15,11 +17,11 @@ class Login extends Component {
         email: values.email,
         password: values.password,
       };
-      
+
       let redirectUrl = this.props.router.query.redirectUrl
       this.props.authenticate(body, "signin", redirectUrl);
     };
-
+    const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
     return (
       <Layout title="Login">
         <div className="container">
@@ -90,10 +92,10 @@ class Login extends Component {
 
                   <Form.Item>
                     <div className="login-create">
-                      <Button htmlType="submit" className="secondary">
-                        Login Now
+                      <Button disabled={this.props.authentication.loading} htmlType="submit" className="secondary">
+                        {this.props.authentication.loading && <Spin indicator={antIcon} />} Login Now
                       </Button>
-                      <Button className="no-color"><Link href="/register">Create Account</Link></Button>
+                      <Button disabled={this.props.authentication.loading} className="no-color"><Link href="/register">Create Account</Link></Button>
                     </div>
                   </Form.Item>
                 </Form>

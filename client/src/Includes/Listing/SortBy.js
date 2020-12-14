@@ -5,8 +5,8 @@ const SortBy = (props) => {
     return (
         <div>
             <ul className="sort-filter">
-                <li>Ascending</li>
-                <li>Descending</li>
+                <li onClick={() => { props.sortProducts('asc'); props.closeThisFilter(); }}>Ascending</li>
+                <li onClick={() => { props.sortProducts('desc'); props.closeThisFilter(); }}>Descending</li>
             </ul>
             <div className="sticky-filter inside-filter-sticky">
                 <Row style={{ width: "100%" }}>

@@ -9,6 +9,8 @@ import Link from "next/link";
 import StarRatings from "react-star-ratings";
 import _ from 'lodash'
 import { STORE_CART_ITEMS, STORE_CHECKOUT_ITEMS } from "../../../redux/types";
+import { FacebookShareButton, FacebookIcon, InstapaperIcon, TwitterShareButton } from 'react-share'
+import AllHelmet from "../../Components/AllHelmet";
 
 class ProductSpecs extends Component {
   state = {
@@ -94,195 +96,135 @@ class ProductSpecs extends Component {
     }
     let loginToken = this.props.authentication.token;
     return (
-      <div className="product-specs">
-        <div className="price-specs">
-          <div className="product-title">{product.name}</div>
-          <div className="ratings-reviews">
-            <div className="ratings">
-              {product.averageRating?.$numberDecimal && (
-                <StarRatings
-                  rating={parseFloat(product.averageRating.$numberDecimal)}
-                  starDimension="18px"
-                  starSpacing="1px"
-                  starRatedColor="#f2c900"
-                  starEmptyColor="#eee"
-                />
-              )}
-              <span>
-                {" "}
-                {product.averageRating?.$numberDecimal
-                  ? parseFloat(product.averageRating.$numberDecimal).toFixed(1)
-                  : "No"}{" "}
+      <>
+        {
+          !_.isEmpty(product) &&
+          <AllHelmet
+            title={`${product.name} | KINDEEM`}
+            desc={`${description}`}
+            url={`${process.env.BASE_URL}/products/${product.slug}`}
+            img={product.images[0].thumbnail} />
+        }
+        <div className="product-specs">
+          <div className="price-specs">
+            <div className="product-title">{product.name}</div>
+            <div className="ratings-reviews">
+              <div className="ratings">
+                {product.averageRating?.$numberDecimal && (
+                  <StarRatings
+                    rating={parseFloat(product.averageRating.$numberDecimal)}
+                    starDimension="18px"
+                    starSpacing="1px"
+                    starRatedColor="#f2c900"
+                    starEmptyColor="#eee"
+                  />
+                )}
+                <span>
+                  {" "}
+                  {product.averageRating?.$numberDecimal
+                    ? parseFloat(product.averageRating.$numberDecimal).toFixed(1)
+                    : "No"}{" "}
                 stars ratings
               </span>
-            </div>
-            <div className="reviews">
-              <span>
-                ( {product.totalRatingUsers} customer reviews | 41 FAQ answered
+              </div>
+              <div className="reviews">
+                <span>
+                  ( {product.totalRatingUsers} customer reviews | 41 FAQ answered
                 )
               </span>
+              </div>
             </div>
-          </div>
-          <div className="price-wish">
-            <div className="old-new-price">
-              {
-                product?.discountRate > 0 &&
-                <div className="old-price">
-                  <span>Rs {product.price.$numberDecimal}</span>
-                </div>
-              }
-              <div className="new-price">
-                <span className="price">
-                  Rs{" "}
-                  {product?.price.$numberDecimal -
-                    ((product?.price.$numberDecimal *
-                      product?.discountRate) /
-                      100)}
-                </span>
+            <div className="price-wish">
+              <div className="old-new-price">
                 {
                   product?.discountRate > 0 &&
-                  <span className="discount">
-                    (Save Rs {(product?.price.$numberDecimal *
-                      product?.discountRate) /
-                      100} |{" "}
-                    {product.discountRate}
+                  <div className="old-price">
+                    <span>Rs {product.price.$numberDecimal}</span>
+                  </div>
+                }
+                <div className="new-price">
+                  <span className="price">
+                    Rs{" "}
+                    {product?.price.$numberDecimal -
+                      ((product?.price.$numberDecimal *
+                        product?.discountRate) /
+                        100)}
+                  </span>
+                  {
+                    product?.discountRate > 0 &&
+                    <span className="discount">
+                      (Save Rs {(product?.price.$numberDecimal *
+                        product?.discountRate) /
+                        100} |{" "}
+                      {product.discountRate}
                   %)
                 </span>
-                }
+                  }
+                </div>
               </div>
-            </div>
-            <div className="wish-btn">
-              {loginToken ? (
-                !_.isEmpty(product.hasOnWishlist) ? (
-                  <Popconfirm
-                    title="Are you sure you want to remove this from wishlist?"
-                    onConfirm={() =>
-                      this.props.removeFromWishList(
-                        product.hasOnWishlist._id
-                      )
-                    }
-                    // onCancel={cancel}
-                    okText="Yes"
-                    cancelText="No"
-                  >
-                    <a>
+              <div className="wish-btn">
+                {loginToken ? (
+                  !_.isEmpty(product.hasOnWishlist) ? (
+                    <Popconfirm
+                      title="Are you sure you want to remove this from wishlist?"
+                      onConfirm={() =>
+                        this.props.removeFromWishList(
+                          product.hasOnWishlist._id
+                        )
+                      }
+                      // onCancel={cancel}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <a>
+                        <img
+                          data-tip="Add to Wishlist"
+                          src="/images/heart-blue.png"
+                        />
+                      </a>
+                    </Popconfirm>
+                  ) : (
                       <img
                         data-tip="Add to Wishlist"
-                        src="/images/heart-blue.png"
+                        src="/images/heart.png"
+                        onClick={() => this.props.addWishListItems(product.slug)}
                       />
-                    </a>
-                  </Popconfirm>
+                    )
                 ) : (
-                    <img
-                      data-tip="Add to Wishlist"
-                      src="/images/heart.png"
-                      onClick={() => this.props.addWishListItems(product.slug)}
-                    />
-                  )
-              ) : (
-                  <Link href={`/login?origin=${this.props.router.asPath}`}>
-                    <a>
-                      <img data-tip="Add to Wishlist" src="/images/heart.png" />
-                    </a>
-                  </Link>
-                )}
+                    <Link href={`/login?origin=${this.props.router.asPath}`}>
+                      <a>
+                        <img data-tip="Add to Wishlist" src="/images/heart.png" />
+                      </a>
+                    </Link>
+                  )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="specs">
-          <div className="spec-details">
-            {description}
-            {allDescription.length > 100 && (
-              <div className="text-center">
-                <a onClick={this.changeViewStatus} className="view-more-less">
-                  View {this.state.showStatus}{" "}
-                  <i className="fa fa-caret-down"></i>
-                </a>
-              </div>
-            )}
+          <div className="specs">
+            <div className="spec-details">
+              {description}
+              {allDescription.length > 100 && (
+                <div className="text-center">
+                  <a onClick={this.changeViewStatus} className="view-more-less">
+                    View {this.state.showStatus}{" "}
+                    <i className="fa fa-caret-down"></i>
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="qty-cart-btn">
-          <div className="qty-cart">
-            {product.quantity ? (
-              loginToken ? (
-                !product.hasOnCart ? (
-                  <>
-                    <div className="qty">
-                      <span className="qty-title">Qty:</span>
-                      <span className="qty-inc-dcs">
-                        <i
-                          aria-hidden="true"
-                          onClick={() => this.changePdValue(-1)}
-                          className={
-                            "fa fa-minus " +
-                            (this.state.pdQty === 1 ? "disabled" : "")
-                          }
-                        />
-                        <Input
-                          defaultValue={this.state.pdQty}
-                          value={this.state.pdQty}
-                          onChange={(e) => {
-                            this.setState({ pdQty: e.target.value });
-                          }}
-                        />
-                        <i
-                          className="fa fa-plus"
-                          aria-hidden="true"
-                          onClick={() => this.changePdValue(1)}
-                        />
-                      </span>
-                    </div>
-
-                    <Button className="primary" onClick={this.addToCart}>
-                      Add to Cart
-                    </Button>
-                    <Link href="/checkout">
-                      <Button
-                        className="buy-now secondary"
-                        onClick={() =>
-                          this.props.saveCheckoutItems({
-                            carts: [{ product }],
-                            totalCount: 1,
-                            totalAmount: ((product?.price.$numberDecimal -
-                              ((product?.price.$numberDecimal *
-                                product?.discountRate) /
-                                100)) * this.state.pdQty),
-                            removeAddQty: true,
-                            totalQty: this.state.pdQty
-                          })
-                        }>Buy Now</Button>
-                    </Link>
-                  </>
-                ) : (
-                    <div className="delete-product">
-                      <Popconfirm
-                        title="Are you sure you want to remove this from cart?"
-                        onConfirm={() =>
-                          this.props.removeCart(product.hasOnCart._id)
-                        }
-                        // onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <a>
-                          <Button className="btn">
-                            <DeleteOutlined />
-                            <span className="txt">REMOVE FROM CART</span>
-                          </Button>
-                        </a>
-                      </Popconfirm>
-                    </div>
-                  )
-              ) : (
-                  <Link href={`/login?origin=${this.props.router.asPath}`}>
-                    <a className="qty-btn">
+          <div className="qty-cart-btn">
+            <div className="qty-cart">
+              {product.quantity ? (
+                loginToken ? (
+                  !product.hasOnCart ? (
+                    <>
                       <div className="qty">
                         <span className="qty-title">Qty:</span>
                         <span className="qty-inc-dcs">
                           <i
                             aria-hidden="true"
-                            // onClick={() => this.changePdValue(-1)}
+                            onClick={() => this.changePdValue(-1)}
                             className={
                               "fa fa-minus " +
                               (this.state.pdQty === 1 ? "disabled" : "")
@@ -298,46 +240,127 @@ class ProductSpecs extends Component {
                           <i
                             className="fa fa-plus"
                             aria-hidden="true"
-                          // onClick={() => this.changePdValue(1)}
+                            onClick={() => this.changePdValue(1)}
                           />
                         </span>
                       </div>
 
-                      <Button className="primary">Add to Cart</Button>
-                    </a>
-                  </Link>
-                )
-            ) : <b>No Stocks Available</b>}
-          </div>
-          <div className="wish-comp-btn">
+                      <Button className="primary" onClick={this.addToCart}>
+                        Add to Cart
+                    </Button>
+                      <Link href="/checkout">
+                        <Button
+                          className="buy-now secondary"
+                          onClick={() =>
+                            this.props.saveCheckoutItems({
+                              carts: [{ product }],
+                              totalCount: 1,
+                              totalAmount: ((product?.price.$numberDecimal -
+                                ((product?.price.$numberDecimal *
+                                  product?.discountRate) /
+                                  100)) * this.state.pdQty),
+                              removeAddQty: true,
+                              totalQty: this.state.pdQty
+                            })
+                          }>Buy Now</Button>
+                      </Link>
+                    </>
+                  ) : (
+                      <div className="delete-product">
+                        <Popconfirm
+                          title="Are you sure you want to remove this from cart?"
+                          onConfirm={() =>
+                            this.props.removeCart(product.hasOnCart._id)
+                          }
+                          // onCancel={cancel}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <a>
+                            <Button className="btn">
+                              <DeleteOutlined />
+                              <span className="txt">REMOVE FROM CART</span>
+                            </Button>
+                          </a>
+                        </Popconfirm>
+                      </div>
+                    )
+                ) : (
+                    <Link href={`/login?origin=${this.props.router.asPath}`}>
+                      <a className="qty-btn">
+                        <div className="qty">
+                          <span className="qty-title">Qty:</span>
+                          <span className="qty-inc-dcs">
+                            <i
+                              aria-hidden="true"
+                              // onClick={() => this.changePdValue(-1)}
+                              className={
+                                "fa fa-minus " +
+                                (this.state.pdQty === 1 ? "disabled" : "")
+                              }
+                            />
+                            <Input
+                              defaultValue={this.state.pdQty}
+                              value={this.state.pdQty}
+                              onChange={(e) => {
+                                this.setState({ pdQty: e.target.value });
+                              }}
+                            />
+                            <i
+                              className="fa fa-plus"
+                              aria-hidden="true"
+                            // onClick={() => this.changePdValue(1)}
+                            />
+                          </span>
+                        </div>
+
+                        <Button className="primary">Add to Cart</Button>
+                      </a>
+                    </Link>
+                  )
+              ) : <b>No Stocks Available</b>}
+            </div>
+            {/* <div className="wish-comp-btn">
             <div className="comp-btn">
               <img data-tip="Add to Compare" src="/images/sliders.png" />
               <span>Add to Compare</span>
             </div>
+          </div> */}
+          </div>
+          <div className="prod-cate-specs">
+            <div className="tags">
+              <b>Tags:</b>{" "}
+              {product.tags.map((tag, i) => {
+                return (
+                  <span key={i}>
+                    {tag}
+                    {product.tags.length !== i + 1 && ","}
+                  </span>
+                );
+              })}
+            </div>
+            <div className="share">
+              <b>Share this product:</b>
+              <span>
+                <FacebookShareButton
+                  url={`http://www.camperstribe.com/products/${product.slug}`}
+                  quote={"CampersTribe - World is yours to explore"}
+                  hashtag="#camperstribe" >
+                  <i className="fa fa-facebook" aria-hidden="true"></i>
+                </FacebookShareButton>
+                <TwitterShareButton
+                  url={`http://www.camperstribe.com/products/${product.slug}`}
+                  quote={"CampersTribe - World is yours to explore"}
+                  hashtag="#camperstribe"
+                >
+                <i className="fa fa-twitter" aria-hidden="true"></i>
+                </TwitterShareButton>
+              </span>
+            </div>
           </div>
         </div>
-        <div className="prod-cate-specs">
-          <div className="tags">
-            <b>Tags:</b>{" "}
-            {product.tags.map((tag, i) => {
-              return (
-                <span key={i}>
-                  {tag}
-                  {product.tags.length !== i + 1 && ","}
-                </span>
-              );
-            })}
-          </div>
-          <div className="share">
-            <b>Share this product:</b>
-            <span>
-              <i className="fa fa-facebook" aria-hidden="true"></i>
-              <i className="fa fa-instagram" aria-hidden="true"></i>
-              <i className="fa fa-twitter" aria-hidden="true"></i>
-            </span>
-          </div>
-        </div>
-      </div>
+
+      </>
     );
   }
 }

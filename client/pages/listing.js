@@ -24,7 +24,8 @@ class Listing extends Component {
     maxPrice: "",
     selectedWarrenty: "",
     filterApplied: false,
-    currentRating: 0
+    currentRating: 0,
+    sortBy: "asc"
   };
 
   static getInitialProps(ctx) {
@@ -64,15 +65,15 @@ class Listing extends Component {
   //   });
   // };
 
-  onCloseSort = (sortTitle) => {
+  onCloseSort = () => {
     this.setState({
       visibleSort: false,
     });
-    if (sortTitle.target === undefined) {
-      this.setState({
-        sortName: sortTitle,
-      });
-    }
+    // if (sortTitle.target === undefined) {
+    //   this.setState({
+    //     sortName: sortTitle,
+    //   });
+    // }
   };
 
   onChangePage = (page) => {
@@ -257,6 +258,35 @@ class Listing extends Component {
     }
   };
 
+  sortProducts = (sort) => {
+    this.setState({
+      sortBy: sort,
+    });
+
+    let body = {};
+
+    let sortBy = sort === "" ? [] : [sort];
+
+    body = getFilterAppendBody(
+      this.state.filterBody,
+      this.props,
+      sortBy,
+      "createdAt"
+    );
+
+    this.setState({
+      filterBody: body,
+    });
+
+    // if (!this.state.visibleFilter) {
+    this.props.searchProducts(
+      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+      body
+    );
+    // this.setState({ filterApplied: true })
+    // }
+  };
+
   onChangeSize = (size) => {
     this.setState({
       selectedSize: size,
@@ -389,6 +419,7 @@ class Listing extends Component {
                   currentPage={this.state.currentPage}
                   currentFilter={this.state.filterBody}
                   searchFilter={this.props.getSearchFilter}
+                  sortProducts={this.sortProducts}
                   removeBrand={this.removeBrand}
                   removeColor={this.removeColor}
                   removeRating={this.removeRating}
@@ -474,7 +505,8 @@ class Listing extends Component {
             height="40vh"
           >
             <SortBy
-              closeThisFilter={this.onCloseSort} />
+              closeThisFilter={this.onCloseSort}
+              sortProducts={this.sortProducts} />
           </Drawer>
         </section>
       </div>

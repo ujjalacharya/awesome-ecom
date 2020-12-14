@@ -1,7 +1,7 @@
 .my-profile {
   .left-menu {
     border-right: 1px solid #efefef;
-    @media screen and (max-width: 480px) {
+    @media screen and (max-width: 992px) {
       border: 0px;
     }
   }
@@ -13,16 +13,34 @@
     @media screen and (max-width: 480px) {
       padding: 0 10px;
     }
+    @media screen and (max-width: 992px) {
+      margin-top: 15px;
+    }
     ul {
       list-style: none;
       li {
         margin-bottom: 10px;
         cursor: pointer;
-        &:hover {
-          color: $secondary-color;
+        @media screen and (max-width: 992px) {
+          border-right: 1px solid #eee;
+          padding-right: 10px;
+          margin-right: 9px;
+          display: inline-block;
+        }
+        &:last-child {
+          @media screen and (max-width: 992px) {
+            border-right: 0px;
+          }
+        }
+        a {
+          &:hover {
+            color: $secondary-color;
+          }
         }
         &.active {
-          color: $primary-color;
+          a {
+            color: $primary-color;
+          }
         }
       }
     }
@@ -111,7 +129,7 @@
       margin-top: 20px;
     }
     .order-search {
-      width: 400px;
+      width: 100%;
       @media screen and (max-width: 480px) {
         width: 100%;
         margin-bottom: 10px;
@@ -189,10 +207,10 @@
       padding-bottom: 5px;
       margin-bottom: 5px;
     }
-    .timeline{
+    .timeline {
       margin-top: 15px;
-      .ant-timeline-item-content{
-        p{
+      .ant-timeline-item-content {
+        p {
           font-size: 14px;
           margin-bottom: 0px;
         }

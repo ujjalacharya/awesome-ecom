@@ -17,7 +17,7 @@ body {
     margin-top: 20px;
   }
   @media screen and (max-width: 480px) {
-    padding: 0 15px;
+    padding: 0 10px;
     margin-top: 10px;
   }
 }
@@ -60,7 +60,11 @@ body {
 }
 
 .ant-input-affix-wrapper {
-  max-height: 35px;
+  max-height: 35px !important;
+}
+
+.ant-select-selector{
+  height: 35px !important;
 }
 
 .breadcrumb-all {

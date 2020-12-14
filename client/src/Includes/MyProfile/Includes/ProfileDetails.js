@@ -89,12 +89,17 @@ class ProfileDetails extends Component {
           name: "Address",
           age: activeLoc.address,
         },
-        ,
         {
           key: "4",
-          name: "Occupation",
-          age: "Private Sector",
+          name: "Email",
+          age: userData.email,
         },
+        // ,
+        // {
+        //   key: "4",
+        //   name: "Occupation",
+        //   age: "Private Sector",
+        // },
       ];
     }
 

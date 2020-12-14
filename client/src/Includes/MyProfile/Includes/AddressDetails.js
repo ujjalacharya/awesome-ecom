@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "antd";
+import { Button, Empty } from "antd";
 import { Table, Space } from "antd";
 import _ from "lodash";
 
@@ -15,17 +15,17 @@ class AddressDetails extends Component {
     userData: [],
     allAddress: [],
     editAddressData: [],
-    showAddNewForm: "addTable",
+    showAddNewForm: "addTable"
   };
 
-  componentDidMount() {
-    let loginToken = this.props.authentication.token;
-    let userInfo = getUserInfo(loginToken);
+  // componentDidMount() {
+  //   let loginToken = this.props.authentication.token;
+  //   let userInfo = getUserInfo(loginToken);
 
-    if (userInfo?._id) {
-      this.props.getUserProfile(userInfo._id);
-    }
-  }
+  //   if (userInfo?._id) {
+  //     this.props.getUserProfile(userInfo._id);
+  //   }
+  // }
 
   componentDidUpdate(prevProps) {
     if (
@@ -34,7 +34,7 @@ class AddressDetails extends Component {
     ) {
       this.setState({
         userData: this.props.user.userProfile,
-        allAddress: this.props.user.userProfile.location,
+        allAddress: this.props.user.userProfile.location
       });
     }
     if (
@@ -168,6 +168,7 @@ class AddressDetails extends Component {
         data.push(ele);
       });
     }
+    
     return (
       <div className="address-details">
         <div className="title-add">
@@ -203,7 +204,7 @@ class AddressDetails extends Component {
               columns={columns}
               dataSource={data}
               pagination={false}
-              loading={this.state.allAddress.length > 0 ? false : true}
+              loading={this.props.user.userProfileLoading}
               expandable={{
                 expandedRowRender: (record) =>
                   <table className="expanded-table">
@@ -244,6 +245,8 @@ class AddressDetails extends Component {
               }}
             />
           )}
+          
+        {(this.state.allAddress.length === 0 && this.state.showAddNewForm === "addTable") && <div className="no-data-table"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>}
       </div>
     );
   }

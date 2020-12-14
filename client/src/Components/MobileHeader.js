@@ -94,7 +94,7 @@ class MobileHeader extends Component {
           </Link>
         </div>
         <div className="mob-menu-items">
-          <Link href="/myprofile">
+          <Link href="/myprofile/manageAccount">
             <a>
               <div className="menu-right-items">
                 <div className="list-icon">

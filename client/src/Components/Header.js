@@ -240,7 +240,7 @@ class Header extends Component {
             </form>
           </Col>
           <Col lg={4} sm={5} className="menu-right">
-            <Link href="/myprofile">
+            <Link href="/myprofile/manageAccount">
               <a>
                 <div className="menu-right-items">
                   <div className="list-icon">
