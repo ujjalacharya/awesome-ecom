@@ -118,7 +118,7 @@ class Register extends Component {
 
                                     <Form.Item>
                                         <div className="login-create">
-                                            <Button disabled={this.props.authentication.loading} htmlType="submit" className="secondary">
+                                            <Button disabled={this.props.authentication.loading} htmlType="submit" className="primary">
                                                 {this.props.authentication.loading && <Spin indicator={antIcon} />} Sign Up
                                             </Button>
                                             <Button disabled={this.props.authentication.loading} className="no-color">Login</Button>
