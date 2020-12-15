@@ -63,7 +63,7 @@ body {
   max-height: 35px !important;
 }
 
-.ant-select-selector{
+.ant-select-selector {
   height: 35px !important;
 }
 
@@ -454,5 +454,22 @@ input.inputfile + label {
     position: absolute;
     top: 50%;
     left: 50%;
+  }
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  padding: 18px 15px;
+  &.facebook{
+    background: #1877f2;
+    color: #fff;
+  }
+  // &.google{
+  //   background: #1877f2;
+  // }
+  span.anticon-facebook{
+    font-size: 22px;
   }
 }
