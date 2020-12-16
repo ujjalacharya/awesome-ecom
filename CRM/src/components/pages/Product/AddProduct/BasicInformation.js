@@ -8,7 +8,7 @@ import {
     Row
 } from "antd";
 import Categories from "./Categories";
-import { ImageUploader } from "./ImageUploader";
+import ImageUploader  from "./ImageUploader";
 const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) => {
     const [form] = Form.useForm()
     const [selectedCategories, setSelectedCategories] = useState([]);

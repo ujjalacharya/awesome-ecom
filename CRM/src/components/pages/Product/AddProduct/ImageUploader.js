@@ -4,7 +4,7 @@ import { connect, useSelector } from 'react-redux'
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
-export const ImageUploader = ({user}) => {
+const ImageUploader = ({user}) => {
     const [fileList, setFileList] = useState([
         {
             uid: '-1',

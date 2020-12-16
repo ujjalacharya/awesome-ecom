@@ -10,7 +10,7 @@ import {
     Col,
     Row
 } from "antd";
-import { ImageUploader } from "./ImageUploader";
+import ImageUploader from "./ImageUploader";
 const DetailInformation = ({ layout, tailLayout, next, prev}) => {
     const [form] = Form.useForm()
     const onFinish = (values) => {
