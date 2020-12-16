@@ -53,6 +53,30 @@ const authenticate = (body, type, redirectUrl) => {
   };
 };
 
+// gets token from the api and stores it in the redux store and in cookie
+const authenticateSocialLogin = (body) => {
+  return async (dispatch) => {
+    await dispatch({ type: AUTHENTICATE_START });
+
+    const authService = new AuthService();
+    const response = await authService.loginUserSocialLogin(body);
+
+    await dispatch({ type: AUTHENTICATE_FINISH });
+    
+    if (response.isSuccess) {
+      setCookie("token", response.data.accessToken);
+      dispatch({ type: AUTHENTICATE, payload: response.data.token });
+
+      const redirectUrl = window.location.search
+        ? window.location.search.split("=")[1]
+        : "/";
+      window.location.href = redirectUrl;
+    } else if (!response.isSuccess) {
+      // dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
+    }
+  };
+};
+
 // gets the token from the cookie and saves it in the store
 const reauthenticate = (token) => {
   if (isTokenExpired(token)) {
@@ -79,5 +103,6 @@ export default {
   authenticate,
   reauthenticate,
   deauthenticate,
-  register
+  register,
+  authenticateSocialLogin
 };

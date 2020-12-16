@@ -104,7 +104,7 @@ class ProfileDetails extends Component {
     }
 
     let checkSekelton = this.state.userData.email === "" ? true : false;
-
+    let userPhoto = userData.userID ? userData.photo : (`${process.env.IMAGE_BASE_URL}/${userData.photo}`)  
     return (
       <div className="profile-details">
         <div className="main-profile">
@@ -114,7 +114,7 @@ class ProfileDetails extends Component {
                 <div className="change-profile">
                   <img
                     // src="/images/default-user.png"
-                    src={`${process.env.IMAGE_BASE_URL}/${userData.photo}`}
+                    src={userPhoto}
                     onError={(ev) => {
                       ev.target.src = "/images/default-user.png";
                     }}

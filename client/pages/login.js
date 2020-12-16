@@ -12,15 +12,28 @@ import { LoadingOutlined, FacebookFilled, GoogleOutlined } from '@ant-design/ico
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 // import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
-import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 class Login extends Component {
   responseFacebook = (response) => {
-    console.log(response);
+    let body = {
+      name: response.name,
+      email: response.email,
+      photo: response.picture.data.url,
+      userID: response.userID,
+      loginDomain: "facebook"
+    }
+    this.props.authenticateSocialLogin(body)
   }
 
   responseGoogle = (response) => {
-    window.addEventListener("message", ({ data }) => { JSON.parse(data); console.log(data) });
-    console.log(response);
+    let { profileObj } = response
+    let body = {
+      name: profileObj.familyName + ' ' + profileObj.givenName,
+      email: profileObj.email,
+      photo: profileObj.imageUrl,
+      userID: response.googleId,
+      loginDomain: "google"
+    }
+    this.props.authenticateSocialLogin(body)
   }
   render() {
     const onFinish = (values) => {

@@ -6,6 +6,12 @@ export class AuthService {
     let data = postService(url, 'POST', body);
     return data;
   }
+
+  async loginUserSocialLogin(body) {
+    let url = `${process.env.SERVER_BASE_URL}/api/user-auth/social-login`
+    let data = postService(url, 'POST', body);
+    return data;
+  }
   
   async registerUser(body) {
     let url = `${process.env.SERVER_BASE_URL}/api/user-auth/signup`
