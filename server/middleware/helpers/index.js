@@ -9,5 +9,6 @@ module.exports = {
     sendEmail: require("./mailer").sendEmail,
     dbConnection: require("./dbConnection"),
     calculateDistance: require("./geoDistance"),
-    createNotification: require("./createNotification")
+    createNotification: require("./createNotification"),
+    waterMarker: require("./waterMarker")
 }

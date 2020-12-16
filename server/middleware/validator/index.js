@@ -31,7 +31,34 @@ exports.validateSignUp = (req, res, next) => {
     // proceed to next middleware
     next();
 };
-
+exports.validateSocialLogin = (req, res, next) => {
+    // name is not null and between 4-10 characters
+    req.check("name", "Name is required.").notEmpty();
+    // email is not null, valid and normalized
+    req.check("email", "Email must be between 3 to 32 characters")
+        .matches(/.+\@.+\..+/)
+        .withMessage("Invalid email")
+        .isLength({
+            min: 4,
+            max: 2000
+        });
+    req.check("userID","userID is required.").notEmpty()
+    req.check("photo", "Invalid photo url.")
+    .notEmpty()
+    .matches(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/)
+    req.check("loginDomain", "Invalid login domian")
+        .notEmpty()
+        .isIn(['google', 'facebook'])
+    // check for errors
+    const errors = req.validationErrors();
+    // if error show the first one as they happen
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+    // proceed to next middleware
+    next();
+};
 const validatedispatcher  = req => {
     // name is not null and between 4-10 characters
     req.check("name", "Name is required").notEmpty();

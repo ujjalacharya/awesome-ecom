@@ -11,7 +11,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const socketIO = require("socket.io");
 // Import methods
-const { dbConnection, errorHandler} = require('./middleware/helpers');
+const { dbConnection, errorHandler, waterMarker } = require('./middleware/helpers');
 
 // Database Connection
 dbConnection();
@@ -27,18 +27,18 @@ io.origins([`${process.env.ADMIN_CRM_ROUTE}`])
 // Middlewares
 var allowlist = ['http://localhost:3000', 'http://localhost:3003', 'http://localhost:3002']
 var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (allowlist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
+    var corsOptions;
+    if (allowlist.indexOf(req.header('Origin')) !== -1) {
+        corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+    } else {
+        corsOptions = { origin: false } // disable CORS for this request
+    }
+    callback(null, corsOptions) // callback expects two parameters: error and options
 }
 
 app.use(cors(corsOptionsDelegate));
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     req.io = io
     next()
 })
@@ -63,6 +63,30 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+// const path = require("path");
+// const multer = require("multer");
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, './public/uploads')
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+//     }
+// })
+// const fileFilter = (req, file, callback) => {
+//     console.log(file);
+//     const ext = path.extname(file.originalname);
+//     if (ext !== '.png' && ext !== '.jpg' && ext !== '.JPG' && ext !== '.jpeg') {
+//         return callback(new Error('Not Image'))
+//     }
+//     callback(null, true)
+// }
+// var upload = multer({ storage, fileFilter }).single("productImages");
+// app.post('/imageupload', upload, waterMarker,async (req, res) => {
+//     res.json({ file: req.file })
+// })
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes
 app.use("/api/admin-auth", require("./routes/admin_auth"));
@@ -88,22 +112,22 @@ app.delete('/api/logout', async (req, res) => {
 app.use(function (err, req, res, next) {
     console.log('****SERVER_ERROR****');
     console.log(err);
-    if (err.message=='Not Image') {
-        return res.status(415).json({error:'Images are only allowed'})
+    if (err.message == 'Not Image') {
+        return res.status(415).json({ error: 'Images are only allowed' })
     }
     return res.status(500).json({
         error: errorHandler(err) || err.message || "Something went wrong!"
     });
-})  
+})
 
 
 
 let roller = Fawn.Roller();
 roller.roll()
-.then(function () {
-    // start server
-    const port = process.env.PORT;
-    server.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
+    .then(function () {
+        // start server
+        const port = process.env.PORT;
+        server.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
     });
-});
