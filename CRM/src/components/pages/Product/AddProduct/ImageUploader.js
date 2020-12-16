@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
@@ -16,9 +16,10 @@ export const ImageUploader = ({user}) => {
     const onChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
     };
-useEffect(() => {
-    user && console.log(user._id)
-}, [user])
+    // const user = useSelector(state => state.auth.user)
+    useEffect(() => {
+        user && console.log(user._id)
+    }, [user])
     const onPreview = async file => {
         let src = file.url;
         if (!src) {
@@ -56,7 +57,7 @@ ImageUploader.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state,'daedsf');
+    console.log(state,'sdfsf');
     return ({
     user:state.auth.user
 })}

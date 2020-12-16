@@ -7,7 +7,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getProducts, getProduct } from '../../../redux/actions/product_actions'
 import ProductDetail from './ProductDetail';
-
 const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, user }) => {
     // const [pagination, setPagination] = useState({
     //     current: 1,
@@ -26,7 +25,7 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
         }
     }, [totalCount])
     useEffect(() => {
-        user && getProducts({id:user._id, page:pagination.current, perPage:pagination.pageSize})
+        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize })
     }, [user])
 
 
@@ -39,13 +38,13 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             sorter = [sorter]
         }
 
-        let price = sorter.find(s=>s.columnKey==='price')
-        price = price?.order? price.order==='ascend'?'asc':'desc':''
+        let price = sorter.find(s => s.columnKey === 'price')
+        price = price?.order ? price.order === 'ascend' ? 'asc' : 'desc' : ''
 
-        let createdAt = sorter.find(s=>s.columnKey==='createdAt')
-        createdAt = createdAt?.order? createdAt.order==='ascend'?'asc':'desc':''
+        let createdAt = sorter.find(s => s.columnKey === 'createdAt')
+        createdAt = createdAt?.order ? createdAt.order === 'ascend' ? 'asc' : 'desc' : ''
 
-        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt, updatedAt:'', status:filters.status?.[0], price, outofstock:filters.qty?.[0]})
+        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt, updatedAt: '', status: filters.status?.[0], price, outofstock: filters.qty?.[0] })
     }
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -144,7 +143,7 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             title: 'Price',
             dataIndex: '',
             sorter: {
-                multiple:1
+                multiple: 1
             },
             key: 'price',
             render: product => {
@@ -178,7 +177,7 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
                 { text: 'Out of Stock', value: 'yes' },
             ],
             render: product => {
-                if (product.quantity<1) return (<span className="badge badge-pill badge-dark">Out of Stock</span>)
+                if (product.quantity < 1) return (<span className="badge badge-pill badge-dark">Out of Stock</span>)
                 return `${product.quantity}`
             },
             width: '5%',
@@ -187,7 +186,7 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             title: 'createdAt',
             dataIndex: 'createdAt',
             sorter: {
-                multiple:2
+                multiple: 2
             },
             key: 'createdAt',
             width: '10%',
@@ -198,9 +197,9 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             dataIndex: '',
             width: '8%',
             render: action => <>
-                <button onClick={()=>openProduct(action)} className="btn btn-info"><i className="fas fa-eye"></i></button>
+                <button onClick={() => openProduct(action)} className="btn btn-info"><i className="fas fa-eye"></i></button>
                 <button className="btn btn-warning"><i className="fas fa-marker"></i></button>
-                </>,
+            </>,
             // onCell: order => {
             //     return {
             //         onClick: e => openProduct(order)

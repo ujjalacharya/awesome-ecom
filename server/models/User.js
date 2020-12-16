@@ -11,11 +11,20 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         trim: true,
-        unique:true
+        // unique:true
+    },
+    userID: {
+        type: String,
+        trim: true,
+        unique: true
+    },
+    loginDomain: {
+        type: String,
+        default: "system"//can be facebook, google as well
     },
     password: {
         type: String,
-        required: true
+        // required: true
     },
     location: [{
         type: Schema.Types.ObjectId,

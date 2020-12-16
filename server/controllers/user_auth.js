@@ -84,12 +84,12 @@ exports.signin = async (req, res) => {
 };
 
 exports.socialLogin = async (req, res) => {
-    let user = await User.findOne({ email: req.body.email });
+    let user = await User.findOne({ userID: req.body.userID });
+    const {name, email, photo, userID, loginDomain} = req.body
     if (!user) {
         // create a new user and login
-        user = new User(req.body);
+        user = new User({ name, email, photo, userID, loginDomain});
         user = await user.save();
-        req.user = user;
         const payload = {
             _id: user._id,
             name: user.name,
@@ -106,15 +106,14 @@ exports.socialLogin = async (req, res) => {
         // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
         return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
     } else {
-        // update existing user with new social info and login
         if (user.isBlocked) {
             return res.status(401).json({
                 error: "Your account has been blocked."
             });
         }
-        user = _.extend(user, req.body);
+        // update existing user with new social info and login
+        user = _.extend(user, { name, email, photo, userID, loginDomain });
         user = await user.save();
-        req.user = user;
         const payload = {
             _id: user._id,
             name: user.name,
