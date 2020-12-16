@@ -1,9 +1,9 @@
-import { getService, postTokenService, getTokenService, uploadImageService } from "../../utils/commonService";
+import { postTokenService, getTokenService, uploadImageService } from "../../utils/commonService";
 
 export class UserService {
-  async getUserProfile(id) {
+  async getUserProfile(id, ctx) {
     let url = `${process.env.SERVER_BASE_URL}/api/user/${id}`
-    let data = getService(url, 'GET');
+    let data = getTokenService(url, 'GET', ctx);
     return data;
   }
 
@@ -21,7 +21,7 @@ export class UserService {
 
   async toggleActiveAddress(query) {
     let url = `${process.env.SERVER_BASE_URL}/api/user/toggle-address-activeness?${query}`
-    let data = getTokenService(url, 'PATCH');
+    let data = getTokenService(url, 'PATCH', ctx);
     return data;
   }
 

@@ -5,7 +5,8 @@ import {
   AUTHENTICATE_START,
   GLOBAL_ERROR,
   REGISTER_FINISH,
-  REGISTER_START
+  REGISTER_START,
+  AUTHENTICATE_FINISH
 } from "../types";
 import { setCookie, removeCookie } from "../../utils/cookie";
 import { isTokenExpired, openNotification } from "../../utils/common";
@@ -37,6 +38,7 @@ const authenticate = (body, type, redirectUrl) => {
     const authService = new AuthService();
     const response = await authService.loginUser(body);
 
+    await dispatch({ type: AUTHENTICATE_FINISH });
     if (response.isSuccess) {
       setCookie("token", response.data.accessToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.token });

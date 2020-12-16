@@ -7,7 +7,6 @@ import Router from "next/router";
 import { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Helmet } from "react-helmet";
 import MobileHeader from "./MobileHeader";
 
 Router.onRouteChangeStart = (url) => NProgress.start();

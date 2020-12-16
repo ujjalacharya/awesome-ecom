@@ -95,7 +95,7 @@ class Reviews extends Component {
             <div className="rate-avge-stars">
               <div className="ratings">
                 <span className="ave-rate">
-                  {parseFloat(data?.averageRating?.$numberDecimal).toFixed(1)}
+                  {parseFloat(data?.averageRating?.$numberDecimal)?.toFixed(1)}
                 </span>{" "}
                 / 5
               </div>

@@ -18,15 +18,15 @@ export default (state = initialState, action) => {
     case GET_ORDERS:
       return { ...state, getOrders: action.payload, loading: false, hasError: false, };
     case GET_ORDER_BY_ID:
-      return { ...state, getOrderByIdResp: action.payload, loading: false, hasError: false, orderByIdLoading: true };
+      return { ...state, getOrderByIdResp: action.payload, orderByIdLoading: false };
     case GET_ORDERS_STATUSES:
-      return { ...state, getOrdersStatus: action.payload, hasError: false, loading: false };
+      return { ...state, getOrdersStatus: action.payload };
     case PLACE_ORDER:
-      return { ...state, placeOrderResp: action.payload, hasError: false, loading: false };
+      return { ...state, placeOrderResp: action.payload };
     case CANCEL_ORDER:
-      return { ...state, cancelOrderResp: action.payload, hasError: false, loading: false };
+      return { ...state, cancelOrderResp: action.payload };
     case GET_SHIPPING_CHARGE:
-      return { ...state, getShippingChargeResp: action.payload, hasError: false, loading: false };
+      return { ...state, getShippingChargeResp: action.payload };
     default:
       return state;
   }

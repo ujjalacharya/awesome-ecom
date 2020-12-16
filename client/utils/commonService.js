@@ -69,6 +69,7 @@ export const postService = async (url, method, body) => {
       method,
       headers: {
         "content-type": "application/json",
+        "x-auth-token": cookie.get("token"),
       },
       body: JSON.stringify(body),
     });

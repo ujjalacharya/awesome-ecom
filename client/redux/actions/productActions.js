@@ -10,6 +10,8 @@ import {
   POST_QUESTION,
   PRODUCT_REVIEWS,
   POST_PRODUCT_REVIEWS,
+  PRODUCT_DETAILS_START,
+  PRODUCT_DETAILS_FINISH,
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -47,8 +49,10 @@ const getLatestProducts = (ctx) => {
 
 const getProductDetails = (slug, ctx) => {
   return async (dispatch) => {
+    await dispatch({ type: PRODUCT_DETAILS_START });
     const productService = new ProductService();
     const response = await productService.getProductDetails(slug, ctx);
+    await dispatch({ type: PRODUCT_DETAILS_FINISH });
     if (response.isSuccess) {
       dispatch({ type: PRODUCT_DETAILS, payload: response.data });
     } else if (!response.isSuccess) {

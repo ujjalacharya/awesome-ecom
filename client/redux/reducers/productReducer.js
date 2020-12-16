@@ -6,6 +6,8 @@ import {
   POST_QUESTION,
   PRODUCT_REVIEWS,
   POST_PRODUCT_REVIEWS,
+  PRODUCT_DETAILS_START,
+  PRODUCT_DETAILS_FINISH,
 } from "../types";
 
 const initialState = {
@@ -16,7 +18,8 @@ const initialState = {
   productQA: null,
   postQnsResp: null,
   productReviews: null,
-  postReviewResp:null
+  postReviewResp: null,
+  productDetailsLoading: false
 };
 
 export default (state = initialState, action) => {
@@ -35,6 +38,10 @@ export default (state = initialState, action) => {
         latestLoading: true,
         hasError: false,
       };
+    case PRODUCT_DETAILS_START:
+      return { ...state, productDetailsLoading: true, hasError: false };
+    case PRODUCT_DETAILS_FINISH:
+      return { ...state, productDetailsLoading: false, hasError: false };
     case PRODUCT_DETAILS:
       return { ...state, productDetails: action.payload, hasError: false };
     case PRODUCT_QA:

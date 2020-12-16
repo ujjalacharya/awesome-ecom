@@ -6,6 +6,9 @@ import _ from "lodash";
 //includes
 import ProductCard from "../../Components/Includes/ProductCard";
 import { getBrandOptions, getColorOptions } from "../../../utils/common";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
+import { withRouter } from "next/router";
 
 // Select Option
 const { Option } = Select;
@@ -35,6 +38,41 @@ class ProductList extends Component {
     }
 
     return null;
+  }
+
+
+  componentDidUpdate(prevProps) {
+    let { cate, slug } = this.props.router.query
+    if (
+      this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
+      this.props.cart.addToCartResp
+    ) {
+      this.props.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`);
+    }
+
+    if (
+      this.props.wishlist.wishlistItemsResp !==
+      prevProps.wishlist.wishlistItemsResp &&
+      this.props.wishlist.wishlistItemsResp
+    ) {
+      this.props.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`);
+    }
+
+    if (
+      this.props.wishlist.removeFromWishlistResp !==
+      prevProps.wishlist.removeFromWishlistResp &&
+      this.props.wishlist.removeFromWishlistResp
+    ) {
+      this.props.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`);
+    }
+
+    if (
+      this.props.cart.removeFromCartResp !==
+      prevProps.cart.removeFromCartResp &&
+      this.props.cart.removeFromCartResp
+    ) {
+      this.props.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`);
+    }
   }
 
   render() {
@@ -117,7 +155,7 @@ class ProductList extends Component {
                 <i className="fa fa-times" aria-hidden="true"></i>
               </span>
             )}
-  
+
             {(this.state.max_price || this.state.min_price) && (
               <span
                 className="filter-tags"
@@ -134,7 +172,7 @@ class ProductList extends Component {
                 <i className="fa fa-times" aria-hidden="true"></i>
               </span>
             )}
-            
+
 
             {!_.isEmpty(currentFilter.warranties) &&
               currentFilter.warranties.map((warenty, i) => {
@@ -181,4 +219,4 @@ class ProductList extends Component {
   }
 }
 
-export default ProductList;
+export default connect((state) => state, actions)(withRouter(ProductList));

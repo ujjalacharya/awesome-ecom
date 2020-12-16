@@ -11,11 +11,11 @@ import {
 } from "../types";
 import { UserService } from "../services/userService";
 
-const getUserProfile = (id) => {
+const getUserProfile = (id, ctx) => {
   return async (dispatch) => {
     await dispatch({ type: GET_USER_PROFILE_START })
     const userService = new UserService();
-    const response = await userService.getUserProfile(id);
+    const response = await userService.getUserProfile(id, ctx);
     if (response.isSuccess) {
       dispatch({ type: USER_PROFILE, payload: response.data });
     } else if (!response.isSuccess) {

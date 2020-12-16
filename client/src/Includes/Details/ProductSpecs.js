@@ -3,19 +3,21 @@ import { Input, Button, Popconfirm } from "antd";
 import { withRouter } from "next/router";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
-import { openNotification } from "../../../utils/common";
 import { DeleteOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import StarRatings from "react-star-ratings";
 import _ from 'lodash'
-import { STORE_CART_ITEMS, STORE_CHECKOUT_ITEMS } from "../../../redux/types";
-import { FacebookShareButton, FacebookIcon, InstapaperIcon, TwitterShareButton } from 'react-share'
+import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
+import { FacebookShareButton, TwitterShareButton } from 'react-share'
 import AllHelmet from "../../Components/AllHelmet";
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 class ProductSpecs extends Component {
   state = {
     pdQty: 1,
     showStatus: "More",
+    disableBuyNow: false
   };
 
   componentDidUpdate(prevProps) {
@@ -95,6 +97,8 @@ class ProductSpecs extends Component {
       }
     }
     let loginToken = this.props.authentication.token;
+
+    const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
     return (
       <>
         {
@@ -245,13 +249,14 @@ class ProductSpecs extends Component {
                         </span>
                       </div>
 
-                      <Button className="primary" onClick={this.addToCart}>
-                        Add to Cart
+                      <Button disabled={this.props.cart.loading || this.state.disableBuyNow || this.props.products.productDetailsLoading} className="primary" onClick={this.addToCart}>
+                        {this.props.cart.loading && <Spin indicator={antIcon} />} Add to Cart
                     </Button>
                       <Link href="/checkout">
                         <Button
                           className="buy-now secondary"
-                          onClick={() =>
+                          disabled={this.props.cart.loading || this.state.disableBuyNow || this.props.products.productDetailsLoading}
+                          onClick={() => {
                             this.props.saveCheckoutItems({
                               carts: [{ product }],
                               totalCount: 1,
@@ -261,7 +266,11 @@ class ProductSpecs extends Component {
                                   100)) * this.state.pdQty),
                               removeAddQty: true,
                               totalQty: this.state.pdQty
+                            });
+                            this.setState({
+                              disableBuyNow: true
                             })
+                          }
                           }>Buy Now</Button>
                       </Link>
                     </>
@@ -277,9 +286,9 @@ class ProductSpecs extends Component {
                           cancelText="No"
                         >
                           <a>
-                            <Button className="btn">
+                            <Button className="btn" disabled={this.props.cart.loading} >
                               <DeleteOutlined />
-                              <span className="txt">REMOVE FROM CART</span>
+                              <span className="txt">{this.props.cart.loading && <Spin indicator={antIcon} />} REMOVE FROM CART</span>
                             </Button>
                           </a>
                         </Popconfirm>
@@ -315,6 +324,7 @@ class ProductSpecs extends Component {
                         </div>
 
                         <Button className="primary">Add to Cart</Button>
+                        <Button className="buy-now secondary">Buy Now</Button>
                       </a>
                     </Link>
                   )
@@ -353,7 +363,7 @@ class ProductSpecs extends Component {
                   quote={"CampersTribe - World is yours to explore"}
                   hashtag="#camperstribe"
                 >
-                <i className="fa fa-twitter" aria-hidden="true"></i>
+                  <i className="fa fa-twitter" aria-hidden="true"></i>
                 </TwitterShareButton>
               </span>
             </div>
@@ -384,6 +394,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   removeCart: (id) => {
     dispatch(actions.removeCart(id))
+  },
+  removeFromWishList: (id) => {
+    dispatch(actions.removeFromWishList(id))
+  },
+  addWishListItems: (id) => {
+    dispatch(actions.addWishListItems(id))
   },
 });
 export default connect((state) => state, mapDispatchToProps)(withRouter(ProductSpecs));

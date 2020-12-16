@@ -1,4 +1,4 @@
-import { getService, postService } from "../../utils/commonService";
+import { getService, getTokenService, postService } from "../../utils/commonService";
 
 export class SearchService {
   async getSearchKeywords(query) {
@@ -13,9 +13,9 @@ export class SearchService {
     return data;
   }
 
-  async getProductsByCategory(query) {
+  async getProductsByCategory(query, ctx) {
     let url = `${process.env.SERVER_BASE_URL}/api/product/by-category${query}`
-    let data = getService(url, 'GET');
+    let data = getTokenService(url, 'GET', ctx);
     return data;
   }
 
