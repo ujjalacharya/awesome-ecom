@@ -8,6 +8,7 @@ import {
     Row
 } from "antd";
 import Categories from "./Categories";
+import { ImageUploader } from "./ImageUploader";
 const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) => {
     const [form] = Form.useForm()
     const [selectedCategories, setSelectedCategories] = useState([]);
@@ -135,7 +136,7 @@ const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) =
                         </div>
                     </Col>
                 </Row>
-                
+                <ImageUploader/>
                 
             </Form>
             <div className="steps-action">

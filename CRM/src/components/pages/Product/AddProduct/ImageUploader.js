@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
-export const ImageUploader = () => {
+export const ImageUploader = ({user}) => {
     const [fileList, setFileList] = useState([
         {
             uid: '-1',
@@ -13,11 +13,12 @@ export const ImageUploader = () => {
             url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
         },
     ]);
-
     const onChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
     };
-
+useEffect(() => {
+    user && console.log(user._id)
+}, [user])
     const onPreview = async file => {
         let src = file.url;
         if (!src) {
@@ -35,29 +36,33 @@ export const ImageUploader = () => {
 
     return (
         <ImgCrop rotate>
-            <Upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+             <Upload
+                action={`http://localhost:3001/api/product/images/${user?._id}`}
                 listType="picture-card"
+                multiple={true}
                 fileList={fileList}
                 onChange={onChange}
                 onPreview={onPreview}
+                name="productImages"
             >
-                {fileList.length < 5 && '+ Upload'}
+                {user && fileList.length < 6 && '+ Upload'}
             </Upload>
         </ImgCrop>
     );
 }
 
 ImageUploader.propTypes = {
-    prop: PropTypes
+    user: PropTypes.object,
 }
 
-const mapStateToProps = (state) => ({
-    
-})
+const mapStateToProps = (state) => {
+    console.log(state,'daedsf');
+    return ({
+    user:state.auth.user
+})}
 
 const mapDispatchToProps = {
     
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(ImageUploader))
+export default connect(mapStateToProps, mapDispatchToProps)(ImageUploader)

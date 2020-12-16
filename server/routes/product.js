@@ -2,7 +2,7 @@ const express = require("express");
 
 const { createProduct, product, getProduct, updateProduct, productImages, deleteImage, getProducts, deleteProduct, latestProducts, deleteImageById, getProductsByCategory, generateFilter, searchProducts, suggestKeywords} = require("../controllers/product")
 const { profile } = require("../controllers/admin")
-const { uploadProductImages } = require("../middleware/helpers");
+const { uploadProductImages , waterMarker} = require("../middleware/helpers");
 const { validateProduct } = require("../middleware/validator")
 const { auth, isSuperAdmin, isAdmin, hasAuthorization } = require('../controllers/admin_auth')
 const {checkUserSignin} = require("../controllers/user_auth")
@@ -12,7 +12,7 @@ const router = express.Router();
 //admin's or superadmin's
 router.get("/products/:id", auth, hasAuthorization, getProducts)
 
-router.post("/images/:id", auth, hasAuthorization, uploadProductImages, productImages)
+router.post("/images/:id", auth, hasAuthorization, uploadProductImages,waterMarker, productImages)
 router.delete("/image/:id", auth, hasAuthorization, deleteImageById)//?image_id=
 router.delete("/image/:id/:p_slug", auth, hasAuthorization, deleteImage)//?image_id=
 router.patch('/delete-product/:id/:p_slug', auth, hasAuthorization, deleteProduct)

@@ -10,6 +10,7 @@ import {
     Col,
     Row
 } from "antd";
+import { ImageUploader } from "./ImageUploader";
 const DetailInformation = ({ layout, tailLayout, next, prev}) => {
     const [form] = Form.useForm()
     const onFinish = (values) => {
@@ -178,7 +179,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
                         </div>
                     </Col>
                 </Row>
-
+                            <ImageUploader/>
                 {/* <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
                             Submit
