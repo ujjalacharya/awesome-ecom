@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema({
     photo: {
         type: String
     },
+    socialPhoto: {
+        type: String
+    },
     dob:{
         type: String
     },

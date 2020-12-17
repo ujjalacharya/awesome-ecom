@@ -63,7 +63,7 @@ exports.uploadPhoto = async (req, res) => {
     if (profile.photo && !profile.userID) fs.unlinkSync(`public/uploads/${profile.photo}`)
     profile.photo = "user/" + image;
     await profile.save()
-    res.json({ photo: profile.photo })
+    res.json({ photo: profile.photo, socailPhoto:profile.socailPhoto })
 }
 
 exports.addAddress = async(req,res) => {
