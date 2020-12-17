@@ -25,11 +25,11 @@ exports.product = async (req, res, next) => {
     .populate("soldBy", "shopName address holidayMode")
     .populate("brand")
     .populate({
-      path:'category',
-      populate:{
-        path:'parent',
-        model:'category',
-        populate:{
+      path: 'category',
+      populate: {
+        path: 'parent',
+        model: 'category',
+        populate: {
           path: 'parent',
           model: 'category'
         }
@@ -47,7 +47,7 @@ exports.getProduct = async (req, res) => {
       .status(404)
       .json({ error: "Product is not verified or has been deleted." });
   //user's action on this product
-  const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser ,'product')
+  const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser, 'product')
   //ratings of this product
   const product = req.product.toObject()
   product.stars = await getRatingInfo(req.product)
@@ -55,7 +55,7 @@ exports.getProduct = async (req, res) => {
   product.hasBought = hasBought
   product.hasOnWishlist = hasOnWishlist
   product.hasReviewed = hasReviewed
-  res.json({product});
+  res.json({ product });
 };
 
 
@@ -197,14 +197,14 @@ exports.updateProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
-  const {createdAt,updatedAt,price, status, keyword,outofstock} = req.query
-  
-  let sortFactor = {createdAt:'desc'} ;
-  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {...sortFactor, createdAt}
-  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor,updatedAt}
-  if(price && (price==='asc' || price==='desc')) sortFactor = {...sortFactor, 'price.$numberDecimal':price}
+  const { createdAt, updatedAt, price, status, keyword, outofstock } = req.query
+
+  let sortFactor = { createdAt: 'desc' };
+  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { ...sortFactor, createdAt }
+  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor, updatedAt }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { ...sortFactor, 'price.$numberDecimal': price }
   let query = { soldBy: req.profile._id }
-  if(keyword) query = {
+  if (keyword) query = {
     ...query,
     name: { $regex: keyword, $options: "i" }
   }
@@ -226,9 +226,9 @@ exports.getProducts = async (req, res) => {
   // }
   if (outofstock && outofstock === 'yes') query = {
     ...query,
-    quantity:0
+    quantity: 0
   }
-console.log(sortFactor);
+  console.log(sortFactor);
   let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
@@ -267,43 +267,43 @@ exports.latestProducts = async (req, res) => {
     .lean()
     .sort(sortFactor);
 
-    let totalCount = await Product.countDocuments({
-      isVerified: { $ne: null },
-      isDeleted: null,
-    })  
-    if (totalCount>50) totalCount = 50
-    //user's action on each product
-    products = products.map(async p => {
-      //user's action on this product
-      const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
-      //ratings of this product
-      // p.stars = await getRatingInfo(p)
-      p.hasOnCart = hasOnCart,
+  let totalCount = await Product.countDocuments({
+    isVerified: { $ne: null },
+    isDeleted: null,
+  })
+  if (totalCount > 50) totalCount = 50
+  //user's action on each product
+  products = products.map(async p => {
+    //user's action on this product
+    const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
+    //ratings of this product
+    // p.stars = await getRatingInfo(p)
+    p.hasOnCart = hasOnCart,
       p.hasOnWishlist = hasOnWishlist
-      return p
-    })
-    products = await Promise.all(products)
-  res.json({products,totalCount});
+    return p
+  })
+  products = await Promise.all(products)
+  res.json({ products, totalCount });
 };
 
-exports.suggestKeywords = async(req,res) => {
+exports.suggestKeywords = async (req, res) => {
   let limits = +req.query.limits || 5
   let suggestedKeywords = await SuggestKeywords
-      .find({ keyword: { $regex: req.query.keyword || '', $options: "i" },isDeleted:null})
-      .select('-_id keyword')
-      .limit(limits)
-  suggestedKeywords = suggestedKeywords.map(s=>s.keyword)
+    .find({ keyword: { $regex: req.query.keyword || '', $options: "i" }, isDeleted: null })
+    .select('-_id keyword')
+    .limit(limits)
+  suggestedKeywords = suggestedKeywords.map(s => s.keyword)
   res.json(suggestedKeywords)
 }
 
 exports.searchProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
-  const {createdAt,updatedAt,price} = req.query
-  let sortFactor = {createdAt:'desc'} ;
-  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
-  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
-  if(price && (price === 'asc' || price === 'desc')) sortFactor = {price}
+  const { createdAt, updatedAt, price } = req.query
+  let sortFactor = { createdAt: 'desc' };
+  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
+  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
   let {
     keyword = "",
     brands,
@@ -337,7 +337,7 @@ exports.searchProducts = async (req, res) => {
     ];
     if (brands) searchingFactor.brand = brands;
     if (max_price && min_price)
-      searchingFactor.price = { $lte: +max_price , $gte: +min_price };
+      searchingFactor.price = { $lte: +max_price, $gte: +min_price };
     if (!max_price && min_price)
       searchingFactor.price = { $gte: +min_price };
     if (sizes) searchingFactor.size = { $in: sizes };
@@ -359,14 +359,14 @@ exports.searchProducts = async (req, res) => {
     if (warranties) searchingFactor.warranty = warranties;
     if (ratings) searchingFactor.averageRating = { $gte: +ratings };
   }
-    let products = await Product.find(searchingFactor)
-      .populate("category", "displayName slug")
-      .populate("brand", "brandName slug")
-      .populate("images", "-createdAt -updatedAt -_v")
-      .skip(perPage * page - perPage)
-      .limit(perPage)
-      .lean()
-      .sort(sortFactor)
+  let products = await Product.find(searchingFactor)
+    .populate("category", "displayName slug")
+    .populate("brand", "brandName slug")
+    .populate("images", "-createdAt -updatedAt -_v")
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .lean()
+    .sort(sortFactor)
   let totalCount = await Product.countDocuments(searchingFactor);
   //user's action on each product
   products = products.map(async p => {
@@ -375,7 +375,7 @@ exports.searchProducts = async (req, res) => {
     //ratings of this product
     // p.stars = await getRatingInfo(p)
     p.hasOnCart = hasOnCart,
-    p.hasOnWishlist = hasOnWishlist
+      p.hasOnWishlist = hasOnWishlist
     return p
   })
   products = await Promise.all(products)
@@ -385,11 +385,11 @@ exports.searchProducts = async (req, res) => {
 exports.getProductsByCategory = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
-  const {createdAt,updatedAt,price} = req.query
-  let sortFactor = {createdAt:'desc'} ;
-  if(createdAt && (createdAt==='asc' || createdAt==='desc')) sortFactor = {createdAt}
-  if(updatedAt && (updatedAt==='asc' || updatedAt==='desc')) sortFactor = {updatedAt}
-  if(price && (price==='asc' || price==='desc')) sortFactor = {price}
+  const { createdAt, updatedAt, price } = req.query
+  let sortFactor = { createdAt: 'desc' };
+  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
+  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
   let categories = await Category.find({
     $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],
     isDisabled: null,
@@ -485,10 +485,10 @@ exports.generateFilter = async (req, res) => {
         isVerified: { $ne: null },
         isDeleted: null,
       })
-      .limit(50)
-      .sort(sortFactor)
-      .populate("brand", "brandName slug")
-      .select("-_id brand warranty size color weight price");
+        .limit(50)
+        .sort(sortFactor)
+        .populate("brand", "brandName slug")
+        .select("-_id brand warranty size color weight price");
       let generatedFilters = filterGenerate(products);
       return res.json(generatedFilters);
     }
@@ -500,8 +500,8 @@ exports.generateFilter = async (req, res) => {
       isVerified: { $ne: null },
       isDeleted: null,
     })
-    .populate("brand", "brandName slug")
-    .select("-_id brand warranty size color weight price");
+      .populate("brand", "brandName slug")
+      .select("-_id brand warranty size color weight price");
     // if (!products.length) {
     //   return res.status(404).json({ error: "Cannot generate filter" });
     // }
