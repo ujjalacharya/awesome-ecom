@@ -1,7 +1,7 @@
 import jwt from "expo-jwt";
 
-export const SERVER_BASE_URL = "http://192.168.1.68:3001";
-export const BASE_URL = "http://192.168.1.68";
+export const SERVER_BASE_URL = "http://192.168.1.67:3001";
+export const BASE_URL = "http://192.168.1.67";
 
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];

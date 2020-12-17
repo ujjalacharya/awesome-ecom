@@ -16,10 +16,6 @@ const ImageUploader = ({user}) => {
     const onChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
     };
-    // const user = useSelector(state => state.auth.user)
-    useEffect(() => {
-        user && console.log(user._id)
-    }, [user])
     const onPreview = async file => {
         let src = file.url;
         if (!src) {
@@ -56,11 +52,9 @@ ImageUploader.propTypes = {
     user: PropTypes.object,
 }
 
-const mapStateToProps = (state) => {
-    console.log(state,'sdfsf');
-    return ({
+const mapStateToProps = (state) =>  ({
     user:state.auth.user
-})}
+})
 
 const mapDispatchToProps = {
     
