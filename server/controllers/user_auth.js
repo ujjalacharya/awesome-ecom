@@ -85,10 +85,10 @@ exports.signin = async (req, res) => {
 
 exports.socialLogin = async (req, res) => {
     let user = await User.findOne({ userID: req.body.userID });
-    const {name, email, photo, userID, loginDomain} = req.body
+    const {name, email, socialPhoto, userID, loginDomain} = req.body
     if (!user) {
         // create a new user and login
-        user = new User({ name, email, photo, userID, loginDomain});
+        user = new User({ name, email, socialPhoto, userID, loginDomain});
         user = await user.save();
         const payload = {
             _id: user._id,
@@ -112,7 +112,7 @@ exports.socialLogin = async (req, res) => {
             });
         }
         // update existing user with new social info and login
-        user = _.extend(user, { name, email, photo, userID, loginDomain });
+        user = _.extend(user, { name, email, socialPhoto, userID, loginDomain });
         user = await user.save();
         const payload = {
             _id: user._id,

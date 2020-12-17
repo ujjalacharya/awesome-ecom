@@ -60,10 +60,10 @@ exports.uploadPhoto = async (req, res) => {
     fs.unlinkSync(req.file.path);//remove from public/uploads
     // if update then remove old photo
 
-    if (profile.photo && !profile.userID) fs.unlinkSync(`public/uploads/${profile.photo}`)
+    if (profile.photo ) fs.unlinkSync(`public/uploads/${profile.photo}`)
     profile.photo = "user/" + image;
     await profile.save()
-    res.json({ photo: profile.photo })
+    res.json({ photo: profile.photo, socialPhoto: profile.socialPhoto })
 }
 
 exports.addAddress = async(req,res) => {
