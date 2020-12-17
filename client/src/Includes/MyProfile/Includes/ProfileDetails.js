@@ -11,7 +11,7 @@ import actions from "../../../../redux/actions";
 
 const userData = {
   email: "",
-  phone: "",
+  phone: ""
 };
 
 const activeLoc = {
@@ -45,7 +45,7 @@ class ProfileDetails extends Component {
 
     if (
       this.props.user.profilePictureResp !==
-        prevProps.user.profilePictureResp &&
+      prevProps.user.profilePictureResp &&
       this.props.user.profilePictureResp
     ) {
       openNotification("Success", "Profile picture uploaded successfully");
@@ -104,7 +104,9 @@ class ProfileDetails extends Component {
     }
 
     let checkSekelton = this.state.userData.email === "" ? true : false;
-    let userPhoto = userData.userID ? userData.photo : (`${process.env.IMAGE_BASE_URL}/${userData.photo}`)  
+    let checkLocal = userData?.photo?.split('/')[0];
+    let userPhoto = checkLocal !== 'user' ? userData.photo : (`${process.env.IMAGE_BASE_URL}/${userData.photo}`)
+    console.log(userPhoto)
     return (
       <div className="profile-details">
         <div className="main-profile">
@@ -137,7 +139,8 @@ class ProfileDetails extends Component {
                     disabled={this.state.disableImg ? true : false}
                   />
                   <label htmlFor={"newFile"}>
-                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    Change
+                    {/* <i className="fa fa-pencil-square-o" aria-hidden="true"></i> */}
                   </label>
                 </div>
               </Col>
