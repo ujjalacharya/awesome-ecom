@@ -202,7 +202,7 @@ exports.getProducts = async (req, res) => {
   let sortFactor = { createdAt: 'desc' };
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { ...sortFactor, createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor, updatedAt }
-  if (price && (price === 'asc' || price === 'desc')) sortFactor = { ...sortFactor, 'price.$numberDecimal': price }
+  // if (price && (price === 'asc' || price === 'desc')) sortFactor = { ...sortFactor, 'price.$numberDecimal': price }
   let query = { soldBy: req.profile._id }
   if (keyword) query = {
     ...query,
@@ -228,7 +228,6 @@ exports.getProducts = async (req, res) => {
     ...query,
     quantity: 0
   }
-  console.log(sortFactor);
   let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
@@ -237,6 +236,11 @@ exports.getProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
+  if (price && (price === 'asc' || price === 'desc')) {
+      products.sort((a, b) => {
+        return price === 'asc' ? parseFloat(a.price) - parseFloat(b.price) : parseFloat(b.price) - parseFloat(a.price)
+      })
+    }
   //rating on each product
   // products = products.map(async p => {
   //   p.stars = await getRatingInfo(p)
@@ -303,7 +307,7 @@ exports.searchProducts = async (req, res) => {
   let sortFactor = { createdAt: 'desc' };
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
+  // if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
   let {
     keyword = "",
     brands,
@@ -367,6 +371,11 @@ exports.searchProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor)
+  if (price && (price === 'asc' || price === 'desc')) {
+    products.sort((a, b) => {
+      return price === 'asc' ? parseFloat(a.price) - parseFloat(b.price) : parseFloat(b.price) - parseFloat(a.price)
+    })
+  }
   let totalCount = await Product.countDocuments(searchingFactor);
   //user's action on each product
   products = products.map(async p => {
@@ -389,7 +398,7 @@ exports.getProductsByCategory = async (req, res) => {
   let sortFactor = { createdAt: 'desc' };
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
+  // if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
   let categories = await Category.find({
     $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],
     isDisabled: null,
@@ -406,6 +415,11 @@ exports.getProductsByCategory = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
+    if (price && (price === 'asc' || price === 'desc')) {
+      products.sort((a, b) => {
+        return price === 'asc' ? parseFloat(a.price) - parseFloat(b.price) : parseFloat(b.price) - parseFloat(a.price)
+      })
+    }
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
