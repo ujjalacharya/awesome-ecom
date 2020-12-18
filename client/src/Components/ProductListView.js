@@ -34,7 +34,7 @@ class ProductListView extends Component {
       productsData: this.props.productsData,
       showQtySection: this.props.showQtySection,
     });
-    
+
     if (this.props.showCheckbox === 'noCheckbox') {
 
       let p_slugs = this.props.cart.checkoutItems?.carts.map((newItems) => {
@@ -70,12 +70,12 @@ class ProductListView extends Component {
       this.props.getCartProducts("page=1");
     }
 
-    if (
-      this.props.cart.editCartQtyResp !== prevProps.cart.editCartQtyResp &&
-      this.props.cart.editCartQtyResp
-    ) {
-      this.props.getCartProducts("page=1");
-    }
+    // if (
+    //   this.props.cart.editCartQtyResp !== prevProps.cart.editCartQtyResp &&
+    //   this.props.cart.editCartQtyResp
+    // ) {
+    //   this.props.getCartProducts("page=1");
+    // }
   }
 
   changePdValue = (num, i, cartId) => {
@@ -86,11 +86,24 @@ class ProductListView extends Component {
       });
     }
     this.props.editCartQty(cartId + "?quantity=" + newPdQty);
+
+    let newCheckoutItems = this.state.checkoutItems.map(obj => {
+      let ele = {}
+      if (obj._id === cartId) {
+        return ele = { ...obj, quantity: newPdQty }
+      }else{ 
+        return obj
+      }
+    })
+    this.setState({
+      checkoutItems: newCheckoutItems
+    })
+    
+    this.props.getCheckoutItems(newCheckoutItems);
   };
 
-  onCheckItems = (e) => {
-    let itemValue = e.target.value;
-
+  onCheckItems = (item, i) => {
+    let itemValue = { ...item, quantity: this.state["pdQtyInStock" + i] };
     let checkoutItems = this.state.checkoutItems;
 
     let newCheckoutItems = [];
@@ -106,10 +119,10 @@ class ProductListView extends Component {
       });
 
       if (!itemsInserted) {
-        newCheckoutItems.push(e.target.value);
+        newCheckoutItems.push(itemValue);
       }
     } else {
-      newCheckoutItems.push(e.target.value);
+      newCheckoutItems.push(itemValue);
     }
 
     this.setState({
@@ -130,12 +143,12 @@ class ProductListView extends Component {
       <>
         {this.state.productsData?.carts?.map((items, i) => {
           return (
-            <div className="product-list-view">
+            <div className="product-list-view" key={i}>
               <Row>
                 <Col lg={2}>
                   <Checkbox
-                    value={items}
-                    onChange={this.onCheckItems}
+                    // value={items}
+                    onChange={() => this.onCheckItems(items, i)}
                     className={this.props.showCheckboxForOutOfStock || this.props.showCheckbox}
                   ></Checkbox>
                 </Col>

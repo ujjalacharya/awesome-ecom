@@ -100,7 +100,7 @@ class OrderSummary extends Component {
 
   render() {
     let { activeLocation, userData } = this.state;
-
+    
     let totalCheckoutItems = 0;
     if (!this.props.checkoutItems?.totalAmount) {
       this.props.checkoutItems?.map((items) => {
