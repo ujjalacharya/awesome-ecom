@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Drawer } from "antd";
-import _ from "lodash";
+import _, { debounce } from "lodash";
 import Router, { withRouter } from "next/router";
 import { AutoComplete } from "antd";
 import { connect } from "react-redux";
@@ -15,8 +15,9 @@ class SearchDrawer extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.onCloseDrawer()
-        Router.push("/search/[slug]", "/search/" + this.state.searchValue);
+        this.searchSelectedProduct(this.state.searchValue);
+        // this.props.onCloseDrawer()
+        // Router.push("/search/[slug]", "/search/" + this.state.searchValue);
     };
 
     componentDidUpdate(prevProps) {
@@ -46,6 +47,25 @@ class SearchDrawer extends Component {
         });
     };
 
+    selectKeyword = (keyword) => {
+      this.searchSelectedProduct(keyword)
+    }
+  
+    searchSelectedProduct = debounce((keyword) => {
+      Router.push("/search/[slug]", "/search/" + keyword);
+      this.setState({ searchValue: keyword });
+      this.props.onCloseDrawer();
+    }, 1000)
+  
+    getSearchKeywordsDeb = (search) => {
+      this.setState({ searchValue: search });
+      this.debouceSearchKeywords(search)
+    }
+  
+    debouceSearchKeywords = debounce((keyword) => {
+      this.props.getSearchKeywords(keyword);
+    }, 500)
+
     render() {
         const { placement } = this.state;
         let { parentCate } = this.props;
@@ -70,13 +90,10 @@ class SearchDrawer extends Component {
                                     width: "100%",
                                 }}
                                 onSelect={(select) => {
-                                    this.props.onCloseDrawer()
-                                    Router.push("/search/[slug]", "/search/" + select);
-                                    this.setState({ searchValue: select });
+                                    this.selectKeyword(select)
                                 }}
                                 onSearch={(search) => {
-                                    this.props.getSearchKeywords(search);
-                                    this.setState({ searchValue: search });
+                                    this.getSearchKeywordsDeb(search);
                                 }}
                                 placeholder="Search for products, brands and more"
                             />
