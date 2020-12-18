@@ -102,11 +102,10 @@ class ProfileDetails extends Component {
         // },
       ];
     }
-
     let checkSekelton = this.state.userData.email === "" ? true : false;
-    let checkLocal = userData?.photo?.split('/')[0];
-    let userPhoto = checkLocal !== 'user' ? userData.photo : (`${process.env.IMAGE_BASE_URL}/${userData.photo}`)
-    console.log(userPhoto)
+    // let checkLocal = userData?.photo?.split('/')[0];
+    let userPhoto = userData.photo ? (`${process.env.IMAGE_BASE_URL}/${userData.photo}`) : userData.socialPhoto
+    
     return (
       <div className="profile-details">
         <div className="main-profile">
@@ -139,8 +138,7 @@ class ProfileDetails extends Component {
                     disabled={this.state.disableImg ? true : false}
                   />
                   <label htmlFor={"newFile"}>
-                    Change
-                    {/* <i className="fa fa-pencil-square-o" aria-hidden="true"></i> */}
+                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                   </label>
                 </div>
               </Col>
