@@ -17,7 +17,7 @@ class Login extends Component {
     let body = {
       name: response.name,
       email: response.email,
-      photo: response.picture.data.url,
+      socialPhoto: response.picture.data.url,
       userID: response.userID,
       loginDomain: "facebook"
     }
@@ -29,7 +29,7 @@ class Login extends Component {
     let body = {
       name: profileObj.familyName + ' ' + profileObj.givenName,
       email: profileObj.email,
-      photo: profileObj.imageUrl,
+      socialPhoto: profileObj.imageUrl,
       userID: response.googleId,
       loginDomain: "google"
     }
