@@ -6,7 +6,7 @@
     "dev": "next -p 3002",
     "build": "next build",
     "start": "next start",
-    "sass": "sass --watch sass/index.scss:public/css/style.css"
+    "sass": "sass --watch sass/main.scss:public/css/style.css"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
