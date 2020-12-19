@@ -22,19 +22,23 @@ import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 import { getCartProducts } from "../../../redux/actions/cartActions";
+import { getProductDetails } from "../../../redux/actions/productActions";
+import Skeleton from "../../components/shared/Skeleton";
+import { SERVER_BASE_URL } from "../../../utils/common";
 
 const CartScreen = (props) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const {token} = useSelector(state => state.authentication)
+  const { token } = useSelector((state) => state.authentication);
+  const { getCartProductsResponse } = useSelector((state) => state.cart);
 
   const [state, setState] = useState({
     checked: false,
   });
 
   useEffect(() => {
-    dispatch(getCartProducts("page=1", token))
-  }, [dispatch])
+    dispatch(getCartProducts("page=1", token));
+  }, [dispatch]);
 
   const _goBack = () => {
     props.navigation.pop();
@@ -64,6 +68,10 @@ const CartScreen = (props) => {
 
   const isCartStack = props.route.name === "CartStack";
 
+  if (!getCartProductsResponse) {
+    return <Skeleton />;
+  }
+
   return (
     <>
       <ScrollView
@@ -84,10 +92,14 @@ const CartScreen = (props) => {
           </Appbar.Header>
         </View>
 
-        {productData.map((product, i) => (
+        {getCartProductsResponse?.carts?.map((cart, i) => (
           <TouchableWithoutFeedback key={i}>
             <Card
-              onPress={() => props.navigation.navigate("Detail")}
+              onPress={() => {
+                cart.product &&
+                  dispatch(getProductDetails(cart.product.slug, token));
+                props.navigation.navigate("Detail");
+              }}
               style={{ marginBottom: 5 }}
             >
               <Card.Content>
@@ -101,9 +113,7 @@ const CartScreen = (props) => {
                     }}
                   >
                     <Checkbox
-                      status={
-                        state["checked" + i] ? "checked" : "unchecked"
-                      }
+                      status={state["checked" + i] ? "checked" : "unchecked"}
                       onPress={() => {
                         setChecked(i);
                       }}
@@ -112,14 +122,19 @@ const CartScreen = (props) => {
                   <View style={{ flex: 0.5 }}>
                     <Image
                       style={styles.tinyLogo}
-                      source={{ uri: product.image }}
+                      source={{
+                        uri:
+                          SERVER_BASE_URL +
+                          "/uploads/" +
+                          cart.product.images[0].medium,
+                      }}
                     />
                   </View>
                   <View style={{ flex: 0.5 }}>
                     <>
                       <View style={{ flex: 0.2 }}>
                         <Text style={{ ...Constants.titleText }}>
-                          {product.title}
+                          {cart.product.name}
                         </Text>
                         <Text style={{ ...Constants.paragraphText }}>
                           {"Ujjal's shop"}
@@ -130,7 +145,7 @@ const CartScreen = (props) => {
                       <View style={{ flex: 0.2, flexDirection: "row" }}>
                         <View style={{ flex: 1 }}>
                           <Text style={{ fontSize: 15, color: "orange" }}>
-                            {product.price}
+                            {cart.product.price.$numberDecimal}
                           </Text>
                           <Text
                             style={{
@@ -139,7 +154,7 @@ const CartScreen = (props) => {
                               textDecorationStyle: "solid",
                             }}
                           >
-                            {product.price}
+                            {cart.product.price.$numberDecimal}
                           </Text>
                         </View>
                         <View style={{ flex: 1, flexDirection: "row" }}>
@@ -182,9 +197,9 @@ const CartScreen = (props) => {
             </Card>
           </TouchableWithoutFeedback>
         ))}
-        <View style={{ height: 250, marginTop: 0 }}>
+        {/* <View style={{ height: 250, marginTop: 0 }}>
           <FeaturedProducts title={"Products for you"} />
-        </View>
+        </View> */}
       </ScrollView>
 
       <View style={{ backgroundColor: Constants.headerTintColor, height: 70 }}>
