@@ -21,7 +21,6 @@ import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
-import { withAuth } from "../../components/shared/withAuth";
 import { getCartProducts } from "../../../redux/actions/cartActions";
 
 const CartScreen = (props) => {
@@ -272,4 +271,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withAuth(CartScreen);
+export default CartScreen;

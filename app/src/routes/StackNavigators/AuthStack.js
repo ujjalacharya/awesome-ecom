@@ -1,13 +1,15 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
-import ProfileScreen from "../../screens/ProfileScreen";
+import AuthScreen from "../../screens/AuthScreen";
 
 import { headerOptions } from "../../utils/common";
-import { withAuth } from "../../components/shared/withAuth";
+import { withUnAuth } from "../../components/shared/withAuth";
 
 const Stack = createStackNavigator();
 
-const ProfileStack = ({ ...rest }) => {
+const AuthStack = ({ ...rest }) => {
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -15,13 +17,13 @@ const ProfileStack = ({ ...rest }) => {
       }}
     >
       <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={headerOptions("Profile")}
+        name="Auth"
+        component={AuthScreen}
+        options={headerOptions("Authenticate")}
         {...rest}
       />
     </Stack.Navigator>
   );
 };
 
-export default withAuth(ProfileStack);
+export default withUnAuth(AuthStack);
