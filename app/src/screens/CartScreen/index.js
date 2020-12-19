@@ -21,7 +21,10 @@ import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
 import FeaturedProducts from "../HomeScreen/FeaturedProducts";
-import { getCartProducts } from "../../../redux/actions/cartActions";
+import {
+  getCartProducts,
+  editCartQty,
+} from "../../../redux/actions/cartActions";
 import { getProductDetails } from "../../../redux/actions/productActions";
 import Skeleton from "../../components/shared/Skeleton";
 import { SERVER_BASE_URL } from "../../../utils/common";
@@ -159,7 +162,14 @@ const CartScreen = (props) => {
                         </View>
                         <View style={{ flex: 1, flexDirection: "row" }}>
                           <TouchableRipple
-                            onPress={() => console.warn("-")}
+                            onPress={() =>
+                              dispatch(
+                                editCartQty(
+                                  `${cart._id}?quantity=${cart.quantity - 1}`,
+                                  token
+                                )
+                              )
+                            }
                             style={{
                               flex: 0.3,
                               alignItems: "center",
@@ -175,10 +185,17 @@ const CartScreen = (props) => {
                               justifyContent: "center",
                             }}
                           >
-                            <Text>{"0"}</Text>
+                            <Text>{cart.quantity}</Text>
                           </View>
                           <TouchableRipple
-                            onPress={() => console.warn("+")}
+                            onPress={() =>
+                              dispatch(
+                                editCartQty(
+                                  `${cart._id}?quantity=${cart.quantity + 1}`,
+                                  token
+                                )
+                              )
+                            }
                             style={{
                               flex: 0.3,
                               alignItems: "center",

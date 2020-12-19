@@ -23,7 +23,17 @@ export default (state = initialState, action) => {
     case REMOVE_FROM_CART:
       return { ...state, removeFromCartResp: action.payload, hasError: false };
     case EDIT_CART_QTY:
-      return { ...state, editCartQtyResp: action.payload, hasError: false };
+     const updatedCartProductsResponse = state.getCartProductsResponse?.carts.map(cart => {
+        if(cart._id === action.payload._id){
+          return {
+            ...cart, quantity: action.payload.quantity
+          }
+        }
+        return cart
+      })
+      return { ...state, editCartQtyResp: action.payload, hasError: false, getCartProductsResponse: {
+        ...state.getCartProductsResponse, carts: updatedCartProductsResponse
+      } };
     case STORE_CHECKOUT_ITEMS:
       return { ...state, checkoutItems: action.payload, hasError: false };
     default:
