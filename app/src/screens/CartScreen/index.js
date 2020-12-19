@@ -7,10 +7,7 @@ import {
 } from "react-native-gesture-handler";
 
 import {
-  Avatar,
   Card,
-  Title,
-  Paragraph,
   Appbar,
   Button,
   Checkbox,
@@ -19,15 +16,13 @@ import {
 import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 
 import Constants from "../../constants/Constants";
-import { productData } from "../../utils/mock";
-import FeaturedProducts from "../HomeScreen/FeaturedProducts";
 import {
   getCartProducts,
   editCartQty,
 } from "../../../redux/actions/cartActions";
 import { getProductDetails } from "../../../redux/actions/productActions";
 import Skeleton from "../../components/shared/Skeleton";
-import { SERVER_BASE_URL } from "../../../utils/common";
+import { getDiscountedAmount, SERVER_BASE_URL } from "../../../utils/common";
 
 const CartScreen = (props) => {
   const dispatch = useDispatch();
@@ -36,24 +31,54 @@ const CartScreen = (props) => {
   const { getCartProductsResponse } = useSelector((state) => state.cart);
 
   const [state, setState] = useState({
-    checked: false,
+    checkedall: false,
   });
 
   useEffect(() => {
     dispatch(getCartProducts("page=1", token));
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!getCartProductsResponse) return;
+
+    let newState = {};
+
+    for (let i = 0; i < getCartProductsResponse.carts.length; i++) {
+      newState["checked" + i] = false;
+    }
+
+    setState({
+      ...state,
+      ...newState,
+    });
+  }, [getCartProductsResponse]);
+
   const _goBack = () => {
     props.navigation.pop();
   };
 
-  const setChecked = (i) => {
-    if (i === null) {
+  const setChecked = (i, _id) => {
+    if (i === "all") {
+      // checedall = false
+
+      let allChecks = { ...state };
+
+      for (let checks in allChecks) {
+        allChecks[checks] = state.checkedall ? false : true;
+      }
+
+      setState((prevState) => ({
+        ...allChecks,
+        checkedall: !prevState.checkedall,
+      }));
+      
+    } else if (i === null) {
       setState((prevState) => ({
         checked: !prevState.checked,
       }));
     } else {
       setState((prevState) => ({
+        ...prevState,
         ["checked" + i]: !prevState["checked" + i],
       }));
     }
@@ -118,7 +143,7 @@ const CartScreen = (props) => {
                     <Checkbox
                       status={state["checked" + i] ? "checked" : "unchecked"}
                       onPress={() => {
-                        setChecked(i);
+                        setChecked(i, cart._id);
                       }}
                     />
                   </View>
@@ -148,7 +173,10 @@ const CartScreen = (props) => {
                       <View style={{ flex: 0.2, flexDirection: "row" }}>
                         <View style={{ flex: 1 }}>
                           <Text style={{ fontSize: 15, color: "orange" }}>
-                            {cart.product.price.$numberDecimal}
+                            {getDiscountedAmount(
+                              cart.product.price.$numberDecimal,
+                              cart.product.discountRate
+                            )}
                           </Text>
                           <Text
                             style={{
@@ -231,9 +259,9 @@ const CartScreen = (props) => {
           >
             <View style={{ flex: 0.2, justifyContent: "center" }}>
               <Checkbox
-                status={state["checked"] ? "checked" : "unchecked"}
+                status={state["checkedall"] ? "checked" : "unchecked"}
                 onPress={() => {
-                  setChecked(null);
+                  setChecked("all");
                 }}
               />
             </View>
