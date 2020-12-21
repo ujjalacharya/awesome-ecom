@@ -9,3 +9,4 @@ export const ORDER_BASE_URL = `${BASE_URL}/api/order`
 export const PRODUCT_BASE_URL = `${BASE_URL}/api/product`
 export const REVIEW_BASE_URL = `${BASE_URL}/api/review-qna`
 export const WISHLIST_BASE_URL = `${BASE_URL}/api/cart-wishlist`
+export const IMAGE_BASE_URL = `${BASE_URL}/uploads`

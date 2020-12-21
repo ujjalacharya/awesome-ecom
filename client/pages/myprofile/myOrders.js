@@ -8,6 +8,7 @@ import { scrollToTop } from "../../utils/common";
 import moment from 'moment'
 import OrderDetails from "../../src/Includes/MyProfile/Includes/OrderDetails";
 import MyProfile from "../../src/Includes/MyProfile/myProfile";
+import { IMAGE_BASE_URL } from "../../utils/constants";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -207,7 +208,7 @@ class MyOrders extends Component {
                 image: (
                     <img
                         src={
-                            process.env.IMAGE_BASE_URL + "/" + order.product.images[0].medium
+                            IMAGE_BASE_URL + "/" + order.product.images[0].medium
                         }
                         className="table-item-img"
                     />
