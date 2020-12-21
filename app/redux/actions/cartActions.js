@@ -93,12 +93,12 @@ const removeCart = (query) => {
   };
 };
 
-const editCartQty = (query) => {
+export const editCartQty = (query, token) => {
   return async (dispatch) => {
     const cartService = new CartService();
-    const response = await cartService.editCartQty(query);
+    const response = await cartService.editCartQty(query, token);
     if (response.isSuccess) {
-      dispatch({ type: EDIT_CART_QTY, payload: response.data });
+      dispatch({ type: EDIT_CART_QTY, payload: response.data, });
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,

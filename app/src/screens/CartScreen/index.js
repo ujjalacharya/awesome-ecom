@@ -7,10 +7,7 @@ import {
 } from "react-native-gesture-handler";
 
 import {
-  Avatar,
   Card,
-  Title,
-  Paragraph,
   Appbar,
   Button,
   Checkbox,
@@ -19,35 +16,69 @@ import {
 import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 
 import Constants from "../../constants/Constants";
-import { productData } from "../../utils/mock";
-import FeaturedProducts from "../HomeScreen/FeaturedProducts";
-import { withAuth } from "../../components/shared/withAuth";
-import { getCartProducts } from "../../../redux/actions/cartActions";
+import {
+  getCartProducts,
+  editCartQty,
+} from "../../../redux/actions/cartActions";
+import { getProductDetails } from "../../../redux/actions/productActions";
+import Skeleton from "../../components/shared/Skeleton";
+import { getDiscountedAmount, SERVER_BASE_URL } from "../../../utils/common";
 
 const CartScreen = (props) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const {token} = useSelector(state => state.authentication)
+  const { token } = useSelector((state) => state.authentication);
+  const { getCartProductsResponse } = useSelector((state) => state.cart);
 
   const [state, setState] = useState({
-    checked: false,
+    checkedall: false,
   });
 
   useEffect(() => {
-    dispatch(getCartProducts("page=1", token))
-  }, [dispatch])
+    dispatch(getCartProducts("page=1", token));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!getCartProductsResponse) return;
+
+    let newState = {};
+
+    for (let i = 0; i < getCartProductsResponse.carts.length; i++) {
+      newState["checked" + i] = false;
+    }
+
+    setState({
+      ...state,
+      ...newState,
+    });
+  }, [getCartProductsResponse]);
 
   const _goBack = () => {
     props.navigation.pop();
   };
 
-  const setChecked = (i) => {
-    if (i === null) {
+  const setChecked = (i, _id) => {
+    if (i === "all") {
+      // checedall = false
+
+      let allChecks = { ...state };
+
+      for (let checks in allChecks) {
+        allChecks[checks] = state.checkedall ? false : true;
+      }
+
+      setState((prevState) => ({
+        ...allChecks,
+        checkedall: !prevState.checkedall,
+      }));
+      
+    } else if (i === null) {
       setState((prevState) => ({
         checked: !prevState.checked,
       }));
     } else {
       setState((prevState) => ({
+        ...prevState,
         ["checked" + i]: !prevState["checked" + i],
       }));
     }
@@ -64,6 +95,10 @@ const CartScreen = (props) => {
   };
 
   const isCartStack = props.route.name === "CartStack";
+
+  if (!getCartProductsResponse) {
+    return <Skeleton />;
+  }
 
   return (
     <>
@@ -85,10 +120,14 @@ const CartScreen = (props) => {
           </Appbar.Header>
         </View>
 
-        {productData.map((product, i) => (
+        {getCartProductsResponse?.carts?.map((cart, i) => (
           <TouchableWithoutFeedback key={i}>
             <Card
-              onPress={() => props.navigation.navigate("Detail")}
+              onPress={() => {
+                cart.product &&
+                  dispatch(getProductDetails(cart.product.slug, token));
+                props.navigation.navigate("Detail");
+              }}
               style={{ marginBottom: 5 }}
             >
               <Card.Content>
@@ -102,25 +141,28 @@ const CartScreen = (props) => {
                     }}
                   >
                     <Checkbox
-                      status={
-                        state["checked" + i] ? "checked" : "unchecked"
-                      }
+                      status={state["checked" + i] ? "checked" : "unchecked"}
                       onPress={() => {
-                        setChecked(i);
+                        setChecked(i, cart._id);
                       }}
                     />
                   </View>
                   <View style={{ flex: 0.5 }}>
                     <Image
                       style={styles.tinyLogo}
-                      source={{ uri: product.image }}
+                      source={{
+                        uri:
+                          SERVER_BASE_URL +
+                          "/uploads/" +
+                          cart.product.images[0].medium,
+                      }}
                     />
                   </View>
                   <View style={{ flex: 0.5 }}>
                     <>
                       <View style={{ flex: 0.2 }}>
                         <Text style={{ ...Constants.titleText }}>
-                          {product.title}
+                          {cart.product.name}
                         </Text>
                         <Text style={{ ...Constants.paragraphText }}>
                           {"Ujjal's shop"}
@@ -131,7 +173,10 @@ const CartScreen = (props) => {
                       <View style={{ flex: 0.2, flexDirection: "row" }}>
                         <View style={{ flex: 1 }}>
                           <Text style={{ fontSize: 15, color: "orange" }}>
-                            {product.price}
+                            {getDiscountedAmount(
+                              cart.product.price.$numberDecimal,
+                              cart.product.discountRate
+                            )}
                           </Text>
                           <Text
                             style={{
@@ -140,12 +185,19 @@ const CartScreen = (props) => {
                               textDecorationStyle: "solid",
                             }}
                           >
-                            {product.price}
+                            {cart.product.price.$numberDecimal}
                           </Text>
                         </View>
                         <View style={{ flex: 1, flexDirection: "row" }}>
                           <TouchableRipple
-                            onPress={() => console.warn("-")}
+                            onPress={() =>
+                              dispatch(
+                                editCartQty(
+                                  `${cart._id}?quantity=${cart.quantity - 1}`,
+                                  token
+                                )
+                              )
+                            }
                             style={{
                               flex: 0.3,
                               alignItems: "center",
@@ -161,10 +213,17 @@ const CartScreen = (props) => {
                               justifyContent: "center",
                             }}
                           >
-                            <Text>{"0"}</Text>
+                            <Text>{cart.quantity}</Text>
                           </View>
                           <TouchableRipple
-                            onPress={() => console.warn("+")}
+                            onPress={() =>
+                              dispatch(
+                                editCartQty(
+                                  `${cart._id}?quantity=${cart.quantity + 1}`,
+                                  token
+                                )
+                              )
+                            }
                             style={{
                               flex: 0.3,
                               alignItems: "center",
@@ -183,9 +242,9 @@ const CartScreen = (props) => {
             </Card>
           </TouchableWithoutFeedback>
         ))}
-        <View style={{ height: 250, marginTop: 0 }}>
+        {/* <View style={{ height: 250, marginTop: 0 }}>
           <FeaturedProducts title={"Products for you"} />
-        </View>
+        </View> */}
       </ScrollView>
 
       <View style={{ backgroundColor: Constants.headerTintColor, height: 70 }}>
@@ -200,9 +259,9 @@ const CartScreen = (props) => {
           >
             <View style={{ flex: 0.2, justifyContent: "center" }}>
               <Checkbox
-                status={state["checked"] ? "checked" : "unchecked"}
+                status={state["checkedall"] ? "checked" : "unchecked"}
                 onPress={() => {
-                  setChecked(null);
+                  setChecked("all");
                 }}
               />
             </View>
@@ -272,4 +331,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withAuth(CartScreen);
+export default CartScreen;

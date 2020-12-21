@@ -7,7 +7,7 @@ import {
 } from "../types";
 
 const initialState = {
-  getCartProducts: null,
+  getCartProductsResponse: null,
   addToCartResp: null,
   removeFromCartResp: null,
   editCartQtyResp: null,
@@ -17,13 +17,23 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case CART_PRODUCTS:
-      return { ...state, getCartProducts: action.payload, hasError: false };
+      return { ...state, getCartProductsResponse: action.payload, hasError: false };
     case ADD_TO_CART:
       return { ...state, addToCartResp: action.payload, hasError: false };
     case REMOVE_FROM_CART:
       return { ...state, removeFromCartResp: action.payload, hasError: false };
     case EDIT_CART_QTY:
-      return { ...state, editCartQtyResp: action.payload, hasError: false };
+     const updatedCartProductsResponse = state.getCartProductsResponse?.carts.map(cart => {
+        if(cart._id === action.payload._id){
+          return {
+            ...cart, quantity: action.payload.quantity
+          }
+        }
+        return cart
+      })
+      return { ...state, editCartQtyResp: action.payload, hasError: false, getCartProductsResponse: {
+        ...state.getCartProductsResponse, carts: updatedCartProductsResponse
+      } };
     case STORE_CHECKOUT_ITEMS:
       return { ...state, checkoutItems: action.payload, hasError: false };
     default:

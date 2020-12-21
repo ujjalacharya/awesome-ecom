@@ -20,9 +20,9 @@ export class CartService {
     return data;
   }
 
-  editCartQty(query) {
+  editCartQty(query, token) {
     let url = `${SERVER_BASE_URL}/api/cart-wishlist/edit-cart/${query}`
-    let data = getTokenService(url, 'PATCH');
+    let data = getTokenService(url, 'PATCH', token);
     return data;
   }
   

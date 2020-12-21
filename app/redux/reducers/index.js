@@ -6,7 +6,7 @@ import listingReducer from './listingReducer';
 import userReducer from './userReducer';
 import globalErrorReducer from './globalErrorReducer';
 import otherReducer from './otherReducer';
-// import cartReducer from './cartReducer';
+import cartReducer from './cartReducer';
 import wishlistReducer from './wishlistReducer';
 import orderReducer from './orderReducer';
 
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   globalError: globalErrorReducer,
   other: otherReducer,
-  // cart: cartReducer,
+  cart: cartReducer,
   wishlist: wishlistReducer,
   order: orderReducer
 });
