@@ -102,6 +102,14 @@ const productSchema = mongoose.Schema({
         type: Date,
         default: null
     },
+    isFeatured: {
+        type: Date,
+        default: null
+    },
+    viewsCount: {
+        type: Number,
+        default: 0,
+    },
     slug: {
         type: String,
         unique: true

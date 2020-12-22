@@ -233,7 +233,7 @@ exports.validateProduct = async (req, res, next) => {
     if (images.length !== (typeof req.body.images === 'string' ? [req.body.images] : req.body.images).length) {
         errors.push({ msg: "Invalid image ids" })
     }
-
+    req.images = images
     // validate brand
     let brand = await ProductBrand.findOne({ slug: req.body.brand })
     if (!brand) {

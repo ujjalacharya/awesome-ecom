@@ -65,7 +65,17 @@ exports.createProduct = async (req, res) => {
   let newProduct = new Product(req.body);
   newProduct.soldBy = req.profile._id;
   // save the product
-  newProduct = await newProduct.save();
+  // newProduct = await newProduct.save();
+  req.images.forEach(i =>{
+    let updataImage = i.toObject()
+    updataImage.productLink = newProduct._id
+    task
+    .update(i, updataImage)
+    .options({ viaSave: true })
+  })
+  await task
+    .save(newProduct)
+    .run({ useMongoose: true });
 
   return res.json(newProduct);
 };
@@ -89,8 +99,13 @@ exports.productImages = async (req, res) => {
       const { filename } = file;
       // remove image from public/uploads
       const Path = `public/uploads/${filename}`;
-      fs.unlinkSync(Path);
+      // console.log(Path);
+      setTimeout(() => {
+        fs.unlinkSync(Path);
+        
+      }, 1);
     });
+    
     return res.status(403).json({ error: "Admin is not verified" });
   }
   const compressImage = async (
@@ -135,6 +150,7 @@ exports.productImages = async (req, res) => {
     return await image.save();
   });
   images = await Promise.all(images);
+  console.log(images);
   res.json(images);
 };
 
