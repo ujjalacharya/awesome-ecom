@@ -8,7 +8,7 @@ import Link from "next/link";
 import StarRatings from "react-star-ratings";
 import _ from 'lodash'
 import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
-import { FacebookShareButton, TwitterShareButton } from 'react-share'
+import { FacebookShareButton, TwitterShareButton, TwitterIcon, FacebookIcon } from 'react-share'
 import AllHelmet from "../../Components/AllHelmet";
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -356,14 +356,14 @@ class ProductSpecs extends Component {
                   url={`http://157.245.106.101:3000/products/${product.slug}`}
                   quote={"Kindeem - explore the mall"}
                   hashtag="#kindeem" >
-                  <i className="fa fa-facebook" aria-hidden="true"></i>
+                  <FacebookIcon size={32} round={true} />
                 </FacebookShareButton>
                 <TwitterShareButton
                   url={`http://157.245.106.101:3000/products/${product.slug}`}
                   quote={"Kindeem - explore the mall"}
                   hashtag="#kindeem"
                 >
-                  <i className="fa fa-twitter" aria-hidden="true"></i>
+                  <TwitterIcon size={32} round={true} />
                 </TwitterShareButton>
               </span>
             </div>
