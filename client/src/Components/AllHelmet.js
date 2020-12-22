@@ -18,12 +18,13 @@ class AllHelmet extends Component{
                 <meta property="og:title" content={this.props.title || ''} />
                 <meta property="og:locale" content="en_US" />
                 <meta property="og:type" content="article" />
-                <meta property="og:site-name" content="BASOBAAS" />
+                <meta property="og:site-name" content="KINDEEM" />
                 <meta property="og:image" content={this.props.img} />
                 <meta property="og:image:secure_url" content={this.props.img} />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
                 <meta property="og:description" content={this.props.desc} />
+                <meta name="twitter:url" content={this.props.url} />
                 <meta name="twitter:title" content={this.props.title || ''} />
                 <meta name="twitter:site" content={this.props.url} />
                 <meta name="twitter:card" content="summary_large_image" />

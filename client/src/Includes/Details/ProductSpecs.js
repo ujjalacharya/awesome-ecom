@@ -106,8 +106,8 @@ class ProductSpecs extends Component {
           <AllHelmet
             title={`${product.name} | KINDEEM`}
             desc={`${description}`}
-            url={`${process.env.BASE_URL}/products/${product.slug}`}
-            img={product.images[0].thumbnail} />
+            url={`http://157.245.106.101:3000/products/${product.slug}`}
+            img={`http://157.245.106.101:3001/uploads/${product.images[0].large}`} />
         }
         <div className="product-specs">
           <div className="price-specs">
@@ -353,15 +353,15 @@ class ProductSpecs extends Component {
               <b>Share this product:</b>
               <span>
                 <FacebookShareButton
-                  url={`http://www.camperstribe.com/products/${product.slug}`}
-                  quote={"CampersTribe - World is yours to explore"}
-                  hashtag="#camperstribe" >
+                  url={`http://157.245.106.101:3000/products/${product.slug}`}
+                  quote={"Kindeem - explore the mall"}
+                  hashtag="#kindeem" >
                   <i className="fa fa-facebook" aria-hidden="true"></i>
                 </FacebookShareButton>
                 <TwitterShareButton
-                  url={`http://www.camperstribe.com/products/${product.slug}`}
-                  quote={"CampersTribe - World is yours to explore"}
-                  hashtag="#camperstribe"
+                  url={`http://157.245.106.101:3000/products/${product.slug}`}
+                  quote={"Kindeem - explore the mall"}
+                  hashtag="#kindeem"
                 >
                   <i className="fa fa-twitter" aria-hidden="true"></i>
                 </TwitterShareButton>
