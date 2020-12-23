@@ -55,7 +55,7 @@ class OtherDetails extends Component {
             {!this.props.data.hasReviewed && this.props.data.hasBought && <ReviewsForm />}
           </TabPane>
           <TabPane tab="Video" key="5">
-            <div className="product-video">
+            <div className="product-video" onClick={this.openCloseVideoModal}>
               <div className="overlay"></div>
               <img src={`${IMAGE_BASE_URL}/${product.images[0].large}`} />
               <PlayCircleFilled />
