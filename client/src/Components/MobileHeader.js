@@ -121,14 +121,25 @@ class MobileHeader extends Component {
             </Link>
           }
           <div className="menu-right-items">
-            <Link href="/cart">
-              <a>
-                <div className="list-icon">
-                  <img src="/images/bag.png" />
-                </div>
-                <div className="list-text">Cart</div>
-              </a>
-            </Link>
+            {
+              loginToken ? (
+                <Link href="/cart">
+                  <a>
+                    <div className="list-icon">
+                      <img src="/images/bag.png" />
+                    </div>
+                    <div className="list-text">Cart</div>
+                  </a>
+                </Link>
+              ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
+                  <a>
+                    <div className="list-icon">
+                      <img src="/images/bag.png" />
+                    </div>
+                    <div className="list-text">Cart</div>
+                  </a>
+                </Link>
+            }
           </div>
           <div className="menu-right-items search-right" onClick={this.showSearchDrawer}>
             <div className="list-icon">

@@ -45,8 +45,15 @@
     .social-btn-cover {
       display: flex;
       align-items: center;
+      @media screen and (max-width: 425px) {
+        display: block;
+      }
       .google {
         margin-left: 10px;
+        @media screen and (max-width: 425px) {
+          margin-left: 0px;
+          margin-top: 10px;
+        }
       }
     }
   }

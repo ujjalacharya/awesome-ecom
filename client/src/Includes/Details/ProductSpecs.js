@@ -8,7 +8,7 @@ import Link from "next/link";
 import StarRatings from "react-star-ratings";
 import _ from 'lodash'
 import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
-import { FacebookShareButton, TwitterShareButton } from 'react-share'
+import { FacebookShareButton, TwitterShareButton, TwitterIcon, FacebookIcon } from 'react-share'
 import AllHelmet from "../../Components/AllHelmet";
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -106,8 +106,8 @@ class ProductSpecs extends Component {
           <AllHelmet
             title={`${product.name} | KINDEEM`}
             desc={`${description}`}
-            url={`${process.env.BASE_URL}/products/${product.slug}`}
-            img={product.images[0].thumbnail} />
+            url={`http://sthautsav.com.np/products/${product.slug}`}
+            img={`http://157.245.106.101:3001/uploads/${product.images[0].large}`} />
         }
         <div className="product-specs">
           <div className="price-specs">
@@ -338,32 +338,35 @@ class ProductSpecs extends Component {
           </div> */}
           </div>
           <div className="prod-cate-specs">
-            <div className="tags">
-              <b>Tags:</b>{" "}
-              {product.tags.map((tag, i) => {
-                return (
-                  <span key={i}>
-                    {tag}
-                    {product.tags.length !== i + 1 && ","}
-                  </span>
-                );
-              })}
-            </div>
+            {
+              product.tags &&
+              <div className="tags">
+                <b>Tags:</b>{" "}
+                {product.tags.map((tag, i) => {
+                  return (
+                    <span key={i}>
+                      {tag}
+                      {product.tags.length !== i + 1 && ","}
+                    </span>
+                  );
+                })}
+              </div>
+            }
             <div className="share">
               <b>Share this product:</b>
               <span>
                 <FacebookShareButton
-                  url={`http://www.camperstribe.com/products/${product.slug}`}
-                  quote={"CampersTribe - World is yours to explore"}
-                  hashtag="#camperstribe" >
-                  <i className="fa fa-facebook" aria-hidden="true"></i>
+                  url={`http://157.245.106.101:3000/products/${product.slug}`}
+                  quote={"Kindeem - explore the mall"}
+                  hashtag="#kindeem" >
+                  <FacebookIcon size={32} round={true} />
                 </FacebookShareButton>
                 <TwitterShareButton
-                  url={`http://www.camperstribe.com/products/${product.slug}`}
-                  quote={"CampersTribe - World is yours to explore"}
-                  hashtag="#camperstribe"
+                  url={`http://sthautsav.com.np/products/${product.slug}`}
+                  quote={"Kindeem - explore the mall"}
+                  hashtag="#kindeem"
                 >
-                  <i className="fa fa-twitter" aria-hidden="true"></i>
+                  <TwitterIcon size={32} round={true} />
                 </TwitterShareButton>
               </span>
             </div>

@@ -9,6 +9,7 @@ import QuickViewModal from "./QuickViewModal";
 import Link from "next/link";
 import actions from "../../../redux/actions";
 import StarRatings from "react-star-ratings";
+import { IMAGE_BASE_URL } from "../../../utils/constants";
 
 const products = {
   category: [
@@ -222,7 +223,7 @@ class ProductCard extends Component {
               <a>
                 <div className="image img-skeleton">
                   <img
-                    src={`${process.env.SERVER_BASE_URL}/uploads/${productData.images[0].medium}`}
+                    src={`${IMAGE_BASE_URL}/${productData.images[0].medium}`}
                     onError={(ev) => {
                       ev.target.src = "/images/default-image.png";
                     }}

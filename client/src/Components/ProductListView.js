@@ -6,6 +6,7 @@ import _ from "lodash";
 import actions from "../../redux/actions";
 import { openNotification, getDiscountedPrice } from "../../utils/common";
 import Link from "next/link";
+import { IMAGE_BASE_URL } from "../../utils/constants";
 
 class ProductListView extends Component {
   state = {
@@ -161,7 +162,7 @@ class ProductListView extends Component {
                       <div className="pd-img">
                         <img
                           src={
-                            process.env.IMAGE_BASE_URL +
+                            IMAGE_BASE_URL +
                             "/" +
                             items.product?.images[0]?.medium
                           }

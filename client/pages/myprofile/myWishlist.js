@@ -10,6 +10,7 @@ import {
 } from "../../utils/common";
 import Link from "next/link";
 import MyProfile from "../../src/Includes/MyProfile/myProfile";
+import { IMAGE_BASE_URL } from "../../utils/constants";
 
 const { Search } = Input;
 
@@ -170,7 +171,7 @@ class MyWishlist extends Component {
                 key: item._id,
                 image: (
                     <img
-                        src={`${process.env.IMAGE_BASE_URL}/${item.product.images[0].medium}`}
+                        src={`${IMAGE_BASE_URL}/${item.product.images[0].medium}`}
                         className="table-item-img"
                     />
                 ),
