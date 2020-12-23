@@ -107,7 +107,7 @@ class ProductSpecs extends Component {
             title={`${product.name} | KINDEEM`}
             desc={`${description}`}
             url={`http://sthautsav.com.np/products/${product.slug}`}
-            img={`http://sthautsav.com.np/uploads/${product.images[0].large}`} />
+            img={`http://sthautsav.com.np:3001/uploads/${product.images[0].large}`} />
         }
         <div className="product-specs">
           <div className="price-specs">
