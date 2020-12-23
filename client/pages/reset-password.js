@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import jwt_decode from "jwt-decode";
+import { withRouter } from 'next/router';
 
 // antd
 import { UserOutlined, LoadingOutlined, LockOutlined } from "@ant-design/icons";
@@ -6,18 +8,18 @@ import { Form, Input, Button, Spin } from "antd";
 
 // includes
 import Layout from '../src/Components/Layout';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+
+//redux
 import actions from '../redux/actions';
-import { useEffect } from 'react';
-import { useState } from 'react';
+
+// utils
 import { openNotification } from '../utils/common';
-import { withRouter } from 'next/router';
-import jwt_decode from "jwt-decode";
+import withUnAuth from '../utils/auth/withUnAuth';
 
 const forgotPassword = (props) => {
     const dispatch = useDispatch();
 
-    const authentication = useSelector(state => state.authentication)
     const [forgotPasswordState, setForgotPasswordState] = useState({ loading: false, success: false, data: {} })
     const [resetPasswordState, setResetPasswordState] = useState({ loading: false, success: false, data: {} })
 
@@ -172,4 +174,4 @@ const forgotPassword = (props) => {
     )
 }
 
-export default withRouter(forgotPassword);
+export default withUnAuth(withRouter(forgotPassword));
