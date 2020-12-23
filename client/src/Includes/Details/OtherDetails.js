@@ -38,34 +38,38 @@ class OtherDetails extends Component {
     return (
       <div className="other-details">
         <Tabs defaultActiveKey="1" onChange={this.callback}>
-          <TabPane tab="Q & A" key="1">
-            <QA />
-          </TabPane>
-          <TabPane tab="Description" key="2">
+          <TabPane tab="Description" key="1">
             <div className="desc-tab">
               <div className="title">Description</div>
               {product?.description}
             </div>
           </TabPane>
-          <TabPane tab="Additional Information" key="3">
+          <TabPane tab="Additional Information" key="2">
             <AdditionalInformation data={addInfo} />
           </TabPane>
-          <TabPane tab="Reviews" key="4">
+          <TabPane tab="Video" key="3">
+            {
+              product?.videoURL.length > 0 ?
+                <>
+                  <div className="product-video" onClick={this.openCloseVideoModal}>
+                    <div className="overlay"></div>
+                    <img src={`${IMAGE_BASE_URL}/${product.images[0].large}`} />
+                    <PlayCircleFilled />
+                  </div>
+                  <ProductVideo
+                    data={product}
+                    openVideo={this.state.openVideo}
+                    onCloseVideo={this.openCloseVideoModal}
+                  />
+                </> : 'No video available'
+            }
+          </TabPane>
+          <TabPane tab="Q & A" key="4">
+            <QA />
+          </TabPane>
+          <TabPane tab="Reviews" key="5">
             <Reviews data={product} />
             {!this.props.data.hasReviewed && this.props.data.hasBought && <ReviewsForm />}
-          </TabPane>
-          <TabPane tab="Video" key="5">
-            <div className="product-video" onClick={this.openCloseVideoModal}>
-              <div className="overlay"></div>
-              <img src={`${IMAGE_BASE_URL}/${product.images[0].large}`} />
-              <PlayCircleFilled />
-            </div>
-            {/* {<button onClick={this.openCloseVideoModal}>open video</button>} */}
-            <ProductVideo
-              data={product}
-              openVideo={this.state.openVideo}
-              onCloseVideo={this.openCloseVideoModal}
-            />
           </TabPane>
         </Tabs>
       </div>

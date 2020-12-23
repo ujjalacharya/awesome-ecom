@@ -205,8 +205,8 @@ class ProductSpecs extends Component {
             </div>
           </div>
           <div className="specs">
-            <div className="spec-details">
-              {description}
+            <div className="spec-details" dangerouslySetInnerHTML={{__html: product.highlights}}>
+              {/* {description}
               {allDescription.length > 100 && (
                 <div className="text-center">
                   <a onClick={this.changeViewStatus} className="view-more-less">
@@ -214,7 +214,7 @@ class ProductSpecs extends Component {
                     <i className="fa fa-caret-down"></i>
                   </a>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
           <div className="qty-cart-btn">
