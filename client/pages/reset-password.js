@@ -26,11 +26,17 @@ const forgotPassword = (props) => {
             email: values.email,
         };
 
-        dispatch(actions.resetMyPassword(body, forgotPasswordState, setForgotPasswordState));
+        dispatch(actions.sendResendPasswordLink(body, forgotPasswordState, setForgotPasswordState));
     };
 
     const onFinishNewPass = (values) => {
         console.log(values)
+        let body = {
+            newPassword: values.newPassword,
+            resetPasswordLink: queryToken
+        }
+
+        dispatch(actions.resetMyPassword(body, resetPasswordState, setResetPasswordState));
     }
 
     useEffect(() => {
@@ -110,12 +116,12 @@ const forgotPassword = (props) => {
                                         <Form.Item>
                                             <div className="login-create">
                                                 <Button
-                                                    disabled={forgotPasswordState.loading}
+                                                    disabled={resetPasswordState.loading}
                                                     htmlType="submit"
                                                     className="primary"
                                                 >
                                                     {
-                                                        forgotPasswordState.loading &&
+                                                        resetPasswordState.loading &&
                                                         <Spin indicator={antIcon} />
                                                     }
                                                     Change Password

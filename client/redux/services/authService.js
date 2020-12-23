@@ -14,8 +14,14 @@ export class AuthService {
     return data;
   }
 
-  async resetPassword(body) {
+  async sendResendPasswordLink(body) {
     let url = `${USER_AUTH_BASE_URL}/forgot-password`
+    let data = postService(url, 'PUT', body);
+    return data;
+  }
+
+  async resetMyPassword(body) {
+    let url = `${USER_AUTH_BASE_URL}/reset-password`
     let data = postService(url, 'PUT', body);
     return data;
   }

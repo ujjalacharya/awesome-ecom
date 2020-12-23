@@ -22,7 +22,6 @@ const register = (body) => {
     await dispatch({ type: REGISTER_FINISH });
     if (response.isSuccess) {
       openNotification("Success", "User registered successfully");
-      // dispatch({ type: AUTHENTICATE, payload: response.data.token });
 
       window.location.href = '/login';
     } else if (!response.isSuccess) {
@@ -33,22 +32,38 @@ const register = (body) => {
 
 
 // reset password
+const sendResendPasswordLink = (body, data, setData) => {
+  return async (dispatch) => { 
+    setData({...data, loading: true, success: false})
+
+    const authService = new AuthService();
+    const response = await authService.sendResendPasswordLink(body);
+
+    if (response.isSuccess) {
+      setData({...data, loading: false, success: true, data: response.data})
+      
+    } else if (!response.isSuccess) {
+      dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
+    }
+  };
+};
+
+// reset password
 const resetMyPassword = (body, data, setData) => {
   return async (dispatch) => { 
     setData({...data, loading: true, success: false})
 
     const authService = new AuthService();
-    const response = await authService.resetPassword(body);
+    const response = await authService.resetMyPassword(body);
 
     if (response.isSuccess) {
-      setData({...data, loading: false, success: true, data: response.data})
-      // dispatch({ type: RESET_PASSWORD, payload: response.data });
+      setData({...data, loading: true, success: true, data: response.data})
+      openNotification("Success", "Password reset successfully");
 
-      // const redirectUrl = window.location.search
-      //   ? window.location.search.split("=")[1]
-      //   : "/";
-      // window.location.href = redirectUrl;
+      window.location.href = '/login';
+      
     } else if (!response.isSuccess) {
+      setData({...data, loading: false, success: false})
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     }
   };
@@ -129,5 +144,6 @@ export default {
   deauthenticate,
   register,
   authenticateSocialLogin,
+  sendResendPasswordLink,
   resetMyPassword
 };
