@@ -339,7 +339,7 @@ class ProductSpecs extends Component {
           </div>
           <div className="prod-cate-specs">
             {
-              product.tags &&
+              product.tags.length > 0 &&
               <div className="tags">
                 <b>Tags:</b>{" "}
                 {product.tags.map((tag, i) => {
