@@ -92,16 +92,61 @@ class ProductListView extends Component {
       let ele = {}
       if (obj._id === cartId) {
         return ele = { ...obj, quantity: newPdQty }
-      }else{ 
+      } else {
         return obj
       }
     })
     this.setState({
       checkoutItems: newCheckoutItems
     })
-    
+
     this.props.getCheckoutItems(newCheckoutItems);
   };
+
+  changeInputPdQty = (e, i, items) => {
+    let newPdQty = e.target.value;
+    let cartId = items._id;
+    if (items.product.quantity <= e.target.value) {
+      openNotification(
+        "Alert",
+        "Maximum product quantity excceded"
+      );
+      newPdQty = items.product.quantity
+    }
+
+    if (e.target.value <= 0 && e.target.value !== '') {
+      openNotification(
+        "Alert",
+        "Quantity cannot be zero"
+      );
+      newPdQty = 1;
+    }
+
+    this.setState({
+      ["pdQtyInStock" + i]: newPdQty,
+    });
+
+    this.props.editCartQty(cartId + "?quantity=" + newPdQty);
+
+    let newCheckoutItems = this.state.checkoutItems.map(obj => {
+      let ele = {}
+      if (obj._id === cartId) {
+        return ele = { ...obj, quantity: newPdQty }
+      } else {
+        return obj
+      }
+    })
+    this.setState({
+      checkoutItems: newCheckoutItems
+    })
+
+    this.props.getCheckoutItems(newCheckoutItems);
+    // else {
+    //   // this.setState({
+    //   //   ["pdQtyInStock" + i]: e.target.value,
+    //   // });
+    // }
+  }
 
   onCheckItems = (item, i) => {
     let itemValue = { ...item, quantity: this.state["pdQtyInStock" + i] };
@@ -228,32 +273,21 @@ class ProductListView extends Component {
                           : <span className="qty-inc-dcs">
                             <i
                               aria-hidden="true"
-                              onClick={() => this.changePdValue(-1, i, items._id)}
+                              onClick={() => { this.state["pdQtyInStock" + i] > 1 && this.changePdValue(-1, i, items._id) }}
                               className={
                                 "fa fa-minus " +
-                                (this.state["pdQtyInStock" + i] === 1
+                                (this.state["pdQtyInStock" + i] <= 1
                                   ? "disabled"
                                   : "")
                               }
+                            // disabled = {this.state["pdQtyInStock" + i] === 1}
                             />
                             <Input
                               type="number"
                               defaultValue={this.state.pdQty}
                               value={this.state["pdQtyInStock" + i]}
                               onChange={(e) => {
-                                if (items.product.quantity <= e.target.value) {
-                                  openNotification(
-                                    "Alert",
-                                    "Maximum product quantity excceded"
-                                  );
-                                  this.setState({
-                                    ["pdQtyInStock" + i]: items.product.quantity,
-                                  });
-                                } else {
-                                  this.setState({
-                                    ["pdQtyInStock" + i]: e.target.value,
-                                  });
-                                }
+                                this.changeInputPdQty(e, i, items)
                               }}
                             />
                             <i
@@ -261,11 +295,14 @@ class ProductListView extends Component {
                                 "fa fa-plus " +
                                 (items.product.quantity <=
                                   this.state["pdQtyInStock" + i]
-                                  ? "disabled clickDisable"
+                                  ? "disabled"
                                   : "")
                               }
                               aria-hidden="true"
-                              onClick={() => this.changePdValue(1, i, items._id)}
+                              onClick={() => {
+                                items.product.quantity > this.state["pdQtyInStock" + i] && 
+                                this.changePdValue(1, i, items._id)
+                              }}
                             />
                           </span>}
                     </div>
