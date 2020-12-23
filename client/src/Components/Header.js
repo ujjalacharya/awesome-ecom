@@ -43,7 +43,7 @@ class Header extends Component {
     if (this.props.authentication.token !== nextProps.authentication.token) {
       let userInfo = [];
       if (nextProps.authentication.token) {
-        userInfo = getUserInfo(loginToken);
+        userInfo = getUserInfo(this.state.loginToken);
       }
       this.setState({
         loginToken: nextProps.authentication.token,
