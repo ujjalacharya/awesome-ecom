@@ -61,9 +61,11 @@ class DetailSlider extends Component {
         >
           <Slider>
             {
-              this.props.data?.images?.map((image, index) => (<Slide index={index}>
-                <ImageWithZoom src={`${baseImageUrl}/${image.large}`} />
-              </Slide>))
+              this.props.data?.images?.map((image, index) => (
+                <Slide index={index}>
+                  <ImageWithZoom src={`${baseImageUrl}/${image.large}`} />
+                </Slide>
+              ))
             }
           </Slider>
           {/* <ButtonBack>Back</ButtonBack>
