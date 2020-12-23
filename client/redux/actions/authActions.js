@@ -6,6 +6,7 @@ import {
   GLOBAL_ERROR,
   REGISTER_FINISH,
   REGISTER_START,
+  RESET_PASSWORD,
   AUTHENTICATE_FINISH
 } from "../types";
 import { setCookie, removeCookie } from "../../utils/cookie";
@@ -24,6 +25,29 @@ const register = (body) => {
       // dispatch({ type: AUTHENTICATE, payload: response.data.token });
 
       window.location.href = '/login';
+    } else if (!response.isSuccess) {
+      dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
+    }
+  };
+};
+
+
+// reset password
+const resetMyPassword = (body, data, setData) => {
+  return async (dispatch) => { 
+    setData({...data, loading: true, success: false})
+
+    const authService = new AuthService();
+    const response = await authService.resetPassword(body);
+
+    if (response.isSuccess) {
+      setData({...data, loading: false, success: true, data: response.data})
+      // dispatch({ type: RESET_PASSWORD, payload: response.data });
+
+      // const redirectUrl = window.location.search
+      //   ? window.location.search.split("=")[1]
+      //   : "/";
+      // window.location.href = redirectUrl;
     } else if (!response.isSuccess) {
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     }
@@ -104,5 +128,6 @@ export default {
   reauthenticate,
   deauthenticate,
   register,
-  authenticateSocialLogin
+  authenticateSocialLogin,
+  resetMyPassword
 };

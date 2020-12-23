@@ -108,9 +108,11 @@ class Login extends Component {
                         <Checkbox>Remember me</Checkbox>
                       </Form.Item>
 
-                      <a className="login-form-forgot" href="">
-                        Forgot password?
-                      </a>
+                      <Link href="/reset-password">
+                        <a className="login-form-forgot" href="">
+                          Forgot password?
+                        </a>
+                      </Link>
                     </div>
                   </Form.Item>
 

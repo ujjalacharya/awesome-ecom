@@ -13,6 +13,12 @@ export class AuthService {
     let data = postService(url, 'POST', body);
     return data;
   }
+
+  async resetPassword(body) {
+    let url = `${USER_AUTH_BASE_URL}/forgot-password`
+    let data = postService(url, 'PUT', body);
+    return data;
+  }
   
   async registerUser(body) {
     let url = `${USER_AUTH_BASE_URL}/signup`
