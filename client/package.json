@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next -p 3002",
-    "build": "next build",
+    "build": "yarn sass-build && next build",
     "start": "next start",
-    "sass": "sass --watch sass/main.scss:public/css/style.css"
+    "sass": "sass --watch sass/main.scss:public/css/style.css",
+    "sass-build": "sass sass/main.scss:public/css/style.css"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
