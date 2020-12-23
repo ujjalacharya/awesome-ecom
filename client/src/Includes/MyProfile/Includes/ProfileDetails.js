@@ -1,4 +1,4 @@
-import React, { Component, useContext, useState, useEffect, useRef  } from "react";
+import React, { Component, useContext, useState, useEffect, useRef } from "react";
 import { Row, Col } from "antd";
 import { Input, Table, Form } from "antd";
 import _ from "lodash";
@@ -182,39 +182,39 @@ class ProfileDetails extends Component {
     let data = [];
 
     // if (!_.isEmpty(activeLoc.address) && !_.isEmpty(userData)) {
-      data = [
-        {
-          key: "1",
-          name: "Date of Birth",
-          age: userData.dob,
-        },
-        {
-          key: "2",
-          name: "Gender",
-          age: userData.gender,
-        },
-        {
-          key: "3",
-          name: "Address",
-          age: activeLoc.address,
-        },
-        {
-          key: "4",
-          name: "Email",
-          age: userData.email,
-        },
-        // ,
-        // {
-        //   key: "4",
-        //   name: "Occupation",
-        //   age: "Private Sector",
-        // },
-      ];
+    data = [
+      {
+        key: "1",
+        name: "Date of Birth",
+        age: userData.dob,
+      },
+      {
+        key: "2",
+        name: "Gender",
+        age: userData.gender,
+      },
+      {
+        key: "3",
+        name: "Address",
+        age: activeLoc.address,
+      },
+      {
+        key: "4",
+        name: "Email",
+        age: userData.email,
+      },
+      // ,
+      // {
+      //   key: "4",
+      //   name: "Occupation",
+      //   age: "Private Sector",
+      // },
+    ];
     // }
     let checkSekelton = this.state.userData.email === "" ? true : false;
     // let checkLocal = userData?.photo?.split('/')[0];
-    let userPhoto = userData.photo ? (`${IMAGE_BASE_URL}/${userData.photo}`) : userData.socialPhoto
-
+    let userPhoto = userData.photo ? (`${IMAGE_BASE_URL}/`) : userData.socialPhoto
+    
     return (
       <div className="profile-details">
         <div className="main-profile">
@@ -222,13 +222,19 @@ class ProfileDetails extends Component {
             <Row className={checkSekelton && "skeleton"}>
               <Col lg={6} xs={24} className="left-prof">
                 <div className="change-profile">
-                  <img
-                    // src="/images/default-user.png"
-                    src={userPhoto}
-                    onError={(ev) => {
-                      ev.target.src = "/images/default-user.png";
-                    }}
-                  />
+                  {
+                    userPhoto ?
+                      <img
+                        src={userPhoto}
+                        onError={(ev) => {
+                          console.log(ev)
+                          ev.target.src = "/images/default-user.png";
+                        }}
+                      /> :
+                      <img
+                        src="/images/default-user.png"
+                      />
+                  }
                   {/* <div>Change Profile</div> */}
                   <input
                     type="file"
