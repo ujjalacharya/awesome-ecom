@@ -51,24 +51,26 @@ class OtherDetails extends Component {
             {
               product?.videoURL.length > 0 ?
                 <>
-                  {
-                    product.videoURL.map((url, index) => {
-                      return (
-                        <div className="product-vid-cov" key={index}>
-                          <div className="product-video" onClick={this.openCloseVideoModal}>
-                            <div className="overlay"></div>
-                            <img src={`${IMAGE_BASE_URL}/${product.images[0].large}`} />
-                            <PlayCircleFilled />
+                  <div className="product-vid-cov">
+                    {
+                      product.videoURL.map((url, index) => {
+                        return (
+                          <div key={index} className="vid-cov">
+                            <div className="product-video" onClick={this.openCloseVideoModal}>
+                              <div className="overlay"></div>
+                              <img src={`${IMAGE_BASE_URL}/${product.images[index].large}`} />
+                              <PlayCircleFilled />
+                            </div>
+                            <ProductVideo
+                              videoURL={url}
+                              openVideo={this.state.openVideo}
+                              onCloseVideo={this.openCloseVideoModal}
+                            />
                           </div>
-                          <ProductVideo
-                            videoURL={url}
-                            openVideo={this.state.openVideo}
-                            onCloseVideo={this.openCloseVideoModal}
-                          />
-                        </div>
-                      )
-                    })
-                  }
+                        )
+                      })
+                    }
+                  </div>
                 </> : 'No video available'
             }
           </TabPane>
