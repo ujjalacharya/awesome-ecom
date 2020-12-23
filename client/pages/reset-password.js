@@ -144,11 +144,11 @@ const forgotPassword = (props) => {
                                                 name="email"
                                                 rules={[
                                                     {
+                                                        type: 'email',
                                                         required: true,
-                                                        message: "Please input your Email!",
+                                                        message: "Please input valid Email!",
                                                     },
                                                 ]}
-                                                initialValue="Tek@gmail.com"
                                             >
                                                 <Input
                                                     prefix={<UserOutlined className="site-form-item-icon" />}

@@ -43,6 +43,7 @@ const sendResendPasswordLink = (body, data, setData) => {
       setData({...data, loading: false, success: true, data: response.data})
       
     } else if (!response.isSuccess) {
+      setData({...data, loading: false, success: false})
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     }
   };
