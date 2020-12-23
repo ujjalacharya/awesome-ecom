@@ -73,6 +73,7 @@ class Login extends Component {
                         message: "Please input your Email!",
                       },
                     ]}
+                    hasFeedback
                     initialValue="Tek@gmail.com"
                   >
                     <Input
@@ -89,9 +90,10 @@ class Login extends Component {
                         message: "Please input your Password!",
                       },
                     ]}
+                    hasFeedback
                     initialValue="helloworld1"
                   >
-                    <Input
+                    <Input.Password
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
                       placeholder="Password"

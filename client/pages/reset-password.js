@@ -30,7 +30,6 @@ const forgotPassword = (props) => {
     };
 
     const onFinishNewPass = (values) => {
-        console.log(values)
         let body = {
             newPassword: values.newPassword,
             resetPasswordLink: queryToken
@@ -47,6 +46,7 @@ const forgotPassword = (props) => {
 
     const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
     const queryToken = props.router?.query?.token;
+    
     let decodedToken = '';
     if (queryToken) {
         decodedToken = jwt_decode(queryToken)
