@@ -77,7 +77,7 @@ class OtherDetails extends Component {
           </TabPane>
           <TabPane tab="Reviews" key="5">
             <Reviews data={product} />
-            {!this.props.data.hasReviewed && this.props.data.hasBought && <ReviewsForm />}
+            {!this.props.data.product.hasReviewed && this.props.data.product.hasBought && <ReviewsForm />}
           </TabPane>
         </Tabs>
       </div>
