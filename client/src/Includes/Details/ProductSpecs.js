@@ -106,7 +106,7 @@ class ProductSpecs extends Component {
           <AllHelmet
             title={`${product.name} | KINDEEM`}
             desc={`${description}`}
-            url={`http://157.245.106.101:3000/products/${product.slug}`}
+            url={`http://sthautsav.com.np/products/${product.slug}`}
             img={`http://157.245.106.101:3001/uploads/${product.images[0].large}`} />
         }
         <div className="product-specs">
@@ -338,17 +338,20 @@ class ProductSpecs extends Component {
           </div> */}
           </div>
           <div className="prod-cate-specs">
-            <div className="tags">
-              <b>Tags:</b>{" "}
-              {product.tags.map((tag, i) => {
-                return (
-                  <span key={i}>
-                    {tag}
-                    {product.tags.length !== i + 1 && ","}
-                  </span>
-                );
-              })}
-            </div>
+            {
+              product.tags &&
+              <div className="tags">
+                <b>Tags:</b>{" "}
+                {product.tags.map((tag, i) => {
+                  return (
+                    <span key={i}>
+                      {tag}
+                      {product.tags.length !== i + 1 && ","}
+                    </span>
+                  );
+                })}
+              </div>
+            }
             <div className="share">
               <b>Share this product:</b>
               <span>
@@ -359,7 +362,7 @@ class ProductSpecs extends Component {
                   <FacebookIcon size={32} round={true} />
                 </FacebookShareButton>
                 <TwitterShareButton
-                  url={`http://157.245.106.101:3000/products/${product.slug}`}
+                  url={`http://sthautsav.com.np/products/${product.slug}`}
                   quote={"Kindeem - explore the mall"}
                   hashtag="#kindeem"
                 >
