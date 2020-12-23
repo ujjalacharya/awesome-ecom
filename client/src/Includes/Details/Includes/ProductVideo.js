@@ -2,7 +2,7 @@ import React from 'react'
 import ModalVideo from 'react-modal-video'
 
 const ProductVideo = (props) => {
-    let videoId = props.data?.videoURL[0]?.split('=').pop()
+    let videoId = props.videoURL.split('=').pop()
     return (
         <div>
             <ModalVideo 

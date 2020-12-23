@@ -203,27 +203,37 @@
       margin-bottom: 10px;
     }
   }
-  .product-video {
-    position: relative;
-    cursor: pointer;
-    text-align: center;
-    &:hover{
-      .anticon{
-        color: #ff3636;
-        transition: all 0.1s ease-in-out;
+  .product-vid-cov {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    .product-video {
+      position: relative;
+      cursor: pointer;
+      text-align: center;
+      width: 300px;
+      &:hover {
+        .anticon {
+          color: #ff3636;
+          transition: all 0.1s ease-in-out;
+        }
       }
-    }
-    .overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: #b7b7b74d;
-    }
-    .anticon {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      font-size: 50px;
+      img {
+        width: 100%;
+        object-fit: contain;
+      }
+      .overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #b7b7b74d;
+      }
+      .anticon {
+        position: absolute;
+        left: 45%;
+        top: 45%;
+        font-size: 50px;
+      }
     }
   }
 }
