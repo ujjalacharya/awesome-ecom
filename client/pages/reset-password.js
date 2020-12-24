@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import jwt_decode from "jwt-decode";
 import { withRouter } from 'next/router';
 
 // antd
@@ -16,6 +15,8 @@ import actions from '../redux/actions';
 // utils
 import { openNotification } from '../utils/common';
 import withUnAuth from '../utils/auth/withUnAuth';
+
+var jwt = require('jsonwebtoken');
 
 const forgotPassword = (props) => {
     const dispatch = useDispatch();
@@ -49,9 +50,18 @@ const forgotPassword = (props) => {
     const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
     const queryToken = props.router?.query?.token;
     
-    let decodedToken = '';
+    let tokenVerfied = false;
+    
     if (queryToken) {
-        decodedToken = jwt_decode(queryToken)
+        try{
+            tokenVerfied = jwt.verify(queryToken, process.env.JWT_EMAIL_VERIFICATION_KEY);
+        } catch(error){
+            if(error.name === "TokenExpiredError"){
+                openNotification('Error', 'Reset link has expired')
+            }else{
+                openNotification('Error', 'Invalid Link') 
+            }
+        }
     }
 
     return (
@@ -64,10 +74,10 @@ const forgotPassword = (props) => {
                     <div className="login-right">
                         <div className="login-title">
                             <h1>Reset My Password</h1>
-                            <p>{decodedToken ? 'Please enter your new password' : 'Please enter your to email to reset your password.'}</p>
+                            <p>{tokenVerfied ? 'Please enter your new password' : 'Please enter your to email to reset your password.'}</p>
                         </div>
                         {
-                            decodedToken ? (
+                            tokenVerfied ? (
                                 <div className="login-form">
                                     <Form
                                         name="forgotPassword"

@@ -9,5 +9,7 @@ module.exports = {
     BASE_URL: process.env.BASE_URL,
     SERVER_BASE_URL: process.env.SERVER_BASE_URL,
     IMAGE_BASE_URL: process.env.IMAGE_BASE_URL,
+    JWT_SIGNIN_KEY: process.env.JWT_SIGNIN_KEY,
+    JWT_EMAIL_VERIFICATION_KEY: process.env.JWT_EMAIL_VERIFICATION_KEY,
   },
 };
