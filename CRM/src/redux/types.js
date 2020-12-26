@@ -41,4 +41,5 @@ export const GET_CATEGORIES = "GET_CATEGORIES"
 export const GET_BRANDS = "GET_BRANDS"
 export const UPLOAD_IMAGES = "UPLOAD_IMAGES"
 export const REMOVE_IMAGE = "REMOVE_IMAGE"
+export const REMOVING_IMAGE = "REMOVING_IMAGE"
 

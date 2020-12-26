@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE} from "../types";
+import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVING_IMAGE} from "../types";
 import api from "../../utils/api";
 
 export const getProducts = ({id, page, perPage, keyword = '', createdAt = '', updatedAt='' , status='',price='', outofstock=''}) => async (dispatch) => {
@@ -125,13 +125,16 @@ export const uploadImages = ({
 
 export const deleteImageById = (id,image_id) => async (dispatch) => {
     try {
+        dispatch({type: REMOVING_IMAGE})
         const res = await api.delete(`/product/image/${id}?image_id=${image_id}`);
         dispatch({
             type: REMOVE_IMAGE,
             payload: res.data._id,
         });
+        return true
     } catch (err) {
         console.log("****product_actions/deleteImageById****", err);
         dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+        return false
     }
 };

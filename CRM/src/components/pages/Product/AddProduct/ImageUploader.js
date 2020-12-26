@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Upload, Modal, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import {uploadImages, deleteImageById} from '../../../../redux/actions/product_actions'
-const ImageUploader = ({user, uploadImages, deleteImageById}) => {
+const ImageUploader = ({user, uploadImages, deleteImageById, isImageRemoved}) => {
     const [fileList, setFileList] = useState([
         {
             uid: '-1',
@@ -29,9 +29,11 @@ const ImageUploader = ({user, uploadImages, deleteImageById}) => {
     }
     const handleCancel = () => setPreview({...preview, previewVisible: false });
     const onChange = ({ file, fileList: newFileList, event }) => {
-        file.status==='success' && setFileList(newFileList);
+        // file.status==='success' && setFileList(newFileList);
+        setFileList(newFileList)
         console.log(file,'this is file');
         console.log(newFileList, 'this is file list');
+        console.log(event, 'this is event');
     };
     const onPreview = async file => {
 
@@ -66,7 +68,6 @@ const ImageUploader = ({user, uploadImages, deleteImageById}) => {
         filename,
         onError,
         onProgress,
-        progress,
         onSuccess,
     }) => {
         return uploadImages({
@@ -75,7 +76,6 @@ const ImageUploader = ({user, uploadImages, deleteImageById}) => {
             filename,
             onError,
             onProgress,
-            progress,
             onSuccess,
         })
   }
@@ -92,7 +92,10 @@ const ImageUploader = ({user, uploadImages, deleteImageById}) => {
                 onChange={onChange}
                 onPreview={onPreview}
                 beforeUpload={beforeUpload}
-                onRemove={file=>deleteImageById(user?.id, file._id)}
+                onRemove={async file=>{
+                    return await deleteImageById(user?._id, file.response.data[0]._id)
+                    // return isImageRemoved
+                    }}
                 progress={{ strokeColor: {
                     '0%': '#108ee9',
                     '100%': '#87d068',
@@ -122,10 +125,12 @@ const ImageUploader = ({user, uploadImages, deleteImageById}) => {
 ImageUploader.propTypes = {
     user: PropTypes.object,
     uploadImages:PropTypes.func.isRequired,
+    isImageRemoved: PropTypes.bool,
 }
 
 const mapStateToProps = (state) =>  ({
-    user:state.auth.user
+    user:state.auth.user,
+    isImageRemoved: state.product.isImageRemoved
 })
 
 const mapDispatchToProps = {

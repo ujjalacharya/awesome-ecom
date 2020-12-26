@@ -110,6 +110,14 @@ const productSchema = mongoose.Schema({
         type: Number,
         default: 0,
     },
+    trendingScore: {
+        type: mongoose.Decimal128,
+        default: 0
+    },
+    noOfSoldOut: {
+        type: Number,
+        default: 0,
+    },
     slug: {
         type: String,
         unique: true

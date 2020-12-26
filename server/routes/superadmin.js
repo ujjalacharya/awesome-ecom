@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher
+    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher, makeProductFeatured
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
@@ -55,6 +55,7 @@ router.get('/product-brands',getProductBrands)
 // product's..
 router.patch('/approve-product/:p_slug', auth, isSuperAdmin, approveProduct)
 router.put('/disapprove-product/:p_slug', auth, isSuperAdmin, disApproveProduct)
+router.put('/featured-product/:p_slug', auth, isSuperAdmin, makeProductFeatured)
 router.get("/products", auth, isSuperAdmin, getProducts)
 
 

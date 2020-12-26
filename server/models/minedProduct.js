@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema
 const miningSchema = new mongoose.Schema({
-    hot: [{
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-        unique: true
-    }],
     trending: [{
         type: Schema.Types.ObjectId,
         ref: 'product',
@@ -27,11 +22,11 @@ const miningSchema = new mongoose.Schema({
         ref: 'user',
         unique: true
         },
-        product: {
+        products: [{
             type: Schema.Types.ObjectId,
             ref: 'product',
             unique: true
-        }
+        }]
     }]
 });
 
