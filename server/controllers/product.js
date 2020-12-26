@@ -333,6 +333,82 @@ exports.minedProducts = async (req, res) => {
   products = await Promise.all(products)
   res.json({ products, totalCount });
 };
+exports.forYouProducts = async (req,res) => {
+  const page = +req.query.page || 1;
+  const perPage = +req.query.perPage || 10;
+  const { createdAt, updatedAt, price } = req.query
+  let sortFactor = { createdAt: 'desc' };
+  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
+  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
+  const orders = await Order.find({ user: req.user._id })
+    .select('-_id product')
+    .populate({
+      path: 'product',
+      select: '-_id category',
+      populate: {
+        path: 'category',
+        model: 'category',
+        select: '_id ',
+        match: {
+          isDisabled: null
+        },
+        populate: {
+          path: 'parent',
+          model: 'category',
+          select: '_id ',
+          match: {
+            isDisabled: null
+          },
+          populate: {
+            path: 'parent',
+            model: 'category',
+            select: '_id ',
+            match: {
+              isDisabled: null
+            },
+          }
+        }
+      }
+    });
+    let categories = []
+    orders.forEach(o=>{
+      o.product.category.forEach(cat=>{
+        categories.push(cat._id)//i.e last layer
+        cat.parent && categories.push(cat.parent._id) //i.e second layer
+        // cat.parent.parent && categories.push(cat.parent.parent._id) //i.e first layer
+      })
+    })
+  categories =[... new Set(categories)]
+  if (!categories.length) {
+    return res.status(403).json({ error: "Categories not found." });
+  }
+  
+  let products = await Product.find({ category: { $in: categories } })
+    .populate("category", "displayName slug")
+    .populate("brand", "brandName slug")
+    .populate("images", "-createdAt -updatedAt -__v")
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .lean()
+    .sort(sortFactor);
+  const totalCount = await Product.countDocuments({
+    category: { $in: categories },
+  });
+
+  //user's action on each product
+  products = products.map(async p => {
+    //user's action on this product
+    const { hasOnCart, hasOnWishlist } = await userHas(p, req.user, 'products')
+    //ratings of this product
+    // p.stars = await getRatingInfo(p)
+    p.hasOnCart = hasOnCart,
+      p.hasOnWishlist = hasOnWishlist
+    return p
+  })
+  products = await Promise.all(products)
+  res.json({ products, totalCount });
+}
 
 exports.suggestKeywords = async (req, res) => {
   let limits = +req.query.limits || 5
