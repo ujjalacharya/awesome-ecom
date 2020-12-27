@@ -2,10 +2,12 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import CartScreen from "../../screens/CartScreen";
 import { headerOptions } from "../../utils/common";
+import { withAuth } from "../../components/shared/withAuth";
+
 
 const Stack = createStackNavigator();
 
-const MessageStack = () => {
+const CartStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -21,4 +23,4 @@ const MessageStack = () => {
   );
 };
 
-export default MessageStack;
+export default withAuth(CartStack);

@@ -15,6 +15,7 @@ import {
 } from "../types";
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
+import { WISHLIST_BASE_URL } from "../../utils/constants";
 
 const productCategories = () => {
   return async (dispatch) => {
@@ -127,7 +128,7 @@ const postReviews = (query, body) => {
 const getOrders = (ctx) => {
   return async (dispatch) => {
     const resp = await fetch(
-      `${process.env.SERVER_BASE_URL}/api/cart-wishlist/carts?page=1`,
+      `${WISHLIST_BASE_URL}/carts?page=1`,
       {
         method: "GET",
         headers: {

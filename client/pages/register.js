@@ -8,6 +8,7 @@ import withUnAuth from "../utils/auth/withUnAuth";
 import { withRouter } from "next/router";
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import Link from "next/link";
 
 // const layout = {
 //     labelCol: { span: 8 },
@@ -118,10 +119,10 @@ class Register extends Component {
 
                                     <Form.Item>
                                         <div className="login-create">
-                                            <Button disabled={this.props.authentication.loading} htmlType="submit" className="secondary">
+                                            <Button disabled={this.props.authentication.loading} htmlType="submit" className="primary">
                                                 {this.props.authentication.loading && <Spin indicator={antIcon} />} Sign Up
                                             </Button>
-                                            <Button disabled={this.props.authentication.loading} className="no-color">Login</Button>
+                                            <Button disabled={this.props.authentication.loading} className="no-color"><Link href="/login">Login</Link></Button>
                                         </div>
                                     </Form.Item>
                                 </Form>

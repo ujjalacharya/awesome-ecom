@@ -6,6 +6,7 @@ import _ from "lodash";
 import actions from "../../redux/actions";
 import { openNotification, getDiscountedPrice } from "../../utils/common";
 import Link from "next/link";
+import { IMAGE_BASE_URL } from "../../utils/constants";
 
 class ProductListView extends Component {
   state = {
@@ -34,7 +35,7 @@ class ProductListView extends Component {
       productsData: this.props.productsData,
       showQtySection: this.props.showQtySection,
     });
-    
+
     if (this.props.showCheckbox === 'noCheckbox') {
 
       let p_slugs = this.props.cart.checkoutItems?.carts.map((newItems) => {
@@ -70,12 +71,12 @@ class ProductListView extends Component {
       this.props.getCartProducts("page=1");
     }
 
-    if (
-      this.props.cart.editCartQtyResp !== prevProps.cart.editCartQtyResp &&
-      this.props.cart.editCartQtyResp
-    ) {
-      this.props.getCartProducts("page=1");
-    }
+    // if (
+    //   this.props.cart.editCartQtyResp !== prevProps.cart.editCartQtyResp &&
+    //   this.props.cart.editCartQtyResp
+    // ) {
+    //   this.props.getCartProducts("page=1");
+    // }
   }
 
   changePdValue = (num, i, cartId) => {
@@ -86,11 +87,69 @@ class ProductListView extends Component {
       });
     }
     this.props.editCartQty(cartId + "?quantity=" + newPdQty);
+
+    let newCheckoutItems = this.state.checkoutItems.map(obj => {
+      let ele = {}
+      if (obj._id === cartId) {
+        return ele = { ...obj, quantity: newPdQty }
+      } else {
+        return obj
+      }
+    })
+    this.setState({
+      checkoutItems: newCheckoutItems
+    })
+
+    this.props.getCheckoutItems(newCheckoutItems);
   };
 
-  onCheckItems = (e) => {
-    let itemValue = e.target.value;
+  changeInputPdQty = (e, i, items) => {
+    let newPdQty = e.target.value;
+    let cartId = items._id;
+    if (items.product.quantity <= e.target.value) {
+      openNotification(
+        "Alert",
+        "Maximum product quantity excceded"
+      );
+      newPdQty = items.product.quantity
+    }
 
+    if (e.target.value <= 0 && e.target.value !== '') {
+      openNotification(
+        "Alert",
+        "Quantity cannot be zero"
+      );
+      newPdQty = 1;
+    }
+
+    this.setState({
+      ["pdQtyInStock" + i]: newPdQty,
+    });
+
+    this.props.editCartQty(cartId + "?quantity=" + newPdQty);
+
+    let newCheckoutItems = this.state.checkoutItems.map(obj => {
+      let ele = {}
+      if (obj._id === cartId) {
+        return ele = { ...obj, quantity: newPdQty }
+      } else {
+        return obj
+      }
+    })
+    this.setState({
+      checkoutItems: newCheckoutItems
+    })
+
+    this.props.getCheckoutItems(newCheckoutItems);
+    // else {
+    //   // this.setState({
+    //   //   ["pdQtyInStock" + i]: e.target.value,
+    //   // });
+    // }
+  }
+
+  onCheckItems = (item, i) => {
+    let itemValue = { ...item, quantity: this.state["pdQtyInStock" + i] };
     let checkoutItems = this.state.checkoutItems;
 
     let newCheckoutItems = [];
@@ -106,10 +165,10 @@ class ProductListView extends Component {
       });
 
       if (!itemsInserted) {
-        newCheckoutItems.push(e.target.value);
+        newCheckoutItems.push(itemValue);
       }
     } else {
-      newCheckoutItems.push(e.target.value);
+      newCheckoutItems.push(itemValue);
     }
 
     this.setState({
@@ -130,12 +189,12 @@ class ProductListView extends Component {
       <>
         {this.state.productsData?.carts?.map((items, i) => {
           return (
-            <div className="product-list-view">
+            <div className="product-list-view" key={i}>
               <Row>
                 <Col lg={2}>
                   <Checkbox
-                    value={items}
-                    onChange={this.onCheckItems}
+                    // value={items}
+                    onChange={() => this.onCheckItems(items, i)}
                     className={this.props.showCheckboxForOutOfStock || this.props.showCheckbox}
                   ></Checkbox>
                 </Col>
@@ -148,7 +207,7 @@ class ProductListView extends Component {
                       <div className="pd-img">
                         <img
                           src={
-                            process.env.IMAGE_BASE_URL +
+                            IMAGE_BASE_URL +
                             "/" +
                             items.product?.images[0]?.medium
                           }
@@ -214,32 +273,21 @@ class ProductListView extends Component {
                           : <span className="qty-inc-dcs">
                             <i
                               aria-hidden="true"
-                              onClick={() => this.changePdValue(-1, i, items._id)}
+                              onClick={() => { this.state["pdQtyInStock" + i] > 1 && this.changePdValue(-1, i, items._id) }}
                               className={
                                 "fa fa-minus " +
-                                (this.state["pdQtyInStock" + i] === 1
+                                (this.state["pdQtyInStock" + i] <= 1
                                   ? "disabled"
                                   : "")
                               }
+                            // disabled = {this.state["pdQtyInStock" + i] === 1}
                             />
                             <Input
                               type="number"
                               defaultValue={this.state.pdQty}
                               value={this.state["pdQtyInStock" + i]}
                               onChange={(e) => {
-                                if (items.product.quantity <= e.target.value) {
-                                  openNotification(
-                                    "Alert",
-                                    "Maximum product quantity excceded"
-                                  );
-                                  this.setState({
-                                    ["pdQtyInStock" + i]: items.product.quantity,
-                                  });
-                                } else {
-                                  this.setState({
-                                    ["pdQtyInStock" + i]: e.target.value,
-                                  });
-                                }
+                                this.changeInputPdQty(e, i, items)
                               }}
                             />
                             <i
@@ -247,11 +295,14 @@ class ProductListView extends Component {
                                 "fa fa-plus " +
                                 (items.product.quantity <=
                                   this.state["pdQtyInStock" + i]
-                                  ? "disabled clickDisable"
+                                  ? "disabled"
                                   : "")
                               }
                               aria-hidden="true"
-                              onClick={() => this.changePdValue(1, i, items._id)}
+                              onClick={() => {
+                                items.product.quantity > this.state["pdQtyInStock" + i] && 
+                                this.changePdValue(1, i, items._id)
+                              }}
                             />
                           </span>}
                     </div>

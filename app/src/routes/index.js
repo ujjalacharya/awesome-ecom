@@ -19,6 +19,7 @@ import MyOrders from "../screens/ProfileScreen/Listings/MyOrders";
 import MyReviews from "../screens/ProfileScreen/Listings/MyReviews";
 import MyWishlists from "../screens/ProfileScreen/Listings/MyWishlists";
 import EditProfile from "../screens/ProfileScreen/EditProfile";
+import { AuthStack } from "./StackNavigators";
 
 export default function App(props) {
   return (
@@ -33,6 +34,7 @@ export default function App(props) {
           {(prop) => <DrawerNavigators {...prop} customCategories={props} />}
         </Stack.Screen>
         {/* // component={DrawerNavigators} props={props}/> */}
+        <Stack.Screen name="Auth" component={AuthStack} />
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="Products" component={ProductListScreen} />
         <Stack.Screen name="WishList" component={WishListScreen} />

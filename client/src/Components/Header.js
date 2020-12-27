@@ -7,6 +7,7 @@ import Link from "next/link";
 import actions from "../../redux/actions";
 import Router, { withRouter } from "next/router";
 import { AutoComplete } from "antd";
+import { debounce } from "lodash";
 
 class Header extends Component {
   state = {
@@ -42,7 +43,7 @@ class Header extends Component {
     if (this.props.authentication.token !== nextProps.authentication.token) {
       let userInfo = [];
       if (nextProps.authentication.token) {
-        userInfo = getUserInfo(loginToken);
+        userInfo = getUserInfo(this.state.loginToken);
       }
       this.setState({
         loginToken: nextProps.authentication.token,
@@ -103,14 +104,31 @@ class Header extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-
-    Router.push("/search/[slug]", "/search/" + this.state.searchValue);
+    this.searchSelectedProduct(this.state.searchValue);
   };
 
   searchProducts = (e, slug, cateId) => {
     e.stopPropagation();
     Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
   };
+
+  selectKeyword = (keyword) => {
+    this.searchSelectedProduct(keyword)
+  }
+
+  searchSelectedProduct = debounce((keyword) => {
+    Router.push("/search/[slug]", "/search/" + keyword);
+    this.setState({ searchValue: keyword });
+  }, 1000)
+
+  getSearchKeywordsDeb = (search) => {
+    this.setState({ searchValue: search });
+    this.debouceSearchKeywords(search)
+  }
+
+  debouceSearchKeywords = debounce((keyword) => {
+    this.props.getSearchKeywords(keyword);
+  }, 500)
 
   render() {
     let { parentCate, loginToken, userInfo } = this.state;
@@ -224,12 +242,10 @@ class Header extends Component {
                 // }}
                 className="auto-search"
                 onSelect={(select) => {
-                  Router.push("/search/[slug]", "/search/" + select);
-                  this.setState({ searchValue: select });
+                  this.selectKeyword(select)
                 }}
                 onSearch={(search) => {
-                  this.props.getSearchKeywords(search);
-                  this.setState({ searchValue: search });
+                  this.getSearchKeywordsDeb(search)
                 }}
               // placeholder="Search for products, brands and more"
               >

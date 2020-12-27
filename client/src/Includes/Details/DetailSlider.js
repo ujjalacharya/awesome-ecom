@@ -3,7 +3,8 @@ import Sliderss from "react-slick";
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, ImageWithZoom } from 'pure-react-carousel';
 import PrevArrow from "../../Components/Includes/PrevArrow";
 import NextArrow from "../../Components/Includes/NextArrow";
-const baseImageUrl = `${process.env.SERVER_BASE_URL}/uploads`
+import { IMAGE_BASE_URL } from "../../../utils/constants";
+const baseImageUrl = IMAGE_BASE_URL
 class DetailSlider extends Component {
   state = {
     imageUrl: `${baseImageUrl}/${this.props.data?.images[0]?.medium}`,
@@ -60,9 +61,11 @@ class DetailSlider extends Component {
         >
           <Slider>
             {
-              this.props.data?.images?.map((image, index) => (<Slide index={index}>
-                <ImageWithZoom src={`${baseImageUrl}/${image.large}`} />
-              </Slide>))
+              this.props.data?.images?.map((image, index) => (
+                <Slide index={index}>
+                  <ImageWithZoom src={`${baseImageUrl}/${image.medium}`} srcZoomed={`${baseImageUrl}/${image.large}`} />
+                </Slide>
+              ))
             }
           </Slider>
           {/* <ButtonBack>Back</ButtonBack>

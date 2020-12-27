@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Carousel, Button } from "antd";
+import { IMAGE_BASE_URL } from "../../utils/constants";
 
 // import Carousel from "nuka-carousel";
 
@@ -21,7 +22,7 @@ class MainCarousel extends Component {
               return (
                 <div className="img-text" key={i}>
                   <div className="carousel-text"></div>
-                  <img src={process.env.IMAGE_BASE_URL+'/'+banner.bannerPhoto} alt="banner" />
+                  <img src={IMAGE_BASE_URL+'/'+banner.bannerPhoto} alt="banner" />
                 </div>
               );
             })}

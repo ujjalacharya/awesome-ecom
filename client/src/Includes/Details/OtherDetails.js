@@ -1,14 +1,27 @@
 import React, { Component } from "react";
 import { Tabs } from "antd";
+import { PlayCircleFilled } from "@ant-design/icons";
 import QA from "./Includes/Q&A";
 import AdditionalInformation from "./Includes/AdditionalInfo";
 import Reviews from "./Includes/Reviews";
 import ReviewsForm from "./Includes/ReviewForm";
+import ProductVideo from "./Includes/ProductVideo";
+import { IMAGE_BASE_URL } from "../../../utils/constants";
 
 const { TabPane } = Tabs;
 
 class OtherDetails extends Component {
-  callback = (key) => {};
+  state = {
+    openVideo: false
+  }
+
+  callback = (key) => { };
+
+  openCloseVideoModal = () => {
+    this.setState({
+      openVideo: !this.state.openVideo
+    })
+  }
 
   render() {
     let {
@@ -21,25 +34,52 @@ class OtherDetails extends Component {
       size: product?.size,
       warranty: product?.warranty,
     };
-    
+
     return (
       <div className="other-details">
         <Tabs defaultActiveKey="1" onChange={this.callback}>
-          <TabPane tab="Q & A" key="1">
-            <QA />
-          </TabPane>
-          <TabPane tab="Description" key="2">
+          <TabPane tab="Description" key="1">
             <div className="desc-tab">
               <div className="title">Description</div>
               {product?.description}
             </div>
           </TabPane>
-          <TabPane tab="Additional Information" key="3">
+          <TabPane tab="Additional Information" key="2">
             <AdditionalInformation data={addInfo} />
           </TabPane>
-          <TabPane tab="Reviews" key="4">
+          <TabPane tab="Video" key="3">
+            {
+              product?.videoURL.length > 0 ?
+                <>
+                  <div className="product-vid-cov">
+                    {
+                      product.videoURL.map((url, index) => {
+                        return (
+                          <div key={index} className="vid-cov">
+                            <div className="product-video" onClick={this.openCloseVideoModal}>
+                              <div className="overlay"></div>
+                              <img src={`${IMAGE_BASE_URL}/${product.images[index].large}`} />
+                              <PlayCircleFilled />
+                            </div>
+                            <ProductVideo
+                              videoURL={url}
+                              openVideo={this.state.openVideo}
+                              onCloseVideo={this.openCloseVideoModal}
+                            />
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                </> : 'No video available'
+            }
+          </TabPane>
+          <TabPane tab="Q & A" key="4">
+            <QA />
+          </TabPane>
+          <TabPane tab="Reviews" key="5">
             <Reviews data={product} />
-            {!this.props.data.hasReviewed && this.props.data.hasBought && <ReviewsForm />}
+            {!this.props.data.product.hasReviewed && this.props.data.product.hasBought && <ReviewsForm />}
           </TabPane>
         </Tabs>
       </div>

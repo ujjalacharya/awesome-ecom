@@ -33,7 +33,7 @@ export const postTokenService = async (url, method, body, token) => {
   }
 };
 
-export const getTokenService = async (url, method, token) => {
+export const getTokenService = async (url, method="GET", token) => {
   try {
     const resp = await fetch(url, {
       method,

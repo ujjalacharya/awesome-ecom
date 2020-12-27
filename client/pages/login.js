@@ -8,9 +8,33 @@ import withUnAuth from "../utils/auth/withUnAuth";
 import { withRouter } from "next/router";
 import Link from "next/link";
 import { Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
-
+import { LoadingOutlined, FacebookFilled, GoogleOutlined } from '@ant-design/icons';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+// import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 class Login extends Component {
+  responseFacebook = (response) => {
+    let body = {
+      name: response.name,
+      email: response.email,
+      socialPhoto: response.picture.data.url,
+      userID: response.userID,
+      loginDomain: "facebook"
+    }
+    this.props.authenticateSocialLogin(body)
+  }
+
+  responseGoogle = (response) => {
+    let { profileObj } = response
+    let body = {
+      name: profileObj.familyName + ' ' + profileObj.givenName,
+      email: profileObj.email,
+      socialPhoto: profileObj.imageUrl,
+      userID: response.googleId,
+      loginDomain: "google"
+    }
+    this.props.authenticateSocialLogin(body)
+  }
   render() {
     const onFinish = (values) => {
       let body = {
@@ -49,6 +73,7 @@ class Login extends Component {
                         message: "Please input your Email!",
                       },
                     ]}
+                    hasFeedback
                     initialValue="Tek@gmail.com"
                   >
                     <Input
@@ -65,9 +90,10 @@ class Login extends Component {
                         message: "Please input your Password!",
                       },
                     ]}
+                    hasFeedback
                     initialValue="helloworld1"
                   >
-                    <Input
+                    <Input.Password
                       prefix={<LockOutlined className="site-form-item-icon" />}
                       type="password"
                       placeholder="Password"
@@ -84,21 +110,59 @@ class Login extends Component {
                         <Checkbox>Remember me</Checkbox>
                       </Form.Item>
 
-                      <a className="login-form-forgot" href="">
-                        Forgot password?
-                      </a>
+                      <Link href="/reset-password">
+                        <a className="login-form-forgot" href="">
+                          Forgot password?
+                        </a>
+                      </Link>
                     </div>
                   </Form.Item>
 
                   <Form.Item>
                     <div className="login-create">
-                      <Button disabled={this.props.authentication.loading} htmlType="submit" className="secondary">
+                      <Button disabled={this.props.authentication.loading} htmlType="submit" className="primary">
                         {this.props.authentication.loading && <Spin indicator={antIcon} />} Login Now
                       </Button>
                       <Button disabled={this.props.authentication.loading} className="no-color"><Link href="/register">Create Account</Link></Button>
                     </div>
                   </Form.Item>
                 </Form>
+              </div>
+              <div className="social-login-opt">
+                <div id="or">OR</div>
+                <div className="social-title">Sign in with</div>
+                <div className="social-btn-cover">
+                  <FacebookLogin
+                    appId="207764167510635"
+                    autoLoad={false}
+                    fields="name,email,picture"
+                    // onClick={componentClicked}
+                    callback={this.responseFacebook}
+                    render={renderProps => (
+                      <Button
+                        className="social-btn facebook"
+                        onClick={renderProps.onClick}
+                      >
+                        <FacebookFilled /> Login With Facebook
+                      </Button>
+                    )}
+                  />
+                  <GoogleLogin
+                    clientId="223562887361-6po823epv7ch9ivklm6d47kcpilt99b3.apps.googleusercontent.com"
+                    buttonText="Login"
+                    onSuccess={this.responseGoogle}
+                    onFailure={this.responseGoogle}
+                    cookiePolicy={'single_host_origin'}
+                    render={renderProps => (
+                      <Button
+                        className="social-btn google"
+                        onClick={renderProps.onClick}
+                      >
+                        <img className="google-img" src="/images/google-icon.png" /> Login With Google
+                      </Button>
+                    )}
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -21,7 +21,7 @@ class Footer extends Component {
             <div className="comp-email">EMAIL: Contact@plazathemes.com</div>
           </Col>
           <Col lg={4} xs={24} md={12} className="customer-care footer-ul-design">
-            <h4>Customer Care</h4>
+            <h4>Customer Care test</h4>
             <ul>
               <li>Clothing</li>
               <li>Shoes</li>

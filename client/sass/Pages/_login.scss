@@ -24,8 +24,41 @@
       font-size: 12px;
     }
   }
+  .social-login-opt {
+    border-top: 1px solid #eee;
+    padding: 10px;
+    position: relative;
+    #or {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      color: #fff;
+      background: #48b5dc;
+      border-radius: 50%;
+      padding: 5px;
+      font-size: 12px;
+    }
+    .social-title {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .social-btn-cover {
+      display: flex;
+      align-items: center;
+      @media screen and (max-width: 425px) {
+        display: block;
+      }
+      .google {
+        margin-left: 10px;
+        @media screen and (max-width: 425px) {
+          margin-left: 0px;
+          margin-top: 10px;
+        }
+      }
+    }
+  }
   .welcome-illus {
-    img{
+    img {
       width: 100%;
     }
   }

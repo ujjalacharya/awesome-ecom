@@ -1,11 +1,14 @@
 .main-header {
   padding: 10px 20px;
   box-shadow: $box-shadow;
-  position: relative;
+  position: sticky;
+  top: 0px;
+  z-index: 9;
+  background: #fff;
   @media screen and (max-width: 576px) {
     display: none;
   }
-  .auto-search{
+  .auto-search {
     width: 350px;
     @media screen and (min-width: 577px) and (max-width: 680px) {
       width: 250px;
