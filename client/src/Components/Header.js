@@ -354,55 +354,71 @@ class Header extends Component {
           </div>
           {
             !isEmpty(this.state.currentChildCate) &&
-            // <div>
-            <Row className="child-cates-cover">
-              <Col 
-                lg={7} 
-                className={`${!isEmpty(this.state.currentChildChildCate) && 'child-cates-col'}`}
-              >
-                <div>
-                  {
-                    this.state.currentChildCate?.map((cate, i) => {
-                      return (
-                        <div
-                          className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
-                          key={i}
-                          onMouseOver={() => this.getCurrentChildChildCates(cate)}
-                        >
-                          {">"} <span>{cate.displayName}</span>
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              </Col>
-              <Col 
-                lg={7} 
-                className={`${!isEmpty(this.state.currentChildChildCate) && 'child-child-cates-col'}`}
-              >
-                <div>
-                  {
-                    this.state.currentChildChildCate?.map((cate, i) => {
-                      return (
-                        <div
-                          className={"child-cate " + (cate._id === this.state.currentActiveChildChildId ? 'active' : '')}
-                          onMouseOut={() => this.setState({ currentActiveChildChildId: '' })}
-                          onMouseOver={() => this.setState({ currentActiveChildChildId: cate._id })}
-                          key={i}
-                        >
-                          {">"} <span>{cate.displayName}</span>
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              </Col>
-              <Col lg={10} style={{ textAlign: 'right' }}>
-                <div><img src="/images/elect-imag.jpg" /></div>
-              </Col>
-            </Row>
+            <div className="child-cates-cover">
+              <Row className="child-cates-row" style={{background: '#fff'}}>
+                <Col
+                  lg={7}
+                  sm={7}
+                  className={`${!isEmpty(this.state.currentChildChildCate) && 'child-cates-col'}`}
+                >
+                  <div>
+                    {
+                      this.state.currentChildCate?.map((cate, i) => {
+                        return (
+                          <div
+                            className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
+                            key={i}
+                            onMouseOver={() => this.getCurrentChildChildCates(cate)}
+                            onClick={(e) =>
+                              this.searchProducts(
+                                e,
+                                cate.slug,
+                                cate._id
+                              )
+                            }
+                          >
+                            {">"} <span>{cate.displayName}</span>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                </Col>
+                <Col
+                  lg={7}
+                  sm={7}
+                  className={`${!isEmpty(this.state.currentChildChildCate) && 'child-child-cates-col'}`}
+                >
+                  <div>
+                    {
+                      this.state.currentChildChildCate?.map((cate, i) => {
+                        return (
+                          <div
+                            className={"child-cate " + (cate._id === this.state.currentActiveChildChildId ? 'active' : '')}
+                            onMouseOut={() => this.setState({ currentActiveChildChildId: '' })}
+                            onMouseOver={() => this.setState({ currentActiveChildChildId: cate._id })}
+                            key={i}
+                            onClick={(e) =>
+                              this.searchProducts(
+                                e,
+                                cate.slug,
+                                cate._id
+                              )
+                            }
+                          >
+                            {">"} <span>{cate.displayName}</span>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                </Col>
+                <Col lg={10} sm={10} style={{ textAlign: 'right' }}>
+                  <div><img src="/images/elect-imag.jpg" /></div>
+                </Col>
+              </Row>
 
-            // </div>
+            </div>
           }
         </div>
       </div>
