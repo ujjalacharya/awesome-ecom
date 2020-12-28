@@ -287,23 +287,23 @@ exports.minedProducts = async (req, res) => {
     isVerified: { $ne: null },
     isDeleted: null
   }
-  if (req.query.keyword === process.env.LATEST_PRODUCT) {
+  if (Buffer.from(req.query.keyword, 'base64').toString() === 'latest') {
     sortFactor = { createdAt: 'desc' }
   }
-  else if (req.query.keyword === process.env.FEATURED_PRODUCT) {
+  else if (Buffer.from(req.query.keyword, 'base64').toString() === 'featured') {
     sortFactor = { createdAt: 'desc' }
     query = {
       ...query,
       isFeatured: { $ne: null }
     }
   }
-  else if (req.query.keyword === process.env.TRENDING_PRODUCT) {
+  else if (Buffer.from(req.query.keyword, 'base64').toString() === 'trending') {
     sortFactor = { trendingScore: -1 }
   }
-  else if (req.query.keyword === process.env.MOST_VIEWED_PRODUCT) {
+  else if (Buffer.from(req.query.keyword, 'base64').toString() === 'mostviewed') {
     sortFactor = { viewsCount: -1 }
   } 
-  else if (req.query.keyword === process.env.TOPSELLING_PRODUCT) {
+  else if (Buffer.from(req.query.keyword, 'base64').toString() === 'topselling') {
     sortFactor = { noOfSoldOut: -1 }
   } 
   else {
