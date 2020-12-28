@@ -478,3 +478,7 @@ input.inputfile + label {
   cursor: pointer;  
   right: 0px !important;
 }
+
+.ant-carousel .slick-dots{
+  z-index: 8;
+}

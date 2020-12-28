@@ -7,8 +7,7 @@ import Link from "next/link";
 import actions from "../../redux/actions";
 import Router, { withRouter } from "next/router";
 import { AutoComplete } from "antd";
-import { debounce } from "lodash";
-
+import { debounce, isEmpty } from "lodash";
 class Header extends Component {
   state = {
     search: "",
@@ -17,6 +16,10 @@ class Header extends Component {
     userInfo: {},
     searchOptions: [],
     searchValue: "",
+    currentMenu: {},
+    allCategories: [],
+    currentChildCate: [],
+    currentChildChildCate: []
   };
 
   componentDidMount() {
@@ -61,6 +64,7 @@ class Header extends Component {
       let {
         menuCategories: { categories },
       } = nextProps.menu;
+
       categories.map((cate) => {
         if (cate.parent === undefined) {
           parentCategory.push(cate);
@@ -77,6 +81,7 @@ class Header extends Component {
 
       this.setState({
         parentCate,
+        allCategories: categories
       });
     }
   }
@@ -130,12 +135,20 @@ class Header extends Component {
     this.props.getSearchKeywords(keyword);
   }, 500)
 
+  getCurrentChildCates = (cate) => {
+    this.setState({ currentMenu: cate, currentChildCate: cate.childCate, currentChildChildCate: [] })
+  }
+
+  getCurrentChildChildCates = (cate) => {
+    this.setState({ currentChildChildCate: cate.childCate, currentActiveChildId: cate._id })
+  }
+
   render() {
     let { parentCate, loginToken, userInfo } = this.state;
 
     return (
       <div className="main-header">
-        <Row>
+        <Row style={{ padding: '20px 30px' }}>
           <Col lg={14} sm={10}>
             <Row className="menu-logo">
               <Col span={2} className="logo">
@@ -146,8 +159,9 @@ class Header extends Component {
                 </Link>
               </Col>
               <Col span={22} className="menu">
-                <div className="menu-list alldepart">
+                {/* <div className="menu-list alldepart">
                   <div className="title">ALL CATEGORIES</div>
+
                   <ul className="category">
                     {parentCate.map((cate, i) => {
                       return (
@@ -223,12 +237,9 @@ class Header extends Component {
                       );
                     })}
                   </ul>
-                </div>
-                {/* <div className="menu-list">MEN</div>
-                <div className="menu-list">WOMEN</div>
-                <div className="menu-list">KIDS</div>
-                <div className="menu-list">HOME & LIVING</div>
-                <div className="menu-list">ESSENTIALS</div> */}
+
+                </div> */}
+
               </Col>
             </Row>
           </Col>
@@ -319,6 +330,81 @@ class Header extends Component {
             )}
           </Col>
         </Row>
+        <div className="all-menu">
+          <div className="sub-menu-header">
+            <div className="parent-cate" onMouseOver={() => this.setState({ currentChildCate: [] })}>Home</div>
+            {
+              parentCate.map((cate, i) => {
+                return (
+                  <div
+                    className={"parent-cate "}
+                    key={i}
+                    onMouseOver={() => {
+                      this.getCurrentChildCates(cate);
+                      this.setState({
+                        currentActiveChildId: ''
+                      })
+                    }}
+                  >
+                    {cate.displayName}
+                  </div>
+                )
+              })
+            }
+          </div>
+          {
+            !isEmpty(this.state.currentChildCate) &&
+            // <div>
+            <Row className="child-cates-cover">
+              <Col 
+                lg={7} 
+                className={`${!isEmpty(this.state.currentChildChildCate) && 'child-cates-col'}`}
+              >
+                <div>
+                  {
+                    this.state.currentChildCate?.map((cate, i) => {
+                      return (
+                        <div
+                          className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
+                          key={i}
+                          onMouseOver={() => this.getCurrentChildChildCates(cate)}
+                        >
+                          {">"} <span>{cate.displayName}</span>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </Col>
+              <Col 
+                lg={7} 
+                className={`${!isEmpty(this.state.currentChildChildCate) && 'child-child-cates-col'}`}
+              >
+                <div>
+                  {
+                    this.state.currentChildChildCate?.map((cate, i) => {
+                      return (
+                        <div
+                          className={"child-cate " + (cate._id === this.state.currentActiveChildChildId ? 'active' : '')}
+                          onMouseOut={() => this.setState({ currentActiveChildChildId: '' })}
+                          onMouseOver={() => this.setState({ currentActiveChildChildId: cate._id })}
+                          key={i}
+                        >
+                          {">"} <span>{cate.displayName}</span>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </Col>
+              <Col lg={10} style={{ textAlign: 'right' }}>
+                <div><img src="/images/elect-imag.jpg" /></div>
+              </Col>
+            </Row>
+
+            // </div>
+          }
+        </div>
       </div>
     );
   }
