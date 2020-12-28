@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Input } from "antd";
 import { connect } from "react-redux";
 
-import { getChildCategories, getUserInfo } from "../../utils/common";
+import { getUserInfo } from "../../utils/common";
 import Link from "next/link";
 import actions from "../../redux/actions";
 import Router, { withRouter } from "next/router";
@@ -19,7 +19,8 @@ class Header extends Component {
     currentMenu: {},
     allCategories: [],
     currentChildCate: [],
-    currentChildChildCate: []
+    currentChildChildCate: [],
+    handleDelay: ''
   };
 
   componentDidMount() {
@@ -248,7 +249,7 @@ class Header extends Component {
                     <div
                       className={"parent-cate "}
                       key={i}
-                      onMouseOver={() => {
+                      onMouseEnter={() => {
                         this.getCurrentChildCates(cate);
                         this.setState({
                           currentActiveChildId: ''
@@ -275,9 +276,9 @@ class Header extends Component {
                         this.state.currentChildCate?.map((cate, i) => {
                           return (
                             <div
+                              // id={"child"+i}
                               className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
                               key={i}
-                              onMouseOver={() => this.getCurrentChildChildCates(cate)}
                               onClick={(e) =>
                                 this.searchProducts(
                                   e,
@@ -286,7 +287,11 @@ class Header extends Component {
                                 )
                               }
                             >
-                              <span>{">"} {cate.displayName}</span>
+                              <span
+                                onMouseEnter={() => {
+                                  this.getCurrentChildChildCates(cate);
+                                }}
+                              >{">"} {cate.displayName}</span>
                             </div>
                           )
                         })
@@ -304,8 +309,8 @@ class Header extends Component {
                           return (
                             <div
                               className={"child-cate " + (cate._id === this.state.currentActiveChildChildId ? 'active' : '')}
-                              onMouseOut={() => this.setState({ currentActiveChildChildId: '' })}
-                              onMouseOver={() => this.setState({ currentActiveChildChildId: cate._id })}
+                              onMouseLeave={() => this.setState({ currentActiveChildChildId: '' })}
+                              onMouseEnter={() => this.setState({ currentActiveChildChildId: cate._id })}
                               key={i}
                               onClick={(e) =>
                                 this.searchProducts(

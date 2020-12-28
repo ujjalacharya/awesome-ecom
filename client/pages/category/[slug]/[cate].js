@@ -15,7 +15,6 @@ class Search extends Component {
   };
   static async getInitialProps(ctx) {
     initialize(ctx);
-    console.log(ctx)
     const {
       query: { slug },
     } = ctx;

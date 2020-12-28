@@ -23,7 +23,6 @@ const productCategories = () => {
     const productService = new ProductService();
     const response = await productService.productCategories();
     if (response.isSuccess) {
-      console.log(response)
       let parentCategory = [];
 
       let parentCate = [];
@@ -45,7 +44,6 @@ const productCategories = () => {
         parentCate.push(parentCateEle);
       });
 
-      console.log(parentCate)
       dispatch({ type: MENU_CATEGORIES, payload: parentCate });
     } else if (!response.isSuccess) {
       dispatch({

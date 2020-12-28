@@ -227,7 +227,6 @@ class ProfileDetails extends Component {
                       <img
                         src={userPhoto}
                         onError={(ev) => {
-                          console.log(ev)
                           ev.target.src = "/images/default-user.png";
                         }}
                       /> :
