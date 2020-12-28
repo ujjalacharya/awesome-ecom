@@ -21,35 +21,6 @@ class MobileHeader extends Component {
         userInfo,
       });
     }
-
-    if (
-      this.props.menu.menuCategories !== nextProps.menu.menuCategories &&
-      nextProps.menu.menuCategories
-    ) {
-      let parentCategory = [];
-
-      let parentCate = [];
-      let {
-        menuCategories: { categories },
-      } = nextProps.menu;
-      categories.map((cate) => {
-        if (cate.parent === undefined) {
-          parentCategory.push(cate);
-        }
-      });
-
-      let allCates = getChildCategories(categories, parentCategory);
-
-      allCates.map((newChild) => {
-        let newallCates = getChildCategories(categories, newChild.childCate);
-        let parentCateEle = { ...newChild, childCate: newallCates };
-        parentCate.push(parentCateEle);
-      });
-
-      this.setState({
-        parentCate,
-      });
-    }
   }
 
   showDrawer = () => {
@@ -77,8 +48,8 @@ class MobileHeader extends Component {
   };
 
   render() {
-    let { parentCate, loginToken } = this.state;
-
+    let { loginToken } = this.state;
+    let parentCate = this.props.menu.menuCategories
     return (
       <div className="mobile-header">
         <div className="menu-logo">

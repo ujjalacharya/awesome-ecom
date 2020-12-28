@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import { Row, Col, Input } from "antd";
 import { connect } from "react-redux";
 
-import { getChildCategories, getUserInfo } from "../../utils/common";
+import { getUserInfo } from "../../utils/common";
 import Link from "next/link";
 import actions from "../../redux/actions";
 import Router, { withRouter } from "next/router";
 import { AutoComplete } from "antd";
-import { debounce } from "lodash";
-
+import { debounce, isEmpty } from "lodash";
 class Header extends Component {
   state = {
     search: "",
@@ -17,11 +16,17 @@ class Header extends Component {
     userInfo: {},
     searchOptions: [],
     searchValue: "",
+    currentMenu: {},
+    allCategories: [],
+    currentChildCate: [],
+    currentChildChildCate: [],
+    handleDelay: ''
   };
 
   componentDidMount() {
-    this.props.productCategories();
-
+    if (isEmpty(this.props.menu.menuCategories)) {
+      this.props.productCategories();
+    }
     let loginToken = this.props.authentication.token;
     let userInfo = getUserInfo(loginToken);
 
@@ -48,35 +53,6 @@ class Header extends Component {
       this.setState({
         loginToken: nextProps.authentication.token,
         userInfo,
-      });
-    }
-
-    if (
-      this.props.menu.menuCategories !== nextProps.menu.menuCategories &&
-      nextProps.menu.menuCategories
-    ) {
-      let parentCategory = [];
-
-      let parentCate = [];
-      let {
-        menuCategories: { categories },
-      } = nextProps.menu;
-      categories.map((cate) => {
-        if (cate.parent === undefined) {
-          parentCategory.push(cate);
-        }
-      });
-
-      let allCates = getChildCategories(categories, parentCategory);
-
-      allCates.map((newChild) => {
-        let newallCates = getChildCategories(categories, newChild.childCate);
-        let parentCateEle = { ...newChild, childCate: newallCates };
-        parentCate.push(parentCateEle);
-      });
-
-      this.setState({
-        parentCate,
       });
     }
   }
@@ -130,196 +106,238 @@ class Header extends Component {
     this.props.getSearchKeywords(keyword);
   }, 500)
 
-  render() {
-    let { parentCate, loginToken, userInfo } = this.state;
+  getCurrentChildCates = (cate) => {
+    this.setState({ currentMenu: cate, currentChildCate: cate.childCate, currentChildChildCate: [] })
+  }
 
+  getCurrentChildChildCates = (cate) => {
+    this.setState({ currentChildChildCate: cate.childCate, currentActiveChildId: cate._id })
+  }
+
+  render() {
+    let { loginToken } = this.state;
+    let parentCate = this.props.menu.menuCategories || []
     return (
-      <div className="main-header">
-        <Row>
-          <Col lg={14} sm={10}>
-            <Row className="menu-logo">
-              <Col span={2} className="logo">
-                <Link href="/">
+      <React.Fragment>
+        <div className="top-header">
+          <div>
+            Customer Care: +9779856321452
+          </div>
+          <div>
+            <ul>
+              <li>Sell On Kindeem</li>
+              <li>About Us</li>
+              <li>
+                <Link href="/myprofile/manageAccount">
                   <a>
-                    <img src="/images/logo.png" />
+                    {loginToken ? "My Profile" : "Login"}
                   </a>
                 </Link>
+              </li>
+              {!loginToken &&
+                <li>
+                  <Link href="/register">
+                    <a>
+                      Register
+                </a>
+                  </Link>
+                </li>
+              }
+              {loginToken && (
+                <li
+                  onClick={() => this.props.deauthenticate()}
+                >
+                  Logout
+                </li>
+              )}
+            </ul>
+          </div>
+        </div>
+        <div className="main-header">
+          <div className="middle-menu">
+            <Row style={{ padding: '20px 60px' }}>
+              <Col lg={20} sm={20}>
+                <Row className="menu-logo">
+                  <Col span={4} className="logo">
+                    <Link href="/">
+                      <a>
+                        <img src="/images/logo.png" />
+                      </a>
+                    </Link>
+                  </Col>
+                  <Col span={20} className="search">
+                    <form onSubmit={this.handleSubmit}>
+                      <AutoComplete
+                        value={this.state.searchValue}
+                        options={this.state.searchOptions}
+                        // style={{
+                        //   width: 400,
+                        // }}
+                        className="auto-search"
+                        onSelect={(select) => {
+                          this.selectKeyword(select)
+                        }}
+                        onSearch={(search) => {
+                          this.getSearchKeywordsDeb(search)
+                        }}
+                      // placeholder="Search for products, brands and more"
+                      >
+                        <Input.Search size="large" placeholder="Search for products, brands and more"
+                        />
+                      </AutoComplete>
+                      {/* <img src="/images/search-icon.png" /> */}
+                    </form>
+
+                  </Col>
+                </Row>
               </Col>
-              <Col span={22} className="menu">
-                <div className="menu-list alldepart">
-                  <div className="title">ALL CATEGORIES</div>
-                  <ul className="category">
-                    {parentCate.map((cate, i) => {
-                      return (
-                        <li key={i}>
-                          <div className="title">
-                            <span>{cate.displayName}</span>
-                            <span className="title-icon">
-                              {cate.childCate.length > 0 && (
-                                <i
-                                  className="fa fa-angle-right"
-                                  aria-hidden="true"
-                                ></i>
-                              )}
-                            </span>
+              <Col lg={4} sm={4} className="menu-right">
+                <div className="menu-right-items">
+                  {
+                    loginToken ? (
+                      <Link href="/myprofile/myWishlist">
+                        <a>
+                          <div className="list-icon">
+                            <img src="/images/heart.png" />
                           </div>
-                          {cate.childCate.length > 0 && (
-                            <ul className="sub-category">
-                              {cate.childCate.map((subCate, i) => {
-                                return (
-                                  <li
-                                    key={i}
-                                    onClick={(e) =>
-                                      this.searchProducts(
-                                        e,
-                                        subCate.slug,
-                                        subCate._id
-                                      )
-                                    }
-                                  >
-                                    <div className="title">
-                                      <span>{subCate.displayName}</span>
-                                      <span className="sub-title-icon">
-                                        {subCate.childCate.length > 0 && (
-                                          <i
-                                            className="fa fa-angle-right"
-                                            aria-hidden="true"
-                                          ></i>
-                                        )}
-                                      </span>
-                                    </div>
-                                    {subCate.childCate.length > 0 && (
-                                      <ul className="sub-category next-sub">
-                                        {subCate.childCate.map(
-                                          (newSubCate, i) => {
-                                            return (
-                                              <li
-                                                key={i}
-                                                onClick={(e) =>
-                                                  this.searchProducts(
-                                                    e,
-                                                    newSubCate.slug,
-                                                    newSubCate._id
-                                                  )
-                                                }
-                                              >
-                                                <div className="title">
-                                                  <span>
-                                                    {newSubCate.displayName}
-                                                  </span>
-                                                </div>
-                                              </li>
-                                            );
-                                          }
-                                        )}
-                                      </ul>
-                                    )}
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
+                          <div className="list-text">Wishlist</div>
+                        </a>
+                      </Link>
+                    ) : (
+                        <Link href={`/login?origin=${this.props.router.asPath}`}>
+                          <a>
+                            <div className="list-icon">
+                              <img src="/images/heart.png" />
+                            </div>
+                            <div className="list-text">Wishlist</div>
+                          </a>
+                        </Link>
+                      )
+                  }
                 </div>
-                {/* <div className="menu-list">MEN</div>
-                <div className="menu-list">WOMEN</div>
-                <div className="menu-list">KIDS</div>
-                <div className="menu-list">HOME & LIVING</div>
-                <div className="menu-list">ESSENTIALS</div> */}
+                <div className="menu-right-items">
+                  {
+                    loginToken ? (
+                      <Link href="/cart">
+                        <a>
+                          <div className="list-icon">
+                            <img src="/images/bag.png" />
+                          </div>
+                          <div className="list-text">Cart</div>
+                        </a>
+                      </Link>
+                    ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
+                        <a>
+                          <div className="list-icon">
+                            <img src="/images/bag.png" />
+                          </div>
+                          <div className="list-text">Cart</div>
+                        </a>
+                      </Link>
+                  }
+                </div>
               </Col>
             </Row>
-          </Col>
-          <Col lg={6} sm={9} className="search">
-            <form onSubmit={this.handleSubmit}>
-              <AutoComplete
-                value={this.state.searchValue}
-                options={this.state.searchOptions}
-                // style={{
-                //   width: 400,
-                // }}
-                className="auto-search"
-                onSelect={(select) => {
-                  this.selectKeyword(select)
-                }}
-                onSearch={(search) => {
-                  this.getSearchKeywordsDeb(search)
-                }}
-              // placeholder="Search for products, brands and more"
-              >
-                <Input.Search size="large" placeholder="Search for products, brands and more"
-                />
-              </AutoComplete>
-              {/* <img src="/images/search-icon.png" /> */}
-            </form>
-          </Col>
-          <Col lg={4} sm={5} className="menu-right">
-            <Link href="/myprofile/manageAccount">
-              <a>
-                <div className="menu-right-items">
-                  <div className="list-icon">
-                    <img src="/images/user.png" />
-                  </div>
-                  <div className="list-text">
-                    {loginToken ? "Profile" : "Login"}
-                  </div>
-                </div>
-              </a>
-            </Link>
-            {!loginToken &&
-              <Link href="/register">
-                <a>
-                  <div className="menu-right-items">
-                    <div className="list-icon">
-                      <img src="/images/user.png" />
-                    </div>
-                    <div className="list-text">
-                      Register
-                    </div>
-                  </div>
-                </a>
-              </Link>
-            }
-            {/* <div className="menu-right-items">
-              <div className="list-icon">
-                <img src="/images/wishlist.png" />
-              </div>
-              <div className="list-text">Wishlist</div>
-            </div> */}
-            <div className="menu-right-items">
-              <div className="list-icon">
-                <img src="/images/bag.png" />
-              </div>
+
+          </div>
+          <div className="all-menu">
+            <div className="sub-menu-header">
+              {/* <div className="parent-cate" onMouseOver={() => this.setState({ currentChildCate: [] })}>Home</div> */}
               {
-                loginToken ? (
-                  <Link href="/cart">
-                    <a>
-                      <div className="list-text">Cart</div>
-                    </a>
-                  </Link>
-                ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
-                    <a>
-                      <div className="list-text">Cart</div>
-                    </a>
-                  </Link>
+                !isEmpty(parentCate) && parentCate.map((cate, i) => {
+                  return (
+                    <div
+                      className={"parent-cate "}
+                      key={i}
+                      onMouseEnter={() => {
+                        this.getCurrentChildCates(cate);
+                        this.setState({
+                          currentActiveChildId: ''
+                        })
+                      }}
+                    >
+                      {cate.displayName}
+                    </div>
+                  )
+                })
               }
             </div>
-            {loginToken && (
-              <div
-                className="menu-right-items"
-                onClick={() => this.props.deauthenticate()}
-              >
-                <div className="list-icon">
-                  <img src="/images/user.png" />
-                </div>
-                <div className="list-text">Logout</div>
+            {
+              !isEmpty(this.state.currentChildCate) &&
+              <div className="child-cates-cover">
+                <Row className="child-cates-row" style={{ background: '#fff' }}>
+                  <Col
+                    lg={7}
+                    sm={7}
+                    className={`${!isEmpty(this.state.currentChildChildCate) && 'child-cates-col'}`}
+                  >
+                    <div>
+                      {
+                        this.state.currentChildCate?.map((cate, i) => {
+                          return (
+                            <div
+                              // id={"child"+i}
+                              className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
+                              key={i}
+                              onClick={(e) =>
+                                this.searchProducts(
+                                  e,
+                                  cate.slug,
+                                  cate._id
+                                )
+                              }
+                            >
+                              <span
+                                onMouseEnter={() => {
+                                  this.getCurrentChildChildCates(cate);
+                                }}
+                              >{">"} {cate.displayName}</span>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  </Col>
+                  <Col
+                    lg={7}
+                    sm={7}
+                    className={`${!isEmpty(this.state.currentChildChildCate) && 'child-child-cates-col'}`}
+                  >
+                    <div>
+                      {
+                        this.state.currentChildChildCate?.map((cate, i) => {
+                          return (
+                            <div
+                              className={"child-cate " + (cate._id === this.state.currentActiveChildChildId ? 'active' : '')}
+                              onMouseLeave={() => this.setState({ currentActiveChildChildId: '' })}
+                              onMouseEnter={() => this.setState({ currentActiveChildChildId: cate._id })}
+                              key={i}
+                              onClick={(e) =>
+                                this.searchProducts(
+                                  e,
+                                  cate.slug,
+                                  cate._id
+                                )
+                              }
+                            >
+                              <span>{">"} {cate.displayName}</span>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  </Col>
+                  <Col lg={10} sm={10} style={{ textAlign: 'right' }}>
+                    <div><img src="/images/elect-imag.jpg" /></div>
+                  </Col>
+                </Row>
+
               </div>
-            )}
-          </Col>
-        </Row>
-      </div>
+            }
+          </div>
+
+        </div>
+      </React.Fragment>
     );
   }
 }

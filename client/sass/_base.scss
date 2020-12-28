@@ -62,9 +62,16 @@ body {
 .ant-input-affix-wrapper {
   max-height: 35px !important;
 }
+.search .ant-input-affix-wrapper {
+  max-height: 45px !important;
+}
 
 .ant-select-selector {
   height: 35px !important;
+}
+
+.ant-select-dropdown-placement-bottomLeft{
+  top: 100px !important;
 }
 
 .breadcrumb-all {
@@ -477,4 +484,8 @@ input.inputfile + label {
 .modal-video-close-btn{
   cursor: pointer;  
   right: 0px !important;
+}
+
+.ant-carousel .slick-dots{
+  z-index: 8;
 }
