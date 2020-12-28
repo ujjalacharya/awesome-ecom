@@ -16,13 +16,37 @@ import {
 import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
 import { WISHLIST_BASE_URL } from "../../utils/constants";
+import { getChildCategories } from "../../utils/common";
 
 const productCategories = () => {
   return async (dispatch) => {
     const productService = new ProductService();
     const response = await productService.productCategories();
     if (response.isSuccess) {
-      dispatch({ type: MENU_CATEGORIES, payload: response.data });
+      console.log(response)
+      let parentCategory = [];
+
+      let parentCate = [];
+      let {
+        categories ,
+      } = response.data;
+
+      categories.map((cate) => {
+        if (cate.parent === undefined) {
+          parentCategory.push(cate);
+        }
+      });
+
+      let allCates = getChildCategories(categories, parentCategory);
+
+      allCates.map((newChild) => {
+        let newallCates = getChildCategories(categories, newChild.childCate);
+        let parentCateEle = { ...newChild, childCate: newallCates };
+        parentCate.push(parentCateEle);
+      });
+
+      console.log(parentCate)
+      dispatch({ type: MENU_CATEGORIES, payload: parentCate });
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -34,7 +58,7 @@ const productCategories = () => {
 
 const getLatestProducts = (ctx) => {
   return async (dispatch) => {
-    dispatch({type: LATEST_LOADING, payload: []})
+    dispatch({ type: LATEST_LOADING, payload: [] })
     const productService = new ProductService();
     const response = await productService.getLatestProducts(ctx);
     if (response.isSuccess) {

@@ -23,8 +23,9 @@ class Header extends Component {
   };
 
   componentDidMount() {
-    this.props.productCategories();
-
+    if (isEmpty(this.props.menu.menuCategories)) {
+      this.props.productCategories();
+    }
     let loginToken = this.props.authentication.token;
     let userInfo = getUserInfo(loginToken);
 
@@ -51,37 +52,6 @@ class Header extends Component {
       this.setState({
         loginToken: nextProps.authentication.token,
         userInfo,
-      });
-    }
-
-    if (
-      this.props.menu.menuCategories !== nextProps.menu.menuCategories &&
-      nextProps.menu.menuCategories
-    ) {
-      let parentCategory = [];
-
-      let parentCate = [];
-      let {
-        menuCategories: { categories },
-      } = nextProps.menu;
-
-      categories.map((cate) => {
-        if (cate.parent === undefined) {
-          parentCategory.push(cate);
-        }
-      });
-
-      let allCates = getChildCategories(categories, parentCategory);
-
-      allCates.map((newChild) => {
-        let newallCates = getChildCategories(categories, newChild.childCate);
-        let parentCateEle = { ...newChild, childCate: newallCates };
-        parentCate.push(parentCateEle);
-      });
-
-      this.setState({
-        parentCate,
-        allCategories: categories
       });
     }
   }
@@ -144,8 +114,8 @@ class Header extends Component {
   }
 
   render() {
-    let { parentCate, loginToken, userInfo } = this.state;
-
+    let { loginToken } = this.state;
+    let parentCate = this.props.menu.menuCategories || []
     return (
       <React.Fragment>
         <div className="top-header">
@@ -159,19 +129,26 @@ class Header extends Component {
               <li>
                 <Link href="/myprofile/manageAccount">
                   <a>
-                    {loginToken ? "Profile" : "Login"}
+                    {loginToken ? "My Profile" : "Login"}
                   </a>
                 </Link>
               </li>
-              <li>
-                {!loginToken &&
+              {!loginToken &&
+                <li>
                   <Link href="/register">
                     <a>
                       Register
                 </a>
                   </Link>
-                }
-              </li>
+                </li>
+              }
+              {loginToken && (
+                <li
+                  onClick={() => this.props.deauthenticate()}
+                >
+                  Logout
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -215,49 +192,58 @@ class Header extends Component {
               </Col>
               <Col lg={4} sm={4} className="menu-right">
                 <div className="menu-right-items">
-                  <div className="list-icon">
-                    <img src="/images/heart.png" />
-                  </div>
-                  <div className="list-text">Wishlist</div>
+                  {
+                    loginToken ? (
+                      <Link href="/myprofile/myWishlist">
+                        <a>
+                          <div className="list-icon">
+                            <img src="/images/heart.png" />
+                          </div>
+                          <div className="list-text">Wishlist</div>
+                        </a>
+                      </Link>
+                    ) : (
+                        <Link href={`/login?origin=${this.props.router.asPath}`}>
+                          <a>
+                            <div className="list-icon">
+                              <img src="/images/heart.png" />
+                            </div>
+                            <div className="list-text">Wishlist</div>
+                          </a>
+                        </Link>
+                      )
+                  }
                 </div>
                 <div className="menu-right-items">
-                  <div className="list-icon">
-                    <img src="/images/bag.png" />
-                  </div>
                   {
                     loginToken ? (
                       <Link href="/cart">
                         <a>
+                          <div className="list-icon">
+                            <img src="/images/bag.png" />
+                          </div>
                           <div className="list-text">Cart</div>
                         </a>
                       </Link>
                     ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
                         <a>
+                          <div className="list-icon">
+                            <img src="/images/bag.png" />
+                          </div>
                           <div className="list-text">Cart</div>
                         </a>
                       </Link>
                   }
                 </div>
-                {loginToken && (
-                  <div
-                    className="menu-right-items"
-                    onClick={() => this.props.deauthenticate()}
-                  >
-                    <div className="list-icon">
-                      <img src="/images/user.png" />
-                    </div>
-                    <div className="list-text">Logout</div>
-                  </div>
-                )}
               </Col>
             </Row>
 
           </div>
           <div className="all-menu">
             <div className="sub-menu-header">
-              <div className="parent-cate" onMouseOver={() => this.setState({ currentChildCate: [] })}>Home</div>
+              {/* <div className="parent-cate" onMouseOver={() => this.setState({ currentChildCate: [] })}>Home</div> */}
               {
-                parentCate.map((cate, i) => {
+                !isEmpty(parentCate) && parentCate.map((cate, i) => {
                   return (
                     <div
                       className={"parent-cate "}
@@ -300,7 +286,7 @@ class Header extends Component {
                                 )
                               }
                             >
-                              {">"} <span>{cate.displayName}</span>
+                              <span>{">"} {cate.displayName}</span>
                             </div>
                           )
                         })
@@ -329,7 +315,7 @@ class Header extends Component {
                                 )
                               }
                             >
-                              {">"} <span>{cate.displayName}</span>
+                              <span>{">"} {cate.displayName}</span>
                             </div>
                           )
                         })

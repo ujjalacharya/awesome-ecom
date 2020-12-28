@@ -194,11 +194,11 @@
         &:last-child{
           margin-right: 0;
         }
-        &:first-child{
-          &::after{
-            content: none;
-          }
-        }
+        // &:first-child{
+        //   &::after{
+        //     content: none;
+        //   }
+        // }
         &::after {
           margin-top: 0.0625rem;
           display: inline-block;
@@ -256,12 +256,15 @@
       .child-cate {
         margin-bottom: 5px;
         cursor: pointer;
+        span{
+          padding: 1px 8px;
+        }
         &.active {
           span {
             color: #fff;
             background: #48b5dc;
-            padding: 1px 8px;
-            padding-left: 0;
+            // padding: 1px 8px;
+            // padding-left: 0;
           }
           // color: $secondary-color;
         }
