@@ -10,9 +10,9 @@
     display: none;
   }
   .auto-search {
-    width: 350px;
+    width: 60%;
     @media screen and (min-width: 577px) and (max-width: 680px) {
-      width: 250px;
+      width: 40%;
     }
   }
   .menu-logo {
@@ -138,12 +138,10 @@
   }
 
   .search {
-    display: flex;
-    align-items: center;
-    flex-direction: row-reverse;
-    // input {
-    //   width: 300px;
-    // }
+    text-align: center;
+    // display: flex;
+    // align-items: center;
+    // flex-direction: row-reverse;
   }
 
   .menu-right {

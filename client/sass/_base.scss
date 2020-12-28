@@ -62,9 +62,16 @@ body {
 .ant-input-affix-wrapper {
   max-height: 35px !important;
 }
+.search .ant-input-affix-wrapper {
+  max-height: 45px !important;
+}
 
 .ant-select-selector {
   height: 35px !important;
+}
+
+.ant-select-dropdown-placement-bottomLeft{
+  top: 100px !important;
 }
 
 .breadcrumb-all {

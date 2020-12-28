@@ -1,0 +1,24 @@
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 60px;
+  background: #f7f7f7;
+  color: #969696;
+  ul {
+    padding: 0;
+    li {
+      display: inline-block;
+      margin-left: 10px;
+      border-right: 2px solid #cacaca;
+      padding-right: 10px;
+      cursor: pointer;
+      &:last-child {
+        border: 0;
+        padding: 0;
+      }
+      a{
+        color: #969696;
+      }
+    }
+  }
+}

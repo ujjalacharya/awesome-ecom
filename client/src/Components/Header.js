@@ -148,157 +148,76 @@ class Header extends Component {
 
     return (
       <div className="main-header">
-        <Row style={{ padding: '20px 30px' }}>
-          <Col lg={14} sm={10}>
+        <div className="top-header">
+          <div>
+            Customer Care: +9779856321452
+          </div>
+          <div>
+            <ul>
+              <li>Sell On Kindeem</li>
+              <li>About Us</li>
+              <li>
+                <Link href="/myprofile/manageAccount">
+                  <a>
+                    {loginToken ? "Profile" : "Login"}
+                  </a>
+                </Link>
+              </li>
+              <li>
+                {!loginToken &&
+                  <Link href="/register">
+                    <a>
+                      Register
+                    </a>
+                  </Link>
+                }
+              </li>
+            </ul>
+          </div>
+        </div>
+        <Row style={{ padding: '20px 60px' }}>
+          <Col lg={20} sm={20}>
             <Row className="menu-logo">
-              <Col span={2} className="logo">
+              <Col span={4} className="logo">
                 <Link href="/">
                   <a>
                     <img src="/images/logo.png" />
                   </a>
                 </Link>
               </Col>
-              <Col span={22} className="menu">
-                {/* <div className="menu-list alldepart">
-                  <div className="title">ALL CATEGORIES</div>
-
-                  <ul className="category">
-                    {parentCate.map((cate, i) => {
-                      return (
-                        <li key={i}>
-                          <div className="title">
-                            <span>{cate.displayName}</span>
-                            <span className="title-icon">
-                              {cate.childCate.length > 0 && (
-                                <i
-                                  className="fa fa-angle-right"
-                                  aria-hidden="true"
-                                ></i>
-                              )}
-                            </span>
-                          </div>
-                          {cate.childCate.length > 0 && (
-                            <ul className="sub-category">
-                              {cate.childCate.map((subCate, i) => {
-                                return (
-                                  <li
-                                    key={i}
-                                    onClick={(e) =>
-                                      this.searchProducts(
-                                        e,
-                                        subCate.slug,
-                                        subCate._id
-                                      )
-                                    }
-                                  >
-                                    <div className="title">
-                                      <span>{subCate.displayName}</span>
-                                      <span className="sub-title-icon">
-                                        {subCate.childCate.length > 0 && (
-                                          <i
-                                            className="fa fa-angle-right"
-                                            aria-hidden="true"
-                                          ></i>
-                                        )}
-                                      </span>
-                                    </div>
-                                    {subCate.childCate.length > 0 && (
-                                      <ul className="sub-category next-sub">
-                                        {subCate.childCate.map(
-                                          (newSubCate, i) => {
-                                            return (
-                                              <li
-                                                key={i}
-                                                onClick={(e) =>
-                                                  this.searchProducts(
-                                                    e,
-                                                    newSubCate.slug,
-                                                    newSubCate._id
-                                                  )
-                                                }
-                                              >
-                                                <div className="title">
-                                                  <span>
-                                                    {newSubCate.displayName}
-                                                  </span>
-                                                </div>
-                                              </li>
-                                            );
-                                          }
-                                        )}
-                                      </ul>
-                                    )}
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-
-                </div> */}
+              <Col span={20} className="search">
+                <form onSubmit={this.handleSubmit}>
+                  <AutoComplete
+                    value={this.state.searchValue}
+                    options={this.state.searchOptions}
+                    // style={{
+                    //   width: 400,
+                    // }}
+                    className="auto-search"
+                    onSelect={(select) => {
+                      this.selectKeyword(select)
+                    }}
+                    onSearch={(search) => {
+                      this.getSearchKeywordsDeb(search)
+                    }}
+                  // placeholder="Search for products, brands and more"
+                  >
+                    <Input.Search size="large" placeholder="Search for products, brands and more"
+                    />
+                  </AutoComplete>
+                  {/* <img src="/images/search-icon.png" /> */}
+                </form>
 
               </Col>
             </Row>
           </Col>
-          <Col lg={6} sm={9} className="search">
-            <form onSubmit={this.handleSubmit}>
-              <AutoComplete
-                value={this.state.searchValue}
-                options={this.state.searchOptions}
-                // style={{
-                //   width: 400,
-                // }}
-                className="auto-search"
-                onSelect={(select) => {
-                  this.selectKeyword(select)
-                }}
-                onSearch={(search) => {
-                  this.getSearchKeywordsDeb(search)
-                }}
-              // placeholder="Search for products, brands and more"
-              >
-                <Input.Search size="large" placeholder="Search for products, brands and more"
-                />
-              </AutoComplete>
-              {/* <img src="/images/search-icon.png" /> */}
-            </form>
-          </Col>
-          <Col lg={4} sm={5} className="menu-right">
-            <Link href="/myprofile/manageAccount">
-              <a>
-                <div className="menu-right-items">
-                  <div className="list-icon">
-                    <img src="/images/user.png" />
-                  </div>
-                  <div className="list-text">
-                    {loginToken ? "Profile" : "Login"}
-                  </div>
-                </div>
-              </a>
-            </Link>
-            {!loginToken &&
-              <Link href="/register">
-                <a>
-                  <div className="menu-right-items">
-                    <div className="list-icon">
-                      <img src="/images/user.png" />
-                    </div>
-                    <div className="list-text">
-                      Register
-                    </div>
-                  </div>
-                </a>
-              </Link>
-            }
-            {/* <div className="menu-right-items">
+          <Col lg={4} sm={4} className="menu-right">
+            <div className="menu-right-items">
               <div className="list-icon">
-                <img src="/images/wishlist.png" />
+                <img src="/images/heart.png" />
               </div>
               <div className="list-text">Wishlist</div>
-            </div> */}
+            </div>
             <div className="menu-right-items">
               <div className="list-icon">
                 <img src="/images/bag.png" />
@@ -355,7 +274,7 @@ class Header extends Component {
           {
             !isEmpty(this.state.currentChildCate) &&
             <div className="child-cates-cover">
-              <Row className="child-cates-row" style={{background: '#fff'}}>
+              <Row className="child-cates-row" style={{ background: '#fff' }}>
                 <Col
                   lg={7}
                   sm={7}
