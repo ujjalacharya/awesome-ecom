@@ -38,9 +38,9 @@ const Index = (props) => {
             headTitle="Trending Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
             removePaddingTop="paddingTopZero"
-            listLink = "latestProducts"
+            listLink = "trendingProducts"
           />
-          <ProductSlider data={props.products.latestProducts} />
+          <ProductSlider data={props.products.trendingProducts} />
         </div>
       </div>
     </Layout>
@@ -50,7 +50,8 @@ const Index = (props) => {
 Index.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  const latestProducts = await ctx.store.dispatch(actions.getLatestProducts(ctx));
+  const latestProducts = await ctx.store.dispatch(actions.getMinedProducts(ctx, 'latest'));
+  const trendingProducts = await ctx.store.dispatch(actions.getMinedProducts(ctx, 'trending'));
 
   // const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
 
@@ -58,6 +59,7 @@ Index.getInitialProps = async (ctx) => {
 
   return {
     latestProducts,
+    trendingProducts
     // orders
   };
 };

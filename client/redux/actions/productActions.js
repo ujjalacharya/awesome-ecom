@@ -1,11 +1,12 @@
-import Router from "next/router";
 import fetch from "isomorphic-unfetch";
 import {
-  LATEST_PRODUCTS,
   MENU_CATEGORIES,
   PRODUCT_DETAILS,
   GLOBAL_ERROR,
-  LATEST_LOADING,
+  LATEST_PRODUCTS_LOADING,
+  LATEST_PRODUCTS,
+  TRENDING_PRODUCTS_LOADING,
+  TRENDING_PRODUCTS,
   PRODUCT_QA,
   POST_QUESTION,
   PRODUCT_REVIEWS,
@@ -13,7 +14,7 @@ import {
   PRODUCT_DETAILS_START,
   PRODUCT_DETAILS_FINISH,
 } from "../types";
-import { setCookie, removeCookie, getCookie } from "../../utils/cookie";
+import { getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
 import { WISHLIST_BASE_URL } from "../../utils/constants";
 import { getChildCategories } from "../../utils/common";
@@ -27,7 +28,7 @@ const productCategories = () => {
 
       let parentCate = [];
       let {
-        categories ,
+        categories,
       } = response.data;
 
       categories.map((cate) => {
@@ -54,13 +55,31 @@ const productCategories = () => {
   };
 };
 
-const getLatestProducts = (ctx) => {
+const getMinedProducts = (ctx, keyword) => {
   return async (dispatch) => {
-    dispatch({ type: LATEST_LOADING, payload: [] })
+    switch (keyword) {
+      case 'trending':
+        dispatch({ type: TRENDING_PRODUCTS_LOADING });
+        break;
+      case 'latest':
+        dispatch({ type: LATEST_PRODUCTS_LOADING });
+        break;
+      default:
+        '';
+    }
     const productService = new ProductService();
-    const response = await productService.getLatestProducts(ctx);
+    const response = await productService.getMinedProducts(ctx, keyword);
     if (response.isSuccess) {
-      dispatch({ type: LATEST_PRODUCTS, payload: response.data });
+      switch (keyword) {
+        case 'trending':
+          dispatch({ type: TRENDING_PRODUCTS, payload: response.data })
+          break;
+        case 'latest':
+          dispatch({ type: LATEST_PRODUCTS, payload: response.data })
+          break; 
+        default:
+          '';
+      }
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -169,12 +188,12 @@ const getOrders = (ctx) => {
 };
 
 export default {
-  getLatestProducts,
   productCategories,
   getProductDetails,
   getOrders,
   getQandA,
   postQuestion,
   getProductReviews,
-  postReviews
+  postReviews,
+  getMinedProducts
 };

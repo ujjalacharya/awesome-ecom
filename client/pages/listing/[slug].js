@@ -17,9 +17,9 @@ class Listing extends Component {
     } = ctx;
 
     let data = []
-    if (ctx.query.slug === "latestProducts") {
-      data = await ctx.store.dispatch(actions.getLatestProducts());
-    }
+    // if (ctx.query.slug === "latestProducts") {
+    //   data = await ctx.store.dispatch(actions.getLatestProducts());
+    // }
 
     // const allBrands = await ctx.store.dispatch(actions.getProductBrands());
 

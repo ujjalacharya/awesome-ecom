@@ -1,13 +1,15 @@
 import {
   LATEST_PRODUCTS,
   PRODUCT_DETAILS,
-  LATEST_LOADING,
+  LATEST_PRODUCTS_LOADING,
   PRODUCT_QA,
   POST_QUESTION,
   PRODUCT_REVIEWS,
   POST_PRODUCT_REVIEWS,
   PRODUCT_DETAILS_START,
   PRODUCT_DETAILS_FINISH,
+  TRENDING_PRODUCTS,
+  TRENDING_PRODUCTS_LOADING
 } from "../types";
 
 const initialState = {
@@ -19,7 +21,9 @@ const initialState = {
   postQnsResp: null,
   productReviews: null,
   postReviewResp: null,
-  productDetailsLoading: false
+  productDetailsLoading: false,
+  trendingProducts: null,
+  trendingLoading: false
 };
 
 export default (state = initialState, action) => {
@@ -31,12 +35,24 @@ export default (state = initialState, action) => {
         hasError: false,
         latestLoading: false,
       };
-    case LATEST_LOADING:
+    case LATEST_PRODUCTS_LOADING:
       return {
         ...state,
-        latestProducts: action.payload,
         latestLoading: true,
         hasError: false,
+      };
+    case TRENDING_PRODUCTS_LOADING:
+      return {
+        ...state,
+        trendingLoading: true,
+        hasError: false,
+      };
+    case TRENDING_PRODUCTS:
+      return {
+        ...state,
+        trendingProducts: action.payload,
+        hasError: false,
+        trendingLoading: false,
       };
     case PRODUCT_DETAILS_START:
       return { ...state, productDetailsLoading: true, hasError: false };

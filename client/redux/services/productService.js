@@ -2,8 +2,14 @@ import { getService, getTokenService, postTokenService } from "../../utils/commo
 import { BASE_URL, PRODUCT_BASE_URL, REVIEW_BASE_URL } from "../../utils/constants";
 
 export class ProductService {
-  getLatestProducts(ctx) {
-    let url = `${PRODUCT_BASE_URL}/latest`
+  // getLatestProducts(ctx) {
+  //   let url = `${PRODUCT_BASE_URL}/latest`
+  //   let data = getTokenService(url, 'GET', ctx);
+  //   return data;
+  // }
+
+  getMinedProducts(ctx, keyword) {
+    let url = `${PRODUCT_BASE_URL}/mined-products?page=1&perPage=10&keyword=${keyword}`
     let data = getTokenService(url, 'GET', ctx);
     return data;
   }
