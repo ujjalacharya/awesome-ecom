@@ -1,4 +1,4 @@
-import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS } from "../types";
+import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE , REMOVING_IMAGE} from "../types";
 
 
 const initialState = {
@@ -8,7 +8,9 @@ const initialState = {
     singleLoading: true,
     totalCount: 0,
     categories:[],
-    brands:[]
+    brands:[],
+    uploadedImages:[],
+    isImageRemoved:false
 }
 
 export default function (state = initialState, action) {
@@ -46,6 +48,23 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 brands: payload
+            }
+        case UPLOAD_IMAGES:
+            return {
+                ...state,
+                uploadedImages:payload,
+                isImageRemoved: false
+            }
+        case REMOVE_IMAGE:
+            return {
+                ...state,
+                uploadedImages: state.uploadedImages.filter(image=>image!==payload),
+                isImageRemoved:true
+            }
+        case REMOVING_IMAGE:
+            return {
+                ...state,
+                isImageRemoved: false
             }
         default:
             return state;

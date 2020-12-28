@@ -14,6 +14,7 @@ const { calculateDistance } = require("../middleware/helpers");
 const sharp = require("sharp");
 const shortid = require("shortid");
 const path = require("path");
+const moment = require("moment")
 const fs = require("fs");
 const _ = require("lodash");
 const Fawn = require("fawn");
@@ -31,7 +32,7 @@ exports.order = async (req, res, next) => {
   // )
   .populate({
     path: "product",
-    select: "name slug images price _id category brand return isVerified isDeleted warranty quantity",
+    select: "name slug images price discountRate _id category brand return isVerified isDeleted warranty quantity",
     populate: {
       path: "images",
       model: "productimages",
@@ -440,6 +441,12 @@ exports.toggleOrderApproval = async (req, res) => {
     if (updateProduct.quantity<1) {
       return res.status(403).json({error:"Cannot approve!, product is out of stock."})
     }
+    updateProduct.noOfSoldOut += order.quantity
+    //change trendingScore
+    const today = moment();
+    const createdDay = moment(product.createdAt);
+    const daysDiff = today.diff(createdDay, 'days');
+    updateProduct.trendingScore = updateProduct.noOfSoldOut / daysDiff
     const results = await task
       .update(neworder, updateOrder)
       .options({ viaSave: true })
@@ -458,6 +465,12 @@ exports.toggleOrderApproval = async (req, res) => {
     updateOrder.status.currentStatus = "active";
     updateOrder.status.approvedDate = null;
     updateProduct.quantity = updateProduct.quantity + order.quantity
+    updateProduct.noOfSoldOut = updateProduct.noOfSoldOut === 0 ? 0 : updateProduct.noOfSoldOut - order.quantity
+    //change trendingScore
+    const today = moment();
+    const createdDay = moment(product.createdAt);
+    const daysDiff = today.diff(createdDay, 'days');
+    updateProduct.trendingScore = updateProduct.noOfSoldOut / daysDiff
     const results = await task
       .update(neworder, updateOrder)
       .options({ viaSave: true })
@@ -505,6 +518,12 @@ exports.orderCancelByAdmin = async (req, res) => {
   let product = await Product.findById(order.product._id);
   let updateProduct = product.toObject();
   updateProduct.quantity = order.quantity + product.quantity;
+  updateProduct.noOfSoldOut = updateProduct.noOfSoldOut === 0 ? 0 : updateProduct.noOfSoldOut - order.quantity
+  //change trendingScore
+  const today = moment();
+  const createdDay = moment(product.createdAt);
+  const daysDiff = today.diff(createdDay, 'days');
+  updateProduct.trendingScore = updateProduct.noOfSoldOut / daysDiff
 
   let results = await task
     .save(newRemark)
@@ -546,6 +565,12 @@ exports.orderCancelByUser = async (req, res) => {
   let product = await Product.findById(order.product._id);
   let updateProduct = product.toObject();
   updateProduct.quantity = order.quantity + product.quantity;
+  updateProduct.noOfSoldOut = updateProduct.noOfSoldOut === 0 ? 0 : updateProduct.noOfSoldOut - order.quantity
+  //change trendingScore
+  const today = moment();
+  const createdDay = moment(product.createdAt);
+  const daysDiff = today.diff(createdDay, 'days');
+  updateProduct.trendingScore = updateProduct.noOfSoldOut / daysDiff
 
   let results = await task
     .save(newRemark)
@@ -740,20 +765,20 @@ exports.editOrderQuantity = async (req,res) => {
   let updateOrder = order.toObject();
   let payment = await Payment.findById(order.payment._id);
   let updatePayment = payment.toObject();
-  let product = await Product.findById(order.product._id)
-  let updateProduct = product.toObject()
+  // let product = await Product.findById(order.product._id)
+  // let updateProduct = product.toObject()
   updateOrder.quantity = req.query.quantity
-  updateProduct.quantity = updateProduct.quantity + order.quantity - updateOrder.quantity
+  // updateProduct.quantity = updateProduct.quantity + order.quantity - updateOrder.quantity
   updatePayment.amount = Math.round(
-    (product.price - product.price * (product.discountRate / 100)) * updateOrder.quantity
+    (order.product.price - order.product.price * (order.product.discountRate / 100)) * updateOrder.quantity
   )
   let results = await task
     .update(payment, updatePayment)
     .options({ viaSave: true })
     .update(order, updateOrder)
     .options({ viaSave: true })
-    .update(product, updateProduct)
-    .options({ viaSave: true })
+    // .update(product, updateProduct)
+    // .options({ viaSave: true })
     .run({ useMongoose: true });
   
   res.json({order:results[1],payment:results[0]});

@@ -10,6 +10,7 @@ const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const Banner = require("../models/Banner")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
+const minedProduct = require("../models/MinedProduct")
 const Remark = require("../models/Remark")
 const shortid = require('shortid');
 const sharp = require("sharp")
@@ -482,8 +483,21 @@ exports.flipCategoryAvailablity = async (req, res) => {
     await category.save()
     res.json(category)
 }
+
+exports.makeProductFeatured = async (req, res) => {
+    let product = await Product.findOne({ slug: req.params.p_slug, isVerified:{$ne:null}, isDeleted:null })
+    if (!product)
+        return res
+            .status(404)
+            .json({ error: "Product not found." });
+
+    product.isFeatured = Date.now()
+    product = await product.save()
+    res.json({ product })
+}
+
 exports.approveProduct = async (req, res) => {
-    const product = await (await Product.findOne({ slug: req.params.p_slug })).populated({
+    const product = await Product.findOne({ slug: req.params.p_slug }).populated({
         path: "remark",
         model: "remark",
         match:{

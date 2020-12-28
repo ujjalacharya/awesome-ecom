@@ -16,6 +16,7 @@ const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
 const Fawn = require("fawn");
+const moment = require('moment')
 const task = Fawn.Task();
 const perPage = 10;
 
@@ -46,6 +47,10 @@ exports.getProduct = async (req, res) => {
     return res
       .status(404)
       .json({ error: "Product is not verified or has been deleted." });
+  //increament viewCount
+  req.product.viewsCount += 1
+ 
+  await req.product.save()
   //user's action on this product
   const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser, 'product')
   //ratings of this product
@@ -62,10 +67,26 @@ exports.getProduct = async (req, res) => {
 exports.createProduct = async (req, res) => {
   if (!req.profile.isVerified)
     return res.status(403).json({ error: "Admin is not verified" });
+  if (req.admin.role!== 'superadmin') {
+    req.body.isFeatured = undefined
+  }
+  if (req.admin.role === 'superadmin' && req.body.isFeatured) {
+    req.body.isFeatured = Date.now()
+  }
   let newProduct = new Product(req.body);
   newProduct.soldBy = req.profile._id;
   // save the product
-  newProduct = await newProduct.save();
+  // with linking product to product images
+  req.images.forEach(i =>{
+    let updataImage = i.toObject()
+    updataImage.productLink = newProduct._id
+    task
+    .update(i, updataImage)
+    .options({ viaSave: true })
+  })
+  await task
+    .save(newProduct)
+    .run({ useMongoose: true });
 
   return res.json(newProduct);
 };
@@ -82,15 +103,22 @@ exports.deleteProduct = async (req, res) => {
 
 exports.productImages = async (req, res) => {
   if (!req.files.length) {
-    return res.status(400).error({ error: "Product images are required" });
+    return res.status(400).json({ error: "Product images are required" });
   }
   if (!req.profile.isVerified) {
-    req.files.forEach((file) => {
+    let fileDeleter = req.files.map((file) => {
       const { filename } = file;
       // remove image from public/uploads
-      const Path = `public/uploads/${filename}`;
-      fs.unlinkSync(Path);
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          fs.unlinkSync(`public/uploads/${filename}`)
+          res()
+        }, 4000);//need to resolve this issue..
+      }
+      )
     });
+    Promise.all(fileDeleter)
+    
     return res.status(403).json({ error: "Admin is not verified" });
   }
   const compressImage = async (
@@ -202,7 +230,7 @@ exports.getProducts = async (req, res) => {
   let sortFactor = { createdAt: 'desc' };
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { ...sortFactor, createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor, updatedAt }
-  if (price && (price === 'asc' || price === 'desc')) sortFactor = { ...sortFactor, 'price.$numberDecimal': price }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
   let query = { soldBy: req.profile._id }
   if (keyword) query = {
     ...query,
@@ -228,7 +256,6 @@ exports.getProducts = async (req, res) => {
     ...query,
     quantity: 0
   }
-  console.log(sortFactor);
   let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
@@ -237,6 +264,11 @@ exports.getProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
+  // if (price && (price === 'asc' || price === 'desc')) {
+  //     products.sort((a, b) => {
+  //       return price === 'asc' ? parseFloat(a.price) - parseFloat(b.price) : parseFloat(b.price) - parseFloat(a.price)
+  //     })
+  //   }
   //rating on each product
   // products = products.map(async p => {
   //   p.stars = await getRatingInfo(p)
@@ -247,18 +279,37 @@ exports.getProducts = async (req, res) => {
   res.json({ products, totalCount });
 };
 
-exports.latestProducts = async (req, res) => {
+exports.minedProducts = async (req, res) => {
   let page = +req.query.page || 1;
   let perPage = +req.query.perPage || 10;
-  let sortFactor = { createdAt: 'desc' }
-  if (req.query.keyword === process.env.LATEST_PRODUCT) {
-    page = 1
-    perPage = 50
-  }
-  let products = await Product.find({
+  let sortFactor
+  let query = {
     isVerified: { $ne: null },
     isDeleted: null
-  })
+  }
+  if (req.query.keyword === 'latest') {
+    sortFactor = { createdAt: 'desc' }
+  }
+  else if (req.query.keyword === 'featured') {
+    sortFactor = { createdAt: 'desc' }
+    query = {
+      ...query,
+      isFeatured: { $ne: null }
+    }
+  }
+  else if (req.query.keyword === 'trending') {
+    sortFactor = { trendingScore: -1 }
+  }
+  else if (req.query.keyword === 'mostviewed') {
+    sortFactor = { viewsCount: -1 }
+  } 
+  else if (req.query.keyword === 'topselling') {
+    sortFactor = { noOfSoldOut: -1 }
+  } 
+  else {
+    return res.status(403).json({error: "Invalid keyword."})
+  }
+  let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -267,11 +318,8 @@ exports.latestProducts = async (req, res) => {
     .lean()
     .sort(sortFactor);
 
-  let totalCount = await Product.countDocuments({
-    isVerified: { $ne: null },
-    isDeleted: null,
-  })
-  if (totalCount > 50) totalCount = 50
+  let totalCount = await Product.countDocuments(query)
+  // if (totalCount > 50) totalCount = 50
   //user's action on each product
   products = products.map(async p => {
     //user's action on this product
@@ -285,6 +333,82 @@ exports.latestProducts = async (req, res) => {
   products = await Promise.all(products)
   res.json({ products, totalCount });
 };
+exports.forYouProducts = async (req,res) => {
+  const page = +req.query.page || 1;
+  const perPage = +req.query.perPage || 10;
+  const { createdAt, updatedAt, price } = req.query
+  let sortFactor = { createdAt: 'desc' };
+  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
+  if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
+  const orders = await Order.find({ user: req.user._id })
+    .select('-_id product')
+    .populate({
+      path: 'product',
+      select: '-_id category',
+      populate: {
+        path: 'category',
+        model: 'category',
+        select: '_id ',
+        match: {
+          isDisabled: null
+        },
+        populate: {
+          path: 'parent',
+          model: 'category',
+          select: '_id ',
+          match: {
+            isDisabled: null
+          },
+          populate: {
+            path: 'parent',
+            model: 'category',
+            select: '_id ',
+            match: {
+              isDisabled: null
+            },
+          }
+        }
+      }
+    });
+    let categories = []
+    orders.forEach(o=>{
+      o.product.category.forEach(cat=>{
+        categories.push(cat._id)//i.e last layer
+        cat.parent && categories.push(cat.parent._id) //i.e second layer
+        // cat.parent.parent && categories.push(cat.parent.parent._id) //i.e first layer
+      })
+    })
+  categories =[... new Set(categories)]
+  if (!categories.length) {
+    return res.status(403).json({ error: "Categories not found." });
+  }
+  
+  let products = await Product.find({ category: { $in: categories } })
+    .populate("category", "displayName slug")
+    .populate("brand", "brandName slug")
+    .populate("images", "-createdAt -updatedAt -__v")
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .lean()
+    .sort(sortFactor);
+  const totalCount = await Product.countDocuments({
+    category: { $in: categories },
+  });
+
+  //user's action on each product
+  products = products.map(async p => {
+    //user's action on this product
+    const { hasOnCart, hasOnWishlist } = await userHas(p, req.user, 'products')
+    //ratings of this product
+    // p.stars = await getRatingInfo(p)
+    p.hasOnCart = hasOnCart,
+      p.hasOnWishlist = hasOnWishlist
+    return p
+  })
+  products = await Promise.all(products)
+  res.json({ products, totalCount });
+}
 
 exports.suggestKeywords = async (req, res) => {
   let limits = +req.query.limits || 5
@@ -303,7 +427,7 @@ exports.searchProducts = async (req, res) => {
   let sortFactor = { createdAt: 'desc' };
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price:price==='asc' ? 1 : -1 }
   let {
     keyword = "",
     brands,
@@ -367,6 +491,11 @@ exports.searchProducts = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor)
+  // if (price && (price === 'asc' || price === 'desc')) {
+  //   products.sort((a, b) => {
+  //     return price === 'asc' ? parseFloat(a.price) - parseFloat(b.price) : parseFloat(b.price) - parseFloat(a.price)
+  //   })
+  // }
   let totalCount = await Product.countDocuments(searchingFactor);
   //user's action on each product
   products = products.map(async p => {
@@ -389,7 +518,7 @@ exports.getProductsByCategory = async (req, res) => {
   let sortFactor = { createdAt: 'desc' };
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
-  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
   let categories = await Category.find({
     $or: [{ slug: req.query.cat_slug }, { parent: req.query.cat_id }],
     isDisabled: null,
@@ -406,6 +535,11 @@ exports.getProductsByCategory = async (req, res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
+    // if (price && (price === 'asc' || price === 'desc')) {
+    //   products.sort((a, b) => {
+    //     return price === 'asc' ? parseFloat(a.price) - parseFloat(b.price) : parseFloat(b.price) - parseFloat(a.price)
+    //   })
+    // }
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }

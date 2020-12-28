@@ -1,38 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema
-const miningSchema = new mongoose.Schema({
-    hot: [{
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-        unique: true
-    }],
-    trending: [{
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-        unique: true
-    }],
-    featured: [{
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-        unique: true
-    }],
-    topSelling: [{
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-        unique: true
-    }],
+const forYouSchema = new mongoose.Schema({
     forYou: [{
         user:{
         type: Schema.Types.ObjectId,
         ref: 'user',
         unique: true
         },
-        product: {
+        products: [{
             type: Schema.Types.ObjectId,
             ref: 'product',
             unique: true
-        }
+        }]
     }]
 });
 
-module.exports = mongoose.model("minedproduct", miningSchema);
+module.exports = mongoose.model("minedproduct", forYouSchema);

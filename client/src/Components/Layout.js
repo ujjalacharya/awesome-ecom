@@ -8,12 +8,21 @@ import { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import MobileHeader from "./MobileHeader";
+import { initGA, logPageView } from "../../utils/analytics";
 
 Router.onRouteChangeStart = (url) => NProgress.start();
 Router.onRouteChangeComplete = (url) => NProgress.done();
 Router.onRouteChangeError = (url) => NProgress.done();
 
 class Layout extends Component {
+  componentDidMount() {
+    if (!window.GA_INITIALIZED) {
+      initGA();
+      window.GA_INITIALIZED = true;
+    }
+    logPageView();
+  }
+
   render() {
     const {
       children,
@@ -22,7 +31,6 @@ class Layout extends Component {
       deauthenticate,
     } = this.props;
 
-    
     return (
       <div>
         <Head>
@@ -31,9 +39,9 @@ class Layout extends Component {
 
         <MobileHeader />
 
-        <Header data={this.props.menuCate}/>
+        <Header data={this.props.menuCate} />
         <div className="has-text-centered body-wrap">{children}</div>
-        
+
         <Footer />
       </div>
     );
