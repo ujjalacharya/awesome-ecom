@@ -147,7 +147,7 @@ class Header extends Component {
     let { parentCate, loginToken, userInfo } = this.state;
 
     return (
-      <div className="main-header">
+      <React.Fragment>
         <div className="top-header">
           <div>
             Customer Care: +9779856321452
@@ -168,179 +168,185 @@ class Header extends Component {
                   <Link href="/register">
                     <a>
                       Register
-                    </a>
+                </a>
                   </Link>
                 }
               </li>
             </ul>
           </div>
         </div>
-        <Row style={{ padding: '20px 60px' }}>
-          <Col lg={20} sm={20}>
-            <Row className="menu-logo">
-              <Col span={4} className="logo">
-                <Link href="/">
-                  <a>
-                    <img src="/images/logo.png" />
-                  </a>
-                </Link>
-              </Col>
-              <Col span={20} className="search">
-                <form onSubmit={this.handleSubmit}>
-                  <AutoComplete
-                    value={this.state.searchValue}
-                    options={this.state.searchOptions}
-                    // style={{
-                    //   width: 400,
-                    // }}
-                    className="auto-search"
-                    onSelect={(select) => {
-                      this.selectKeyword(select)
-                    }}
-                    onSearch={(search) => {
-                      this.getSearchKeywordsDeb(search)
-                    }}
-                  // placeholder="Search for products, brands and more"
-                  >
-                    <Input.Search size="large" placeholder="Search for products, brands and more"
-                    />
-                  </AutoComplete>
-                  {/* <img src="/images/search-icon.png" /> */}
-                </form>
+        <div className="main-header">
+          <div className="middle-menu">
+            <Row style={{ padding: '20px 60px' }}>
+              <Col lg={20} sm={20}>
+                <Row className="menu-logo">
+                  <Col span={4} className="logo">
+                    <Link href="/">
+                      <a>
+                        <img src="/images/logo.png" />
+                      </a>
+                    </Link>
+                  </Col>
+                  <Col span={20} className="search">
+                    <form onSubmit={this.handleSubmit}>
+                      <AutoComplete
+                        value={this.state.searchValue}
+                        options={this.state.searchOptions}
+                        // style={{
+                        //   width: 400,
+                        // }}
+                        className="auto-search"
+                        onSelect={(select) => {
+                          this.selectKeyword(select)
+                        }}
+                        onSearch={(search) => {
+                          this.getSearchKeywordsDeb(search)
+                        }}
+                      // placeholder="Search for products, brands and more"
+                      >
+                        <Input.Search size="large" placeholder="Search for products, brands and more"
+                        />
+                      </AutoComplete>
+                      {/* <img src="/images/search-icon.png" /> */}
+                    </form>
 
+                  </Col>
+                </Row>
+              </Col>
+              <Col lg={4} sm={4} className="menu-right">
+                <div className="menu-right-items">
+                  <div className="list-icon">
+                    <img src="/images/heart.png" />
+                  </div>
+                  <div className="list-text">Wishlist</div>
+                </div>
+                <div className="menu-right-items">
+                  <div className="list-icon">
+                    <img src="/images/bag.png" />
+                  </div>
+                  {
+                    loginToken ? (
+                      <Link href="/cart">
+                        <a>
+                          <div className="list-text">Cart</div>
+                        </a>
+                      </Link>
+                    ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
+                        <a>
+                          <div className="list-text">Cart</div>
+                        </a>
+                      </Link>
+                  }
+                </div>
+                {loginToken && (
+                  <div
+                    className="menu-right-items"
+                    onClick={() => this.props.deauthenticate()}
+                  >
+                    <div className="list-icon">
+                      <img src="/images/user.png" />
+                    </div>
+                    <div className="list-text">Logout</div>
+                  </div>
+                )}
               </Col>
             </Row>
-          </Col>
-          <Col lg={4} sm={4} className="menu-right">
-            <div className="menu-right-items">
-              <div className="list-icon">
-                <img src="/images/heart.png" />
-              </div>
-              <div className="list-text">Wishlist</div>
-            </div>
-            <div className="menu-right-items">
-              <div className="list-icon">
-                <img src="/images/bag.png" />
-              </div>
+
+          </div>
+          <div className="all-menu">
+            <div className="sub-menu-header">
+              <div className="parent-cate" onMouseOver={() => this.setState({ currentChildCate: [] })}>Home</div>
               {
-                loginToken ? (
-                  <Link href="/cart">
-                    <a>
-                      <div className="list-text">Cart</div>
-                    </a>
-                  </Link>
-                ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
-                    <a>
-                      <div className="list-text">Cart</div>
-                    </a>
-                  </Link>
+                parentCate.map((cate, i) => {
+                  return (
+                    <div
+                      className={"parent-cate "}
+                      key={i}
+                      onMouseOver={() => {
+                        this.getCurrentChildCates(cate);
+                        this.setState({
+                          currentActiveChildId: ''
+                        })
+                      }}
+                    >
+                      {cate.displayName}
+                    </div>
+                  )
+                })
               }
             </div>
-            {loginToken && (
-              <div
-                className="menu-right-items"
-                onClick={() => this.props.deauthenticate()}
-              >
-                <div className="list-icon">
-                  <img src="/images/user.png" />
-                </div>
-                <div className="list-text">Logout</div>
-              </div>
-            )}
-          </Col>
-        </Row>
-        <div className="all-menu">
-          <div className="sub-menu-header">
-            <div className="parent-cate" onMouseOver={() => this.setState({ currentChildCate: [] })}>Home</div>
             {
-              parentCate.map((cate, i) => {
-                return (
-                  <div
-                    className={"parent-cate "}
-                    key={i}
-                    onMouseOver={() => {
-                      this.getCurrentChildCates(cate);
-                      this.setState({
-                        currentActiveChildId: ''
-                      })
-                    }}
+              !isEmpty(this.state.currentChildCate) &&
+              <div className="child-cates-cover">
+                <Row className="child-cates-row" style={{ background: '#fff' }}>
+                  <Col
+                    lg={7}
+                    sm={7}
+                    className={`${!isEmpty(this.state.currentChildChildCate) && 'child-cates-col'}`}
                   >
-                    {cate.displayName}
-                  </div>
-                )
-              })
+                    <div>
+                      {
+                        this.state.currentChildCate?.map((cate, i) => {
+                          return (
+                            <div
+                              className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
+                              key={i}
+                              onMouseOver={() => this.getCurrentChildChildCates(cate)}
+                              onClick={(e) =>
+                                this.searchProducts(
+                                  e,
+                                  cate.slug,
+                                  cate._id
+                                )
+                              }
+                            >
+                              {">"} <span>{cate.displayName}</span>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  </Col>
+                  <Col
+                    lg={7}
+                    sm={7}
+                    className={`${!isEmpty(this.state.currentChildChildCate) && 'child-child-cates-col'}`}
+                  >
+                    <div>
+                      {
+                        this.state.currentChildChildCate?.map((cate, i) => {
+                          return (
+                            <div
+                              className={"child-cate " + (cate._id === this.state.currentActiveChildChildId ? 'active' : '')}
+                              onMouseOut={() => this.setState({ currentActiveChildChildId: '' })}
+                              onMouseOver={() => this.setState({ currentActiveChildChildId: cate._id })}
+                              key={i}
+                              onClick={(e) =>
+                                this.searchProducts(
+                                  e,
+                                  cate.slug,
+                                  cate._id
+                                )
+                              }
+                            >
+                              {">"} <span>{cate.displayName}</span>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                  </Col>
+                  <Col lg={10} sm={10} style={{ textAlign: 'right' }}>
+                    <div><img src="/images/elect-imag.jpg" /></div>
+                  </Col>
+                </Row>
+
+              </div>
             }
           </div>
-          {
-            !isEmpty(this.state.currentChildCate) &&
-            <div className="child-cates-cover">
-              <Row className="child-cates-row" style={{ background: '#fff' }}>
-                <Col
-                  lg={7}
-                  sm={7}
-                  className={`${!isEmpty(this.state.currentChildChildCate) && 'child-cates-col'}`}
-                >
-                  <div>
-                    {
-                      this.state.currentChildCate?.map((cate, i) => {
-                        return (
-                          <div
-                            className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
-                            key={i}
-                            onMouseOver={() => this.getCurrentChildChildCates(cate)}
-                            onClick={(e) =>
-                              this.searchProducts(
-                                e,
-                                cate.slug,
-                                cate._id
-                              )
-                            }
-                          >
-                            {">"} <span>{cate.displayName}</span>
-                          </div>
-                        )
-                      })
-                    }
-                  </div>
-                </Col>
-                <Col
-                  lg={7}
-                  sm={7}
-                  className={`${!isEmpty(this.state.currentChildChildCate) && 'child-child-cates-col'}`}
-                >
-                  <div>
-                    {
-                      this.state.currentChildChildCate?.map((cate, i) => {
-                        return (
-                          <div
-                            className={"child-cate " + (cate._id === this.state.currentActiveChildChildId ? 'active' : '')}
-                            onMouseOut={() => this.setState({ currentActiveChildChildId: '' })}
-                            onMouseOver={() => this.setState({ currentActiveChildChildId: cate._id })}
-                            key={i}
-                            onClick={(e) =>
-                              this.searchProducts(
-                                e,
-                                cate.slug,
-                                cate._id
-                              )
-                            }
-                          >
-                            {">"} <span>{cate.displayName}</span>
-                          </div>
-                        )
-                      })
-                    }
-                  </div>
-                </Col>
-                <Col lg={10} sm={10} style={{ textAlign: 'right' }}>
-                  <div><img src="/images/elect-imag.jpg" /></div>
-                </Col>
-              </Row>
 
-            </div>
-          }
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
