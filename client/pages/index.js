@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import MainCarousel from "../src/Components/Carousel";
 import ProductSlider from "../src/Components/ProductSlider";
 import SliderHeader from "../src/Components/SliderHeader";
-import Popular from "../src/Components/Popular";
-import LatestSLider from "../src/Components/LatestSlider";
+// import Popular from "../src/Components/Popular";
+// import LatestSLider from "../src/Components/LatestSlider";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
@@ -24,7 +24,7 @@ const Index = (props) => {
           obliques"
             listLink="latestProducts"
           />
-          <ProductSlider data={props.products.latestProducts} />
+          <ProductSlider data={props.products.latestProducts} sliderName="featured" />
           {/* <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
@@ -41,7 +41,7 @@ const Index = (props) => {
             removePaddingTop="paddingTopZero"
             listLink="trendingProducts"
           />
-          <ProductSlider data={props.products.trendingProducts} />
+          <ProductSlider data={props.products.trendingProducts} sliderName="trending" />
           <SliderHeader
             headTitle="Latest Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
@@ -56,7 +56,7 @@ const Index = (props) => {
                 props.products.latestProducts.products.map((product, index) => {
                   return (
                     <Col className="latest-cards" key={index} lg={6}>
-                      <ProductCard data={product} />
+                      <ProductCard data={product} sliderName="latest" />
                     </Col>
                   )
                 })

@@ -55,6 +55,19 @@ class ProductCard extends Component {
     });
   };
 
+  addToWishlists = (slug) => {
+    if (this.props.sliderName === 'trending') {
+      this.props.addWishListItems(slug, "trending")
+    }
+  }
+
+  removeFromWishList = (id) => {
+    if (this.props.sliderName === 'trending') {
+      this.props.removeFromWishList(id, "trending")
+    }
+    // this.props.removeFromWishList()
+  }
+
   render() {
     const { productData } = this.state;
 
@@ -152,9 +165,7 @@ class ProductCard extends Component {
                     <Popconfirm
                       title="Are you sure you want to remove this from wishlist?"
                       onConfirm={() =>
-                        this.props.removeFromWishList(
-                          productData.hasOnWishlist._id
-                        )
+                        this.removeFromWishList(productData.hasOnWishlist._id)
                       }
                       // onCancel={cancel}
                       okText="Yes"
@@ -183,7 +194,7 @@ class ProductCard extends Component {
                           data-tip="Add to Wishlist"
                           src="/images/heart.png"
                           onClick={() =>
-                            this.props.addWishListItems(productData.slug)
+                            this.addToWishlists(productData.slug)
                           }
                         />
                       </Tooltip>

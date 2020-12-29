@@ -47,7 +47,7 @@ class ProductSlider extends Component {
       this.props.cart.addToCartResp !== prevProps.cart.addToCartResp &&
       this.props.cart.addToCartResp
     ) {
-      this.props.getLatestProducts();
+      // this.props.getLatestProducts();
     }
 
     if (
@@ -55,7 +55,7 @@ class ProductSlider extends Component {
         prevProps.wishlist.wishlistItemsResp?.updatedAt &&
       this.props.wishlist.wishlistItemsResp
     ) {
-      this.props.getLatestProducts();
+      // this.props.getLatestProducts();
     }
 
     if (
@@ -63,7 +63,7 @@ class ProductSlider extends Component {
         prevProps.wishlist.removeFromWishlistResp?.updatedAt &&
       this.props.wishlist.removeFromWishlistResp
     ) {
-      this.props.getLatestProducts();
+      // this.props.getLatestProducts();
     }
 
     if (
@@ -71,7 +71,7 @@ class ProductSlider extends Component {
         prevProps.cart.removeFromCartResp &&
       this.props.cart.removeFromCartResp
     ) {
-      this.props.getLatestProducts();
+      // this.props.getLatestProducts();
     }
   }
 
@@ -114,7 +114,7 @@ class ProductSlider extends Component {
       <section className="product-slider">
         <Slider {...settings}>
           {this.props.data?.products?.map((product, i) => {
-            return <ProductCard key={i} data={product} />;
+            return <ProductCard key={i} data={product} sliderName={this.props.sliderName} />;
           })}
         </Slider>
       </section>
