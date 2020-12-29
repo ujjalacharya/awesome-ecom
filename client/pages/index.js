@@ -24,7 +24,7 @@ const Index = (props) => {
           obliques"
             listLink="latestProducts"
           />
-          <ProductSlider data={props.products.latestProducts} sliderName="featured" />
+          <ProductSlider data={props.products.latestProducts} sliderName="latest" />
           {/* <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
@@ -53,9 +53,9 @@ const Index = (props) => {
             
             <Row>
               {
-                props.products.latestProducts.products.map((product, index) => {
+                props.products.latestProducts?.products?.map((product, index) => {
                   return (
-                    <Col className="latest-cards" key={index} lg={6}>
+                    <Col className="latest-cards" key={index} lg={6} sm={8}>
                       <ProductCard data={product} sliderName="latest" />
                     </Col>
                   )

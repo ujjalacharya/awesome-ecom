@@ -56,16 +56,19 @@ class ProductCard extends Component {
   };
 
   addToWishlists = (slug) => {
-    if (this.props.sliderName === 'trending') {
-      this.props.addWishListItems(slug, "trending")
-    }
+    this.props.addWishListItems(slug, this.props.sliderName)
   }
 
   removeFromWishList = (id) => {
-    if (this.props.sliderName === 'trending') {
-      this.props.removeFromWishList(id, "trending")
-    }
-    // this.props.removeFromWishList()
+    this.props.removeFromWishList(id, this.props.sliderName)
+  }
+
+  addToCart = (slug, qty) => {
+    this.props.addToCart(slug, qty, this.props.sliderName);
+  }
+
+  removeFromCart = (id) => {
+    this.props.removeCart(id, this.props.sliderName);
   }
 
   render() {
@@ -114,9 +117,7 @@ class ProductCard extends Component {
                         alt="bag.jpg"
                         title="Add to Cart"
                         onClick={() => {
-                          this.props.addToCart(productData.slug, {
-                            quantity: 1,
-                          });
+                          this.addToCart(productData.slug, {quantity: 1})
                         }}
                       />
                     </Tooltip>
@@ -124,7 +125,7 @@ class ProductCard extends Component {
                       <Popconfirm
                         title="Are you sure you want to remove this from cart?"
                         onConfirm={() =>
-                          this.props.removeCart(productData.hasOnCart._id)
+                          this.removeFromCart(productData.hasOnCart._id)
                         }
                         // onCancel={cancel}
                         okText="Yes"

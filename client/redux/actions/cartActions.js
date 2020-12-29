@@ -5,10 +5,13 @@ import {
   REMOVE_FROM_CART,
   EDIT_CART_QTY,
   CART_START,
-  CART_FINISH
+  CART_FINISH,
+  TRENDING_PRODUCTS,
+  LATEST_PRODUCTS
 } from "../types";
 import { CartService } from "../services/cartService";
 import { getDiscountedPrice, openNotification } from "../../utils/common";
+import { ProductService } from "../services/productService";
 
 const getCartProducts = (query, ctx) => {
   return async (dispatch) => {
@@ -65,13 +68,24 @@ const getCartProducts = (query, ctx) => {
   };
 };
 
-const addToCart = (query, body) => {
+const addToCart = (query, body, sliderName) => {
   return async (dispatch) => {
     await dispatch({ type: CART_START });
     const cartService = new CartService();
     const response = await cartService.addToCart(query, body);
     await dispatch({ type: CART_FINISH });
     if (response.isSuccess) {
+      const productService = new ProductService();
+      switch (sliderName) {
+        case 'trending':
+          const prodResponse = await productService.getMinedProducts('', 'trending');
+          dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
+          break;
+        case 'latest':
+          const prodLatestResponse = await productService.getMinedProducts('', 'latest');
+          dispatch({ type: LATEST_PRODUCTS, payload: prodLatestResponse.data });
+          break;
+      }
       openNotification("Success", "Product added to cart successfully");
       dispatch({ type: ADD_TO_CART, payload: response.data });
     } else if (!response.isSuccess) {
@@ -83,13 +97,24 @@ const addToCart = (query, body) => {
   };
 };
 
-const removeCart = (query) => {
+const removeCart = (query, sliderName) => {
   return async (dispatch) => {
     await dispatch({ type: CART_START });
     const cartService = new CartService();
     const response = await cartService.removeCart(query);
     await dispatch({ type: CART_FINISH });
     if (response.isSuccess) {
+      const productService = new ProductService();
+      switch (sliderName) {
+        case 'trending':
+          const prodResponse = await productService.getMinedProducts('', 'trending');
+          dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
+          break;
+        case 'latest':
+          const prodLatestResponse = await productService.getMinedProducts('', 'latest');
+          dispatch({ type: LATEST_PRODUCTS, payload: prodLatestResponse.data });
+          break;
+      }
       openNotification("Success", "Product removed from cart successfully");
       dispatch({ type: REMOVE_FROM_CART, payload: response.data });
     } else if (!response.isSuccess) {

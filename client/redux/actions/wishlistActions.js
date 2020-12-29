@@ -6,8 +6,8 @@ import {
   ADD_WISHLIST_ITEMS,
   REMOVE_FROM_WISHLIST,
   GET_WISHLIST_ITEMS,
-  UPDATE_TRENDING_PRODUCTS,
-  TRENDING_PRODUCTS
+  TRENDING_PRODUCTS,
+  LATEST_PRODUCTS
 } from "../types";
 
 const getWishListItems = (query) => {
@@ -36,14 +36,13 @@ const addWishListItems = (slug, sliderName) => {
           const prodResponse = await productService.getMinedProducts('', 'trending');
           dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
           break;
+        case 'latest':
+          const prodLatestResponse = await productService.getMinedProducts('', 'latest');
+          dispatch({ type: LATEST_PRODUCTS, payload: prodLatestResponse.data });
+          break;
       }
-
       openNotification("Success", "Product added to wishlist successfully");
       dispatch({ type: ADD_WISHLIST_ITEMS, payload: response.data });
-
-      // switch (sliderName){
-      //   case 'trending':
-      // }
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
@@ -63,6 +62,10 @@ const removeFromWishList = (id, sliderName) => {
         case 'trending':
           const prodResponse = await productService.getMinedProducts('', 'trending');
           dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
+          break;
+        case 'latest':
+          const prodLatestResponse = await productService.getMinedProducts('', 'latest');
+          dispatch({ type: LATEST_PRODUCTS, payload: prodLatestResponse.data });
           break;
       }
       openNotification("Success", "Product removed from wishlist successfully");
