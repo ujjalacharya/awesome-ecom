@@ -1,5 +1,5 @@
 .product-card {
-  padding: 0 30px;
+  padding: 0 20px;
   padding-bottom: 10px;
   @media screen and (max-width: 480px) {
     padding: 0 15px;
@@ -64,12 +64,18 @@
       align-items: center;
       justify-content: space-between;
       font-size: 13px;
+      @media screen and (min-width: 769px) and (max-width: 1028px) {
+        display: block;
+      }
       .cate {
         color: $light-text-color;
-        max-width: 130px;
+        max-width: 65%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        @media screen and (min-width: 769px) and (max-width: 1028px) {
+          max-width: 100%;
+        }
       }
       .stars {
         i {
@@ -86,7 +92,7 @@
       color: $primary-color;
     }
     .prod-name {
-      max-width: 200px;
+      max-width: 100%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

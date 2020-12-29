@@ -8,6 +8,7 @@ import LatestSLider from "../src/Components/LatestSlider";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
+import ProductCard from "../src/Components/Includes/ProductCard";
 
 const Index = (props) => {
   return (
@@ -21,10 +22,10 @@ const Index = (props) => {
             headTitle="Featured Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching
           obliques"
-          listLink = "latestProducts"
+            listLink="latestProducts"
           />
           <ProductSlider data={props.products.latestProducts} />
-          <section className="latest-popular">
+          {/* <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
                 <Popular data={props.products.latestProducts} />
@@ -33,14 +34,35 @@ const Index = (props) => {
                 <LatestSLider data={props.products.latestProducts} />
               </Col>
             </Row>
-          </section>
+          </section> */}
           <SliderHeader
             headTitle="Trending Products"
             headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
             removePaddingTop="paddingTopZero"
-            listLink = "trendingProducts"
+            listLink="trendingProducts"
           />
           <ProductSlider data={props.products.trendingProducts} />
+          <SliderHeader
+            headTitle="Latest Products"
+            headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+            removePaddingTop="paddingTopZero"
+            listLink="latestProducts"
+          />
+          {/* <ProductSlider data={props.products.latestProducts} /> */}
+          <div className="latest-products">
+            
+            <Row>
+              {
+                props.products.latestProducts.products.map((product, index) => {
+                  return (
+                    <Col className="latest-cards" key={index} lg={6}>
+                      <ProductCard data={product} />
+                    </Col>
+                  )
+                })
+              }
+            </Row>
+          </div>
         </div>
       </div>
     </Layout>
