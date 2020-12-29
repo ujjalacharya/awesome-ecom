@@ -146,49 +146,57 @@ class Header extends Component {
             </ul>
           </div>
         </div>
-        <div className="main-header">
-          <div className="middle-menu">
-            <Row className="middle-menu-row">
-              <Col lg={20} sm={20}>
-                <Row className="menu-logo">
-                  <Col span={4} className="logo">
-                    <Link href="/">
+        <div className="middle-menu">
+          <Row className="middle-menu-row">
+            <Col lg={20} sm={20}>
+              <Row className="menu-logo">
+                <Col span={4} className="logo">
+                  <Link href="/">
+                    <a>
+                      <img src="/images/logo.png" />
+                    </a>
+                  </Link>
+                </Col>
+                <Col span={20} className="search">
+                  <form onSubmit={this.handleSubmit}>
+                    <AutoComplete
+                      value={this.state.searchValue}
+                      options={this.state.searchOptions}
+                      // style={{
+                      //   width: 400,
+                      // }}
+                      className="auto-search"
+                      onSelect={(select) => {
+                        this.selectKeyword(select)
+                      }}
+                      onSearch={(search) => {
+                        this.getSearchKeywordsDeb(search)
+                      }}
+                    // placeholder="Search for products, brands and more"
+                    >
+                      <Input.Search size="large" placeholder="Search for products, brands and more"
+                      />
+                    </AutoComplete>
+                    {/* <img src="/images/search-icon.png" /> */}
+                  </form>
+
+                </Col>
+              </Row>
+            </Col>
+            <Col lg={4} sm={4} className="menu-right">
+              <div className="menu-right-items">
+                {
+                  loginToken ? (
+                    <Link href="/myprofile/myWishlist">
                       <a>
-                        <img src="/images/logo.png" />
+                        <div className="list-icon">
+                          <img src="/images/heart.png" />
+                        </div>
+                        <div className="list-text">Wishlist</div>
                       </a>
                     </Link>
-                  </Col>
-                  <Col span={20} className="search">
-                    <form onSubmit={this.handleSubmit}>
-                      <AutoComplete
-                        value={this.state.searchValue}
-                        options={this.state.searchOptions}
-                        // style={{
-                        //   width: 400,
-                        // }}
-                        className="auto-search"
-                        onSelect={(select) => {
-                          this.selectKeyword(select)
-                        }}
-                        onSearch={(search) => {
-                          this.getSearchKeywordsDeb(search)
-                        }}
-                      // placeholder="Search for products, brands and more"
-                      >
-                        <Input.Search size="large" placeholder="Search for products, brands and more"
-                        />
-                      </AutoComplete>
-                      {/* <img src="/images/search-icon.png" /> */}
-                    </form>
-
-                  </Col>
-                </Row>
-              </Col>
-              <Col lg={4} sm={4} className="menu-right">
-                <div className="menu-right-items">
-                  {
-                    loginToken ? (
-                      <Link href="/myprofile/myWishlist">
+                  ) : (
+                      <Link href={`/login?origin=${this.props.router.asPath}`}>
                         <a>
                           <div className="list-icon">
                             <img src="/images/heart.png" />
@@ -196,46 +204,36 @@ class Header extends Component {
                           <div className="list-text">Wishlist</div>
                         </a>
                       </Link>
-                    ) : (
-                        <Link href={`/login?origin=${this.props.router.asPath}`}>
-                          <a>
-                            <div className="list-icon">
-                              <img src="/images/heart.png" />
-                            </div>
-                            <div className="list-text">Wishlist</div>
-                          </a>
-                        </Link>
-                      )
-                  }
-                </div>
-                <div className="menu-right-items">
-                  {
-                    loginToken ? (
-                      <Link href="/cart">
-                        <a>
-                          <div className="list-icon">
-                            <img src="/images/bag.png" />
-                          </div>
-                          <div className="list-text">Cart</div>
-                        </a>
-                      </Link>
-                    ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
-                        <a>
-                          <div className="list-icon">
-                            <img src="/images/bag.png" />
-                          </div>
-                          <div className="list-text">Cart</div>
-                        </a>
-                      </Link>
-                  }
-                </div>
-              </Col>
-            </Row>
-
-          </div>
+                    )
+                }
+              </div>
+              <div className="menu-right-items">
+                {
+                  loginToken ? (
+                    <Link href="/cart">
+                      <a>
+                        <div className="list-icon">
+                          <img src="/images/bag.png" />
+                        </div>
+                        <div className="list-text">Cart</div>
+                      </a>
+                    </Link>
+                  ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
+                      <a>
+                        <div className="list-icon">
+                          <img src="/images/bag.png" />
+                        </div>
+                        <div className="list-text">Cart</div>
+                      </a>
+                    </Link>
+                }
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <div className="main-header">
           <div className="all-menu">
             <div className="sub-menu-header">
-              {/* <div className="parent-cate" onMouseOver={() => this.setState({ currentChildCate: [] })}>Home</div> */}
               <div className="parent-cate-cover">
                 {
                   !isEmpty(parentCate) && parentCate.map((cate, i) => {
