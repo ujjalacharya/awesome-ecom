@@ -26,6 +26,7 @@ class Login extends Component {
 
   responseGoogle = (response) => {
     let { profileObj } = response
+    console.log(response)
     let body = {
       name: profileObj.familyName + ' ' + profileObj.givenName,
       email: profileObj.email,
