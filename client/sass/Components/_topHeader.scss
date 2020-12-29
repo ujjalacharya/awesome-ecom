@@ -4,6 +4,10 @@
   padding: 5px 60px;
   background: #f7f7f7;
   color: #969696;
+  @media screen and (max-width: 998px) {
+    padding: 5px 20px;
+    font-size: 13px
+  }
   ul {
     padding: 0;
     li {
