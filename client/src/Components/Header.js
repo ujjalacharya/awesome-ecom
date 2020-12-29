@@ -126,8 +126,8 @@ class Header extends Component {
           <div>
             <ul>
               <li>Sell On Kindeem</li>
-              <li>About Us</li>
-              <li>
+              <li className="about-top-head">About Us</li>
+              <li className="profile-top-head">
                 <Link href="/myprofile/manageAccount">
                   <a>
                     {loginToken ? "My Profile" : "Login"}
@@ -135,21 +135,14 @@ class Header extends Component {
                 </Link>
               </li>
               {!loginToken &&
-                <li>
+                <li className="register-top-head">
                   <Link href="/register">
                     <a>
                       Register
-                </a>
+                    </a>
                   </Link>
                 </li>
               }
-              {loginToken && (
-                <li
-                  onClick={() => this.props.deauthenticate()}
-                >
-                  Logout
-                </li>
-              )}
             </ul>
           </div>
         </div>
