@@ -8,6 +8,9 @@
     padding: 5px 20px;
     font-size: 13px
   }
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
   ul {
     padding: 0;
     li {
