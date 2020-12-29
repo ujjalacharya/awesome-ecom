@@ -13,6 +13,11 @@ import {
   POST_PRODUCT_REVIEWS,
   PRODUCT_DETAILS_START,
   PRODUCT_DETAILS_FINISH,
+  TOP_SELLING_PRODUCTS_LOADING,
+  TOP_SELLING_PRODUCTS,
+  MOST_VIEWED_PRODUCTS_LOADING,
+  MOST_VIEWED_PRODUCTS,
+  FEATURED_PRODUCTS_LOADING,
 } from "../types";
 import { getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -64,6 +69,15 @@ const getMinedProducts = (ctx, keyword) => {
       case 'latest':
         dispatch({ type: LATEST_PRODUCTS_LOADING });
         break;
+      case 'topselling':
+        dispatch({ type: TOP_SELLING_PRODUCTS_LOADING });
+        break;
+      case 'mostviewed':
+        dispatch({ type: MOST_VIEWED_PRODUCTS_LOADING });
+        break;
+      case 'featured':
+        dispatch({ type: FEATURED_PRODUCTS_LOADING });
+        break;
       default:
         '';
     }
@@ -76,7 +90,16 @@ const getMinedProducts = (ctx, keyword) => {
           break;
         case 'latest':
           dispatch({ type: LATEST_PRODUCTS, payload: response.data })
-          break; 
+          break;
+        case 'topselling':
+          dispatch({ type: TOP_SELLING_PRODUCTS, payload: response.data })
+          break;
+        case 'mostviewed':
+          dispatch({ type: MOST_VIEWED_PRODUCTS, payload: response.data })
+          break;
+        case 'featured':
+          dispatch({ type: FEATURED_PRODUCTS_LOADING, payload: response.data })
+          break;
         default:
           '';
       }

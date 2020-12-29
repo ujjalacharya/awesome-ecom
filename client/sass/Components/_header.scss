@@ -121,6 +121,9 @@
 }
 
 .middle-menu {
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
   .middle-menu-row {
     padding: 20px 60px;
     @media screen and (max-width: 998px) {

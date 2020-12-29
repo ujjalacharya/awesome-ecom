@@ -9,6 +9,7 @@ import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 import ProductCard from "../src/Components/Includes/ProductCard";
+import { isEmpty } from "lodash";
 
 const Index = (props) => {
   return (
@@ -18,13 +19,18 @@ const Index = (props) => {
           <MainCarousel data={props.other?.getBannerImages} />
         </div>
         <div className="container">
-          <SliderHeader
-            headTitle="Featured Products"
-            headDetails="Quicksand is a sans serif type family of three weights plus matching
-          obliques"
-            listLink="latestProducts"
-          />
-          <ProductSlider data={props.products.latestProducts} sliderName="latest" />
+          {
+            !isEmpty(props.products.featuredProducts) && (
+              <>
+                <SliderHeader
+                  headTitle="Featured Products"
+                  headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+                  listLink="featuredProducts"
+                />
+                <ProductSlider data={props.products.featuredProducts} sliderName="featured" />
+              </>
+            )
+          }
           {/* <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
@@ -35,34 +41,68 @@ const Index = (props) => {
               </Col>
             </Row>
           </section> */}
-          <SliderHeader
-            headTitle="Trending Products"
-            headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
-            removePaddingTop="paddingTopZero"
-            listLink="trendingProducts"
-          />
-          <ProductSlider data={props.products.trendingProducts} sliderName="trending" />
-          <SliderHeader
-            headTitle="Latest Products"
-            headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
-            removePaddingTop="paddingTopZero"
-            listLink="latestProducts"
-          />
-          {/* <ProductSlider data={props.products.latestProducts} /> */}
-          <div className="latest-products">
-            
-            <Row>
-              {
-                props.products.latestProducts?.products?.map((product, index) => {
-                  return (
-                    <Col className="latest-cards" key={index} lg={6} sm={8}>
-                      <ProductCard data={product} sliderName="latest" />
-                    </Col>
-                  )
-                })
-              }
-            </Row>
-          </div>
+          {
+            !isEmpty(props.products.trendingProducts) &&
+            <>
+              <SliderHeader
+                headTitle="Trending Products"
+                headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+                removePaddingTop="paddingTopZero"
+                listLink="trendingProducts"
+              />
+              <ProductSlider data={props.products.trendingProducts} sliderName="trending" />
+            </>
+          }
+          {
+            !isEmpty(props.products.topSellingProducts) &&
+            <>
+              <SliderHeader
+                headTitle="Top Selling"
+                headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+                removePaddingTop="paddingTopZero"
+                listLink="topSellingProducts"
+              />
+              <ProductSlider data={props.products.topSellingProducts} sliderName="topselling" />
+            </>
+          }
+          {
+            !isEmpty(props.products.mostViewedProducts) &&
+            <>
+              <SliderHeader
+                headTitle="Most Viewed"
+                headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+                removePaddingTop="paddingTopZero"
+                listLink="mostViewedProducts"
+              />
+              <ProductSlider data={props.products.mostViewedProducts} sliderName="mostViewed" />
+            </>
+          }
+          {
+            !isEmpty(props.products.latestProducts) &&
+            <>
+              <SliderHeader
+                headTitle="Latest Products"
+                headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+                removePaddingTop="paddingTopZero"
+                listLink="latestProducts"
+              />
+              <div className="latest-products">
+
+                <Row>
+                  {
+                    props.products.latestProducts?.products?.map((product, index) => {
+                      return (
+                        <Col className="latest-cards" key={index} lg={6} sm={8}>
+                          <ProductCard data={product} sliderName="latest" />
+                        </Col>
+                      )
+                    })
+                  }
+                </Row>
+              </div>
+            </>
+          }
+
         </div>
       </div>
     </Layout>
@@ -72,16 +112,19 @@ const Index = (props) => {
 Index.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  const latestProducts = await ctx.store.dispatch(actions.getMinedProducts(ctx, 'latest'));
-  const trendingProducts = await ctx.store.dispatch(actions.getMinedProducts(ctx, 'trending'));
+  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'latest'));
+  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'trending'));
+  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'topselling'));
+  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'mostviewed'));
+  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'featured'));
 
   // const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
 
   await ctx.store.dispatch(actions.getBannerImages());
 
   return {
-    latestProducts,
-    trendingProducts
+    // latestProducts,
+    // trendingProducts
     // orders
   };
 };

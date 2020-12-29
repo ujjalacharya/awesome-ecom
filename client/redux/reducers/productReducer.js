@@ -9,7 +9,13 @@ import {
   PRODUCT_DETAILS_START,
   PRODUCT_DETAILS_FINISH,
   TRENDING_PRODUCTS,
-  TRENDING_PRODUCTS_LOADING
+  TRENDING_PRODUCTS_LOADING,
+  TOP_SELLING_PRODUCTS_LOADING,
+  TOP_SELLING_PRODUCTS,
+  MOST_VIEWED_PRODUCTS_LOADING,
+  MOST_VIEWED_PRODUCTS,
+  FEATURED_PRODUCTS_LOADING,
+  FEATURED_PRODUCTS
 } from "../types";
 
 const initialState = {
@@ -53,6 +59,45 @@ export default (state = initialState, action) => {
         trendingProducts: action.payload,
         hasError: false,
         trendingLoading: false,
+      };
+    case TOP_SELLING_PRODUCTS_LOADING:
+      return {
+        ...state,
+        topSellingLoading: true,
+        hasError: false,
+      };
+    case TOP_SELLING_PRODUCTS:
+      return {
+        ...state,
+        topSellingProducts: action.payload,
+        hasError: false,
+        topSellingLoading: false,
+      };
+    case MOST_VIEWED_PRODUCTS_LOADING:
+      return {
+        ...state,
+        mostViewedLoading: true,
+        hasError: false,
+      };
+    case MOST_VIEWED_PRODUCTS:
+      return {
+        ...state,
+        mostViewedProducts: action.payload,
+        hasError: false,
+        mostViewedLoading: false,
+      };
+    case FEATURED_PRODUCTS_LOADING:
+      return {
+        ...state,
+        featuredLoading: true,
+        hasError: false,
+      };
+    case FEATURED_PRODUCTS:
+      return {
+        ...state,
+        featuredProducts: action.payload,
+        hasError: false,
+        featuredLoading: false,
       };
     case PRODUCT_DETAILS_START:
       return { ...state, productDetailsLoading: true, hasError: false };
