@@ -1,3 +1,4 @@
+const axios = require('axios')
 const User = require("../models/User");
 const RefreshToken = require("../models/RefereshToken")
 const { sendEmail } = require("../middleware/helpers");
@@ -84,6 +85,10 @@ exports.signin = async (req, res) => {
 };
 
 exports.socialLogin = async (req, res) => {
+    console.log(req.body.accessToken);
+    let resp =await axios.get(`https://graph.facebook.com/me?access_token=${req.body.accessToken}`)
+    resp = JSON.stringify(resp)
+    return res.json(resp)
     let user = await User.findOne({ userID: req.body.userID });
     const {name, email, socialPhoto, userID, loginDomain} = req.body
     if (!user) {

@@ -614,7 +614,7 @@ exports.generateFilter = async (req, res) => {
     let products
     let sortFactor = { createdAt: 'desc' }
     //if keyword is system keyword of latest products
-    if (req.query.keyword === process.env.LATEST_PRODUCT) {
+    if (req.query.keyword === 'latest') {
       products = await Product.find({
         isVerified: { $ne: null },
         isDeleted: null,

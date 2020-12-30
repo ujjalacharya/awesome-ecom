@@ -1,11 +1,11 @@
 const express = require("express");
 
 const {
-    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher, makeProductFeatured
+    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher, makeProductFeatured, addLead
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
-const { validateDispatcher,validateUpdateDispatcher} = require("../middleware/validator")
+const { validateDispatcher,validateUpdateDispatcher, validateLead} = require("../middleware/validator")
 
 const router = express.Router();
 
@@ -57,6 +57,9 @@ router.patch('/approve-product/:p_slug', auth, isSuperAdmin, approveProduct)
 router.put('/disapprove-product/:p_slug', auth, isSuperAdmin, disApproveProduct)
 router.put('/featured-product/:p_slug', auth, isSuperAdmin, makeProductFeatured)
 router.get("/products", auth, isSuperAdmin, getProducts)
+
+//lead's..
+router.post('/add-lead',validateLead, addLead)
 
 
 module.exports = router;
