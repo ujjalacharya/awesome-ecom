@@ -85,12 +85,25 @@ exports.signin = async (req, res) => {
 };
 
 exports.socialLogin = async (req, res) => {
-    console.log(req.body.accessToken);
-    let resp =await axios.get(`https://graph.facebook.com/me?access_token=${req.body.accessToken}`)
-    resp = JSON.stringify(resp)
-    return res.json(resp)
-    let user = await User.findOne({ userID: req.body.userID });
-    const {name, email, socialPhoto, userID, loginDomain} = req.body
+    const { name, email, socialPhoto, userID, loginDomain, access_token} = req.body
+    // for app access_token of facebook
+    // let clientId = '207764167510635'
+    // let clientSecret = '409076fa8a8b38cd881542529738f5e7'
+    // let response = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`)
+    // console.log(response.data.access_token);
+    if (loginDomai) {
+        
+    }
+    let appAccessToken = '207764167510635|u2td7U0Mif9tPANacbg1AzL_q34'
+    let resp = await axios.get(`https://graph.facebook.com/debug_token?input_token=${access_token}
+     &access_token=${appAccessToken}`)
+    if (resp.data.data.error || !resp.data.data.is_valid) {
+        return res.status(401).json({ error: resp.data.data.error.message ||'Invalid OAuth access token.'})
+    }
+    if (resp.data.data.user_id !== userID) {
+        return res.status(401).json({error: "Invalid userID."})
+    }
+    let user = await User.findOne({ email });
     if (!user) {
         // create a new user and login
         user = new User({ name, email, socialPhoto, userID, loginDomain});
@@ -104,37 +117,37 @@ exports.socialLogin = async (req, res) => {
             payload,
             process.env.JWT_SIGNIN_KEY,
             { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-        );
-        let refreshToken = {refreshToken:jwt.sign(payload, process.env.REFRESH_TOKEN_KEY)}
-        refreshToken = new RefreshToken(refreshToken)
-        await refreshToken.save()
-        // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
-    } else {
-        if (user.isBlocked) {
-            return res.status(401).json({
-                error: "Your account has been blocked."
-            });
-        }
-        // update existing user with new social info and login
-        user = _.extend(user, { name, email, socialPhoto, userID, loginDomain });
-        user = await user.save();
-        const payload = {
-            _id: user._id,
-            name: user.name,
-            email: user.email
-        };
-        const accessToken = jwt.sign(
-            payload,
-            process.env.JWT_SIGNIN_KEY,
-            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-        );
-        let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
-        refreshToken = new RefreshToken(refreshToken)
-        await refreshToken.save()
-        // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
+            );
+            let refreshToken = {refreshToken:jwt.sign(payload, process.env.REFRESH_TOKEN_KEY)}
+            refreshToken = new RefreshToken(refreshToken)
+            await refreshToken.save()
+            // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+            return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
     }
+
+    if (user.isBlocked) {
+        return res.status(401).json({
+            error: "Your account has been blocked."
+        });
+    }
+    // update existing user with new social info and login
+    user = _.extend(user, { name, socialPhoto, userID, loginDomain });
+    user = await user.save();
+    const payload = {
+        _id: user._id,
+        name: user.name,
+        email: user.email
+    };
+    const accessToken = jwt.sign(
+        payload,
+        process.env.JWT_SIGNIN_KEY,
+        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+    );
+    let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+    refreshToken = new RefreshToken(refreshToken)
+    await refreshToken.save()
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+    return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
 
 };
 
