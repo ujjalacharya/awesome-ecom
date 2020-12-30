@@ -97,7 +97,6 @@ class ProductSpecs extends Component {
       }
     }
     let loginToken = this.props.authentication.token;
-
     const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
     return (
       <>
@@ -133,7 +132,7 @@ class ProductSpecs extends Component {
               </div>
               <div className="reviews">
                 <span>
-                  ( {product.totalRatingUsers} customer reviews | 41 FAQ answered
+                  ( {product.totalRatingUsers} customer reviews | {this.props.products.productQA?.totalCount} FAQ answered
                 )
               </span>
               </div>
@@ -205,7 +204,7 @@ class ProductSpecs extends Component {
             </div>
           </div>
           <div className="specs">
-            <div className="spec-details" dangerouslySetInnerHTML={{__html: product.highlights}}>
+            <div className="spec-details" dangerouslySetInnerHTML={{ __html: product.highlights }}>
               {/* {description}
               {allDescription.length > 100 && (
                 <div className="text-center">

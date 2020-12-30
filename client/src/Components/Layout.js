@@ -37,9 +37,9 @@ class Layout extends Component {
           <title>{title || ""}</title>
         </Head>
 
+        <Header data={this.props.menuCate} />
         <MobileHeader />
 
-        <Header data={this.props.menuCate} />
         <div className="has-text-centered body-wrap">{children}</div>
 
         <Footer />

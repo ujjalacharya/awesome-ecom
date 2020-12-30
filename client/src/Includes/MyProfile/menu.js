@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { withRouter } from "next/router";
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import actions from "../../../redux/actions";
 
 class Menu extends Component {
   render() {
     let { pathname } = this.props.router
     let currentTab = pathname.split('/').pop()
-    
+
     return (
       <div className="profile-menu">
         <ul>
@@ -42,6 +44,11 @@ class Menu extends Component {
               </a>
             </Link>
           </li>
+          <li
+            onClick={() => this.props.deauthenticate()}
+          >
+            Logout
+          </li>
           {/* <li className={currentTab === 'sell-on-daraz' ? 'active' : ''} onClick={() => this.props.changeMenuTab('sell-on-daraz')}>Sell on our site</li> */}
         </ul>
       </div>
@@ -49,4 +56,4 @@ class Menu extends Component {
   }
 }
 
-export default withRouter(Menu);
+export default connect(state => state, actions)(withRouter(Menu));

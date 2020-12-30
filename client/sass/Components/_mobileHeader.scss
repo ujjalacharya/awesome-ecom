@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 15px;
-  box-shadow: $box-shadow;
-  position: fixed;
+  box-shadow: 0 4px 12px rgba(199, 197, 197, 0.5);
+  position: sticky;
   top: 0;
   z-index: 99;
   width: 100%;

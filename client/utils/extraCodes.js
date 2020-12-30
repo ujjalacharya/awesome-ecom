@@ -79,3 +79,29 @@
     </ul>
 
 </div> */}
+
+// update trending
+// case UPDATE_TRENDING_PRODUCTS:
+//       let currentTrendingProducts = action.payload.data;
+//       let changedSlug = action.payload.slug;
+//       let newTrendingProducts = currentTrendingProducts.products.map((product) => {
+//         // let ele = {}
+//         if(changedSlug === product.slug){
+//           if(product.hasOnWishList){
+//             return {...product, hasOnWishlist: false}
+//           }else{
+//             return {...product, hasOnWishlist: true}
+//           }
+//         }
+//         return product
+//       })
+//       newTrendingProducts = {
+//         products: [...newTrendingProducts],
+//         totalCount: newTrendingProducts.length
+//       }
+//       return {
+//         ...state,
+//         trendingProducts: newTrendingProducts,
+//         hasError: false,
+//         trendingLoading: false,
+//       };

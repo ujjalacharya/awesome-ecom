@@ -27,6 +27,7 @@ class Login extends Component {
 
   responseGoogle = (response) => {
     let { profileObj } = response
+    console.log(response)
     let body = {
       name: profileObj.familyName + ' ' + profileObj.givenName,
       email: profileObj.email,
@@ -149,7 +150,7 @@ class Login extends Component {
                     )}
                   />
                   <GoogleLogin
-                    clientId="223562887361-6po823epv7ch9ivklm6d47kcpilt99b3.apps.googleusercontent.com"
+                    clientId="1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com"
                     buttonText="Login"
                     onSuccess={this.responseGoogle}
                     onFailure={this.responseGoogle}

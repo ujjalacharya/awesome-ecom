@@ -9,7 +9,7 @@ export class ProductService {
   // }
 
   getMinedProducts(ctx, keyword) {
-    let url = `${PRODUCT_BASE_URL}/mined-products?page=1&perPage=10&keyword=${keyword}`
+    let url = `${PRODUCT_BASE_URL}/mined-products?page=1&perPage=12&keyword=${keyword}`
     let data = getTokenService(url, 'GET', ctx);
     return data;
   }

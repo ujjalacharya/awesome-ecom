@@ -4,6 +4,20 @@
   padding: 5px 60px;
   background: #f7f7f7;
   color: #969696;
+  @media screen and (max-width: 998px) {
+    padding: 5px 20px;
+    font-size: 13px
+  }
+  @media screen and (max-width: 576px) {
+    padding: 5px 15px;
+    font-size: 11px;
+  }
+  @media screen and (max-width: 360px) {
+    font-size: 10px;
+  }
+  // @media screen and (max-width: 576px) {
+  //   display: none;
+  // }
   ul {
     padding: 0;
     li {
@@ -15,6 +29,20 @@
       &:last-child {
         border: 0;
         padding: 0;
+      }
+      @media screen and (max-width: 576px) {
+        padding-right: 5px;
+        margin-left: 5px;
+      }
+      &.profile-top-head, &.register-top-head{
+        @media screen and (max-width: 576px) {
+          display: none;
+        }
+      }
+      &.about-top-head{
+        @media screen and (max-width: 576px) {
+          border: 0;
+        }
       }
       a{
         color: #969696;

@@ -55,6 +55,22 @@ class ProductCard extends Component {
     });
   };
 
+  addToWishlists = (slug) => {
+    this.props.addWishListItems(slug, this.props.sliderName)
+  }
+
+  removeFromWishList = (id) => {
+    this.props.removeFromWishList(id, this.props.sliderName)
+  }
+
+  addToCart = (slug, qty) => {
+    this.props.addToCart(slug, qty, this.props.sliderName);
+  }
+
+  removeFromCart = (id) => {
+    this.props.removeCart(id, this.props.sliderName);
+  }
+
   render() {
     const { productData } = this.state;
 
@@ -101,9 +117,7 @@ class ProductCard extends Component {
                         alt="bag.jpg"
                         title="Add to Cart"
                         onClick={() => {
-                          this.props.addToCart(productData.slug, {
-                            quantity: 1,
-                          });
+                          this.addToCart(productData.slug, {quantity: 1})
                         }}
                       />
                     </Tooltip>
@@ -111,7 +125,7 @@ class ProductCard extends Component {
                       <Popconfirm
                         title="Are you sure you want to remove this from cart?"
                         onConfirm={() =>
-                          this.props.removeCart(productData.hasOnCart._id)
+                          this.removeFromCart(productData.hasOnCart._id)
                         }
                         // onCancel={cancel}
                         okText="Yes"
@@ -152,9 +166,7 @@ class ProductCard extends Component {
                     <Popconfirm
                       title="Are you sure you want to remove this from wishlist?"
                       onConfirm={() =>
-                        this.props.removeFromWishList(
-                          productData.hasOnWishlist._id
-                        )
+                        this.removeFromWishList(productData.hasOnWishlist._id)
                       }
                       // onCancel={cancel}
                       okText="Yes"
@@ -183,7 +195,7 @@ class ProductCard extends Component {
                           data-tip="Add to Wishlist"
                           src="/images/heart.png"
                           onClick={() =>
-                            this.props.addWishListItems(productData.slug)
+                            this.addToWishlists(productData.slug)
                           }
                         />
                       </Tooltip>

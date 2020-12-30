@@ -22,11 +22,11 @@ body {
   }
 }
 
-.body-wrap {
-  @media screen and (max-width: 577px) {
-    margin-top: 50px;
-  }
-}
+// .body-wrap {
+//   @media screen and (max-width: 577px) {
+//     margin-top: 50px;
+//   }
+// }
 
 .action-btn {
   border: 1px solid;
@@ -488,4 +488,10 @@ input.inputfile + label {
 
 .ant-carousel .slick-dots{
   z-index: 8;
+}
+
+.latest-products{
+  .latest-cards{
+    margin-bottom: 20px;
+  }
 }
