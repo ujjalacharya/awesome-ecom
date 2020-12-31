@@ -19,12 +19,6 @@ class ProductListView extends Component {
   };
 
   componentDidMount() {
-    let loginToken = this.props.authentication.token;
-    let userInfo = getUserInfo(loginToken);
-
-    if (userInfo?._id) {
-        this.props.getUserProfile(userInfo._id);
-    }
 
     this.props.productsData?.carts?.map((item, i) => {
       this.setState({
@@ -192,7 +186,7 @@ class ProductListView extends Component {
   };
 
   render() {
-    console.log(this.props.user)
+    
     return (
       <>
         {this.state.productsData?.carts?.map((items, i) => {

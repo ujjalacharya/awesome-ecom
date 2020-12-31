@@ -117,8 +117,6 @@ class OrderSummary extends Component {
     let deliveryCharges = this.props.showShippingAddress === 'showDisplay' ? this.props.shippingCharge : (this.props.shippingCharge && this.props.checkoutItems.length)
       ? this.props.shippingCharge
       : 0;
-
-    console.log(this.props.user)
     return (
       <div className="order-shipping">
         <EditAddressModal
@@ -233,7 +231,7 @@ class OrderSummary extends Component {
                         className={"btn " + this.props.diableOrderBtn}
                         disabled={
                           (this.props.diableOrderBtn === "disableBtn" ||
-                            isEmpty(this.props.user.userProfile?.location))
+                            isEmpty(this.props.userResp?.location))
                             ? true
                             : false
                         }
@@ -244,7 +242,7 @@ class OrderSummary extends Component {
                   </Link>
 
                   {
-                    isEmpty(this.props.user?.userProfile?.location) &&
+                    isEmpty(this.props.userResp?.location) &&
                     <div className="checkout-note">Note: Please add address in your profile before proceeding further.</div>
                   }
                 </div>
@@ -258,7 +256,8 @@ class OrderSummary extends Component {
 
 const mapStatesToProps = (state) => ({
   shippingCharge: state.order.getShippingChargeResp,
-  orderResp: state.order.placeOrderResp
+  orderResp: state.order.placeOrderResp,
+  userResp: state.user.userProfile
 });
 
 const mapDispatchToProps = (dispatch) => ({
