@@ -22,6 +22,11 @@ body {
   }
 }
 
+.disableBtn {
+  background-color: $disabled !important;
+  color: $disabled-color !important;
+}
+
 .checkout-note {
   font-size: 11px;
   margin-top: 5px;
@@ -77,7 +82,7 @@ body {
   height: 35px !important;
 }
 
-.ant-select-dropdown-placement-bottomLeft{
+.ant-select-dropdown-placement-bottomLeft {
   top: 100px !important;
 }
 
@@ -476,29 +481,29 @@ input.inputfile + label {
   align-items: center;
   font-size: 14px;
   padding: 18px 15px;
-  &.facebook{
+  &.facebook {
     background: #1877f2;
     color: #fff;
   }
   // &.google{
   //   background: #1877f2;
   // }
-  span.anticon-facebook{
+  span.anticon-facebook {
     font-size: 22px;
   }
 }
 
-.modal-video-close-btn{
-  cursor: pointer;  
+.modal-video-close-btn {
+  cursor: pointer;
   right: 0px !important;
 }
 
-.ant-carousel .slick-dots{
+.ant-carousel .slick-dots {
   z-index: 8;
 }
 
-.latest-products{
-  .latest-cards{
+.latest-products {
+  .latest-cards {
     margin-bottom: 20px;
   }
 }
