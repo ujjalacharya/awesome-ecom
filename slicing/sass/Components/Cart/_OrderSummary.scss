@@ -15,7 +15,7 @@
       .name-add {
         display: flex;
         // align-items: center;
-        span.anticon{
+        span.anticon {
           margin-right: 5px;
           font-size: 12px;
           position: relative;
@@ -54,11 +54,11 @@
           border-right: 0px;
         }
         button {
-            background: $text;
-            color: #fff;
-            border: 0px;
-            border-top-left-radius: 0px !important;
-            border-bottom-left-radius: 0px !important;
+          background: $text;
+          color: #fff;
+          border: 0px;
+          border-top-left-radius: 0px !important;
+          border-bottom-left-radius: 0px !important;
         }
       }
       .order-procced {

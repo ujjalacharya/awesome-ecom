@@ -10,7 +10,7 @@ import {
   scrollToTop,
   openNotification,
 } from "../../../utils/common";
-import { times } from "lodash";
+import { isEmpty, times } from "lodash";
 import next from "next";
 
 class CartItems extends Component {
