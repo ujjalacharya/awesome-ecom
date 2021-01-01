@@ -3,11 +3,17 @@ import { capitalize } from 'lodash'
 
 // includes
 import Layout from "../../src/Components/Layout";
+
+// utils
 import initialize from "../../utils/initialize";
-import actions from "../../redux/actions";
 import Listing from "../listing";
-import { useDispatch, useSelector } from "react-redux";
+
+// next router
 import { withRouter } from "next/router";
+
+// redux
+import actions from "../../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 function previousQuery(value) {
   const ref = useRef();
@@ -27,7 +33,7 @@ const Search = (props) => {
   let prevQuery = previousQuery(query.slug)
 
   useEffect(() => {
-    if (prevQuery !== undefined && prevQuery !== query.slug) {
+    if (!props.isServer && prevQuery !== query.slug) {
       dispatch(actions.searchFilter(`?keyword=${query.slug}`))
       dispatch(actions.searchProducts(`?page=1&perPage=10`, {keyword: query.slug} ))
     }
@@ -51,6 +57,10 @@ Search.getInitialProps = async (ctx) => {
     await ctx.store.dispatch(
       actions.searchProducts(`?page=1&perPage=10`, {keyword: ctx.query.slug})
     );
+  }
+
+  return {
+    isServer
   }
 }
 

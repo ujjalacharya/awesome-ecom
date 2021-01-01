@@ -76,3 +76,22 @@ export const productDetailSkeleton = {
     hasReviewed: null,
     videoURL: [''],
 }
+
+export const SearchFilterSkeleton = {
+    sizes: [],
+    brands: [],
+    warranties: [],
+    colors: [],
+    weights: [],
+    prices: [
+        null,
+        100
+    ],
+    ratings: [
+        5,
+        4,
+        3,
+        2,
+        1
+    ]
+}

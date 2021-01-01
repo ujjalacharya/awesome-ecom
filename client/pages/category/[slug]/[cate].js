@@ -26,7 +26,7 @@ const Category = (props) => {
   let prevQuery = previousQuery(query.slug)
 
   useEffect(() => {
-    if (prevQuery !== undefined && prevQuery !== query.slug) {
+    if (!props.isServer && prevQuery !== query.slug) {
       dispatch(actions.searchFilter(`?cat_id=${query.cate}&cat_slug=${query.slug}`))
       dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${query.cate}&cat_slug=${query.slug}`))
     }
@@ -42,6 +42,7 @@ const Category = (props) => {
 Category.getInitialProps = async (ctx) => {
   initialize(ctx);
 
+  let isServer = ctx.isServer;
   if (ctx.isServer) {
     await ctx.store.dispatch(
       actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
@@ -50,6 +51,10 @@ Category.getInitialProps = async (ctx) => {
     await ctx.store.dispatch(
       actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`, ctx)
     );
+  }
+
+  return {
+    isServer
   }
 }
 
