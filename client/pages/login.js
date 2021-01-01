@@ -21,7 +21,7 @@ class Login extends Component {
       userID: response.userID,
       loginDomain: "facebook"
     }
-    this.props.authenticateSocialLogin(body)
+    // this.props.authenticateSocialLogin(body)
   }
 
   responseGoogle = (response) => {
