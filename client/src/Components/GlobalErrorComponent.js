@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, notification } from "antd";
+import { Button, message, notification } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import actions from "../../redux/actions";
@@ -21,11 +21,12 @@ class GlobalErrorComponent extends Component {
   }
 
   openNotification = (globalError) => {
-    notification.open({
-      message: "Notification Title",
-      description: globalError.errorMessage,
-      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-    });
+    // notification.open({
+    //   message: "Notification Title",
+    //   description: globalError.errorMessage,
+    //   icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    // });
+    message.error(globalError.errorMessage)
   };
   render() {
     return <></>;

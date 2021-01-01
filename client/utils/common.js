@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import * as moment from "moment-timezone";
-import { notification } from 'antd';
+import { message, notification } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import $ from 'jquery'
 import { useEffect, useRef } from "react";
@@ -122,11 +122,12 @@ export const getColorOptions = (data) => {
 };
 
 export const openNotification = (title, description) => {
-  notification.open({
-    message: title,
-    description: description,
-    icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-  });
+  // notification.open({
+  //   message: title,
+  //   description: description,
+  //   icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+  // });
+  message.success(description)
 };
 
 export const getDiscountedPrice = (price, discountRate) => {
