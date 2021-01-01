@@ -12,6 +12,7 @@ import { productDetailSkeleton } from "../../../utils/skeletons";
 const { TabPane } = Tabs;
 
 const OtherDetails = (props) => {
+  console.log(props)
   let [openVideo, setOpenVideo] = useState(false);
   let [productDetail, setProductDetail] = useState(productDetailSkeleton)
 
@@ -22,8 +23,10 @@ const OtherDetails = (props) => {
   const callback = (key) => { };
 
   useEffect(() => {
-    setProductDetail(props.data.product)
-  }, [props.data.product])
+    if (props.data) {
+      setProductDetail(props.data?.product)
+    }
+  }, [props.data?.product])
 
   let addInfo = {
     weight: productDetail?.weight,
@@ -31,7 +34,8 @@ const OtherDetails = (props) => {
     size: productDetail?.size,
     warranty: productDetail?.warranty,
   };
-  
+
+  console.log(productDetail)
   return (
     <div className="other-details">
       <Tabs defaultActiveKey="1" onChange={callback}>
@@ -55,7 +59,10 @@ const OtherDetails = (props) => {
                         <div key={index} className="vid-cov">
                           <div className="product-video" onClick={openCloseVideoModal}>
                             <div className="overlay"></div>
-                            <img src={`${IMAGE_BASE_URL}/${productDetail.images[index].large}`} />
+                            <img src={`${IMAGE_BASE_URL}/${productDetail.images[0].large}`}
+                              onError={(ev) => {
+                                ev.target.src = "/images/default-image.png";
+                              }} />
                             <PlayCircleFilled />
                           </div>
                           <ProductVideo
