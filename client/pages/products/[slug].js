@@ -33,18 +33,21 @@ const Details = (props) => {
 
   let { query } = props.router;
   let prevQuery = previousQuery(query.slug)
-  
+
   useEffect(() => {
-    if (prevQuery !== undefined && prevQuery !== query.slug) {
+    if (
+      !props.isServer &&
+      prevQuery !== query.slug
+    ) {
       dispatch(actions.getProductDetails(query.slug));
     }
   }, [dispatch, query.slug])
-  
+
   useEffect(() => {
     dispatch(actions.getQandA(query.slug + "?page=1"));
     dispatch(actions.getProductReviews(query.slug + "?page=1&perPage=10"));
-  }, [dispatch])
-  
+  }, [])
+
   return (
     <Layout title={productDetails?.product?.name}>
       <div className="wrapper">
@@ -98,7 +101,9 @@ Details.getInitialProps = async (ctx) => {
     await ctx.store.dispatch(
       actions.getProductDetails(ctx.query.slug, ctx)
     );
-
+  }
+  return {
+    isServer: ctx.isServer
   }
 
 }

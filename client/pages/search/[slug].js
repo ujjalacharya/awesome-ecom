@@ -3,10 +3,11 @@ import { capitalize } from 'lodash'
 
 // includes
 import Layout from "../../src/Components/Layout";
+import Listing from "../listing";
 
 // utils
 import initialize from "../../utils/initialize";
-import Listing from "../listing";
+import { previousQuery } from "../../utils/common";
 
 // next router
 import { withRouter } from "next/router";
@@ -15,14 +16,6 @@ import { withRouter } from "next/router";
 import actions from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 
-function previousQuery(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
-
 const Search = (props) => {
   let dispatch = useDispatch();
 
@@ -30,17 +23,20 @@ const Search = (props) => {
 
   let { query } = props.router
   let title = capitalize(query.slug.split('-').join(' '));
-  let prevQuery = previousQuery(query.slug)
+  let prevQuery = previousQuery(query.slug);
 
   useEffect(() => {
-    if (!props.isServer && prevQuery !== query.slug) {
+    if (
+      !props.isServer && 
+      prevQuery !== query.slug 
+    ) {
       dispatch(actions.searchFilter(`?keyword=${query.slug}`))
-      dispatch(actions.searchProducts(`?page=1&perPage=10`, {keyword: query.slug} ))
+      dispatch(actions.searchProducts(`?page=1&perPage=10`, { keyword: query.slug }))
     }
   }, [query.slug])
 
   return (
-    <Layout title={title}> 
+    <Layout title={title}>
       <Listing getSearchFilter={listing.getSearchFilter} data={listing.getSearchData} perPage={10} />
     </Layout>
   );
@@ -55,7 +51,7 @@ Search.getInitialProps = async (ctx) => {
     );
 
     await ctx.store.dispatch(
-      actions.searchProducts(`?page=1&perPage=10`, {keyword: ctx.query.slug})
+      actions.searchProducts(`?page=1&perPage=10`, { keyword: ctx.query.slug })
     );
   }
 

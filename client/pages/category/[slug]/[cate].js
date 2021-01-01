@@ -26,7 +26,10 @@ const Category = (props) => {
   let prevQuery = previousQuery(query.slug)
 
   useEffect(() => {
-    if (!props.isServer && prevQuery !== query.slug) {
+    if (
+      !props.isServer && 
+      prevQuery !== query.slug
+    ) {
       dispatch(actions.searchFilter(`?cat_id=${query.cate}&cat_slug=${query.slug}`))
       dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${query.cate}&cat_slug=${query.slug}`))
     }
