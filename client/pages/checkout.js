@@ -12,6 +12,8 @@ import { getCookie } from "../utils/cookie";
 import { getUserInfo } from "../utils/common";
 import CheckoutItems from "../src/Includes/Cart/CheckoutItems";
 import withPrivate from "../utils/auth/withPrivate";
+import { isEmpty } from "lodash";
+import Router from "next/router";
 
 class CheckoutCart extends Component {
   static async getInitialProps(ctx) {
@@ -20,20 +22,37 @@ class CheckoutCart extends Component {
     const {
       query: { slug },
     } = ctx;
+    let cart = ctx.store.getState().cart.checkoutItems;
+    if (isEmpty(cart)) {
+      if (ctx.res) {
+        ctx.res.writeHead(302, {
+          Location: '/cart',
+        });
+        ctx.res.end();
+      } else {
+        Router.replace('/cart');
+      }
+    } else {
+      let loginToken = getCookie("token", ctx.req);
+      let userInfo = getUserInfo(loginToken);
 
-    let loginToken = getCookie("token", ctx.req);
-    let userInfo = getUserInfo(loginToken);
+      if (userInfo?._id) {
+        await ctx.store.dispatch(
+          actions.getUserProfile(userInfo._id, ctx)
+        );
+      }
 
-    if (userInfo?._id) {
       await ctx.store.dispatch(
-        actions.getUserProfile(userInfo._id, ctx)
+        actions.getCartProducts("page=1", ctx)
       );
     }
 
-    const productReview = await ctx.store.dispatch(
-      actions.getCartProducts("page=1", ctx)
-    );
   }
+  // componentDidMount(){
+  //   if(isEmpty(this.props.cart.checkoutItems)){
+  //     window.location.href = '/cart'
+  //   }
+  // }
 
   render() {
     return (
@@ -49,7 +68,7 @@ class CheckoutCart extends Component {
                       ? this.props.cart.checkoutItems
                       : this.props.cart.getCartProducts
                   }
-                  showCheckbox = "noCheckbox"
+                  showCheckbox="noCheckbox"
                 />
               </Col>
               <Col md={8} xs={24}>

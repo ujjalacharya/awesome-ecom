@@ -9,6 +9,8 @@ import OrderSummary from "../src/Includes/Cart/OrderSummary";
 import Layout from "../src/Components/Layout";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
+import { getCookie } from "../utils/cookie";
+import { getUserInfo } from "../utils/common";
 
 class Cart extends Component {
   state = {
@@ -22,7 +24,16 @@ class Cart extends Component {
       query: { slug },
     } = ctx;
 
-    const productReview = await ctx.store.dispatch(
+    let loginToken = getCookie("token", ctx.req);
+    let userInfo = getUserInfo(loginToken);
+
+    if (userInfo?._id) {
+      await ctx.store.dispatch(
+        actions.getUserProfile(userInfo._id, ctx)
+      );
+    }
+
+    await ctx.store.dispatch(
       actions.getCartProducts("page=1", ctx)
     );
   }

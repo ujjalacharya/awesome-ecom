@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Row, Col, Input, Button, Popconfirm, Checkbox } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import actions from "../../redux/actions";
-import { openNotification, getDiscountedPrice } from "../../utils/common";
+import { openNotification, getDiscountedPrice, getUserInfo } from "../../utils/common";
 import Link from "next/link";
 import { IMAGE_BASE_URL } from "../../utils/constants";
 
@@ -19,6 +19,7 @@ class ProductListView extends Component {
   };
 
   componentDidMount() {
+
     this.props.productsData?.carts?.map((item, i) => {
       this.setState({
         ["pdQtyInStock" + i]: item.quantity,
@@ -185,6 +186,7 @@ class ProductListView extends Component {
   };
 
   render() {
+    
     return (
       <>
         {this.state.productsData?.carts?.map((items, i) => {
@@ -196,6 +198,7 @@ class ProductListView extends Component {
                     // value={items}
                     onChange={() => this.onCheckItems(items, i)}
                     className={this.props.showCheckboxForOutOfStock || this.props.showCheckbox}
+                    disabled={isEmpty(this.props.user.userProfile?.location)}
                   ></Checkbox>
                 </Col>
                 <Col lg={6} xs={24} key={i}>
