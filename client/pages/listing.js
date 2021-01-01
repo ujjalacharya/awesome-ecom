@@ -59,30 +59,16 @@ class Listing extends Component {
     });
   };
 
-  // onCheckBrands = (checkedValues) => {
-  //   this.setState({
-  //     checkedBrands: checkedValues,
-  //   });
-  // };
-
   onCloseSort = () => {
     this.setState({
       visibleSort: false,
     });
-    // if (sortTitle.target === undefined) {
-    //   this.setState({
-    //     sortName: sortTitle,
-    //   });
-    // }
   };
 
   onChangePage = (page) => {
     this.setState({
       currentPage: page,
     });
-    // let body = {
-    //   keyword: this.props.router.query.slug,
-    // };
     this.props.searchProducts(
       `?page=${page}&perPage=${this.props.perPage}`,
       this.state.filterBody
@@ -175,31 +161,10 @@ class Listing extends Component {
       this.setState({
         minPrice: price,
       });
-
-      // if (this.state.visibleFilter) {
-      //   let body = {};
-      //   body = getFilterAppendBody(
-      //     this.state.filterBody,
-      //     this.props,
-      //     price + "",
-      //     "min_price"
-      //   );
-      //   this.setState({
-      //     filterBody: body,
-      //   });
-      // }
     } else {
       this.setState({
         maxPrice: price,
       });
-
-      // if (this.state.visibleFilter) {
-      //   let body = {};
-      //   body = getFilterAppendBody(body, this.props, price + "", "max_price");
-      //   this.setState({
-      //     filterBody: body,
-      //   });
-      // }
     }
   };
 
@@ -278,13 +243,10 @@ class Listing extends Component {
       filterBody: body,
     });
 
-    // if (!this.state.visibleFilter) {
     this.props.searchProducts(
       `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
       body
     );
-    // this.setState({ filterApplied: true })
-    // }
   };
 
   onChangeSize = (size) => {
@@ -359,20 +321,15 @@ class Listing extends Component {
 
     let newFilterBody = this.state.filterBody
     if (this.state.minPrice) {
-      let body = {};
       newFilterBody = getFilterAppendBody(
         newFilterBody,
         this.props,
         this.state.minPrice + "",
         "min_price"
       );
-      // this.setState({
-      //   filterBody: body,
-      // });
     }
 
     if (this.state.maxPrice) {
-      let body = {};
       newFilterBody = getFilterAppendBody(newFilterBody, this.props, this.state.maxPrice + "", "max_price");
     }
     this.setState({
