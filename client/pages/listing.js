@@ -1,474 +1,435 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component, useEffect, useState } from "react";
 import { Row, Col, Pagination, Drawer } from "antd";
 import _ from "lodash";
+
+// redux
+import { connect, useDispatch } from "react-redux";
+import actions from "../redux/actions";
+
+// next router
+import { withRouter } from "next/router";
+
+// utils
+import { getFilterAppendBody, previousQuery } from "../utils/common";
 
 // includes
 import ProductList from "../src/Includes/Listing/ProductList";
 import Filter from "../src/Includes/Listing/Filter";
-import actions from "../redux/actions";
-import { withRouter } from "next/router";
-import { getFilterAppendBody } from "../utils/common";
 import SortBy from "../src/Includes/Listing/SortBy";
 
-class Listing extends Component {
-  state = {
-    visibleFilter: false,
-    visibleSort: false,
-    sortName: "",
-    checkedBrands: [],
-    currentPage: 1,
-    checkedColors: [],
-    filterBody: {},
-    minPrice: "",
-    maxPrice: "",
-    selectedWarrenty: "",
-    filterApplied: false,
-    currentRating: 0,
-    sortBy: "asc"
-  };
+const Listing = (props) => {
+  let dispatch = useDispatch()
 
-  static getInitialProps(ctx) {
-    initialize(ctx);
-  }
+  let [visibleFilter, setVisibleFilter] = useState(false)
+  let [visibleSort, setVisibleSort] = useState(false)
+  let [filterApplied, setFilterApplied] = useState(false)
+  let [currentPage, setCurrentPage] = useState(1)
+  let [sortName, setSortName] = useState('')
+  let [checkedBrands, setCheckedBrands] = useState([])
+  let [checkedColors, setCheckedColors] = useState([])
+  let [filterBody, setFilterBody] = useState({})
+  let [minPrice, setMinPrice] = useState('')
+  let [maxPrice, setMaxPrice] = useState('')
+  let [selectedWarrenty, setSelectedWarrenty] = useState('')
+  let [selectedSize, setSelectedSize] = useState('')
+  let [currentRating, setCurrentRating] = useState(0)
+  let [sortBy, setSortBy] = useState('asc')
 
-  componentDidUpdate(prevprops) {
-    if (this.props.router.asPath !== prevprops.router.asPath) {
-      this.setState({
-        filterBody: {}, filterApplied: false,
-        currentRating: 0
-      })
+  let path = props.router.asPath;
+  let prevPath = previousQuery(path)
+
+  useEffect(() => {
+    if (path !== prevPath) {
+      setFilterBody({})
+      setFilterApplied(false)
+      setCurrentRating(0)
     }
-  }
+  }, [])
 
-  showDrawerFiter = () => {
-    this.setState({
-      visibleFilter: true,
-    });
+
+  const showDrawerFiter = () => {
+    setVisibleFilter(true)
   };
 
-  showDrawerSort = () => {
-    this.setState({
-      visibleSort: true,
-    });
+  const showDrawerSort = () => {
+    setVisibleSort(true)
   };
 
-  onCloseFilter = () => {
-    this.setState({
-      visibleFilter: false,
-    });
+  const onCloseFilter = () => {
+    setVisibleFilter(false)
   };
 
-  onCloseSort = () => {
-    this.setState({
-      visibleSort: false,
-    });
+  const onCloseSort = () => {
+    setVisibleSort(false)
   };
 
-  onChangePage = (page) => {
-    this.setState({
-      currentPage: page,
-    });
-    this.props.searchProducts(
-      `?page=${page}&perPage=${this.props.perPage}`,
-      this.state.filterBody
-    );
+  const onChangePage = (page) => {
+    setCurrentPage(page)
+    dispatch(actions.searchProducts(
+      `?page=${page}&perPage=${props.perPage}`,
+      filterBody
+    ))
   };
 
-  onCheckBrands = (brands) => {
-    this.setState({
-      checkedBrands: brands,
-    });
+  const onCheckBrands = (brands) => {
+    setCheckedBrands(brands);
 
     let body = {};
 
     body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
+      filterBody,
+      props,
       brands,
       "brands"
     );
 
-    this.setState({
-      filterBody: body,
-    });
+    setFilterBody(body)
 
-    if (!this.state.visibleFilter) {
-      this.props.searchProducts(
-        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    if (!visibleFilter) {
+      dispatch(actions.searchProducts(
+        `?page=${currentPage}&perPage=${props.perPage}`,
         body
-      );
-      this.setState({ filterApplied: true })
+      ))
+      setFilterApplied(true)
     }
   };
 
-  onChangeColors = (colors) => {
-    this.setState({
-      checkedColors: colors,
-    });
+  const onChangeColors = (colors) => {
+    setCheckedColors(colors)
 
     let body = {};
 
     body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
+      filterBody,
+      props,
       colors,
       "colors"
     );
 
-    this.setState({
-      filterBody: body,
-    });
+    setFilterBody(body)
 
-    if (!this.state.visibleFilter) {
-      this.props.searchProducts(
-        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    if (!visibleFilter) {
+      dispatch(actions.searchProducts(
+        `?page=${currentPage}&perPage=${props.perPage}`,
         body
-      );
-      this.setState({ filterApplied: true })
+      ))
+      setFilterApplied(true)
     }
   };
 
-  onHandleRatings = (rating) => {
-    this.setState({
-      currentRating: rating,
-    });
+  const onHandleRatings = (rating) => {
+    setCurrentRating(rating)
 
     let body = {};
 
     body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
+      filterBody,
+      props,
       rating + "",
       "ratings"
     );
 
-    this.setState({
-      filterBody: body,
-    });
+    setFilterBody(body)
 
-    if (!this.state.visibleFilter) {
-      this.props.searchProducts(
-        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    if (!visibleFilter) {
+      dispatch(actions.searchProducts(
+        `?page=${currentPage}&perPage=${props.perPage}`,
         body
-      );
-      this.setState({ filterApplied: true })
+      ))
+      setFilterApplied(true)
     }
   };
 
-  changePrice = (price, type) => {
+  const changePrice = (price, type) => {
     if (type === "min") {
-      this.setState({
-        minPrice: price,
-      });
+      setMinPrice(price)
     } else {
-      this.setState({
-        maxPrice: price,
-      });
+      setMaxPrice(price)
     }
   };
 
-  searchPrice = (minPrice, maxPrice) => {
+  const searchPrice = (minPrice, maxPrice) => {
     let body = {};
 
     body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
+      filterBody,
+      props,
       minPrice + "",
       "min_price"
     );
 
-    body = getFilterAppendBody(body, this.props, maxPrice + "", "max_price");
+    body = getFilterAppendBody(body, props, maxPrice + "", "max_price");
 
-    this.setState({
-      filterBody: body,
-    });
+    setFilterBody(body)
 
-    if (!this.state.visibleFilter) {
-      this.props.searchProducts(
-        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    if (!visibleFilter) {
+      dispatch(actions.searchProducts(
+        `?page=${currentPage}&perPage=${props.perPage}`,
         body
-      );
-      this.setState({ filterApplied: true })
+      ))
+      setFilterApplied(true)
     }
 
   };
 
-  onChangeWarrenty = (warrenty) => {
-    this.setState({
-      selectedWarrenty: warrenty,
-    });
+  const onChangeWarrenty = (warrenty) => {
+    setSelectedWarrenty(warrenty)
 
     let body = {};
 
     let warenty = warrenty === "" ? [] : [warrenty];
 
     body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
+      filterBody,
+      props,
       warenty,
       "warranties"
     );
 
-    this.setState({
-      filterBody: body,
-    });
+    setFilterBody(body)
 
-    if (!this.state.visibleFilter) {
-      this.props.searchProducts(
-        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    if (!visibleFilter) {
+      dispatch(actions.searchProducts(
+        `?page=${currentPage}&perPage=${props.perPage}`,
         body
-      );
-      this.setState({ filterApplied: true })
+      ))
+      setFilterApplied(true)
     }
   };
 
-  sortProducts = (sort) => {
-    this.setState({
-      sortBy: sort,
-    });
+  const sortProducts = (sort) => {
+    setSortBy(sort)
 
     let body = {};
 
     let sortBy = sort === "" ? [] : [sort];
 
     body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
+      filterBody,
+      props,
       sortBy,
       "createdAt"
     );
 
-    this.setState({
-      filterBody: body,
-    });
+    setFilterBody(body)
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    dispatch(actions.searchProducts(
+      `?page=${currentPage}&perPage=${props.perPage}`,
       body
-    );
+    ))
   };
 
-  onChangeSize = (size) => {
-    this.setState({
-      selectedSize: size,
-    });
+  const onChangeSize = (size) => {
+    setSelectedSize(size)
 
     let body = {};
 
     body = getFilterAppendBody(
-      this.state.filterBody,
-      this.props,
+      filterBody,
+      props,
       size,
       "sizes"
     );
 
-    this.setState({
-      filterBody: body,
-    });
+    setFilterBody(body)
 
-    if (!this.state.visibleFilter) {
-      this.props.searchProducts(
-        `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    if (!visibleFilter) {
+      dispatch(actions.searchProducts(
+        `?page=${currentPage}&perPage=${props.perPage}`,
         body
-      );
-      this.setState({ filterApplied: true })
+      ))
+      setFilterApplied(true)
     }
   };
 
-  removeBrand = (brand) => {
-    let allBrands = this.state.checkedBrands;
-    let newBrands = allBrands.filter((obj) => {
+  const removeBrand = (brand) => {
+    let newBrands = checkedBrands.filter((obj) => {
       return obj !== brand;
     });
 
-    this.onCheckBrands(newBrands);
+    onCheckBrands(newBrands);
   };
 
-  removeColor = (color) => {
-    let allColors = this.state.checkedColors;
-    let newColors = allColors.filter((obj) => {
+  const removeColor = (color) => {
+    let newColors = checkedColors.filter((obj) => {
       return obj !== color;
     });
 
-    this.onChangeColors(newColors);
+    onChangeColors(newColors);
   };
 
-  removeRating = (rating) => {
-    this.onHandleRatings("");
+  const removeRating = (rating) => {
+    onHandleRatings("");
   };
 
-  removePrice = () => {
-    this.setState({
-      minPrice: "",
-      maxPrice: "",
-    });
-    this.searchPrice("", "");
+  const removePrice = () => {
+    setMinPrice('');
+    setMaxPrice('');
+    searchPrice("", "");
   };
 
-  removeWarrenty = () => {
-    this.onChangeWarrenty("");
+  const  removeWarrenty = () => {
+    onChangeWarrenty("");
   };
 
-  removeSize = () => {
-    this.onChangeSize("");
+  const removeSize = () => {
+    onChangeSize("");
   };
 
-  applyFilter = async () => {
-    this.setState({
-      filterApplied: true
-    })
+  const applyFilter = async () => {
+    setFilterApplied(true)
 
-    let newFilterBody = this.state.filterBody
-    if (this.state.minPrice) {
+    let newFilterBody = filterBody
+    if (minPrice) {
       newFilterBody = getFilterAppendBody(
         newFilterBody,
-        this.props,
-        this.state.minPrice + "",
+        props,
+        minPrice + "",
         "min_price"
       );
     }
 
-    if (this.state.maxPrice) {
-      newFilterBody = getFilterAppendBody(newFilterBody, this.props, this.state.maxPrice + "", "max_price");
+    if (maxPrice) {
+      newFilterBody = getFilterAppendBody(newFilterBody, props, maxPrice + "", "max_price");
     }
-    this.setState({
-      filterBody: newFilterBody,
-    });
 
-    this.props.searchProducts(
-      `?page=${this.state.currentPage}&perPage=${this.props.perPage}`,
+    setFilterBody(newFilterBody);
+
+    dispatch(actions.searchProducts(
+      `?page=${currentPage}&perPage=${props.perPage}`,
       newFilterBody
-    );
+    ))
   }
 
-  render() {
-    return (
-      <div className="wrapper">
-        <section className="listing">
-          <div className="container">
-            <Row>
-              <Col lg={4} xs={24} md={6} className="remove-filter">
-                <Filter
-                  removeThisFilter="noDisplayMobAndTab"
-                  data={this.props.getSearchFilter}
-                  onCheckBrands={this.onCheckBrands}
-                  checkedBrands={this.state.checkedBrands}
-                  onChangeColors={this.onChangeColors}
-                  checkedColors={this.state.checkedColors}
-                  onHandleRatings={this.onHandleRatings}
-                  searchPrice={this.searchPrice}
-                  changePrice={this.changePrice}
-                  minPrice={this.state.minPrice}
-                  maxPrice={this.state.maxPrice}
-                  onChangeWarrenty={this.onChangeWarrenty}
-                  selectedWarrenty={this.state.selectedWarrenty}
-                  onChangeSize={this.onChangeSize}
-                  selectedSize={this.state.selectedSize}
-                  currentRating={this.state.currentRating}
+  return (
+    <div className="wrapper">
+      <section className="listing">
+        <div className="container">
+          <Row>
+            <Col lg={4} xs={24} md={6} className="remove-filter">
+              <Filter
+                removeThisFilter="noDisplayMobAndTab"
+                data={props.getSearchFilter}
+                onCheckBrands={onCheckBrands}
+                checkedBrands={checkedBrands}
+                onChangeColors={onChangeColors}
+                checkedColors={checkedColors}
+                onHandleRatings={onHandleRatings}
+                searchPrice={searchPrice}
+                changePrice={changePrice}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                onChangeWarrenty={onChangeWarrenty}
+                selectedWarrenty={selectedWarrenty}
+                onChangeSize={onChangeSize}
+                selectedSize={selectedSize}
+                currentRating={currentRating}
+              />
+            </Col>
+            <Col lg={20} xs={24} md={18} className="right-listing">
+              <div className="products-title">All Products</div>
+              <ProductList
+                data={props.data}
+                perPage={props.perPage}
+                currentPage={currentPage}
+                currentFilter={filterBody}
+                searchFilter={props.getSearchFilter}
+                sortProducts={sortProducts}
+                removeBrand={removeBrand}
+                removeColor={removeColor}
+                removeRating={removeRating}
+                removePrice={removePrice}
+                removeWarrenty={removeWarrenty}
+                removeSize={removeSize}
+                filterApplied={filterApplied}
+              />
+              <div className="pagination">
+                <div className="page-status">
+                  Page {currentPage} of{" "}
+                  {Math.ceil(
+                    props.data &&
+                    props.data.totalCount / props.perPage
+                  )}
+                </div>
+                <Pagination
+                  defaultCurrent={1}
+                  total={props.data && props.data.totalCount}
+                  onChange={onChangePage}
                 />
-              </Col>
-              <Col lg={20} xs={24} md={18} className="right-listing">
-                <div className="products-title">All Products</div>
-                <ProductList
-                  data={this.props.data}
-                  perPage={this.props.perPage}
-                  currentPage={this.state.currentPage}
-                  currentFilter={this.state.filterBody}
-                  searchFilter={this.props.getSearchFilter}
-                  sortProducts={this.sortProducts}
-                  removeBrand={this.removeBrand}
-                  removeColor={this.removeColor}
-                  removeRating={this.removeRating}
-                  removePrice={this.removePrice}
-                  removeWarrenty={this.removeWarrenty}
-                  removeSize={this.removeSize}
-                  filterApplied={this.state.filterApplied}
-                />
-                <div className="pagination">
-                  <div className="page-status">
-                    Page {this.state.currentPage} of{" "}
-                    {Math.ceil(
-                      this.props.data &&
-                      this.props.data.totalCount / this.props.perPage
-                    )}
-                  </div>
-                  <Pagination
-                    defaultCurrent={1}
-                    total={this.props.data && this.props.data.totalCount}
-                    onChange={this.onChangePage}
-                  />
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <div className="sticky-filter">
-            <Row style={{ width: "100%" }}>
-              <Col span={12}>
-                <div className="filter-type" onClick={this.showDrawerSort}>
-                  <i className="fa fa-sort" aria-hidden="true"></i>
-                  {" "}<span>Sort By</span>
-                </div>
-              </Col>
-              <Col span={12}>
-                <div
-                  className="filter-type removeBorder"
-                  onClick={() => { this.showDrawerFiter(); }}
-                >
-                  <i className="fa fa-filter" aria-hidden="true"></i>
-                  {" "}<span>Filter</span>
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <Drawer
-            title="FILTER"
-            placement="bottom"
-            closable={true}
-            onClose={this.onCloseFilter}
-            visible={this.state.visibleFilter}
-            className="showFilterDrawer"
-            height="100vh"
-          >
-            <Filter
-              removeThisFilter="displayMobAndTab"
-              removeThisTitle="noDisplay"
-              data={this.props.getSearchFilter}
-              onCheckBrands={this.onCheckBrands}
-              checkedBrands={this.state.checkedBrands}
-              onChangeColors={this.onChangeColors}
-              checkedColors={this.state.checkedColors}
-              onHandleRatings={this.onHandleRatings}
-              searchPrice={this.searchPrice}
-              changePrice={this.changePrice}
-              minPrice={this.state.minPrice}
-              maxPrice={this.state.maxPrice}
-              onChangeWarrenty={this.onChangeWarrenty}
-              selectedWarrenty={this.state.selectedWarrenty}
-              onChangeSize={this.onChangeSize}
-              selectedSize={this.state.selectedSize}
-              closeThisFilter={this.onCloseFilter}
-              applyFilter={this.applyFilter}
-              currentRating={this.state.currentRating}
-            />
-          </Drawer>
-          <Drawer
-            title="SORT BY"
-            placement="bottom"
-            closable={false}
-            onClose={this.onCloseSort}
-            visible={this.state.visibleSort}
-            className="showSortDrawer"
-            height="40vh"
-          >
-            <SortBy
-              closeThisFilter={this.onCloseSort}
-              sortProducts={this.sortProducts} />
-          </Drawer>
-        </section>
-      </div>
-    );
-  }
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <div className="sticky-filter">
+          <Row style={{ width: "100%" }}>
+            <Col span={12}>
+              <div className="filter-type" onClick={showDrawerSort}>
+                <i className="fa fa-sort" aria-hidden="true"></i>
+                {" "}<span>Sort By</span>
+              </div>
+            </Col>
+            <Col span={12}>
+              <div
+                className="filter-type removeBorder"
+                onClick={() => { showDrawerFiter(); }}
+              >
+                <i className="fa fa-filter" aria-hidden="true"></i>
+                {" "}<span>Filter</span>
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <Drawer
+          title="FILTER"
+          placement="bottom"
+          closable={true}
+          onClose={onCloseFilter}
+          visible={visibleFilter}
+          className="showFilterDrawer"
+          height="100vh"
+        >
+          <Filter
+            removeThisFilter="displayMobAndTab"
+            removeThisTitle="noDisplay"
+            data={props.getSearchFilter}
+            onCheckBrands={onCheckBrands}
+            checkedBrands={checkedBrands}
+            onChangeColors={onChangeColors}
+            checkedColors={checkedColors}
+            onHandleRatings={onHandleRatings}
+            searchPrice={searchPrice}
+            changePrice={changePrice}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            onChangeWarrenty={onChangeWarrenty}
+            selectedWarrenty={selectedWarrenty}
+            onChangeSize={onChangeSize}
+            selectedSize={selectedSize}
+            closeThisFilter={onCloseFilter}
+            applyFilter={applyFilter}
+            currentRating={currentRating}
+          />
+        </Drawer>
+        <Drawer
+          title="SORT BY"
+          placement="bottom"
+          closable={false}
+          onClose={onCloseSort}
+          visible={visibleSort}
+          className="showSortDrawer"
+          height="40vh"
+        >
+          <SortBy
+            closeThisFilter={onCloseSort}
+            sortProducts={sortProducts} />
+        </Drawer>
+      </section>
+    </div>
+  );
 }
 
-export default connect((state) => state, actions)(withRouter(Listing));
+Listing.getInitialProps = async (ctx) => {
+  initialize(ctx);
+}
+
+export default withRouter(Listing);

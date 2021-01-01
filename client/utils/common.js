@@ -3,6 +3,7 @@ import * as moment from "moment-timezone";
 import { notification } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import $ from 'jquery'
+import { useEffect, useRef } from "react";
 
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];
@@ -145,4 +146,12 @@ export function scrollToTop(){
     });
   };
   $("html").scrollView();
+}
+
+export function previousQuery(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }
