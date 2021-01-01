@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Layout from "../src/Components/Layout";
 import { connect } from "react-redux";
 import actions from "../redux/actions";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import withUnAuth from "../utils/auth/withUnAuth";
 import { withRouter } from "next/router";
@@ -14,14 +14,22 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import GoogleLogin from 'react-google-login';
 class Login extends Component {
   responseFacebook = (response) => {
-    let body = {
-      name: response.name,
-      email: response.email,
-      socialPhoto: response.picture.data.url,
-      userID: response.userID,
-      loginDomain: "facebook"
+    if (response.name) {
+      let body = {
+        name: response.name,
+        email: response.email,
+        socialPhoto: response.picture.data.url,
+        userID: response.userID,
+        loginDomain: "facebook"
+      }
+      this.props.authenticateSocialLogin(body)
+    } else {
+      message.error('Facebook login failed! Please try again later.')
     }
-    // this.props.authenticateSocialLogin(body)
+  }
+
+  responseGoogleError = (response) => {
+    message.error('Google login failed! Please try again later.')
   }
 
   responseGoogle = (response) => {
@@ -123,7 +131,9 @@ class Login extends Component {
                       <Button disabled={this.props.authentication.loading} htmlType="submit" className="primary">
                         {this.props.authentication.loading && <Spin indicator={antIcon} />} Login Now
                       </Button>
-                      <Button disabled={this.props.authentication.loading} className="no-color"><Link href="/register">Create Account</Link></Button>
+                      <Button disabled={this.props.authentication.loading} className="no-color">
+                        <Link href="/register"><a>Create Account</a></Link>
+                      </Button>
                     </div>
                   </Form.Item>
                 </Form>
@@ -151,7 +161,7 @@ class Login extends Component {
                     clientId="1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com"
                     buttonText="Login"
                     onSuccess={this.responseGoogle}
-                    onFailure={this.responseGoogle}
+                    onFailure={this.responseGoogleError}
                     cookiePolicy={'single_host_origin'}
                     render={renderProps => (
                       <Button
