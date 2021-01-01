@@ -1,45 +1,57 @@
-import React, { Component } from "react";
-import _ from 'lodash'
+import React, { useEffect, useRef } from "react";
+import { capitalize } from 'lodash'
 
 // includes
 import Layout from "../../../src/Components/Layout";
 import initialize from "../../../utils/initialize";
 import actions from "../../../redux/actions";
 import Listing from "../../listing";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "next/router";
 
-class Search extends Component {
-  state = {
-    perPage: 10,
-  };
-  static async getInitialProps(ctx) {
-    initialize(ctx);
-    const {
-      query: { slug },
-    } = ctx;
+function previousQuery(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
-    if(ctx.isServer){
-      await ctx.store.dispatch(
-        actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
-      );
+const Search = (props) => {
+  let dispatch = useDispatch();
+
+  const listing = useSelector((state) => state.listing)
+
+  let { query } = props.router
+  let title = capitalize(query.slug.split('-').join(' '));
+  let prevQuery = previousQuery(query.slug)
   
-      await ctx.store.dispatch(
-        actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`, ctx)
-      );
+  useEffect(() => {
+    if (prevQuery !== undefined && prevQuery !== query.slug) {
+      dispatch(actions.searchFilter(`?cat_id=${query.cate}&cat_slug=${query.slug}`))
+      dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${query.cate}&cat_slug=${query.slug}`))
     }
+  }, [query.slug])
 
-  }
+  return (
+    <Layout title={title}>
+      <Listing getSearchFilter={listing.getSearchFilter} data={listing.getSearchData} perPage={10} />
+    </Layout>
+  );
+}
 
-  render() {
-    let { query } = this.props.router
-    let title = _.capitalize(query.slug.split('-').join(' '))
-    return (
-      <Layout title={title}>
-        <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />
-      </Layout>
+Search.getInitialProps = async (ctx) => {
+  initialize(ctx);
+
+  if (ctx.isServer) {
+    await ctx.store.dispatch(
+      actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
+    );
+
+    await ctx.store.dispatch(
+      actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`, ctx)
     );
   }
 }
 
-export default connect((state) => state)(withRouter(Search));
+export default withRouter(Search);
