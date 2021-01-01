@@ -22,17 +22,19 @@ class Search extends Component {
       query: { slug },
     } = ctx;
 
-    const searchFilter = await ctx.store.dispatch(
-      actions.searchFilter(`?keyword=${ctx.query.slug}`)
-    );
+    if (ctx.isServer) {
+      await ctx.store.dispatch(
+        actions.searchFilter(`?keyword=${ctx.query.slug}`)
+      );
 
-    let body = {
-      keyword: ctx.query.slug
+      let body = {
+        keyword: ctx.query.slug
+      }
+
+      await ctx.store.dispatch(
+        actions.searchProducts(`?page=1&perPage=10`, body)
+      );
     }
-
-    const searchData = await ctx.store.dispatch(
-      actions.searchProducts(`?page=1&perPage=10`, body)
-    );
 
     // return {
     //   searchData,

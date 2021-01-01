@@ -19,13 +19,15 @@ class Search extends Component {
       query: { slug },
     } = ctx;
 
-    await ctx.store.dispatch(
-      actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
-    );
-
-    await ctx.store.dispatch(
-      actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`, ctx)
-    );
+    if(ctx.isServer){
+      await ctx.store.dispatch(
+        actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
+      );
+  
+      await ctx.store.dispatch(
+        actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`, ctx)
+      );
+    }
 
   }
 

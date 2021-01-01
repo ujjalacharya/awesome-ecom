@@ -24,18 +24,20 @@ class Cart extends Component {
       query: { slug },
     } = ctx;
 
-    let loginToken = getCookie("token", ctx.req);
-    let userInfo = getUserInfo(loginToken);
+    if (ctx.isServer) {
+      let loginToken = getCookie("token", ctx.req);
+      let userInfo = getUserInfo(loginToken);
 
-    if (userInfo?._id) {
+      if (userInfo?._id) {
+        await ctx.store.dispatch(
+          actions.getUserProfile(userInfo._id, ctx)
+        );
+      }
+
       await ctx.store.dispatch(
-        actions.getUserProfile(userInfo._id, ctx)
+        actions.getCartProducts("page=1", ctx)
       );
     }
-
-    await ctx.store.dispatch(
-      actions.getCartProducts("page=1", ctx)
-    );
   }
 
   getCheckoutItems = (items) => {

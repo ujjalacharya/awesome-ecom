@@ -112,11 +112,13 @@ const Index = (props) => {
 Index.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'latest'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'trending'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'topselling'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'mostviewed'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'featured'));
+  if (ctx.isServer) {
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'latest'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'trending'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'topselling'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'mostviewed'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'featured'));
+  }
 
   // const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
 

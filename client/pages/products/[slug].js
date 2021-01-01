@@ -19,17 +19,19 @@ class Details extends Component {
       query: { slug },
     } = ctx;
 
-    const data = await ctx.store.dispatch(
-      actions.getProductDetails(ctx.query.slug, ctx)
-    );
+    if (ctx.isServer) {
+      await ctx.store.dispatch(
+        actions.getProductDetails(ctx.query.slug, ctx)
+      );
 
-    const qa = await ctx.store.dispatch(
-      actions.getQandA(ctx.query.slug + "?page=1")
-    );
+      await ctx.store.dispatch(
+        actions.getQandA(ctx.query.slug + "?page=1")
+      );
 
-    const productReview = await ctx.store.dispatch(
-      actions.getProductReviews(ctx.query.slug + "?page=1&perPage=10")
-    );
+      await ctx.store.dispatch(
+        actions.getProductReviews(ctx.query.slug + "?page=1&perPage=10")
+      );
+    }
 
     // return {
     //   data,
