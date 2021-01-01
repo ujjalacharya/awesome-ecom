@@ -17,6 +17,7 @@ import Link from "next/link";
 // redux
 import actions from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { previousQuery } from "../../utils/common";
 
 // function previousQuery(value) {
 //   const ref = useRef();
@@ -27,24 +28,22 @@ import { useDispatch, useSelector } from "react-redux";
 // }
 
 const Details = (props) => {
-  let dispatch = useDispatch();
-  
+  const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.products.productDetails)
-  console.log(productDetails)
 
   let { query } = props.router;
-  // let prevQuery = previousQuery(query.slug)
-
+  let prevQuery = previousQuery(query.slug)
+  
   useEffect(() => {
-    // if (prevQuery !== undefined && prevQuery !== query.slug) {
+    if (prevQuery !== undefined && prevQuery !== query.slug) {
       dispatch(actions.getProductDetails(query.slug));
-    // }
-  }, [query.slug])
+    }
+  }, [dispatch, query.slug])
   
   useEffect(() => {
     dispatch(actions.getQandA(query.slug + "?page=1"));
     dispatch(actions.getProductReviews(query.slug + "?page=1&perPage=10"));
-  }, [])
+  }, [dispatch])
   
   return (
     <Layout title={productDetails?.product?.name}>

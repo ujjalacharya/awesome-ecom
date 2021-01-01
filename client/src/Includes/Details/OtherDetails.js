@@ -12,7 +12,6 @@ import { productDetailSkeleton } from "../../../utils/skeletons";
 const { TabPane } = Tabs;
 
 const OtherDetails = (props) => {
-  console.log(props)
   let [openVideo, setOpenVideo] = useState(false);
   let [productDetail, setProductDetail] = useState(productDetailSkeleton)
 
@@ -35,7 +34,6 @@ const OtherDetails = (props) => {
     warranty: productDetail?.warranty,
   };
 
-  console.log(productDetail)
   return (
     <div className="other-details">
       <Tabs defaultActiveKey="1" onChange={callback}>
