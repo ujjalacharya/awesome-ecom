@@ -11,6 +11,7 @@ import actions from "../redux/actions";
 import { getCookie } from "../utils/cookie";
 import { getUserInfo } from "../utils/common";
 import CheckoutItems from "../src/Includes/Cart/CheckoutItems";
+import withPrivate from "../utils/auth/withPrivate";
 
 class CheckoutCart extends Component {
   static async getInitialProps(ctx) {
@@ -72,4 +73,4 @@ class CheckoutCart extends Component {
   }
 }
 
-export default connect((state) => state, actions)(CheckoutCart);
+export default connect((state) => state, actions)(withPrivate(CheckoutCart));
