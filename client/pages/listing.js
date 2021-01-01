@@ -1,9 +1,9 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Pagination, Drawer } from "antd";
 import _ from "lodash";
 
 // redux
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import actions from "../redux/actions";
 
 // next router
@@ -24,7 +24,6 @@ const Listing = (props) => {
   let [visibleSort, setVisibleSort] = useState(false)
   let [filterApplied, setFilterApplied] = useState(false)
   let [currentPage, setCurrentPage] = useState(1)
-  let [sortName, setSortName] = useState('')
   let [checkedBrands, setCheckedBrands] = useState([])
   let [checkedColors, setCheckedColors] = useState([])
   let [filterBody, setFilterBody] = useState({})
