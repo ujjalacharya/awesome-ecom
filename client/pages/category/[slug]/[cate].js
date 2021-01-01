@@ -17,7 +17,7 @@ function previousQuery(value) {
   return ref.current;
 }
 
-const Search = (props) => {
+const Category = (props) => {
   let dispatch = useDispatch();
 
   const listing = useSelector((state) => state.listing)
@@ -25,7 +25,7 @@ const Search = (props) => {
   let { query } = props.router
   let title = capitalize(query.slug.split('-').join(' '));
   let prevQuery = previousQuery(query.slug)
-  
+
   useEffect(() => {
     if (prevQuery !== undefined && prevQuery !== query.slug) {
       dispatch(actions.searchFilter(`?cat_id=${query.cate}&cat_slug=${query.slug}`))
@@ -40,7 +40,7 @@ const Search = (props) => {
   );
 }
 
-Search.getInitialProps = async (ctx) => {
+Category.getInitialProps = async (ctx) => {
   initialize(ctx);
 
   if (ctx.isServer) {
@@ -54,4 +54,4 @@ Search.getInitialProps = async (ctx) => {
   }
 }
 
-export default withRouter(Search);
+export default withRouter(Category);
