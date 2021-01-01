@@ -1,21 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { capitalize } from 'lodash'
 
 // includes
 import Layout from "../../../src/Components/Layout";
-import initialize from "../../../utils/initialize";
-import actions from "../../../redux/actions";
 import Listing from "../../listing";
+
+// redux
+import actions from "../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
+
+// next router
 import { withRouter } from "next/router";
 
-function previousQuery(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
+// utils
+import initialize from "../../../utils/initialize";
+import { previousQuery } from "../../../utils/common";
 
 const Category = (props) => {
   let dispatch = useDispatch();
