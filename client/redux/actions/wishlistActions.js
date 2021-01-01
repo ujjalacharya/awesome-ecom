@@ -33,24 +33,26 @@ const addWishListItems = (slug, sliderName) => {
     const wishlistService = new WishlistService();
     const response = await wishlistService.addWishListItems(slug);
     if (response.isSuccess) {
-      const productService = new ProductService();
-      const prodResponse = await productService.getMinedProducts('', sliderName);
-      switch (sliderName) {
-        case 'trending':
-          dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'latest':
-          dispatch({ type: LATEST_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'topselling':
-          dispatch({ type: TOP_SELLING_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'mostviewed':
-          dispatch({ type: MOST_VIEWED_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'featured':
-          dispatch({ type: FEATURED_PRODUCTS, payload: prodResponse.data });
-          break;
+      if (sliderName) {
+        const productService = new ProductService();
+        const prodResponse = await productService.getMinedProducts('', sliderName);
+        switch (sliderName) {
+          case 'trending':
+            dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'latest':
+            dispatch({ type: LATEST_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'topselling':
+            dispatch({ type: TOP_SELLING_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'mostviewed':
+            dispatch({ type: MOST_VIEWED_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'featured':
+            dispatch({ type: FEATURED_PRODUCTS, payload: prodResponse.data });
+            break;
+        }
       }
       openNotification("Success", "Product added to wishlist successfully");
       dispatch({ type: ADD_WISHLIST_ITEMS, payload: response.data });
@@ -68,24 +70,26 @@ const removeFromWishList = (id, sliderName) => {
     const wishlistService = new WishlistService();
     const response = await wishlistService.removeFromWishList(id);
     if (response.isSuccess) {
-      const productService = new ProductService();
-      const prodResponse = await productService.getMinedProducts('', sliderName);
-      switch (sliderName) {
-        case 'trending':
-          dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'latest':
-          dispatch({ type: LATEST_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'topselling':
-          dispatch({ type: TOP_SELLING_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'mostviewed':
-          dispatch({ type: MOST_VIEWED_PRODUCTS, payload: prodResponse.data });
-          break;
-        case 'featured':
-          dispatch({ type: FEATURED_PRODUCTS, payload: prodResponse.data });
-          break;
+      if (sliderName) {
+        const productService = new ProductService();
+        const prodResponse = await productService.getMinedProducts('', sliderName);
+        switch (sliderName) {
+          case 'trending':
+            dispatch({ type: TRENDING_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'latest':
+            dispatch({ type: LATEST_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'topselling':
+            dispatch({ type: TOP_SELLING_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'mostviewed':
+            dispatch({ type: MOST_VIEWED_PRODUCTS, payload: prodResponse.data });
+            break;
+          case 'featured':
+            dispatch({ type: FEATURED_PRODUCTS, payload: prodResponse.data });
+            break;
+        }
       }
       openNotification("Success", "Product removed from wishlist successfully");
       dispatch({ type: REMOVE_FROM_WISHLIST, payload: response.data });
