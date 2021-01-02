@@ -2,9 +2,9 @@ import { getTokenService, postTokenService } from "../../utils/commonService";
 import { ORDER_BASE_URL } from "../../utils/constants";
 
 export class OrderService {
-  getOrders(query) {
+  getOrders(query, ctx) {
     let url = `${ORDER_BASE_URL}/orders?${query}&perPage=10`;
-    let data = getTokenService(url, "GET");
+    let data = getTokenService(url, "GET", ctx);
     return data;
   }
 
@@ -14,9 +14,9 @@ export class OrderService {
     return data;
   }
 
-  getOrdersStatuses() {
+  getOrdersStatuses(ctx) {
     let url = `${ORDER_BASE_URL}/get-order-status`;
-    let data = getTokenService(url, "GET");
+    let data = getTokenService(url, "GET", ctx);
     return data;
   }
 

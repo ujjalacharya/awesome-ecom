@@ -104,3 +104,75 @@ export const userDataSkeleton = {
 export const activeLocSkeleton = {
   address: "",
 };
+
+export const myOrdersSkeleton = {
+    orders:[
+        {
+            _id: '1',
+            status: {
+                dispatchedDetail: {
+                    dispatchedDate: null
+                },
+                cancelledDetail: {
+                    cancelledDate: "",
+                    cancelledBy: "",
+                    remark: ""
+                },
+                returnedDetail: {
+                    returnedDate: null,
+                    remark: []
+                },
+                activeDate: '',
+                approvedDate: null,
+                completedDate: null,
+                tobereturnedDate: null,
+                currentStatus: ''
+            },
+            isPaid: false,
+            shipto: {
+                region: "",
+                city: "",
+                area: "",
+                address: "",
+                phoneno: "",
+                geolocation: {
+                    coordinates: [
+                        ""
+                    ],
+                    _id: "",
+                    type: ""
+                }
+            },
+            orderID: "",
+            user: "",
+            product: {
+                _id: "",
+                images: [
+                    {
+                        _id: "",
+                        thumbnail: "",
+                        medium: "",
+                        large: "",
+                        createdAt: "",
+                        updatedAt: "",
+                        __v: 0
+                    }
+                ],
+                slug: "",
+                name: "",
+                price: {
+                    $numberDecimal: ""
+                }
+            },
+            soldBy: {
+                _id: "",
+                shopName: ""
+            },
+            quantity: "",
+            payment: "",
+            createdAt: "",
+            updatedAt: "",
+        }
+    ],
+    totalCount: 1
+}
