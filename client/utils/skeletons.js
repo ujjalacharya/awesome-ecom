@@ -95,3 +95,12 @@ export const SearchFilterSkeleton = {
         1
     ]
 }
+
+export const userDataSkeleton = {
+  email: "",
+  phone: ""
+};
+
+export const activeLocSkeleton = {
+  address: "",
+};
