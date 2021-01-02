@@ -84,7 +84,7 @@ const ProfileDetails = (props) => {
 
   let checkSekelton = userData.email === "" ? true : false;
   let userPhoto = userData.photo ? (`${IMAGE_BASE_URL}/`) : userData.socialPhoto;
-  
+
   return (
     <div className="profile-details">
       <div className="main-profile">
@@ -136,7 +136,7 @@ const ProfileDetails = (props) => {
                     {!checkSekelton && "Email:"} {userData.email}
                   </span>
                 </div>
-                {!_.isEmpty(activeLoc) && (
+                {!isEmpty(activeLoc) && (
                   <div>
                     <span className="medium-line">
                       {!checkSekelton && "Mobile:"} {activeLoc.phoneno}
@@ -157,7 +157,7 @@ const ProfileDetails = (props) => {
       </div>
       <div className="profile-bottom">
         <h4>Profile Details</h4>
-        {!_.isEmpty(activeLoc) && (
+        {!isEmpty(activeLoc) && (
           <Table
             columns={columns}
             dataSource={data}
