@@ -87,11 +87,11 @@ const updateProfilePicture = (body) => {
   };
 };
 
-const getMyReviews = (query) => {
+const getMyReviews = (query, ctx) => {
   return async (dispatch) => {
     await dispatch({ type: GET_REVIEWS_START });
     const userService = new UserService();
-    const response = await userService.getMyReviews(query);
+    const response = await userService.getMyReviews(query, ctx);
     if (response.isSuccess) {
       dispatch({ type: MY_PROFILE_REVIEWS, payload: response.data });
     } else if (!response.isSuccess) {

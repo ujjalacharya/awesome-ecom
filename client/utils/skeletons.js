@@ -176,3 +176,33 @@ export const myOrdersSkeleton = {
     ],
     totalCount: 1
 }
+
+export const myReviewsSkeleton = [
+    {
+        _id: '1',
+        star: '',
+        user: '',
+        product: {
+            _id: '1',
+            images: [
+                {
+                    _id: '1',
+                    thumbnail: '/images/default-image.png',
+                    medium: '/images/default-image.png',
+                    large: '/images/default-image.png',
+                    createdAt: '',
+                    updatedAt: '',
+                }
+            ],
+            slug: '',
+            name: '',
+            soldBy: {
+                _id: '1',
+                shopName: ''
+            }
+        },
+        createdAt: '',
+        updatedAt: '',
+        comment: ''
+    }
+]
