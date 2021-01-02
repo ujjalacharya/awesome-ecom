@@ -22,7 +22,7 @@ export class UserService {
 
   async toggleActiveAddress(query) {
     let url = `${USER_BASE_URL}/toggle-address-activeness?${query}`
-    let data = getTokenService(url, 'PATCH', ctx);
+    let data = getTokenService(url, 'PATCH');
     return data;
   }
 

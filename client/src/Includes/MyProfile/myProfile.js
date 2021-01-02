@@ -1,63 +1,36 @@
-import React, { Component } from "react";
-import Menu from "../../../src/Includes/MyProfile/menu";
+import React, { useState } from "react";
 import { Row, Col } from "antd";
 
-//includes
+// includes
+import Menu from "../../../src/Includes/MyProfile/menu";
 import Layout from "../../../src/Components/Layout";
+
+// utils
 import withPrivate from "../../../utils/auth/withPrivate";
-import { connect } from "react-redux";
-import actions from "../../../redux/actions";
-import { getUserInfo } from "../../../utils/common";
 
-class MyProfile extends Component {
-    state = {
-        currentMenu: "manage-account",
-        userInfo: {},
+const MyProfile = (props) => {
+    let [currentMenu, setCurrentMenu] = useState("manage-account");
+
+    const changeMenuTab = (menu) => {
+        setCurrentMenu(menu)
     };
 
-    componentDidMount() {
-        let loginToken = this.props.authentication.token;
-        let userInfo = getUserInfo(loginToken);
-
-        if (userInfo?._id) {
-            this.props.getUserProfile(userInfo._id);
-        }
-
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.user.userProfile !== prevProps.user.userProfile && this.props.user.userProfile) {
-            this.setState({
-                userInfo: this.props.user.userProfile
-            })
-        }
-    }
-
-    changeMenuTab = (menu) => {
-        this.setState({
-            currentMenu: menu,
-        });
-    };
-
-    render() {
-
-        return (
-            <Layout title={this.props.title}>
-                <div className="my-profile">
-                    <div className="container min-height">
-                        <Row>
-                            <Col lg={4} xs={24} className="left-menu">
-                                <Menu changeMenuTab={this.changeMenuTab} currentMenu={this.state.currentMenu} />
-                            </Col>
-                            <Col lg={20} xs={24} className="profile-right-menu">
-                                {this.props.children}
-                            </Col>
-                        </Row>
-                    </div>
+    return (
+        <Layout title={props.title}>
+            <div className="my-profile">
+                <div className="container min-height">
+                    <Row>
+                        <Col lg={4} xs={24} className="left-menu">
+                            <Menu changeMenuTab={changeMenuTab} currentMenu={currentMenu} />
+                        </Col>
+                        <Col lg={20} xs={24} className="profile-right-menu">
+                            {props.children}
+                        </Col>
+                    </Row>
                 </div>
-            </Layout>
-        );
-    }
+            </div>
+        </Layout>
+    );
 }
 
-export default connect((state) => state, actions)(withPrivate(MyProfile));
+export default withPrivate(MyProfile);

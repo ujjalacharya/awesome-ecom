@@ -70,7 +70,7 @@ const ManageAccount = (props) => {
   );
 
   return (
-    <MyProfile title="My Account">
+    <MyProfile userData={userData} title="My Account">
       <div className="menu-details">
         <h3>Manage My Account</h3>
         <StickyContainer>
@@ -79,7 +79,7 @@ const ManageAccount = (props) => {
               <ProfileDetails userData={userData} activeLoc={activeLoc} />
             </TabPane>
             <TabPane tab="My Address" key="2">
-              <AddressDetails userData={userData} />
+              <AddressDetails userData={userData} allAddress={userData.location} />
             </TabPane>
             {/* <TabPane tab="Recent Orders" key="3">
             <RecentOrders />

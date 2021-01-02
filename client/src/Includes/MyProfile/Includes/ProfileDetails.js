@@ -29,7 +29,7 @@ const ProfileDetails = (props) => {
       setUserData(props.userData);
       setActiveLoc(props.activeLoc)
     }
-  }, [userData])
+  }, [props.userData])
 
   const prevProfilePicResp = previousQuery(profilePictureResp)
 
@@ -115,7 +115,6 @@ const ProfileDetails = (props) => {
                   multiple
                   onChange={(e) => {
                     let formData = new FormData();
-                    console.log(e.target.files[0]);
                     formData.append("photo", e.target.files[0]);
                     dispatch(actions.updateProfilePicture(formData));
                   }}
