@@ -32,7 +32,6 @@ const MyOrders = (props) => {
     let [myOrders, setMyOrders] = useState(myOrdersSkeleton);
     let [orderStatuses, setOrderStatuses] = useState(['']);
     let [currentStatus, setCurrentStatus] = useState('');
-    let [appendUrl, setAppendUrl] = useState('page=1');
     let [currentPage, setCurrentPage] = useState(1);
     let [searchKeyword, setSearchKeyword] = useState('');
     let [loading, setLoading] = useState(true);
