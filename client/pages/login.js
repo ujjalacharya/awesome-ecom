@@ -19,7 +19,7 @@ class Login extends Component {
       email: response.email,
       socialPhoto: response.picture.data.url,
       userID: response.userID,
-      accessToken: response.accessToken,
+      access_token: response.accessToken,
       loginDomain: "facebook"
     }
     this.props.authenticateSocialLogin(body)

@@ -47,6 +47,23 @@ exports.updateProfile = async (req, res) => {
 }
 
 exports.uploadPhoto = async (req, res) => {
+    // const { filename: image } = req.file;
+    //Compress image
+    // await sharp(req.file.path)
+    //     .resize(300)
+    //     .jpeg({ quality: 100 })
+    //     .toFile(path.resolve(req.file.destination, "user", image))
+    // fs.unlinkSync(req.file.path);//remove from public/uploads
+    // let users = await User.find()
+    // users = users.map(async (u,index)=> {
+    //     let val = index + 1
+    //     u.photo = "user/"+ val + ".jpg"
+    //     await u.save()
+    //     return u.photo
+    // })
+    // users = await Promise.all(users)
+    // return res.json(users)
+
     let profile = req.user
     if (req.file == undefined) {
         return res.status(400).json({error:'Image is required.'})
