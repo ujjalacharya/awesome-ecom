@@ -24,7 +24,7 @@ const Category = (props) => {
   let { query } = props.router
   let title = capitalize(query.slug.split('-').join(' '));
   let prevQuery = previousQuery(query.slug)
-
+  
   useEffect(() => {
     if (
       !props.isServer && 
