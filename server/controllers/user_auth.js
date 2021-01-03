@@ -1,3 +1,4 @@
+const axios = require('axios')
 const User = require("../models/User");
 const RefreshToken = require("../models/RefereshToken")
 const { sendEmail } = require("../middleware/helpers");
@@ -6,7 +7,7 @@ const _ = require('lodash')
 const Address = require('../models/Address')
 
 exports.signup = async (req, res) => {
-    let userExists = await User.findOne({ email: req.body.email });
+    let userExists = await User.findOne({ email: req.body.email, loginDomain: 'system' });
     if (userExists)
         return res.status(403).json({
             error: "Email is taken!"
@@ -16,18 +17,18 @@ exports.signup = async (req, res) => {
         process.env.JWT_EMAIL_VERIFICATION_KEY,
         { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
     );
+    req.body.emailVerifyLink = token
     let user = new User(req.body);
     user = await user.save();
-    // req.body.emailVerifyLink = token
-    
-    // const mailingData = {
-    //     from: "Ecom",
-    //     to: user.email,
-    //     subject: "email verification",
-    //     html: `<p>Hi, ${user.name} . </p></br>
-    //                 <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`
-    // };
-    // await sendEmail(mailingData)
+
+    const mailingData = {
+        from: "Kindeem",
+        to: user.email,
+        subject: "email verification",
+        html: `<p>Hi, ${user.name} . </p></br>
+                    <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`
+    };
+    await sendEmail(mailingData)
     res
         .status(200)
         .json({
@@ -38,12 +39,11 @@ exports.signup = async (req, res) => {
 exports.emailverify = async (req, res) => {
     const { token } = req.query;
     let user = await User.findOne({ emailVerifyLink: token })
-    if (!user || (user && !user.emailVerifyLink))
+    if (!user)
         return res.status(401).json({
             error: "Token is invalid!"
         });
     user.emailVerifyLink = ''
-    user.updated = Date.now()
     await user.save()
     res.status(201).json({ msg: "Successfully signup!" });
 };
@@ -80,39 +80,53 @@ exports.signin = async (req, res) => {
     refreshToken = new RefreshToken(refreshToken)
     await refreshToken.save()
     // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-    return res.json({ accessToken, refreshToken: refreshToken.refreshToken});
+    return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
 };
 
 exports.socialLogin = async (req, res) => {
-    let user = await User.findOne({ userID: req.body.userID });
-    const {name, email, socialPhoto, userID, loginDomain} = req.body
+
+    const { name, email, socialPhoto, userID, loginDomain, access_token } = req.body
+
+    if (loginDomain === 'facebook') {
+        // for app access_token of facebook
+        const clientId = '207764167510635'
+        const clientSecret = '409076fa8a8b38cd881542529738f5e7'
+        const response = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`)
+
+        const appAccessToken = response.data.access_token
+        const resp = await axios.get(`https://graph.facebook.com/debug_token?input_token=${access_token}
+        &access_token=${appAccessToken}`).catch(err => {
+            // console.log(err.response.data, 'dcscsc')
+            return null
+        })
+        console.log(resp.data);
+        if (!resp || resp.data.data.error || !resp.data.data.is_valid) {
+            return res.status(401).json({ error: resp.data.data.error.message || 'Invalid OAuth access token.' })
+        }
+        if (resp.data.data.user_id !== userID) {
+            return res.status(401).json({ error: "Invalid userID." })
+        }
+    }
+
+    if (loginDomain === 'google') {
+        const clientId = '1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com'
+        const resp = await axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${access_token}`).catch(err => {
+            // console.log(err.response.data, 'dcscsc')
+            return null
+        })
+
+        if (!resp || resp.data.iss !== 'accounts.google.com' || resp.data.aud !== clientId) {
+            return res.status(401).json({ error: "Invalid OAuth access token." })
+        }
+        if (resp.data.sub !== userID) {
+            return res.status(401).json({ error: "Invalid userID" })
+        }
+
+    }
+    let user = await User.findOne({ userID, loginDomain });
     if (!user) {
         // create a new user and login
-        user = new User({ name, email, socialPhoto, userID, loginDomain});
-        user = await user.save();
-        const payload = {
-            _id: user._id,
-            name: user.name,
-            email: user.email
-        };
-        const accessToken = jwt.sign(
-            payload,
-            process.env.JWT_SIGNIN_KEY,
-            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-        );
-        let refreshToken = {refreshToken:jwt.sign(payload, process.env.REFRESH_TOKEN_KEY)}
-        refreshToken = new RefreshToken(refreshToken)
-        await refreshToken.save()
-        // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
-        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
-    } else {
-        if (user.isBlocked) {
-            return res.status(401).json({
-                error: "Your account has been blocked."
-            });
-        }
-        // update existing user with new social info and login
-        user = _.extend(user, { name, email, socialPhoto, userID, loginDomain });
+        user = new User({ name, email, socialPhoto, userID, loginDomain });
         user = await user.save();
         const payload = {
             _id: user._id,
@@ -131,14 +145,38 @@ exports.socialLogin = async (req, res) => {
         return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
     }
 
+    if (user.isBlocked) {
+        return res.status(401).json({
+            error: "Your account has been blocked."
+        });
+    }
+    // update existing user with new social info and login
+    user = _.extend(user, { name, socialPhoto, email });
+    user = await user.save();
+    const payload = {
+        _id: user._id,
+        name: user.name,
+        email: user.email
+    };
+    const accessToken = jwt.sign(
+        payload,
+        process.env.JWT_SIGNIN_KEY,
+        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+    );
+    let refreshToken = { refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_KEY) }
+    refreshToken = new RefreshToken(refreshToken)
+    await refreshToken.save()
+    // res.setHeader('Set-Cookie', `refreshToken=${refreshToken.refreshToken}; HttpOnly`);
+    return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
+
 };
 
-exports.refreshToken = async (req,res) => {
-    const {refreshToken} = req.body
-    if(refreshToken == null) return res.status(400).json({error:" Token is Null"})
-    let token = await RefreshToken.findOne({refreshToken})
-    if(!token) return res.status(403).json({error:"Invalid refresh token"})
-    const user = await jwt.verify(token.refreshToken,process.env.REFRESH_TOKEN_KEY)
+exports.refreshToken = async (req, res) => {
+    const { refreshToken } = req.body
+    if (refreshToken == null) return res.status(400).json({ error: " Token is Null" })
+    let token = await RefreshToken.findOne({ refreshToken })
+    if (!token) return res.status(403).json({ error: "Invalid refresh token" })
+    const user = await jwt.verify(token.refreshToken, process.env.REFRESH_TOKEN_KEY)
     const payload = {
         _id: user._id,
         name: user.name,
@@ -157,7 +195,7 @@ exports.forgotPassword = async (req, res) => {
     if (!req.body.email) return res.status(400).json({ error: "No Email in request body" });
 
     const { email } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, loginDomain: 'system' });
     if (!user)
         return res.status(404).json({
             error: "User with that email does not exist!"
@@ -199,7 +237,7 @@ exports.resetPassword = async (req, res) => {
     };
 
     user = _.extend(user, updatedFields);
-    user.updated = Date.now();
+    // user.updated = Date.now();
 
     await user.save()
     res.json({
@@ -212,7 +250,7 @@ exports.auth = async (req, res, next) => {
     const token = req.header('x-auth-token');
     try {
         if (token) {
-            const u =  parseToken(token)
+            const u = parseToken(token)
             if (u._id) {
                 const user = await User.findById(u._id).select('-password -salt')
                 if (user) {
@@ -243,9 +281,9 @@ function parseToken(token) {
 }
 
 //checkUserSignin
-exports.checkUserSignin = async(req,res,next) => {
+exports.checkUserSignin = async (req, res, next) => {
     const token = req.header('x-auth-token');
-    if(token) {
+    if (token) {
         const user = parseToken(token)
         const foundUser = await User.findById(user._id).select('name')
         if (foundUser) {

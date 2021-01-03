@@ -14,17 +14,13 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import GoogleLogin from 'react-google-login';
 class Login extends Component {
   responseFacebook = (response) => {
-    if (response.name) {
-      let body = {
-        name: response.name,
-        email: response.email,
-        socialPhoto: response.picture.data.url,
-        userID: response.userID,
-        loginDomain: "facebook"
-      }
-      this.props.authenticateSocialLogin(body)
-    } else {
-      message.error('Facebook login failed! Please try again later.')
+    let body = {
+      name: response.name,
+      email: response.email,
+      socialPhoto: response.picture.data.url,
+      userID: response.userID,
+      access_token: response.accessToken,
+      loginDomain: "facebook"
     }
   }
 
@@ -39,6 +35,7 @@ class Login extends Component {
       email: profileObj.email,
       socialPhoto: profileObj.imageUrl,
       userID: response.googleId,
+      access_token: response.tokenId,
       loginDomain: "google"
     }
     this.props.authenticateSocialLogin(body)

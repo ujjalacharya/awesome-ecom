@@ -10,7 +10,7 @@ const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
 const Banner = require("../models/Banner")
 const Category = require("../models/Category")
 const Product = require("../models/Product")
-// const minedProduct = require("../models/MinedProduct")
+const Lead = require("../models/Lead")
 const Remark = require("../models/Remark")
 const shortid = require('shortid');
 const sharp = require("sharp")
@@ -172,6 +172,17 @@ exports.getDeletedBanners = async (req, res) => {
     const totalCount = await Banner.countDocuments({ isDeleted: { "$ne": null } })
     res.json({ banners, totalCount })
 }
+
+exports.addLead = async (req,res) => {
+    let lead = await Lead.findOne({email:req.body.email})
+    if (lead) {
+        return res.status(403).json({error:'Lead has already been created.'})
+    }
+    let newLead = new Lead({email:req.body.email})
+    await newLead.save()
+    res.json(newLead)
+}
+
 
 exports.getAdmins = async (req, res) => {
     const page = +req.query.page || 1
