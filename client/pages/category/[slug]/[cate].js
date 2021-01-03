@@ -57,7 +57,7 @@ Category.getInitialProps = async (ctx) => {
   }
 
   return {
-    isServer
+    isServer: ctx.isServer
   }
 }
 

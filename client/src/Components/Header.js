@@ -174,8 +174,7 @@ class Header extends Component {
                       }}
                     // placeholder="Search for products, brands and more"
                     >
-                      <Input.Search size="large" placeholder="Search for products, brands and more"
-                      />
+                      <Input size="large" placeholder="Search for products, brands and more"/>
                     </AutoComplete>
                     {/* <img src="/images/search-icon.png" /> */}
                   </form>
