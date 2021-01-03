@@ -18,30 +18,31 @@ const Index = (props) => {
   let bannerImages = useSelector((state) => state.other.getBannerImages)
 
   useEffect(() => {
-    if (isEmpty(allProducts.latestProducts)) {
-      dispatch(actions.getMinedProducts('', 'latest'));
+    if (!props.isServer) {
+      if (isEmpty(allProducts.latestProducts)) {
+        dispatch(actions.getMinedProducts('', 'latest'));
+      }
+
+      if (isEmpty(allProducts.trendingProducts)) {
+        dispatch(actions.getMinedProducts('', 'trending'));
+      }
+
+      if (isEmpty(allProducts.topSellingProducts)) {
+        dispatch(actions.getMinedProducts('', 'topselling'));
+      }
+
+      if (isEmpty(allProducts.mostViewedProducts)) {
+        dispatch(actions.getMinedProducts('', 'mostviewed'));
+      }
+
+      if (isEmpty(allProducts.featuredProducts)) {
+        dispatch(actions.getMinedProducts('', 'featured'));
+      }
     }
-    
-    if (isEmpty(allProducts.trendingProducts)) {
-      dispatch(actions.getMinedProducts('', 'trending'));
-    }
-    
-    if (isEmpty(allProducts.topSellingProducts)) {
-      dispatch(actions.getMinedProducts('', 'topselling'));
-    }
-    
-    if (isEmpty(allProducts.mostViewedProducts)) {
-      dispatch(actions.getMinedProducts('', 'mostviewed'));
-    }
-    
-    if (isEmpty(allProducts.featuredProducts)) {
-      dispatch(actions.getMinedProducts('', 'featured'));
-    }
-    
     if (isEmpty(bannerImages)) {
       dispatch(actions.getBannerImages())
     }
-  }, [dispatch])
+  }, [])
 
   return (
     <Layout title="Home">
@@ -149,7 +150,6 @@ Index.getInitialProps = async (ctx) => {
     await ctx.store.dispatch(actions.getMinedProducts(ctx, 'topselling'));
     await ctx.store.dispatch(actions.getMinedProducts(ctx, 'mostviewed'));
     await ctx.store.dispatch(actions.getMinedProducts(ctx, 'featured'));
-    await ctx.store.dispatch(actions.getBannerImages());
   }
   return {}
 };
