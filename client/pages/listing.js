@@ -44,6 +44,23 @@ const Listing = (props) => {
       setCurrentRating(0)
     }
   }, [])
+  
+  let { query } = props.router
+  let prevQuery = previousQuery(query.slug)
+  console.log(filterBody)
+
+  useEffect(() => {
+    if(query.slug !== prevQuery && query.slug){
+      setCheckedBrands([]);
+      setCheckedColors([]);
+      setMaxPrice('');
+      setMinPrice('');
+      setSelectedSize('');
+      setSelectedWarrenty('');
+      setFilterBody({});
+      setCurrentRating(0);
+    }
+  }, [query.slug])
 
 
   const showDrawerFiter = () => {
