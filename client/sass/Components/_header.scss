@@ -258,10 +258,31 @@
     }
   }
   .search {
-    text-align: center;
-    // display: flex;
-    // align-items: center;
-    // flex-direction: row-reverse;
+    .search-cover {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: left;
+      input{
+        font-size: 14px !important;
+      }
+      .search-btn {
+        position: relative;
+        left: -40px;
+        border: 0;
+        padding: 0;
+        border-left: 1px solid #eee;
+        border-radius: 0 !important;
+        padding-left: 10px;
+        cursor: pointer;
+        &:hover{
+          color: inherit;
+        }
+        .anticon {
+          font-size: 18px;
+        }
+      }
+    }
   }
   .menu-right {
     display: flex;
