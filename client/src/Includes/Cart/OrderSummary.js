@@ -13,6 +13,7 @@ import actions from "../../../redux/actions";
 import { withRouter } from "next/router";
 import initialize from "../../../utils/initialize";
 import EditAddressModal from "../../Components/EditAddressModal";
+import { isEmpty } from "lodash";
 
 const shortid = require('shortid');
 
@@ -46,7 +47,7 @@ class OrderSummary extends Component {
     });
   };
 
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps) {
     if (
       this.props.orderResp !== prevProps.orderResp &&
       this.props.orderResp
@@ -62,13 +63,13 @@ class OrderSummary extends Component {
     let { checkoutItems, userData } = this.props;
 
     let products = checkoutItems.carts.map((item) => {
-      
+
       return {
         p_slug: item.product.slug,
         quantity: checkoutItems.totalQty || item.quantity,
       };
     });
-    
+
     let activeAddress = {}
     userData.location.map((loc) => {
       if (loc.isActive) {
@@ -100,7 +101,7 @@ class OrderSummary extends Component {
 
   render() {
     let { activeLocation, userData } = this.state;
-    
+
     let totalCheckoutItems = 0;
     if (!this.props.checkoutItems?.totalAmount) {
       this.props.checkoutItems?.map((items) => {
@@ -112,11 +113,10 @@ class OrderSummary extends Component {
     } else {
       totalCheckoutItems = this.props.checkoutItems.totalAmount;
     }
-    
+
     let deliveryCharges = this.props.showShippingAddress === 'showDisplay' ? this.props.shippingCharge : (this.props.shippingCharge && this.props.checkoutItems.length)
       ? this.props.shippingCharge
       : 0;
-
     return (
       <div className="order-shipping">
         <EditAddressModal
@@ -134,8 +134,8 @@ class OrderSummary extends Component {
                 <div className="name">
                   <div>{userData?.name}</div>
                   <div className="address">
-                    {activeLocation?.area}, {activeLocation?.address}, <br />
-                    {activeLocation?.city}, {activeLocation?.region}
+                    {activeLocation?.area}{activeLocation?.area ? ',' : ''} {activeLocation?.address}{activeLocation?.address ? ',' : ''} <br />
+                    {activeLocation?.city}{activeLocation?.city ? ',' : ''} {activeLocation?.region}
                   </div>
                 </div>
               </div>
@@ -149,10 +149,13 @@ class OrderSummary extends Component {
           </div>
           <div className="ti-pr">
             <div className="ti">
-              <div className="name-add">
-                <PhoneOutlined />
-                <div className="name">{activeLocation?.phoneno}</div>
-              </div>
+              {
+                activeLocation?.phoneno &&
+                <div className="name-add">
+                  <PhoneOutlined />
+                  <div className="name">{activeLocation?.phoneno}</div>
+                </div>
+              }
             </div>
             {/* <div className="pr edit">EDIT</div> */}
           </div>
@@ -227,7 +230,8 @@ class OrderSummary extends Component {
                       <Button
                         className={"btn " + this.props.diableOrderBtn}
                         disabled={
-                          (this.props.diableOrderBtn === "disableBtn")
+                          (this.props.diableOrderBtn === "disableBtn" ||
+                            isEmpty(this.props.userResp?.location))
                             ? true
                             : false
                         }
@@ -236,6 +240,11 @@ class OrderSummary extends Component {
                       </Button>
                     </a>
                   </Link>
+
+                  {
+                    isEmpty(this.props.userResp?.location) &&
+                    <div className="checkout-note">Note: Please add address in your profile before proceeding further.</div>
+                  }
                 </div>
               )}
           </div>
@@ -247,7 +256,8 @@ class OrderSummary extends Component {
 
 const mapStatesToProps = (state) => ({
   shippingCharge: state.order.getShippingChargeResp,
-  orderResp: state.order.placeOrderResp
+  orderResp: state.order.placeOrderResp,
+  userResp: state.user.userProfile
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -75,7 +75,6 @@ const toggleActiveAddress = (query) => {
 const updateProfilePicture = (body) => {
   return async (dispatch) => {
     const userService = new UserService();
-    debugger;
     const response = await userService.updateProfilePicture(body);
     if (response.isSuccess) {
       dispatch({ type: UPDATE_PROFILE_PICTURE, payload: response.data });
@@ -88,11 +87,11 @@ const updateProfilePicture = (body) => {
   };
 };
 
-const getMyReviews = (query) => {
+const getMyReviews = (query, ctx) => {
   return async (dispatch) => {
     await dispatch({ type: GET_REVIEWS_START });
     const userService = new UserService();
-    const response = await userService.getMyReviews(query);
+    const response = await userService.getMyReviews(query, ctx);
     if (response.isSuccess) {
       dispatch({ type: MY_PROFILE_REVIEWS, payload: response.data });
     } else if (!response.isSuccess) {

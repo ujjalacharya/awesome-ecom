@@ -26,11 +26,11 @@ export const getCookie = (key, req) => {
     : getCookieFromServer(key, req);
 };
 
-const getCookieFromBrowser = key => {
+export const getCookieFromBrowser = key => {
   return cookie.get(key);
 };
 
-const getCookieFromServer = (key, req) => {
+export const getCookieFromServer = (key, req) => {
   if (!req.headers.cookie) {
     return undefined;
   }

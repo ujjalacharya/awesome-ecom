@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { Tabs } from "antd";
 import { PlayCircleFilled } from "@ant-design/icons";
 import QA from "./Includes/Q&A";
@@ -7,84 +7,85 @@ import Reviews from "./Includes/Reviews";
 import ReviewsForm from "./Includes/ReviewForm";
 import ProductVideo from "./Includes/ProductVideo";
 import { IMAGE_BASE_URL } from "../../../utils/constants";
+import { productDetailSkeleton } from "../../../utils/skeletons";
 
 const { TabPane } = Tabs;
 
-class OtherDetails extends Component {
-  state = {
-    openVideo: false
+const OtherDetails = (props) => {
+  let [openVideo, setOpenVideo] = useState(false);
+  let [productDetail, setProductDetail] = useState(productDetailSkeleton)
+
+  const openCloseVideoModal = () => {
+    setOpenVideo(!openVideo)
   }
 
-  callback = (key) => { };
+  const callback = (key) => { };
 
-  openCloseVideoModal = () => {
-    this.setState({
-      openVideo: !this.state.openVideo
-    })
-  }
+  useEffect(() => {
+    if (props.data) {
+      setProductDetail(props.data?.product)
+    }
+  }, [props.data?.product])
 
-  render() {
-    let {
-      data: { product },
-    } = this.props;
+  let addInfo = {
+    weight: productDetail?.weight,
+    color: productDetail?.color,
+    size: productDetail?.size,
+    warranty: productDetail?.warranty,
+  };
 
-    let addInfo = {
-      weight: product?.weight,
-      color: product?.color,
-      size: product?.size,
-      warranty: product?.warranty,
-    };
-
-    return (
-      <div className="other-details">
-        <Tabs defaultActiveKey="1" onChange={this.callback}>
-          <TabPane tab="Description" key="1">
-            <div className="desc-tab">
-              <div className="title">Description</div>
-              {product?.description}
-            </div>
-          </TabPane>
-          <TabPane tab="Additional Information" key="2">
-            <AdditionalInformation data={addInfo} />
-          </TabPane>
-          <TabPane tab="Video" key="3">
-            {
-              product?.videoURL.length > 0 ?
-                <>
-                  <div className="product-vid-cov">
-                    {
-                      product.videoURL.map((url, index) => {
-                        return (
-                          <div key={index} className="vid-cov">
-                            <div className="product-video" onClick={this.openCloseVideoModal}>
-                              <div className="overlay"></div>
-                              <img src={`${IMAGE_BASE_URL}/${product.images[index].large}`} />
-                              <PlayCircleFilled />
-                            </div>
-                            <ProductVideo
-                              videoURL={url}
-                              openVideo={this.state.openVideo}
-                              onCloseVideo={this.openCloseVideoModal}
-                            />
+  return (
+    <div className="other-details">
+      <Tabs defaultActiveKey="1" onChange={callback}>
+        <TabPane tab="Description" key="1">
+          <div className="desc-tab">
+            <div className="title">Description</div>
+            {productDetail?.description}
+          </div>
+        </TabPane>
+        <TabPane tab="Additional Information" key="2">
+          <AdditionalInformation data={addInfo} />
+        </TabPane>
+        <TabPane tab="Video" key="3">
+          {
+            productDetail?.videoURL.length > 0 ?
+              <>
+                <div className="product-vid-cov">
+                  {
+                    productDetail.videoURL.map((url, index) => {
+                      return (
+                        <div key={index} className="vid-cov">
+                          <div className="product-video" onClick={openCloseVideoModal}>
+                            <div className="overlay"></div>
+                            <img src={`${IMAGE_BASE_URL}/${productDetail.images[0].large}`}
+                              onError={(ev) => {
+                                ev.target.src = "/images/default-image.png";
+                              }} />
+                            <PlayCircleFilled />
                           </div>
-                        )
-                      })
-                    }
-                  </div>
-                </> : 'No video available'
-            }
-          </TabPane>
-          <TabPane tab="Q & A" key="4">
-            <QA />
-          </TabPane>
-          <TabPane tab="Reviews" key="5">
-            <Reviews data={product} />
-            {!this.props.data.product.hasReviewed && this.props.data.product.hasBought && <ReviewsForm />}
-          </TabPane>
-        </Tabs>
-      </div>
-    );
-  }
+                          <ProductVideo
+                            videoURL={url}
+                            openVideo={openVideo}
+                            onCloseVideo={openCloseVideoModal}
+                          />
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </> : 'No video available'
+          }
+        </TabPane>
+        <TabPane tab="Q & A" key="4">
+          <QA />
+        </TabPane>
+        <TabPane tab="Reviews" key="5">
+          <Reviews data={productDetail} />
+          {!productDetail.hasReviewed && productDetail.hasBought && <ReviewsForm />}
+        </TabPane>
+      </Tabs>
+    </div>
+  );
 }
 
 export default OtherDetails;

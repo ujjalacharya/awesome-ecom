@@ -527,7 +527,10 @@ exports.getProductsByCategory = async (req, res) => {
     return res.status(404).json({ error: "Categories not found" });
   }
   categories = categories.map((c) => c._id.toString());
-  let products = await Product.find({ category: { $in: categories } })
+  let products = await Product.find({ category: { $in: categories }, 
+    isVerified: { $ne: null },
+    isDeleted: null
+  })
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -545,6 +548,8 @@ exports.getProductsByCategory = async (req, res) => {
   // }
   const totalCount = await Product.countDocuments({
     category: { $in: categories },
+    isVerified: { $ne: null },
+    isDeleted: null
   });
 
   //user's action on each product

@@ -22,7 +22,7 @@ export class UserService {
 
   async toggleActiveAddress(query) {
     let url = `${USER_BASE_URL}/toggle-address-activeness?${query}`
-    let data = getTokenService(url, 'PATCH', ctx);
+    let data = getTokenService(url, 'PATCH');
     return data;
   }
 
@@ -32,9 +32,9 @@ export class UserService {
     return data;
   }
 
-  async getMyReviews(query) {
+  async getMyReviews(query, ctx) {
     let url = `${REVIEW_BASE_URL}/my-reviews?${query}&perPage=5`
-    let data = uploadImageService(url, 'GET');
+    let data = getTokenService(url, 'GET', ctx);
     return data;
   }
   

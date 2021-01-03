@@ -1,52 +1,63 @@
-import React, { Component } from "react";
-import { Row, Col, Pagination, Drawer } from "antd";
+import React, { useEffect, useRef } from "react";
+import { capitalize } from 'lodash'
 
 // includes
-import ProductList from "../../src/Includes/Listing/ProductList";
 import Layout from "../../src/Components/Layout";
-import initialize from "../../utils/initialize";
-import actions from "../../redux/actions";
-import Filter from "../../src/Includes/Listing/Filter";
 import Listing from "../listing";
-import { connect } from "react-redux";
+
+// utils
+import initialize from "../../utils/initialize";
+import { previousQuery } from "../../utils/common";
+
+// next router
 import { withRouter } from "next/router";
 
-class Search extends Component {
-  state = {
-    perPage: 10,
-  };
-  static async getInitialProps(ctx) {
-    initialize(ctx);
+// redux
+import actions from "../../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
-    const {
-      query: { slug },
-    } = ctx;
+const Search = (props) => {
+  let dispatch = useDispatch();
 
-    const searchFilter = await ctx.store.dispatch(
+  const listing = useSelector((state) => state.listing)
+
+  let { query } = props.router
+  let title = capitalize(query.slug.split('-').join(' '));
+  let prevQuery = previousQuery(query.slug);
+
+  useEffect(() => {
+    if (
+      !props.isServer && 
+      prevQuery !== query.slug 
+    ) {
+      dispatch(actions.searchFilter(`?keyword=${query.slug}`))
+      dispatch(actions.searchProducts(`?page=1&perPage=10`, { keyword: query.slug }))
+    }
+  }, [query.slug])
+
+  return (
+    <Layout title={title}>
+      <Listing getSearchFilter={listing.getSearchFilter} data={listing.getSearchData} perPage={10} />
+    </Layout>
+  );
+}
+
+Search.getInitialProps = async (ctx) => {
+  initialize(ctx);
+
+  if (ctx.isServer) {
+    await ctx.store.dispatch(
       actions.searchFilter(`?keyword=${ctx.query.slug}`)
     );
 
-    let body = {
-      keyword: ctx.query.slug
-    }
-
-    const searchData = await ctx.store.dispatch(
-      actions.searchProducts(`?page=1&perPage=10`, body)
+    await ctx.store.dispatch(
+      actions.searchProducts(`?page=1&perPage=10`, { keyword: ctx.query.slug })
     );
-
-    // return {
-    //   searchData,
-    //   searchFilter
-    // };
   }
 
-  render() {
-    return (
-      <Layout>
-        <Listing getSearchFilter={this.props.listing.getSearchFilter} data={this.props.listing.getSearchData} perPage={this.state.perPage} />
-      </Layout>
-    );
+  return {
+    isServer: ctx.isServer
   }
 }
 
-export default connect((state) => state)(withRouter(Search));
+export default withRouter(Search);

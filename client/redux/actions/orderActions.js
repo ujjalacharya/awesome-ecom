@@ -2,11 +2,11 @@ import { GLOBAL_ERROR, GET_ORDERS, GET_ORDERS_STATUSES, PLACE_ORDER, GET_SHIPPIN
 import { OrderService } from "../services/orderService";
 import { openNotification } from "../../utils/common";
 
-const getOrders = (query) => {
+const getOrders = (query, ctx) => {
   return async (dispatch) => {
     await dispatch({ type: GET_ORDERS_START });
     const orderService = new OrderService();
-    const response = await orderService.getOrders(query);
+    const response = await orderService.getOrders(query, ctx);
     if (response.isSuccess) {
       dispatch({ type: GET_ORDERS, payload: response.data });
     } else if (!response.isSuccess) {
@@ -34,10 +34,10 @@ const getOrderById = (id) => {
   };
 };
 
-const getOrdersStatuses = () => {
+const getOrdersStatuses = (ctx) => {
   return async (dispatch) => {
     const orderService = new OrderService();
-    const response = await orderService.getOrdersStatuses();
+    const response = await orderService.getOrdersStatuses(ctx);
     if (response.isSuccess) {
       dispatch({ type: GET_ORDERS_STATUSES, payload: response.data });
     } else if (!response.isSuccess) {

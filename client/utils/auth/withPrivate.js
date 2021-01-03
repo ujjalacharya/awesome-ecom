@@ -28,7 +28,7 @@ export default (WrappedComponent) => {
         Router.replace(login+"?origin="+ctx.pathname);
       }
     } else if (WrappedComponent.getInitialProps) {
-      const wrappedProps = await WrappedComponent.getInitialProps(userAuth);
+      const wrappedProps = await WrappedComponent.getInitialProps(ctx);
       return { ...wrappedProps, userAuth };
     }
 

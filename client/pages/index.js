@@ -1,5 +1,5 @@
 import { Row, Col } from "antd";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import MainCarousel from "../src/Components/Carousel";
 import ProductSlider from "../src/Components/ProductSlider";
 import SliderHeader from "../src/Components/SliderHeader";
@@ -10,39 +10,70 @@ import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
 import ProductCard from "../src/Components/Includes/ProductCard";
 import { isEmpty } from "lodash";
+import { useEffect } from "react";
 
 const Index = (props) => {
+  let dispatch = useDispatch();
+  let allProducts = useSelector((state) => state.products)
+  let bannerImages = useSelector((state) => state.other.getBannerImages)
+
+  useEffect(() => {
+    if (isEmpty(allProducts.latestProducts)) {
+      dispatch(actions.getMinedProducts('', 'latest'));
+    }
+    
+    if (isEmpty(allProducts.trendingProducts)) {
+      dispatch(actions.getMinedProducts('', 'trending'));
+    }
+    
+    if (isEmpty(allProducts.topSellingProducts)) {
+      dispatch(actions.getMinedProducts('', 'topselling'));
+    }
+    
+    if (isEmpty(allProducts.mostViewedProducts)) {
+      dispatch(actions.getMinedProducts('', 'mostviewed'));
+    }
+    
+    if (isEmpty(allProducts.featuredProducts)) {
+      dispatch(actions.getMinedProducts('', 'featured'));
+    }
+    
+    if (isEmpty(bannerImages)) {
+      dispatch(actions.getBannerImages())
+    }
+  }, [dispatch])
+
   return (
     <Layout title="Home">
       <div className="wrapper">
         <div className="main-carousel">
-          <MainCarousel data={props.other?.getBannerImages} />
+          <MainCarousel data={bannerImages} />
         </div>
         <div className="container">
           {
-            !isEmpty(props.products.featuredProducts) && (
+            !isEmpty(allProducts.featuredProducts) && (
               <>
                 <SliderHeader
                   headTitle="Featured Products"
                   headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
                   listLink="featuredProducts"
                 />
-                <ProductSlider data={props.products.featuredProducts} sliderName="featured" />
+                <ProductSlider data={allProducts.featuredProducts} sliderName="featured" />
               </>
             )
           }
           {/* <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
-                <Popular data={props.products.latestProducts} />
+                <Popular data={allProducts.latestProducts} />
               </Col>
               <Col lg={12} xs={24} md={12}>
-                <LatestSLider data={props.products.latestProducts} />
+                <LatestSLider data={allProducts.latestProducts} />
               </Col>
             </Row>
           </section> */}
           {
-            !isEmpty(props.products.trendingProducts) &&
+            !isEmpty(allProducts.trendingProducts) &&
             <>
               <SliderHeader
                 headTitle="Trending Products"
@@ -50,11 +81,11 @@ const Index = (props) => {
                 removePaddingTop="paddingTopZero"
                 listLink="trendingProducts"
               />
-              <ProductSlider data={props.products.trendingProducts} sliderName="trending" />
+              <ProductSlider data={allProducts.trendingProducts} sliderName="trending" />
             </>
           }
           {
-            !isEmpty(props.products.topSellingProducts) &&
+            !isEmpty(allProducts.topSellingProducts) &&
             <>
               <SliderHeader
                 headTitle="Top Selling"
@@ -62,11 +93,11 @@ const Index = (props) => {
                 removePaddingTop="paddingTopZero"
                 listLink="topSellingProducts"
               />
-              <ProductSlider data={props.products.topSellingProducts} sliderName="topselling" />
+              <ProductSlider data={allProducts.topSellingProducts} sliderName="topselling" />
             </>
           }
           {
-            !isEmpty(props.products.mostViewedProducts) &&
+            !isEmpty(allProducts.mostViewedProducts) &&
             <>
               <SliderHeader
                 headTitle="Most Viewed"
@@ -74,11 +105,11 @@ const Index = (props) => {
                 removePaddingTop="paddingTopZero"
                 listLink="mostViewedProducts"
               />
-              <ProductSlider data={props.products.mostViewedProducts} sliderName="mostViewed" />
+              <ProductSlider data={allProducts.mostViewedProducts} sliderName="mostViewed" />
             </>
           }
           {
-            !isEmpty(props.products.latestProducts) &&
+            !isEmpty(allProducts.latestProducts) &&
             <>
               <SliderHeader
                 headTitle="Latest Products"
@@ -90,7 +121,7 @@ const Index = (props) => {
 
                 <Row>
                   {
-                    props.products.latestProducts?.products?.map((product, index) => {
+                    allProducts.latestProducts?.products?.map((product, index) => {
                       return (
                         <Col className="latest-cards" key={index} lg={6} sm={8}>
                           <ProductCard data={product} sliderName="latest" />
@@ -112,21 +143,15 @@ const Index = (props) => {
 Index.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'latest'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'trending'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'topselling'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'mostviewed'));
-  await ctx.store.dispatch(actions.getMinedProducts(ctx, 'featured'));
-
-  // const orders = await ctx.store.dispatch(actions.getOrders(ctx.req));
-
-  await ctx.store.dispatch(actions.getBannerImages());
-
-  return {
-    // latestProducts,
-    // trendingProducts
-    // orders
-  };
+  if (ctx.isServer) {
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'latest'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'trending'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'topselling'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'mostviewed'));
+    await ctx.store.dispatch(actions.getMinedProducts(ctx, 'featured'));
+    await ctx.store.dispatch(actions.getBannerImages());
+  }
+  return {}
 };
 
-export default connect((state) => state)(Index);
+export default (Index);

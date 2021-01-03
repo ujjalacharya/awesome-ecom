@@ -1,255 +1,240 @@
-import React, { Component } from "react";
-import { Button, Empty } from "antd";
-import { Table, Space } from "antd";
-import _ from "lodash";
+import React, { useEffect, useState } from "react";
+import { capitalize } from "lodash";
+import { Table, Space, Button, Empty, message } from "antd";
 
 // includes
-import { connect } from "react-redux";
-import actions from "../../../../redux/actions";
-import { getUserInfo, openNotification } from "../../../../utils/common";
 import AddressForm from "./AddressForm";
 
-class AddressDetails extends Component {
-  state = {
-    show: "table",
-    userData: [],
-    allAddress: [],
-    editAddressData: [],
-    showAddNewForm: "addTable"
-  };
+// redux
+import actions from "../../../../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
-  // componentDidMount() {
-  //   let loginToken = this.props.authentication.token;
-  //   let userInfo = getUserInfo(loginToken);
+// utils
+import { previousQuery } from "../../../../utils/common";
 
-  //   if (userInfo?._id) {
-  //     this.props.getUserProfile(userInfo._id);
-  //   }
-  // }
+const AddressDetails = (props) => {
+  const dispatch = useDispatch();
 
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.user.userProfile !== prevProps.user.userProfile &&
-      this.props.user.userProfile
-    ) {
-      this.setState({
-        userData: this.props.user.userProfile,
-        allAddress: this.props.user.userProfile.location
-      });
+  const toggleActiveAddResp = useSelector((state) => state.user.toggleActiveAddResp);
+  const userProfileLoading = useSelector((state) => state.user.userProfileLoading);
+
+  let [show, setShow] = useState("table");
+  let [userData, setUserData] = useState([]);
+  let [allAddress, setAllAddress] = useState([]);
+  let [editAddressData, setEditAddressData] = useState([]);
+  let [showAddNewForm, setShowAddNewForm] = useState("addTable");
+
+  useEffect(() => {
+    if (props.userData) {
+      setUserData(props.userData);
+      setAllAddress(props.allAddress)
     }
-    if (
-      this.props.user.toggleActiveAddResp !==
-      prevProps.user.toggleActiveAddResp &&
-      this.props.user.toggleActiveAddResp
-    ) {
-      openNotification("Success", "Active address changed successfully");
-      this.props.getUserProfile(this.state.userData._id);
-    }
-  }
+  }, [props.userData])
 
-  changeShow = (show, userId) => {
-    this.setState({
-      show,
-      showAddNewForm: "addTable",
-    });
+  const prevToggleActiveAddResp = previousQuery(toggleActiveAddResp)
+
+  useEffect(() => {
+    if (toggleActiveAddResp !== prevToggleActiveAddResp && toggleActiveAddResp) {
+      message.success("Active address changed successfully")
+      dispatch(actions.getUserProfile(userData._id));
+    }
+  }, [toggleActiveAddResp])
+
+  const changeShow = (show, userId) => {
+    setShow(show);
+    setShowAddNewForm("addTable");
+
     if (userId) {
-      this.props.getUserProfile(userId);
+      dispatch(actions.getUserProfile(userId));
     }
   };
 
-  toggleAddress = (label) => {
-    this.props.toggleActiveAddress(`label=${label}`);
+  const toggleAddress = (label) => {
+    dispatch(actions.toggleActiveAddress(`label=${label}`));
   };
 
-  render() {
-    const columns = [
-      {
-        title: "Full Name",
-        dataIndex: "fullname",
-        key: "fullname",
-        render: (text) => <a>{text}</a>,
-      },
-      {
-        title: "Label",
-        dataIndex: "label",
-        key: "label",
-        render: (text) => <a>{text}</a>,
-      },
-      {
-        title: "Address",
-        dataIndex: "address",
-        key: "address",
-      },
-      {
-        title: "Area",
-        dataIndex: "area",
-        key: "area",
-      },
-      {
-        title: "City",
-        dataIndex: "city",
-        key: "city",
-      },
-      {
-        title: "Region",
-        dataIndex: "region",
-        key: "region",
-      },
-      {
-        title: "Phone Number",
-        dataIndex: "phoneNo",
-        key: "phoneNo",
-      },
-      {
-        title: "GeoLocation",
-        dataIndex: "geoLocation",
-        key: "geoLocation",
-      },
-      {
-        title: "Active",
-        dataIndex: "isActive",
-        key: "isActive",
-      },
-      {
-        title: "Action",
-        key: "action",
-        render: (record) => (
-          <Space size="middle">
-            <a
-              onClick={() => {
-                this.setState({
-                  editAddressData: record,
-                });
-                this.changeShow("form");
-              }}
-            >
-              Edit
-            </a>
-          </Space>
-        ),
-      },
-    ];
+  const columns = [
+    {
+      title: "Full Name",
+      dataIndex: "fullname",
+      key: "fullname",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Label",
+      dataIndex: "label",
+      key: "label",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Area",
+      dataIndex: "area",
+      key: "area",
+    },
+    {
+      title: "City",
+      dataIndex: "city",
+      key: "city",
+    },
+    {
+      title: "Region",
+      dataIndex: "region",
+      key: "region",
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phoneNo",
+      key: "phoneNo",
+    },
+    {
+      title: "GeoLocation",
+      dataIndex: "geoLocation",
+      key: "geoLocation",
+    },
+    {
+      title: "Active",
+      dataIndex: "isActive",
+      key: "isActive",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (record) => (
+        <Space size="middle">
+          <a
+            onClick={() => {
+              setEditAddressData(record);
+              changeShow("form");
+            }}
+          >
+            Edit
+          </a>
+        </Space>
+      ),
+    },
+  ];
 
-    let data = [];
-    if (this.state.allAddress.length > 0) {
-      this.state.allAddress.map((address, i) => {
-        let ele = {
-          key: address._id,
-          fullname: this.state.userData.name,
-          label: address.label,
-          address: address.address,
-          area: address.area,
-          city: address.city,
-          region: address.region,
-          phoneNo: address.phoneno ? address.phoneno : "-",
-          geoLocation:
-            address.geolocation.coordinates[0] +
-            " , " +
-            address.geolocation.coordinates[1],
-          isActive: (
-            <div className="yes-no">
-              <span>No</span>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  onChange={() => {
-                    !address.isActive && this.toggleAddress(address.label);
-                  }}
-                  checked={address.isActive ? true : false}
-                />
-                <span className="slider round"></span>
-              </label>
-              <span>Yes</span>
-            </div>
-          ),
-          // isActive: address.isActive ? "true" : "false",
-        };
-
-        data.push(ele);
-      });
-    }
-    
-    return (
-      <div className="address-details">
-        <div className="title-add">
-          <h4>Profile Details</h4>
-          {this.state.show === "table" &&
-            this.state.showAddNewForm === "addTable" && (
-              <Button
-                className="secondary"
-                onClick={() => this.setState({ showAddNewForm: "addForm" })}
-              >
-                Add new address
-              </Button>
-            )}
-        </div>
-        {this.state.show === "form" ||
-          this.state.showAddNewForm === "addForm" ? (
-            this.state.show === "form" ? (
-              <AddressForm
-                changeShow={this.changeShow}
-                editAddressData={this.state.editAddressData}
-                userId={this.state.userData._id}
+  let data = [];
+  if (allAddress.length > 0) {
+    allAddress.map((address, i) => {
+      let ele = {
+        key: address._id,
+        fullname: userData.name,
+        label: address.label,
+        address: address.address,
+        area: address.area,
+        city: address.city,
+        region: address.region,
+        phoneNo: address.phoneno ? address.phoneno : "-",
+        geoLocation:
+          address.geolocation.coordinates[0] +
+          " , " +
+          address.geolocation.coordinates[1],
+        isActive: (
+          <div className="yes-no">
+            <span>No</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                onChange={() => {
+                  !address.isActive && toggleAddress(address.label);
+                }}
+                checked={address.isActive ? true : false}
               />
-            ) : (
-                <AddressForm
-                  changeShow={this.changeShow}
-                  editAddressData={{}}
-                  userId=""
-                />
-              )
-          ) : (
-            <Table
-              className="orders-table table-wrapper"
-              columns={columns}
-              dataSource={data}
-              pagination={false}
-              loading={this.props.user.userProfileLoading}
-              expandable={{
-                expandedRowRender: (record) =>
-                  <table className="expanded-table">
-                    <tbody>
-                      {
-                        Object.entries(record).map(([key, value], i) => {
-                          if (key !== 'key' && key !== 'fullname' && key !== 'label') {
-                            return (
-                              <tr key={i}>
-                                <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                                <td>{_.capitalize(key)}</td>
-                                <td>{value}</td>
-                              </tr>
-                            )
-                          }
-                        })
-                      }
-                      <tr>
-                        <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
-                        <td>Action  </td>
-                        <td>
-                          <Space size="middle">
-                            <a
-                              onClick={() => {
-                                this.setState({
-                                  editAddressData: record,
-                                });
-                                this.changeShow("form");
-                              }}
-                            >
-                              Edit
-                          </a>
-                          </Space>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-              }}
-            />
-          )}
-          
-        {(this.state.allAddress.length === 0 && this.state.showAddNewForm === "addTable") && <div className="no-data-table"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>}
-      </div>
-    );
+              <span className="slider round"></span>
+            </label>
+            <span>Yes</span>
+          </div>
+        ),
+        // isActive: address.isActive ? "true" : "false",
+      };
+
+      data.push(ele);
+    });
   }
+  return (
+    <div className="address-details">
+      <div className="title-add">
+        <h4>Profile Details</h4>
+        {show === "table" &&
+          showAddNewForm === "addTable" && (
+            <Button
+              className="secondary"
+              onClick={() => setShowAddNewForm("addForm")}
+            >
+              Add new address
+            </Button>
+          )}
+      </div>
+      {show === "form" ||
+        showAddNewForm === "addForm" ? (
+          show === "form" ? (
+            <AddressForm
+              changeShow={changeShow}
+              editAddressData={editAddressData}
+              userId={userData._id}
+            />
+          ) : (
+              <AddressForm
+                changeShow={changeShow}
+                editAddressData={{}}
+                userId=""
+              />
+            )
+        ) : (
+          <Table
+            className="orders-table table-wrapper"
+            columns={columns}
+            dataSource={data}
+            pagination={false}
+            loading={userProfileLoading}
+            expandable={{
+              expandedRowRender: (record) =>
+                <table className="expanded-table">
+                  <tbody>
+                    {
+                      Object.entries(record).map(([key, value], i) => {
+                        if (key !== 'key' && key !== 'fullname' && key !== 'label') {
+                          return (
+                            <tr key={i}>
+                              <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                              <td>{capitalize(key)}</td>
+                              <td>{value}</td>
+                            </tr>
+                          )
+                        }
+                      })
+                    }
+                    <tr>
+                      <td><button type="button" class="ant-table-row-expand-icon" style={{ visibility: 'hidden' }} ></button></td>
+                      <td>Action  </td>
+                      <td>
+                        <Space size="middle">
+                          <a
+                            onClick={() => {
+                              setEditAddressData(record);
+                              changeShow("form");
+                            }}
+                          >
+                            Edit
+                        </a>
+                        </Space>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+            }}
+          />
+        )}
+
+      {(allAddress.length === 0 && showAddNewForm === "addTable") && <div className="no-data-table"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></div>}
+    </div>
+  );
 }
 
-export default connect((state) => state, actions)(AddressDetails);
+export default AddressDetails;
