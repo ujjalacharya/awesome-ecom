@@ -10,15 +10,19 @@ import {
   LATEST_PRODUCTS,
   TOP_SELLING_PRODUCTS,
   MOST_VIEWED_PRODUCTS,
-  FEATURED_PRODUCTS
+  FEATURED_PRODUCTS,
+  GET_WISHLIST_ITEMS_START,
+  GET_WISHLIST_ITEMS_FINISH
 } from "../types";
 
-const getWishListItems = (query) => {
+const getWishListItems = (query, ctx) => {
   return async (dispatch) => {
+    await dispatch({ type: GET_WISHLIST_ITEMS_START });
     const wishlistService = new WishlistService();
-    const response = await wishlistService.getWishListItems(query);
+    const response = await wishlistService.getWishListItems(query, ctx);
     if (response.isSuccess) {
-      dispatch({ type: GET_WISHLIST_ITEMS, payload: response.data });
+      await dispatch({ type: GET_WISHLIST_ITEMS, payload: response.data });
+      await dispatch({ type: GET_WISHLIST_ITEMS_FINISH });
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,

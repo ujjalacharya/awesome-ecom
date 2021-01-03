@@ -85,6 +85,7 @@ const MyOrders = (props) => {
 
     const getSearch = (val) => {
         setSearchKeyword(val);
+        setCurrentPage(1);
     };
 
     const onChangePage = (page) => {
@@ -242,7 +243,7 @@ const MyOrders = (props) => {
                     className="orders-table table-wrapper"
                     columns={columns}
                     dataSource={data}
-                    pagination={{ total: myOrders?.totalCount }}
+                    pagination={{ total: myOrders?.totalCount, current: currentPage }}
                     onChange={onChangePage}
                     loading={false}
                     expandable={{
