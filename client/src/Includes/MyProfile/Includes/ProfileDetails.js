@@ -83,7 +83,7 @@ const ProfileDetails = (props) => {
   }
 
   let checkSekelton = userData.email === "" ? true : false;
-  let userPhoto = userData.photo ? (`${IMAGE_BASE_URL}/`) : userData.socialPhoto;
+  let userPhoto = userData.photo ? (`${IMAGE_BASE_URL}/${userData.photo}`) : userData.socialPhoto;
 
   return (
     <div className="profile-details">
