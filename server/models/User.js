@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         trim: true,
-        unique:true
+        // unique:true
     },
     userID: {
         type: String,
@@ -88,7 +88,7 @@ userSchema.pre('save', function (next) {
 })
 userSchema.statics.findByCredentials = async function (email, password) {
     let User = this;
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email, loginDomain:'system' })
     if (!user) return ''
     let passwordData = sha512(password, user.salt)
     if (passwordData.passwordHash == user.password) {

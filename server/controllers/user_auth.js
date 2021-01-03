@@ -7,7 +7,7 @@ const _ = require('lodash')
 const Address = require('../models/Address')
 
 exports.signup = async (req, res) => {
-    let userExists = await User.findOne({ email: req.body.email });
+    let userExists = await User.findOne({ email: req.body.email, loginDomain:'system' });
     if (userExists)
         return res.status(403).json({
             error: "Email is taken!"
@@ -85,25 +85,43 @@ exports.signin = async (req, res) => {
 };
 
 exports.socialLogin = async (req, res) => {
+    
     const { name, email, socialPhoto, userID, loginDomain, access_token} = req.body
+    if (loginDomain==='facebook') {
     // for app access_token of facebook
-    // let clientId = '207764167510635'
-    // let clientSecret = '409076fa8a8b38cd881542529738f5e7'
-    // let response = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`)
-    // console.log(response.data.access_token);
-    if (loginDomai) {
+    const clientId = '207764167510635'
+    const clientSecret = '409076fa8a8b38cd881542529738f5e7'
+    const response = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`)
+        
+        const appAccessToken = response.data.access_token
+        const resp = await axios.get(`https://graph.facebook.com/debug_token?input_token=${access_token}
+        &access_token=${appAccessToken}`).catch(err => {
+            // console.log(err.response.data, 'dcscsc')
+            return null
+        })
+        if (!resp || resp.data.data.error || !resp.data.data.is_valid) {
+            return res.status(401).json({ error: resp.data.data.error.message ||'Invalid OAuth access token.'})
+        }
+        if (resp.data.data.user_id !== userID) {
+            return res.status(401).json({error: "Invalid userID."})
+        }
+    }   
+    if (loginDomain === 'google') {
+        const clientId = '1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com'
+        const resp = await axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${access_token}`).catch(err=> {
+            // console.log(err.response.data, 'dcscsc')
+            return null
+        })
+
+        if (!resp || resp.data.iss !== 'accounts.google.com' || resp.data.aud !== clientId ) {
+            return res.status(401).json({error:"Invalid OAuth access token."})
+        }
+        if(resp.data.sub !== userID) {
+            return res.status(401).json({error:"Invalid userID"})
+        }
         
     }
-    let appAccessToken = '207764167510635|u2td7U0Mif9tPANacbg1AzL_q34'
-    let resp = await axios.get(`https://graph.facebook.com/debug_token?input_token=${access_token}
-     &access_token=${appAccessToken}`)
-    if (resp.data.data.error || !resp.data.data.is_valid) {
-        return res.status(401).json({ error: resp.data.data.error.message ||'Invalid OAuth access token.'})
-    }
-    if (resp.data.data.user_id !== userID) {
-        return res.status(401).json({error: "Invalid userID."})
-    }
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ userID, loginDomain });
     if (!user) {
         // create a new user and login
         user = new User({ name, email, socialPhoto, userID, loginDomain});
@@ -131,7 +149,7 @@ exports.socialLogin = async (req, res) => {
         });
     }
     // update existing user with new social info and login
-    user = _.extend(user, { name, socialPhoto, userID, loginDomain });
+    user = _.extend(user, { name, socialPhoto, email });
     user = await user.save();
     const payload = {
         _id: user._id,

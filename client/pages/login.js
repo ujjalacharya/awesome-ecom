@@ -33,6 +33,7 @@ class Login extends Component {
       email: profileObj.email,
       socialPhoto: profileObj.imageUrl,
       userID: response.googleId,
+      access_token: response.tokenId,
       loginDomain: "google"
     }
     this.props.authenticateSocialLogin(body)

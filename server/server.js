@@ -75,28 +75,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-// const path = require("path");
-// const multer = require("multer");
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, './public/uploads')
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-//     }
-// })
-// const fileFilter = (req, file, callback) => {
-//     console.log(file);
-//     const ext = path.extname(file.originalname);
-//     if (ext !== '.png' && ext !== '.jpg' && ext !== '.JPG' && ext !== '.jpeg') {
-//         return callback(new Error('Not Image'))
-//     }
-//     callback(null, true)
-// }
-// var upload = multer({ storage, fileFilter }).single("productImages");
-// app.post('/imageupload', upload, waterMarker,async (req, res) => {
-//     res.json({ file: req.file })
-// })
+
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes
