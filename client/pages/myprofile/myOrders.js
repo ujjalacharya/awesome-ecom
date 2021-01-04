@@ -77,7 +77,7 @@ const MyOrders = (props) => {
     };
 
     useEffect(() => {
-        if (!props.isServer) {
+        if (currentStatus || currentPage || searchKeyword) {
             initialRequest();
             setLoading(true);
         }
