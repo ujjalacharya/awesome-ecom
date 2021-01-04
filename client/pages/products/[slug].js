@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Row, Col, Breadcrumb } from "antd";
 
 // includes
@@ -18,18 +18,13 @@ import Link from "next/link";
 import actions from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { previousQuery } from "../../utils/common";
-
-// function previousQuery(value) {
-//   const ref = useRef();
-//   useEffect(() => {
-//     ref.current = value;
-//   });
-//   return ref.current;
-// }
+import { productDetailSkeleton } from "../../utils/skeletons";
 
 const Details = (props) => {
   const dispatch = useDispatch();
-  const productDetails = useSelector((state) => state.products.productDetails)
+  const productState = useSelector((state) => state.products.productDetails)
+
+  let [productDetails, setProductDetails] = useState({ product: productDetailSkeleton })
 
   let { query } = props.router;
   let prevQuery = previousQuery(query.slug)
@@ -41,7 +36,11 @@ const Details = (props) => {
     ) {
       dispatch(actions.getProductDetails(query.slug));
     }
-  }, [dispatch, query.slug])
+  }, [query.slug])
+
+  useEffect(() => {
+    setProductDetails(productState)
+  }, [productState.product])
 
   useEffect(() => {
     dispatch(actions.getQandA(query.slug + "?page=1"));

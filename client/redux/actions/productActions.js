@@ -114,10 +114,10 @@ const getMinedProducts = (ctx, keyword) => {
 
 const getProductDetails = (slug, ctx) => {
   return async (dispatch) => {
-    await dispatch({ type: PRODUCT_DETAILS_START });
+    dispatch({ type: PRODUCT_DETAILS_START });
     const productService = new ProductService();
     const response = await productService.getProductDetails(slug, ctx);
-    await dispatch({ type: PRODUCT_DETAILS_FINISH });
+    dispatch({ type: PRODUCT_DETAILS_FINISH });
     if (response.isSuccess) {
       dispatch({ type: PRODUCT_DETAILS, payload: response.data });
     } else if (!response.isSuccess) {

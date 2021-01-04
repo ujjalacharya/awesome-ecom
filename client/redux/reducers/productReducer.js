@@ -1,3 +1,4 @@
+import { productDetailSkeleton } from "../../utils/skeletons";
 import {
   LATEST_PRODUCTS,
   PRODUCT_DETAILS,
@@ -20,7 +21,7 @@ import {
 
 const initialState = {
   latestProducts: null,
-  productDetails: null,
+  productDetails: {product: {}},
   hasError: false,
   latestLoading: false,
   productQA: null,
@@ -100,7 +101,7 @@ export default (state = initialState, action) => {
         featuredLoading: false,
       };
     case PRODUCT_DETAILS_START:
-      return { ...state, productDetailsLoading: true, hasError: false };
+      return { ...state, productDetailsLoading: true, productDetails: {product: productDetailSkeleton}, hasError: false };
     case PRODUCT_DETAILS_FINISH:
       return { ...state, productDetailsLoading: false, hasError: false };
     case PRODUCT_DETAILS:
