@@ -15,9 +15,9 @@ export const productDetailSkeleton = {
     }],
     images: [{
         _id: "1",
-        thumbnail: '',
-        medium: '',
-        large: '',
+        thumbnail: '/images/default-image.png',
+        medium: '/images/default-image.png',
+        large: '/images/default-image.png',
     }],
     size: [''],
     color: [''],

@@ -17,21 +17,21 @@
     height: 8px;
     background-color: #eee;
     width: 100%;
-    display: inline-block;
+    display: block;
     @include gradient-liner;
   }
   .medium-line {
     height: 8px;
     background-color: #eee;
     width: 80%;
-    display: inline-block;
+    display: block;
     @include gradient-liner;
   }
   .small-line {
     height: 8px;
     background-color: #eee;
     width: 50%;
-    display: inline-block;
+    display: block;
     @include gradient-liner;
   }
   img {
@@ -42,7 +42,7 @@
   }
   .productImg-loader {
     background-color: #eee;
-    display: inline-block;
+    display: block;
     @include gradient-liner;
   }
   .card-body {
@@ -63,6 +63,57 @@
   }
   100% {
     background-position: 250px 0;
+  }
+}
+
+.product-detail-skeleton {
+  .ratings,
+  .reviews,
+  .price-wish,
+  .qty-cart-btn,
+  .prod-cate-specs,
+  .detail-breadcrumb {
+    height: 15px;
+    background-color: #eee;
+    width: 20%;
+    display: block;
+    @include gradient-liner;
+  }
+  .ratings{
+    width: 30% !important;
+  }
+  .price-specs{
+    margin-bottom: 25px;
+  }
+  .specs {
+    .details1,
+    .details2,
+    .details3,
+    .details4 {
+      height: 10px;
+      background-color: #eee;
+      display: block;
+      @include gradient-liner;
+    }
+    .details1,
+    .details2,
+    .details3 {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .details4 {
+      width: 60%;
+    }
+  }
+  .qty-cart-btn {
+    padding-bottom: 0px !important;
+    // width: 20%;
+  }
+  .prod-cate-specs {
+    width: 30% !important;
+  }
+  .detail-breadcrumb{
+    width: 40%;
   }
 }
 

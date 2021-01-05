@@ -19,6 +19,7 @@ import actions from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { previousQuery } from "../../utils/common";
 import { productDetailSkeleton } from "../../utils/skeletons";
+import { isEmpty } from "lodash";
 
 const Details = (props) => {
   const dispatch = useDispatch();
@@ -39,7 +40,9 @@ const Details = (props) => {
   }, [query.slug])
 
   useEffect(() => {
-    setProductDetails(productState)
+    if(!isEmpty(productState.product)){
+      setProductDetails(productState)
+    }
   }, [productState.product])
 
   useEffect(() => {
@@ -54,21 +57,25 @@ const Details = (props) => {
           <div className="container">
             <Row className="breadcrumb-all">
               <Col lg={24}>
-                <Breadcrumb>
-                  <Breadcrumb.Item><Link href="/"><a>Home</a></Link></Breadcrumb.Item>
-                  {
-                    productDetails?.product.category[0].parent &&
-                    <Breadcrumb.Item>
-                      <Link href={`/category/${productDetails.product.category[0].parent.slug}/${productDetails.product.category[0].parent._id}`}><a>{productDetails.product.category[0].parent.displayName}</a></Link>
-                    </Breadcrumb.Item>
-                  }
-                  {
-                    productDetails?.product.category[0].parent &&
-                    <Breadcrumb.Item>
-                      <a>{productDetails?.product.category[0].displayName}</a>
-                    </Breadcrumb.Item>
-                  }
-                </Breadcrumb>
+                {
+                  productDetails?.product.name && (
+                    <Breadcrumb>
+                      <Breadcrumb.Item><Link href="/"><a>Home</a></Link></Breadcrumb.Item>
+                      {
+                        productDetails?.product.category[0].parent &&
+                        <Breadcrumb.Item>
+                          <Link href={`/category/${productDetails.product.category[0].parent.slug}/${productDetails.product.category[0].parent._id}`}><a>{productDetails.product.category[0].parent.displayName}</a></Link>
+                        </Breadcrumb.Item>
+                      }
+                      {
+                        productDetails?.product.category[0].parent &&
+                        <Breadcrumb.Item>
+                          <a>{productDetails?.product.category[0].displayName}</a>
+                        </Breadcrumb.Item>
+                      }
+                    </Breadcrumb>
+                  )
+                }
               </Col>
             </Row>
             {productDetails?.product && (
@@ -81,11 +88,14 @@ const Details = (props) => {
                 </Col>
               </Row>
             )}
-            <Row>
-              <Col lg={24}>
-                <OtherDetails data={productDetails} />
-              </Col>
-            </Row>
+            {
+              productDetails?.product.name &&
+              <Row>
+                <Col lg={24}>
+                  <OtherDetails data={productDetails} />
+                </Col>
+              </Row>
+            }
           </div>
         </section>
       </div>
