@@ -1,4 +1,4 @@
-import { productDetailSkeleton } from "../../utils/skeletons";
+import { mutliProductCardSekelton, productDetailSkeleton } from "../../utils/skeletons";
 import {
   LATEST_PRODUCTS,
   PRODUCT_DETAILS,
@@ -16,7 +16,8 @@ import {
   MOST_VIEWED_PRODUCTS_LOADING,
   MOST_VIEWED_PRODUCTS,
   FEATURED_PRODUCTS_LOADING,
-  FEATURED_PRODUCTS
+  FEATURED_PRODUCTS,
+  GET_PRODUCTS_START
 } from "../types";
 
 const initialState = {
@@ -35,6 +36,16 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case GET_PRODUCTS_START:
+      return {
+        ...state,
+        latestProducts: mutliProductCardSekelton,
+        trendingProducts: mutliProductCardSekelton,
+        topSellingProducts: mutliProductCardSekelton,
+        mostViewedProducts: mutliProductCardSekelton,
+        featuredProducts: mutliProductCardSekelton,
+        hasError: false,
+      };
     case LATEST_PRODUCTS:
       return {
         ...state,

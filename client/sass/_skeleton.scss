@@ -1,44 +1,55 @@
 @mixin gradient-liner {
   background: linear-gradient(to right, #eee 20%, #ddd 50%, #eee 80%);
   animation-name: moving-gradient;
-  animation-duration: 1s;
+  animation-duration: 7s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
 
 .skeleton {
+  &:hover {
+    .card-hover-items {
+      display: none !important;
+    }
+  }
   .large-line {
     height: 8px;
     background-color: #eee;
-    width: 200px;
+    width: 100%;
     display: inline-block;
     @include gradient-liner;
   }
   .medium-line {
     height: 8px;
     background-color: #eee;
-    width: 150px;
+    width: 80%;
     display: inline-block;
     @include gradient-liner;
   }
   .small-line {
     height: 8px;
     background-color: #eee;
-    width: 100px;
+    width: 50%;
     display: inline-block;
     @include gradient-liner;
   }
-  .productImg-loader{
+  img {
+    object-fit: cover !important;
+  }
+  .product-box-shadow {
+    border: 0 !important;
+  }
+  .productImg-loader {
     background-color: #eee;
     display: inline-block;
     @include gradient-liner;
   }
-  .card-body{
-    padding: 10px;
-    div{
+  .card-body {
+    padding: 10px 0 !important;
+    div {
       display: block;
-      &.medium-line{
+      &.medium-line {
         margin-top: 10px;
         margin-bottom: 10px;
       }
@@ -47,10 +58,13 @@
 }
 
 @keyframes moving-gradient {
-  0% { background-position: -250px 0; }
-  100% { background-position: 250px 0; }
+  0% {
+    background-position: -250px 0;
+  }
+  100% {
+    background-position: 250px 0;
+  }
 }
-
 
 // .loading {
 //   position: relative;

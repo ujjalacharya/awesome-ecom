@@ -1,4 +1,5 @@
-import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR, SEARCH_KEYWORD } from "../types";
+import { mutliProductCardSekelton } from "../../utils/skeletons";
+import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR, SEARCH_KEYWORD, SEARCH_PRODUCTS_START, SEARCH_PRODUCTS_FINISH } from "../types";
 
 const initialState = {
   getSearchFilter: null,
@@ -8,6 +9,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SEARCH_PRODUCTS_START:
+      return { ...state, getSearchData: mutliProductCardSekelton, searchLoading: true, hasError: true };
+    case SEARCH_PRODUCTS_FINISH:
+      return { ...state, searchLoading: false, hasError: true };
     case SEARCH_KEYWORD:
       return { ...state, getSearchKeywords: action.payload, hasError: false };
     case SEARCH_FILTER:
