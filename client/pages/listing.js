@@ -102,7 +102,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -125,7 +125,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -148,7 +148,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -179,7 +179,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -205,7 +205,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -214,22 +214,9 @@ const Listing = (props) => {
 
   const sortProducts = (sort) => {
     setSortBy(sort)
-
-    let body = {};
-
-    let sortBy = sort === "" ? [] : [sort];
-
-    body = getFilterAppendBody(
-      filterBody,
-      props,
-      sortBy,
-      "createdAt"
-    );
-
-    setFilterBody(body)
-
+    
     dispatch(actions.searchProducts(
-      `?page=${currentPage}&perPage=${props.perPage}`,
+      `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sort}`,
       body
     ))
   };
@@ -250,7 +237,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -311,7 +298,7 @@ const Listing = (props) => {
     setFilterBody(newFilterBody);
 
     dispatch(actions.searchProducts(
-      `?page=${currentPage}&perPage=${props.perPage}`,
+      `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
       newFilterBody
     ))
   }
