@@ -1,164 +1,156 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Pagination } from "antd";
 
 //includes
-import actions from "../../../redux/actions";
 import ProductListView from "../../Components/ProductListView";
+
+// utils
 import {
-  getDiscountedPrice,
   scrollToTop,
-  openNotification,
+  previousQuery,
 } from "../../../utils/common";
-import { isEmpty, times } from "lodash";
-import next from "next";
+import { myCartsSkeleton } from "../../../utils/skeletons";
 
-class CartItems extends Component {
-  state = {
-    cardItems: [],
-    inStockProducts: [],
-    noStockProducts: [],
-    perPage: 5,
-  };
 
-  componentDidMount() {
-    if (this.props.cartData) {
-      scrollToTop();
-      // this.setState({
-      //   cardItems: this.props.cartData,
-      // });
-    }
-  }
+const CartItems = (props) => {
+  const cart = useSelector(state => state.cart)
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.cartData !== prevState.listItems && nextProps.cartData) {
-      return {
-        allnoStockProducts: nextProps.cartData.noStockProducts,
-        noStockProducts: {
-          ...nextProps.cartData.noStockProducts,
-          carts: nextProps.cartData.noStockProducts?.carts && [...nextProps.cartData.noStockProducts.carts].slice(
-            0,
-            prevState.perPage
-          ),
-        },
-        allinStockProducts: nextProps.cartData.inStockProducts,
-        inStockProducts: {
-          ...nextProps.cartData.inStockProducts,
-          carts: nextProps.cartData.inStockProducts.carts && [...nextProps.cartData.inStockProducts.carts].slice(
-            0,
-            prevState.perPage
-          ),
-        },
-        listItems: nextProps.cartData,
-      };
-    }
-    return null;
-  }
+  let [inStockProducts, setInStockProducts] = useState(myCartsSkeleton);
+  let [noStockProducts, setNoStockProducts] = useState(myCartsSkeleton);
+  let [perPage, setPerPage] = useState(5);
 
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.cart.getCartProducts !== prevProps.cart.getCartProducts &&
-      this.props.cart.getCartProducts
-    ) {
+  let prevCartProducts = previousQuery(cart.getCartProducts)
+
+  useEffect(() => {
+    if (props.cartData) {
       scrollToTop();
     }
-    // if (
-    //   this.props.order.placeOrderResp !== prevProps.order.placeOrderResp &&
-    //   this.props.order.placeOrderResp
-    // ) {
-    //   openNotification("Success", "Order placed successfully");
-    //   window.location.href = "/myprofile";
-    // }
-  }
 
-  onChangePageInStock = (page) => {
-    let pageNum = (page - 1) * this.state.perPage;
+    if (prevCartProducts !== undefined && prevCartProducts !== cart.getCartProducts) {
+      scrollToTop();
+    }
+  }, [cart.getCartProducts])
+
+  const prevCartData = previousQuery(props.cartData);
+
+  useEffect(() => {
+    if (prevCartData !== props.cartData && props.cartData) {
+      if (props.cartData.inStockProducts?.carts) {
+        setInStockProducts({
+          ...props.cartData.inStockProducts,
+          carts: props.cartData.inStockProducts.carts && [...props.cartData.inStockProducts.carts].slice(
+            0,
+            perPage
+          ),
+        })
+      }
+      if (props.cartData.noStockProducts?.carts) {
+        setNoStockProducts({
+          ...props.cartData.noStockProducts,
+          carts: props.cartData.noStockProducts?.carts && [...props.cartData.noStockProducts.carts].slice(
+            0,
+            perPage
+          ),
+        })
+      }
+    }
+  }, [props.cartData])
+
+  const onChangePageInStock = (page) => {
+    let pageNum = (page - 1) * perPage;
 
     let newInStockProducts = {
-      ...this.state.inStockProducts,
-      carts: [...this.state.allinStockProducts.carts].slice(
+      ...inStockProducts,
+      carts: [...allinStockProducts.carts].slice(
         pageNum,
-        pageNum + this.state.perPage
+        pageNum + perPage
       ),
     };
 
-    this.setState({
-      inStockProducts: newInStockProducts,
-      currentPage: page,
-    });
+    setInStockProducts(newInStockProducts);
   };
-
-  render() {
-    return (
-      <div className="cart-items">
-        <div className="delivery-status">
+  
+  let checkSkeleton = !props.cartData?.carts[0]?.product?.name ? true : false
+  return (
+    <div className="cart-items">
+      <div className="delivery-status">
+        {
+          !checkSkeleton &&
           <div className="delivery-price">
             <span className="delivery-icon">
               <img src="/images/delivery-van.png" alt="delivery van" />
               <span>Standard Delivery</span>
             </span>
 
-            {this.props.order?.getShippingChargeResp ? (
+            {props.order?.getShippingChargeResp ? (
               <>
                 {/* <span className="delivery-date">Get By: 25 - 28 Aug 2019</span> */}
                 <span className="price">
-                  Cost: Rs {this.props.order?.getShippingChargeResp}
+                  Cost: Rs {props.order?.getShippingChargeResp}
                 </span>
               </>
             ) : (
-              <span className="price">
-                Please select the product to get the shipping charge
-              </span>
-            )}
+                <span className="price">
+                  Please select the product to get the shipping charge
+                </span>
+              )}
           </div>
-        </div>
-        <div className="bag-items">
+        }
+      </div>
+      <div className="bag-items">
+        {
+          !checkSkeleton &&
           <div className="title">
-            <h4>My Cart ({this.state.inStockProducts?.totalCount} Items)</h4>
+            <h4>My Cart ({inStockProducts?.totalCount} Items)</h4>
             <div className="price">
-              Total: Rs {this.state.inStockProducts?.totalAmount?.toFixed(2)}
+              Total: Rs {inStockProducts?.totalAmount?.toFixed(2)}
             </div>
           </div>
-          <div className="items-list">
-            <ProductListView
-              productsData={this.state.inStockProducts}
-              getCheckoutItems={this.props.getCheckoutItems}
-              showCheckbox={this.props.showCheckbox}
+        }
+        <div className="items-list">
+          <ProductListView
+            productsData={inStockProducts}
+            getCheckoutItems={props.getCheckoutItems}
+            showCheckbox={props.showCheckbox}
+          />
+          <div className="all-pagination">
+            <Pagination
+              defaultCurrent={1}
+              pageSize={5}
+              total={inStockProducts?.totalCount}
+              onChange={onChangePageInStock}
+              showLessItems={true}
             />
-            <div className="all-pagination">
-              <Pagination
-                defaultCurrent={1}
-                pageSize={5}
-                total={this.state.inStockProducts?.totalCount}
-                onChange={this.onChangePageInStock}
-                showLessItems={true}
-              />
-            </div>
           </div>
         </div>
+      </div>
 
-        {this.state.noStockProducts?.carts?.length > 0 && (
-          <div className="bag-items">
+      {noStockProducts?.carts?.length > 0 && (
+        <div className="bag-items">
+          {
+            !checkSkeleton &&
             <div className="title">
               <h4>
-                Out Of Stock ({this.state.noStockProducts?.totalCount} Items)
-              </h4>
+                Out Of Stock ({noStockProducts?.totalCount} Items)
+            </h4>
               <div className="price">
-                Total: Rs {this.state.noStockProducts?.totalAmount?.toFixed(2)}
+                Total: Rs {noStockProducts?.totalAmount?.toFixed(2)}
               </div>
             </div>
-            <div className="items-list">
-              <ProductListView
-                showCheckboxForOutOfStock="noCheckbox"
-                productsData={this.state.noStockProducts}
-                showQtySection="displayNone"
-              />
-            </div>
+          }
+          <div className="items-list">
+            <ProductListView
+              showCheckboxForOutOfStock="noCheckbox"
+              productsData={noStockProducts}
+              showQtySection="displayNone"
+            />
           </div>
-        )}
-      </div>
-    );
-  }
+        </div>
+      )}
+    </div>
+  );
+
 }
 
-export default connect((state) => state, actions)(CartItems);
+export default CartItems;

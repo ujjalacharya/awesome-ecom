@@ -79,10 +79,10 @@
     display: block;
     @include gradient-liner;
   }
-  .ratings{
+  .ratings {
     width: 30% !important;
   }
-  .price-specs{
+  .price-specs {
     margin-bottom: 25px;
   }
   .specs {
@@ -112,8 +112,39 @@
   .prod-cate-specs {
     width: 30% !important;
   }
-  .detail-breadcrumb{
+  .detail-breadcrumb {
     width: 40%;
+  }
+}
+
+.list-view-skeleton {
+  .pd-details {
+    .name,
+    .price,
+    .qty,
+    .available-stock,
+    .delete-product {
+      height: 10px;
+      background-color: #eee;
+      display: block;
+      @include gradient-liner;
+    }
+    .name{
+      width: 40% !important;
+    }
+    .price{
+      width: 20%;
+    }
+    .qty{
+      width: 30%;
+      margin-bottom: 20px;
+    }
+    .available-stock{
+      width: 55%;
+    }
+    .delete-product{
+      width: 60%;
+    }
   }
 }
 

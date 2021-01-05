@@ -7,14 +7,14 @@ import actions from "../../redux/actions";
 import { openNotification, getDiscountedPrice, getUserInfo } from "../../utils/common";
 import Link from "next/link";
 import { IMAGE_BASE_URL } from "../../utils/constants";
-
+import { myCartsSkeleton, productDetailSkeleton } from "../../utils/skeletons";
 class ProductListView extends Component {
   state = {
     pdQty: 1,
     listItems: [],
     checkoutItems: [],
     noStockProducts: [],
-    productsData: [],
+    productsData: myCartsSkeleton,
     showQtySection: "",
   };
 
@@ -186,12 +186,12 @@ class ProductListView extends Component {
   };
 
   render() {
-    
+    let checkSkeleton = this.state.productsData?.carts[0]?.product?.name === '' ? 'list-view-skeleton' : '';
     return (
       <>
         {this.state.productsData?.carts?.map((items, i) => {
           return (
-            <div className="product-list-view" key={i}>
+            <div className={"product-list-view " + checkSkeleton} key={i}>
               <Row>
                 <Col lg={2}>
                   <Checkbox
@@ -202,28 +202,48 @@ class ProductListView extends Component {
                   ></Checkbox>
                 </Col>
                 <Col lg={6} xs={24} key={i}>
-                  <Link
-                    href="/products/[slug]"
-                    as={`/products/${items.product.slug}`}
-                  >
-                    <a>
-                      <div className="pd-img">
-                        <img
-                          src={
-                            IMAGE_BASE_URL +
-                            "/" +
-                            items.product?.images[0]?.medium
-                          }
-                          alt="helmet"
-                        />
-                        {this.props.showQtySection && (
-                          <div className="not-available">
-                            <span>NOT AVAILABLE</span>
+                  {
+                    !checkSkeleton ? (
+                      <Link
+                        href="/products/[slug]"
+                        as={`/products/${items.product.slug}`}
+                      >
+                        <a>
+                          <div className="pd-img">
+                            <img
+                              src={
+                                IMAGE_BASE_URL +
+                                "/" +
+                                items.product?.images[0]?.medium
+                              }
+                              alt="helmet"
+                            />
+                            {this.props.showQtySection && (
+                              <div className="not-available">
+                                <span>NOT AVAILABLE</span>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    </a>
-                  </Link>
+                        </a>
+                      </Link>
+                    ) : (
+                        <div className="pd-img">
+                          <img
+                            src={
+                              items.product?.images[0]?.medium
+                            }
+                            alt="helmet"
+                          />
+                          {this.props.showQtySection && (
+                            <div className="not-available">
+                              <span>NOT AVAILABLE</span>
+                            </div>
+                          )}
+                        </div>
+
+                      )
+                  }
+
                 </Col>
                 <Col lg={16} xs={24}>
                   <div className="pd-details">
@@ -238,22 +258,23 @@ class ProductListView extends Component {
                           </a>
                         </Link>
                         <div className="sold-by">
-                          Sold By: {items.product?.soldBy.shopName}
+                          {!checkSkeleton && 'Sold By:'} {items.product?.soldBy.shopName}
                         </div>
                       </div>
                       <div className="price">
                         {items.product?.discountRate === 0 ? (
                           <div className="new-price">
                             {" "}
-                            Rs {items.product?.price.$numberDecimal}
+                            {!checkSkeleton && 'Rs'} {items.product?.price.$numberDecimal}
                           </div>
                         ) : (
+                            !checkSkeleton &&
                             <>
                               <div className="new-price">
                                 <span className="old-price">
-                                  Rs {items.product?.price.$numberDecimal}
+                                  {!checkSkeleton && 'Rs'} {items.product?.price.$numberDecimal}
                                 </span>
-                              Rs{" "}
+                                {!checkSkeleton && 'Rs'}{" "}
                                 {items.product?.price.$numberDecimal -
                                   (items.product?.price.$numberDecimal *
                                     items.product?.discountRate) /
@@ -269,11 +290,12 @@ class ProductListView extends Component {
                       </div>
                     </div>
                     <div className={"qty " + this.state.showQtySection}>
-                      <span className="qty-title">Qty:</span>
+                      <span className="qty-title">{!checkSkeleton && 'Qty:'}</span>
                       {
                         this.props.showCheckbox === 'noCheckbox' ?
                           this.state.productsData?.totalQty || items.quantity
-                          : <span className="qty-inc-dcs">
+                          :
+                          !checkSkeleton && <span className="qty-inc-dcs">
                             <i
                               aria-hidden="true"
                               onClick={() => { this.state["pdQtyInStock" + i] > 1 && this.changePdValue(-1, i, items._id) }}
@@ -303,33 +325,37 @@ class ProductListView extends Component {
                               }
                               aria-hidden="true"
                               onClick={() => {
-                                items.product.quantity > this.state["pdQtyInStock" + i] && 
-                                this.changePdValue(1, i, items._id)
+                                items.product.quantity > this.state["pdQtyInStock" + i] &&
+                                  this.changePdValue(1, i, items._id)
                               }}
                             />
-                          </span>}
+                          </span>
+                      }
                     </div>
-                    {items.product.quantity <= 5 &&
+                    {items.product.quantity <= 5 && !checkSkeleton ?
                       !this.state.showQtySection && (
                         <div className="available-stock">
                           Only {items.product.quantity} items available on stock
                         </div>
-                      )}
+                      ) : <div className="available-stock"></div>}
                     <div className="delete-product">
-                      <Popconfirm
-                        title="Are you sure you want to remove this from cart?"
-                        onConfirm={() => this.props.removeCart(items._id)}
-                        // onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <a>
-                          <Button className="btn">
-                            <DeleteOutlined />
-                            <span className="txt">REMOVE FROM CART</span>
-                          </Button>
-                        </a>
-                      </Popconfirm>
+                      {
+                        !checkSkeleton &&
+                        <Popconfirm
+                          title="Are you sure you want to remove this from cart?"
+                          onConfirm={() => this.props.removeCart(items._id)}
+                          // onCancel={cancel}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <a>
+                            <Button className="btn">
+                              <DeleteOutlined />
+                              <span className="txt">REMOVE FROM CART</span>
+                            </Button>
+                          </a>
+                        </Popconfirm>
+                      }
                     </div>
                   </div>
                 </Col>
