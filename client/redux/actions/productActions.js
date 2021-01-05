@@ -18,6 +18,8 @@ import {
   MOST_VIEWED_PRODUCTS_LOADING,
   MOST_VIEWED_PRODUCTS,
   FEATURED_PRODUCTS_LOADING,
+  GET_PRODUCTS_START,
+  GET_PRODUCTS_FINISH,
 } from "../types";
 import { getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -62,6 +64,7 @@ const productCategories = () => {
 
 const getMinedProducts = (ctx, keyword) => {
   return async (dispatch) => {
+    dispatch({ type: GET_PRODUCTS_START })
     switch (keyword) {
       case 'trending':
         dispatch({ type: TRENDING_PRODUCTS_LOADING });
@@ -103,6 +106,7 @@ const getMinedProducts = (ctx, keyword) => {
         default:
           '';
       }
+      dispatch({ type: GET_PRODUCTS_FINISH })
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,

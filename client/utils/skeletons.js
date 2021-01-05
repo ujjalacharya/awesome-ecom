@@ -15,9 +15,9 @@ export const productDetailSkeleton = {
     }],
     images: [{
         _id: "1",
-        thumbnail: '/images/default-image.png',
-        medium: '/images/default-image.png',
-        large: '/images/default-image.png',
+        thumbnail: '',
+        medium: '',
+        large: '',
     }],
     size: [''],
     color: [''],
@@ -77,6 +77,96 @@ export const productDetailSkeleton = {
     videoURL: [''],
 }
 
+export const singleProductCardSkeleton = {
+    category: [
+        {
+            displayName: "",
+            slug: "",
+        },
+    ],
+    images: [
+        {
+            large: "",
+            medium: "",
+            thumbnail: "",
+        },
+    ],
+    name: "",
+    price: "",
+}
+
+export const mutliProductCardSekelton = {
+    products: [
+        {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        },
+        {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        }, {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        }, {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        }
+    ],
+    totalCount: 4
+}
+
 export const SearchFilterSkeleton = {
     sizes: [],
     brands: [],
@@ -97,16 +187,16 @@ export const SearchFilterSkeleton = {
 }
 
 export const userDataSkeleton = {
-  email: "",
-  phone: ""
+    email: "",
+    phone: ""
 };
 
 export const activeLocSkeleton = {
-  address: "",
+    address: "",
 };
 
 export const myOrdersSkeleton = {
-    orders:[
+    orders: [
         {
             _id: '1',
             status: {
