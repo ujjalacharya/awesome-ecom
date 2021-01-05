@@ -2,7 +2,6 @@ import { mutliProductCardSekelton, productDetailSkeleton } from "../../utils/ske
 import {
   LATEST_PRODUCTS,
   PRODUCT_DETAILS,
-  LATEST_PRODUCTS_LOADING,
   PRODUCT_QA,
   POST_QUESTION,
   PRODUCT_REVIEWS,
@@ -10,19 +9,20 @@ import {
   PRODUCT_DETAILS_START,
   PRODUCT_DETAILS_FINISH,
   TRENDING_PRODUCTS,
-  TRENDING_PRODUCTS_LOADING,
-  TOP_SELLING_PRODUCTS_LOADING,
   TOP_SELLING_PRODUCTS,
-  MOST_VIEWED_PRODUCTS_LOADING,
   MOST_VIEWED_PRODUCTS,
-  FEATURED_PRODUCTS_LOADING,
   FEATURED_PRODUCTS,
-  GET_PRODUCTS_START
+  GET_PRODUCTS_START,
+  TRENDING_PRODUCTS_START,
+  LATEST_PRODUCTS_START,
+  TOP_SELLING_PRODUCTS_START,
+  MOST_VIEWED_PRODUCTS_START,
+  FEATURED_PRODUCTS_START,
 } from "../types";
 
 const initialState = {
   latestProducts: null,
-  productDetails: {product: {}},
+  productDetails: { product: {} },
   hasError: false,
   latestLoading: false,
   productQA: null,
@@ -53,15 +53,17 @@ export default (state = initialState, action) => {
         hasError: false,
         latestLoading: false,
       };
-    case LATEST_PRODUCTS_LOADING:
+    case LATEST_PRODUCTS_START:
       return {
         ...state,
+        latestProducts: mutliProductCardSekelton,
         latestLoading: true,
         hasError: false,
       };
-    case TRENDING_PRODUCTS_LOADING:
+    case TRENDING_PRODUCTS_START:
       return {
         ...state,
+        trendingProducts: mutliProductCardSekelton,
         trendingLoading: true,
         hasError: false,
       };
@@ -72,9 +74,10 @@ export default (state = initialState, action) => {
         hasError: false,
         trendingLoading: false,
       };
-    case TOP_SELLING_PRODUCTS_LOADING:
+    case TOP_SELLING_PRODUCTS_START:
       return {
         ...state,
+        topSellingProducts: mutliProductCardSekelton,
         topSellingLoading: true,
         hasError: false,
       };
@@ -85,9 +88,10 @@ export default (state = initialState, action) => {
         hasError: false,
         topSellingLoading: false,
       };
-    case MOST_VIEWED_PRODUCTS_LOADING:
+    case MOST_VIEWED_PRODUCTS_START:
       return {
         ...state,
+        mostViewedProducts: mutliProductCardSekelton,
         mostViewedLoading: true,
         hasError: false,
       };
@@ -98,9 +102,10 @@ export default (state = initialState, action) => {
         hasError: false,
         mostViewedLoading: false,
       };
-    case FEATURED_PRODUCTS_LOADING:
+    case FEATURED_PRODUCTS_START:
       return {
         ...state,
+        featuredProducts: mutliProductCardSekelton,
         featuredLoading: true,
         hasError: false,
       };
@@ -112,7 +117,7 @@ export default (state = initialState, action) => {
         featuredLoading: false,
       };
     case PRODUCT_DETAILS_START:
-      return { ...state, productDetailsLoading: true, productDetails: {product: productDetailSkeleton}, hasError: false };
+      return { ...state, productDetailsLoading: true, productDetails: { product: productDetailSkeleton }, hasError: false };
     case PRODUCT_DETAILS_FINISH:
       return { ...state, productDetailsLoading: false, hasError: false };
     case PRODUCT_DETAILS:

@@ -47,7 +47,6 @@ const Listing = (props) => {
   
   let { query } = props.router
   let prevQuery = previousQuery(query.slug)
-  console.log(filterBody)
 
   useEffect(() => {
     if(query.slug !== prevQuery && query.slug){

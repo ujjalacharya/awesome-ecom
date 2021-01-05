@@ -19,23 +19,23 @@ const Index = (props) => {
 
   useEffect(() => {
     if (!props.isServer) {
-      if (isEmpty(allProducts.latestProducts)) {
+      if (isEmpty(allProducts.latestProducts?.products)) {
         dispatch(actions.getMinedProducts('', 'latest'));
       }
 
-      if (isEmpty(allProducts.trendingProducts)) {
+      if (isEmpty(allProducts.trendingProducts?.products)) {
         dispatch(actions.getMinedProducts('', 'trending'));
       }
 
-      if (isEmpty(allProducts.topSellingProducts)) {
+      if (isEmpty(allProducts.topSellingProducts?.products)) {
         dispatch(actions.getMinedProducts('', 'topselling'));
       }
 
-      if (isEmpty(allProducts.mostViewedProducts)) {
+      if (isEmpty(allProducts.mostViewedProducts?.products)) {
         dispatch(actions.getMinedProducts('', 'mostviewed'));
       }
 
-      if (isEmpty(allProducts.featuredProducts)) {
+      if (isEmpty(allProducts.featuredProducts?.products)) {
         dispatch(actions.getMinedProducts('', 'featured'));
       }
     }
@@ -52,7 +52,7 @@ const Index = (props) => {
         </div>
         <div className="container">
           {
-            !isEmpty(allProducts.featuredProducts) && (
+            !isEmpty(allProducts.featuredProducts?.products) && (
               <>
                 <SliderHeader
                   headTitle="Featured Products"
@@ -74,7 +74,7 @@ const Index = (props) => {
             </Row>
           </section> */}
           {
-            !isEmpty(allProducts.trendingProducts) &&
+            !isEmpty(allProducts.trendingProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Trending Products"
@@ -86,7 +86,7 @@ const Index = (props) => {
             </>
           }
           {
-            !isEmpty(allProducts.topSellingProducts) &&
+            !isEmpty(allProducts.topSellingProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Top Selling"
@@ -98,7 +98,7 @@ const Index = (props) => {
             </>
           }
           {
-            !isEmpty(allProducts.mostViewedProducts) &&
+            !isEmpty(allProducts.mostViewedProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Most Viewed"
@@ -110,7 +110,7 @@ const Index = (props) => {
             </>
           }
           {
-            !isEmpty(allProducts.latestProducts) &&
+            !isEmpty(allProducts.latestProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Latest Products"
