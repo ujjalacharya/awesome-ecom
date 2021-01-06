@@ -217,7 +217,7 @@ const Listing = (props) => {
     
     dispatch(actions.searchProducts(
       `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sort}`,
-      body
+      filterBody
     ))
   };
 
