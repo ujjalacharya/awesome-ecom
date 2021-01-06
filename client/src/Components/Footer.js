@@ -4,6 +4,7 @@ import { Row, Col, Input } from "antd";
 // react-redux
 import actions from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { debounce } from "lodash";
 
 const { Search } = Input;
 
@@ -11,9 +12,9 @@ const Footer = () => {
   const dispatch = useDispatch();
   const subscribeResp = useSelector(state => state.other)
 
-  const onSearch = (value) => {
+  const onSearch = debounce((value) => {
     dispatch(actions.subscribeLead({ email: value }));
-  }
+  }, 500)
   return (
     <section className="footer">
       <Row>
