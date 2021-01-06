@@ -98,6 +98,8 @@ class ProductSpecs extends Component {
     }
     let loginToken = this.props.authentication.token;
     const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
+
+    let checkSkeleton = product.name === '' ? 'product-detail-skeleton' : ''
     return (
       <>
         {
@@ -108,7 +110,7 @@ class ProductSpecs extends Component {
             url={`http://sthautsav.com.np/products/${product.slug}`}
             img={`http://sthautsav.com.np:3001/uploads/${product.images[0].large}`} />
         }
-        <div className="product-specs">
+        <div className={"product-specs " + checkSkeleton}>
           <div className="price-specs">
             <div className="product-title">{product.name}</div>
             <div className="ratings-reviews">
@@ -122,99 +124,109 @@ class ProductSpecs extends Component {
                     starEmptyColor="#eee"
                   />
                 )}
-                <span>
-                  {" "}
-                  {product.averageRating?.$numberDecimal
-                    ? parseFloat(product.averageRating.$numberDecimal).toFixed(1)
-                    : "No"}{" "}
-                stars ratings
-              </span>
+                {
+                  !checkSkeleton &&
+                  <span>
+                    {" "}{product.averageRating?.$numberDecimal
+                      ? parseFloat(product.averageRating.$numberDecimal).toFixed(1)
+                      : "No"}{" "}
+                    stars ratings
+                </span>
+                }
               </div>
               <div className="reviews">
-                <span>
-                  ( {product.totalRatingUsers} customer reviews | {this.props.products.productQA?.totalCount} FAQ answered
-                )
-              </span>
-              </div>
-            </div>
-            <div className="price-wish">
-              <div className="old-new-price">
                 {
-                  product?.discountRate > 0 &&
-                  <div className="old-price">
-                    <span>Rs {product.price.$numberDecimal}</span>
-                  </div>
+                  !checkSkeleton && (
+                    <span>
+                      {product.totalRatingUsers} customer reviews | {this.props.products.productQA?.totalCount} FAQ answered
+                    </span>
+                  )
                 }
-                <div className="new-price">
-                  <span className="price">
-                    Rs{" "}
-                    {product?.price.$numberDecimal -
-                      ((product?.price.$numberDecimal *
-                        product?.discountRate) /
-                        100)}
-                  </span>
-                  {
-                    product?.discountRate > 0 &&
-                    <span className="discount">
-                      (Save Rs {(product?.price.$numberDecimal *
-                        product?.discountRate) /
-                        100} |{" "}
-                      {product.discountRate}
-                  %)
-                </span>
-                  }
-                </div>
-              </div>
-              <div className="wish-btn">
-                {loginToken ? (
-                  !_.isEmpty(product.hasOnWishlist) ? (
-                    <Popconfirm
-                      title="Are you sure you want to remove this from wishlist?"
-                      onConfirm={() =>
-                        this.props.removeFromWishList(
-                          product.hasOnWishlist._id
-                        )
-                      }
-                      // onCancel={cancel}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <a>
-                        <img
-                          data-tip="Add to Wishlist"
-                          src="/images/heart-blue.png"
-                        />
-                      </a>
-                    </Popconfirm>
-                  ) : (
-                      <img
-                        data-tip="Add to Wishlist"
-                        src="/images/heart.png"
-                        onClick={() => this.props.addWishListItems(product.slug)}
-                      />
-                    )
-                ) : (
-                    <Link href={`/login?origin=${this.props.router.asPath}`}>
-                      <a>
-                        <img data-tip="Add to Wishlist" src="/images/heart.png" />
-                      </a>
-                    </Link>
-                  )}
               </div>
             </div>
+            {
+              !checkSkeleton ? (
+                <div className="price-wish">
+                  <div className="old-new-price">
+                    {
+                      product?.discountRate > 0 &&
+                      <div className="old-price">
+                        <span>Rs {product.price.$numberDecimal}</span>
+                      </div>
+                    }
+                    <div className="new-price">
+                      <span className="price">
+                        Rs{" "}
+                        {product?.price.$numberDecimal -
+                          ((product?.price.$numberDecimal *
+                            product?.discountRate) /
+                            100)}
+                      </span>
+                      {
+                        product?.discountRate > 0 &&
+                        <span className="discount">
+                          (Save Rs {(product?.price.$numberDecimal *
+                            product?.discountRate) /
+                            100} |{" "}
+                          {product.discountRate}
+                    %)
+                  </span>
+                      }
+                    </div>
+                  </div>
+                  <div className="wish-btn">
+                    {loginToken ? (
+                      !_.isEmpty(product.hasOnWishlist) ? (
+                        <Popconfirm
+                          title="Are you sure you want to remove this from wishlist?"
+                          onConfirm={() =>
+                            this.props.removeFromWishList(
+                              product.hasOnWishlist._id
+                            )
+                          }
+                          // onCancel={cancel}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <a>
+                            <img
+                              data-tip="Add to Wishlist"
+                              src="/images/heart-blue.png"
+                            />
+                          </a>
+                        </Popconfirm>
+                      ) : (
+                          <img
+                            data-tip="Add to Wishlist"
+                            src="/images/heart.png"
+                            onClick={() => this.props.addWishListItems(product.slug)}
+                          />
+                        )
+                    ) : (
+                        <Link href={`/login?origin=${this.props.router.asPath}`}>
+                          <a>
+                            <img data-tip="Add to Wishlist" src="/images/heart.png" />
+                          </a>
+                        </Link>
+                      )}
+                  </div>
+                </div>
+              ) : <div className="price-wish"></div>
+            }
           </div>
           <div className="specs">
-            <div className="spec-details" dangerouslySetInnerHTML={{ __html: product.highlights }}>
-              {/* {description}
-              {allDescription.length > 100 && (
-                <div className="text-center">
-                  <a onClick={this.changeViewStatus} className="view-more-less">
-                    View {this.state.showStatus}{" "}
-                    <i className="fa fa-caret-down"></i>
-                  </a>
-                </div>
-              )} */}
-            </div>
+            {
+              !checkSkeleton ?
+                <div className="spec-details" dangerouslySetInnerHTML={{ __html: product.highlights }}>
+                </div> : (
+                  <>
+                    <div className="details1"></div>
+                    <div className="details2"></div>
+                    <div className="details3"></div>
+                    <div className="details4"></div>
+                  </>
+                )
+            }
           </div>
           <div className="qty-cart-btn">
             <div className="qty-cart">
@@ -327,7 +339,7 @@ class ProductSpecs extends Component {
                       </a>
                     </Link>
                   )
-              ) : <b>No Stocks Available</b>}
+              ) : !checkSkeleton ? <b>No Stocks Available</b> : ''}
             </div>
             {/* <div className="wish-comp-btn">
             <div className="comp-btn">
@@ -340,7 +352,7 @@ class ProductSpecs extends Component {
             {
               product.tags.length > 0 &&
               <div className="tags">
-                <b>Tags:</b>{" "}
+                {!checkSkeleton && <b>Tags:</b>}{" "}
                 {product.tags.map((tag, i) => {
                   return (
                     <span key={i}>
@@ -351,24 +363,28 @@ class ProductSpecs extends Component {
                 })}
               </div>
             }
-            <div className="share">
-              <b>Share this product:</b>
-              <span>
-                <FacebookShareButton
-                  url={`http://157.245.106.101:3000/products/${product.slug}`}
-                  quote={"Kindeem - explore the mall"}
-                  hashtag="#kindeem" >
-                  <FacebookIcon size={32} round={true} />
-                </FacebookShareButton>
-                <TwitterShareButton
-                  url={`http://sthautsav.com.np/products/${product.slug}`}
-                  quote={"Kindeem - explore the mall"}
-                  hashtag="#kindeem"
-                >
-                  <TwitterIcon size={32} round={true} />
-                </TwitterShareButton>
-              </span>
-            </div>
+            {
+              !checkSkeleton ? (
+                <div className="share">
+                  <b>Share this product:</b>
+                  <span>
+                    <FacebookShareButton
+                      url={`http://157.245.106.101:3000/products/${product.slug}`}
+                      quote={"Kindeem - explore the mall"}
+                      hashtag="#kindeem" >
+                      <FacebookIcon size={32} round={true} />
+                    </FacebookShareButton>
+                    <TwitterShareButton
+                      url={`http://sthautsav.com.np/products/${product.slug}`}
+                      quote={"Kindeem - explore the mall"}
+                      hashtag="#kindeem"
+                    >
+                      <TwitterIcon size={32} round={true} />
+                    </TwitterShareButton>
+                  </span>
+                </div>
+              ): <div className="share"></div>
+            }
           </div>
         </div>
 

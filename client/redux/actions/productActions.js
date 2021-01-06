@@ -3,9 +3,7 @@ import {
   MENU_CATEGORIES,
   PRODUCT_DETAILS,
   GLOBAL_ERROR,
-  LATEST_PRODUCTS_LOADING,
   LATEST_PRODUCTS,
-  TRENDING_PRODUCTS_LOADING,
   TRENDING_PRODUCTS,
   PRODUCT_QA,
   POST_QUESTION,
@@ -13,11 +11,14 @@ import {
   POST_PRODUCT_REVIEWS,
   PRODUCT_DETAILS_START,
   PRODUCT_DETAILS_FINISH,
-  TOP_SELLING_PRODUCTS_LOADING,
   TOP_SELLING_PRODUCTS,
-  MOST_VIEWED_PRODUCTS_LOADING,
   MOST_VIEWED_PRODUCTS,
-  FEATURED_PRODUCTS_LOADING,
+  TRENDING_PRODUCTS_START,
+  LATEST_PRODUCTS_START,
+  TOP_SELLING_PRODUCTS_START,
+  MOST_VIEWED_PRODUCTS_START,
+  FEATURED_PRODUCTS_START,
+  FEATURED_PRODUCTS,
 } from "../types";
 import { getCookie } from "../../utils/cookie";
 import { ProductService } from "../services/productService";
@@ -64,19 +65,19 @@ const getMinedProducts = (ctx, keyword) => {
   return async (dispatch) => {
     switch (keyword) {
       case 'trending':
-        dispatch({ type: TRENDING_PRODUCTS_LOADING });
+        dispatch({ type: TRENDING_PRODUCTS_START })
         break;
-      case 'latest':
-        dispatch({ type: LATEST_PRODUCTS_LOADING });
+        case 'latest':
+        dispatch({ type: LATEST_PRODUCTS_START })
         break;
-      case 'topselling':
-        dispatch({ type: TOP_SELLING_PRODUCTS_LOADING });
+        case 'topselling':
+        dispatch({ type: TOP_SELLING_PRODUCTS_START })
         break;
-      case 'mostviewed':
-        dispatch({ type: MOST_VIEWED_PRODUCTS_LOADING });
+        case 'mostviewed':
+        dispatch({ type: MOST_VIEWED_PRODUCTS_START })
         break;
-      case 'featured':
-        dispatch({ type: FEATURED_PRODUCTS_LOADING });
+        case 'featured':
+        dispatch({ type: FEATURED_PRODUCTS_START })
         break;
       default:
         '';
@@ -98,7 +99,7 @@ const getMinedProducts = (ctx, keyword) => {
           dispatch({ type: MOST_VIEWED_PRODUCTS, payload: response.data })
           break;
         case 'featured':
-          dispatch({ type: FEATURED_PRODUCTS_LOADING, payload: response.data })
+          dispatch({ type: FEATURED_PRODUCTS, payload: response.data })
           break;
         default:
           '';
@@ -114,10 +115,10 @@ const getMinedProducts = (ctx, keyword) => {
 
 const getProductDetails = (slug, ctx) => {
   return async (dispatch) => {
-    await dispatch({ type: PRODUCT_DETAILS_START });
+    dispatch({ type: PRODUCT_DETAILS_START });
     const productService = new ProductService();
     const response = await productService.getProductDetails(slug, ctx);
-    await dispatch({ type: PRODUCT_DETAILS_FINISH });
+    dispatch({ type: PRODUCT_DETAILS_FINISH });
     if (response.isSuccess) {
       dispatch({ type: PRODUCT_DETAILS, payload: response.data });
     } else if (!response.isSuccess) {

@@ -24,7 +24,7 @@ const OrderDetails = (props) => {
     }, [props.orderId])
 
     useEffect(() => {
-        if(props.visibleOrder === false){
+        if (props.visibleOrder === false) {
             setShowCancelForm(false)
         }
     }, [props.visibleOrder])
@@ -48,7 +48,7 @@ const OrderDetails = (props) => {
     };
 
     let { getOrderByIdResp: orderDetails } = store.order
-    
+
     return (
         <div className="order-details">
             {
@@ -119,6 +119,36 @@ const OrderDetails = (props) => {
                                         </p>
                                         <p>
                                             {moment(orderDetails.status.cancelledDetail.cancelledDate).format('YYYY/MM/DD hh:mm A')}
+                                        </p>
+                                    </Timeline.Item>
+                                }
+                                {
+                                    orderDetails.status.dispatchedDetail.dispatchedDate &&
+                                    <Timeline.Item color="gray">
+                                        <strong>Dispatched</strong>
+                                        <p>
+                                            {moment(orderDetails.status.dispatchedDetail.dispatchedDate).format('YYYY/MM/DD hh:mm A')}
+                                        </p>
+                                    </Timeline.Item>
+                                }
+                                {
+                                    orderDetails.status.completedDate &&
+                                    <Timeline.Item color="gray">
+                                        <strong>Completed</strong>
+                                        <p>
+                                            {moment(orderDetails.status.completedDate).format('YYYY/MM/DD hh:mm A')}
+                                        </p>
+                                    </Timeline.Item>
+                                }
+                                {
+                                    orderDetails.status.returnedDetail.returnedDate &&
+                                    <Timeline.Item color="gray">
+                                        <strong>Returned</strong>
+                                        <p>
+                                            Remark: {orderDetails.status.dispatchedDetail.remark?.comment}
+                                        </p>
+                                        <p>
+                                            {moment(orderDetails.status.dispatchedDetail.returnedDate).format('YYYY/MM/DD hh:mm A')}
                                         </p>
                                     </Timeline.Item>
                                 }

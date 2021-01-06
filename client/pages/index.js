@@ -18,30 +18,31 @@ const Index = (props) => {
   let bannerImages = useSelector((state) => state.other.getBannerImages)
 
   useEffect(() => {
-    if (isEmpty(allProducts.latestProducts)) {
-      dispatch(actions.getMinedProducts('', 'latest'));
+    if (!props.isServer) {
+      if (isEmpty(allProducts.latestProducts?.products)) {
+        dispatch(actions.getMinedProducts('', 'latest'));
+      }
+
+      if (isEmpty(allProducts.trendingProducts?.products)) {
+        dispatch(actions.getMinedProducts('', 'trending'));
+      }
+
+      if (isEmpty(allProducts.topSellingProducts?.products)) {
+        dispatch(actions.getMinedProducts('', 'topselling'));
+      }
+
+      if (isEmpty(allProducts.mostViewedProducts?.products)) {
+        dispatch(actions.getMinedProducts('', 'mostviewed'));
+      }
+
+      if (isEmpty(allProducts.featuredProducts?.products)) {
+        dispatch(actions.getMinedProducts('', 'featured'));
+      }
     }
-    
-    if (isEmpty(allProducts.trendingProducts)) {
-      dispatch(actions.getMinedProducts('', 'trending'));
-    }
-    
-    if (isEmpty(allProducts.topSellingProducts)) {
-      dispatch(actions.getMinedProducts('', 'topselling'));
-    }
-    
-    if (isEmpty(allProducts.mostViewedProducts)) {
-      dispatch(actions.getMinedProducts('', 'mostviewed'));
-    }
-    
-    if (isEmpty(allProducts.featuredProducts)) {
-      dispatch(actions.getMinedProducts('', 'featured'));
-    }
-    
     if (isEmpty(bannerImages)) {
       dispatch(actions.getBannerImages())
     }
-  }, [dispatch])
+  }, [])
 
   return (
     <Layout title="Home">
@@ -51,7 +52,7 @@ const Index = (props) => {
         </div>
         <div className="container">
           {
-            !isEmpty(allProducts.featuredProducts) && (
+            !isEmpty(allProducts.featuredProducts?.products) && (
               <>
                 <SliderHeader
                   headTitle="Featured Products"
@@ -73,7 +74,7 @@ const Index = (props) => {
             </Row>
           </section> */}
           {
-            !isEmpty(allProducts.trendingProducts) &&
+            !isEmpty(allProducts.trendingProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Trending Products"
@@ -85,7 +86,7 @@ const Index = (props) => {
             </>
           }
           {
-            !isEmpty(allProducts.topSellingProducts) &&
+            !isEmpty(allProducts.topSellingProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Top Selling"
@@ -97,7 +98,7 @@ const Index = (props) => {
             </>
           }
           {
-            !isEmpty(allProducts.mostViewedProducts) &&
+            !isEmpty(allProducts.mostViewedProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Most Viewed"
@@ -109,7 +110,7 @@ const Index = (props) => {
             </>
           }
           {
-            !isEmpty(allProducts.latestProducts) &&
+            !isEmpty(allProducts.latestProducts?.products) &&
             <>
               <SliderHeader
                 headTitle="Latest Products"
@@ -149,7 +150,6 @@ Index.getInitialProps = async (ctx) => {
     await ctx.store.dispatch(actions.getMinedProducts(ctx, 'topselling'));
     await ctx.store.dispatch(actions.getMinedProducts(ctx, 'mostviewed'));
     await ctx.store.dispatch(actions.getMinedProducts(ctx, 'featured'));
-    await ctx.store.dispatch(actions.getBannerImages());
   }
   return {}
 };

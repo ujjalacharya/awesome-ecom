@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Row, Col, Input } from "antd";
+import { Row, Col, Input, Button } from "antd";
+import { SearchOutlined } from '@ant-design/icons'
 import { connect } from "react-redux";
 
 import { getUserInfo } from "../../utils/common";
@@ -95,7 +96,7 @@ class Header extends Component {
   searchSelectedProduct = debounce((keyword) => {
     Router.push("/search/[slug]", "/search/" + keyword);
     this.setState({ searchValue: keyword });
-  }, 1000)
+  }, 500)
 
   getSearchKeywordsDeb = (search) => {
     this.setState({ searchValue: search });
@@ -159,24 +160,29 @@ class Header extends Component {
                 </Col>
                 <Col span={20} className="search">
                   <form onSubmit={this.handleSubmit}>
-                    <AutoComplete
-                      value={this.state.searchValue}
-                      options={this.state.searchOptions}
-                      // style={{
-                      //   width: 400,
-                      // }}
-                      className="auto-search"
-                      onSelect={(select) => {
-                        this.selectKeyword(select)
-                      }}
-                      onSearch={(search) => {
-                        this.getSearchKeywordsDeb(search)
-                      }}
-                    // placeholder="Search for products, brands and more"
-                    >
-                      <Input.Search size="large" placeholder="Search for products, brands and more"
-                      />
-                    </AutoComplete>
+                    <div className="search-cover">
+                      <AutoComplete
+                        value={this.state.searchValue}
+                        options={this.state.searchOptions}
+                        // style={{
+                        //   width: 400,
+                        // }}
+                        className="auto-search"
+                        onSelect={(select) => {
+                          this.selectKeyword(select)
+                        }}
+                        onSearch={(search) => {
+                          this.getSearchKeywordsDeb(search)
+                        }}
+                        placeholder="Search for products, brands and more"
+                      >
+                        {/* <SearchOutlined /> */}
+                        {/* <Input size="large" placeholder="Search for products, brands and more"/> */}
+                      </AutoComplete>
+                      <div className="search-btn" onClick={() => this.selectKeyword(this.state.searchValue)}>
+                        <SearchOutlined />
+                      </div>
+                    </div>
                     {/* <img src="/images/search-icon.png" /> */}
                   </form>
 

@@ -44,6 +44,22 @@ const Listing = (props) => {
       setCurrentRating(0)
     }
   }, [])
+  
+  let { query } = props.router
+  let prevQuery = previousQuery(query.slug)
+
+  useEffect(() => {
+    if(query.slug !== prevQuery && query.slug){
+      setCheckedBrands([]);
+      setCheckedColors([]);
+      setMaxPrice('');
+      setMinPrice('');
+      setSelectedSize('');
+      setSelectedWarrenty('');
+      setFilterBody({});
+      setCurrentRating(0);
+    }
+  }, [query.slug])
 
 
   const showDrawerFiter = () => {
@@ -86,7 +102,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -109,7 +125,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -132,7 +148,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -163,7 +179,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -189,7 +205,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -198,22 +214,9 @@ const Listing = (props) => {
 
   const sortProducts = (sort) => {
     setSortBy(sort)
-
-    let body = {};
-
-    let sortBy = sort === "" ? [] : [sort];
-
-    body = getFilterAppendBody(
-      filterBody,
-      props,
-      sortBy,
-      "createdAt"
-    );
-
-    setFilterBody(body)
-
+    
     dispatch(actions.searchProducts(
-      `?page=${currentPage}&perPage=${props.perPage}`,
+      `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sort}`,
       body
     ))
   };
@@ -234,7 +237,7 @@ const Listing = (props) => {
 
     if (!visibleFilter) {
       dispatch(actions.searchProducts(
-        `?page=${currentPage}&perPage=${props.perPage}`,
+        `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
         body
       ))
       setFilterApplied(true)
@@ -295,7 +298,7 @@ const Listing = (props) => {
     setFilterBody(newFilterBody);
 
     dispatch(actions.searchProducts(
-      `?page=${currentPage}&perPage=${props.perPage}`,
+      `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sortBy}`,
       newFilterBody
     ))
   }

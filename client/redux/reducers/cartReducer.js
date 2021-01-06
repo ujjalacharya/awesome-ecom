@@ -1,3 +1,4 @@
+import { myCartsSkeleton } from "../../utils/skeletons";
 import {
   CART_PRODUCTS,
   ADD_TO_CART,
@@ -21,7 +22,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case CART_START:
-      return { ...state, loading: true, hasError: false };
+      return { ...state, loading: true, getCartProducts: myCartsSkeleton, hasError: false };
     case CART_FINISH:
       return { ...state, loading: false, hasError: false };
     case CART_PRODUCTS:

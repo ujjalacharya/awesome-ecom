@@ -77,6 +77,96 @@ export const productDetailSkeleton = {
     videoURL: [''],
 }
 
+export const singleProductCardSkeleton = {
+    category: [
+        {
+            displayName: "",
+            slug: "",
+        },
+    ],
+    images: [
+        {
+            large: "",
+            medium: "",
+            thumbnail: "",
+        },
+    ],
+    name: "",
+    price: "",
+}
+
+export const mutliProductCardSekelton = {
+    products: [
+        {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        },
+        {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        }, {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        }, {
+            category: [
+                {
+                    displayName: "",
+                    slug: "",
+                },
+            ],
+            images: [
+                {
+                    large: "",
+                    medium: "",
+                    thumbnail: "",
+                },
+            ],
+            name: "",
+            price: "",
+        }
+    ],
+    totalCount: 4
+}
+
 export const SearchFilterSkeleton = {
     sizes: [],
     brands: [],
@@ -97,16 +187,16 @@ export const SearchFilterSkeleton = {
 }
 
 export const userDataSkeleton = {
-  email: "",
-  phone: ""
+    email: "",
+    phone: ""
 };
 
 export const activeLocSkeleton = {
-  address: "",
+    address: "",
 };
 
 export const myOrdersSkeleton = {
-    orders:[
+    orders: [
         {
             _id: '1',
             status: {
@@ -209,6 +299,185 @@ export const myReviewsSkeleton = [
 
 export const myWishlistSkeleton = {
     wishlists: [
+        {
+            _id: '1',
+            isDeleted: null,
+            user: '',
+            product: {
+                _id: '1',
+                images: [
+                    {
+                        _id: '1',
+                        thumbnail: '/images/default-image.png',
+                        medium: '/images/default-image.png',
+                        large: '/images/default-image.png',
+                        createdAt: '',
+                        updatedAt: ''
+                    }
+                ],
+                discountRate: '',
+                slug: '',
+                name: '',
+                quantity: '',
+                soldBy: {
+                    _id: '1',
+                    name: '',
+                    address: '',
+                    shopName: ''
+                },
+                price: {
+                    $numberDecimal: ''
+                }
+            },
+            createdAt: '',
+            updatedAt: '',
+            stars: {
+                fiveStars: 0,
+                fourStars: 0,
+                threeStars: 0,
+                twoStars: 0,
+                oneStars: 0,
+                averageStar: 0,
+                totalRatingUsers: 0
+            },
+            hasOnWishlist: null
+        }
+    ],
+    totalCount: 1,
+    totalAmount: 0
+}
+
+export const myCartsSkeleton = {
+    carts: [
+        {
+            _id: '1',
+            isDeleted: null,
+            user: '',
+            product: {
+                _id: '1',
+                images: [
+                    {
+                        _id: '1',
+                        thumbnail: '/images/default-image.png',
+                        medium: '/images/default-image.png',
+                        large: '/images/default-image.png',
+                        createdAt: '',
+                        updatedAt: ''
+                    }
+                ],
+                discountRate: '',
+                slug: '',
+                name: '',
+                quantity: '',
+                soldBy: {
+                    _id: '1',
+                    name: '',
+                    address: '',
+                    shopName: ''
+                },
+                price: {
+                    $numberDecimal: ''
+                }
+            },
+            createdAt: '',
+            updatedAt: '',
+            stars: {
+                fiveStars: 0,
+                fourStars: 0,
+                threeStars: 0,
+                twoStars: 0,
+                oneStars: 0,
+                averageStar: 0,
+                totalRatingUsers: 0
+            },
+            hasOnWishlist: null
+        },
+        {
+            _id: '1',
+            isDeleted: null,
+            user: '',
+            product: {
+                _id: '1',
+                images: [
+                    {
+                        _id: '1',
+                        thumbnail: '/images/default-image.png',
+                        medium: '/images/default-image.png',
+                        large: '/images/default-image.png',
+                        createdAt: '',
+                        updatedAt: ''
+                    }
+                ],
+                discountRate: '',
+                slug: '',
+                name: '',
+                quantity: '',
+                soldBy: {
+                    _id: '1',
+                    name: '',
+                    address: '',
+                    shopName: ''
+                },
+                price: {
+                    $numberDecimal: ''
+                }
+            },
+            createdAt: '',
+            updatedAt: '',
+            stars: {
+                fiveStars: 0,
+                fourStars: 0,
+                threeStars: 0,
+                twoStars: 0,
+                oneStars: 0,
+                averageStar: 0,
+                totalRatingUsers: 0
+            },
+            hasOnWishlist: null
+        },
+        {
+            _id: '1',
+            isDeleted: null,
+            user: '',
+            product: {
+                _id: '1',
+                images: [
+                    {
+                        _id: '1',
+                        thumbnail: '/images/default-image.png',
+                        medium: '/images/default-image.png',
+                        large: '/images/default-image.png',
+                        createdAt: '',
+                        updatedAt: ''
+                    }
+                ],
+                discountRate: '',
+                slug: '',
+                name: '',
+                quantity: '',
+                soldBy: {
+                    _id: '1',
+                    name: '',
+                    address: '',
+                    shopName: ''
+                },
+                price: {
+                    $numberDecimal: ''
+                }
+            },
+            createdAt: '',
+            updatedAt: '',
+            stars: {
+                fiveStars: 0,
+                fourStars: 0,
+                threeStars: 0,
+                twoStars: 0,
+                oneStars: 0,
+                averageStar: 0,
+                totalRatingUsers: 0
+            },
+            hasOnWishlist: null
+        },
         {
             _id: '1',
             isDeleted: null,

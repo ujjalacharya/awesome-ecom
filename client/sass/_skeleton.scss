@@ -1,44 +1,55 @@
 @mixin gradient-liner {
   background: linear-gradient(to right, #eee 20%, #ddd 50%, #eee 80%);
   animation-name: moving-gradient;
-  animation-duration: 1s;
+  animation-duration: 7s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
 
 .skeleton {
+  &:hover {
+    .card-hover-items {
+      display: none !important;
+    }
+  }
   .large-line {
     height: 8px;
     background-color: #eee;
-    width: 200px;
-    display: inline-block;
+    width: 100%;
+    display: block;
     @include gradient-liner;
   }
   .medium-line {
     height: 8px;
     background-color: #eee;
-    width: 150px;
-    display: inline-block;
+    width: 80%;
+    display: block;
     @include gradient-liner;
   }
   .small-line {
     height: 8px;
     background-color: #eee;
-    width: 100px;
-    display: inline-block;
+    width: 50%;
+    display: block;
     @include gradient-liner;
   }
-  .productImg-loader{
+  img {
+    object-fit: cover !important;
+  }
+  .product-box-shadow {
+    border: 0 !important;
+  }
+  .productImg-loader {
     background-color: #eee;
-    display: inline-block;
+    display: block;
     @include gradient-liner;
   }
-  .card-body{
-    padding: 10px;
-    div{
+  .card-body {
+    padding: 10px 0 !important;
+    div {
       display: block;
-      &.medium-line{
+      &.medium-line {
         margin-top: 10px;
         margin-bottom: 10px;
       }
@@ -47,10 +58,95 @@
 }
 
 @keyframes moving-gradient {
-  0% { background-position: -250px 0; }
-  100% { background-position: 250px 0; }
+  0% {
+    background-position: -250px 0;
+  }
+  100% {
+    background-position: 250px 0;
+  }
 }
 
+.product-detail-skeleton {
+  .ratings,
+  .reviews,
+  .price-wish,
+  .qty-cart-btn,
+  .prod-cate-specs,
+  .detail-breadcrumb {
+    height: 15px;
+    background-color: #eee;
+    width: 20%;
+    display: block;
+    @include gradient-liner;
+  }
+  .ratings {
+    width: 30% !important;
+  }
+  .price-specs {
+    margin-bottom: 25px;
+  }
+  .specs {
+    .details1,
+    .details2,
+    .details3,
+    .details4 {
+      height: 10px;
+      background-color: #eee;
+      display: block;
+      @include gradient-liner;
+    }
+    .details1,
+    .details2,
+    .details3 {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .details4 {
+      width: 60%;
+    }
+  }
+  .qty-cart-btn {
+    padding-bottom: 0px !important;
+    // width: 20%;
+  }
+  .prod-cate-specs {
+    width: 30% !important;
+  }
+  .detail-breadcrumb {
+    width: 40%;
+  }
+}
+
+.list-view-skeleton {
+  .pd-details {
+    .name,
+    .price,
+    .qty,
+    .available-stock,
+    .delete-product {
+      height: 10px;
+      background-color: #eee;
+      display: block;
+      @include gradient-liner;
+    }
+    .name{
+      width: 40% !important;
+    }
+    .price{
+      width: 20%;
+    }
+    .qty{
+      width: 30%;
+      margin-bottom: 20px;
+    }
+    .available-stock{
+      width: 55%;
+    }
+    .delete-product{
+      width: 60%;
+    }
+  }
+}
 
 // .loading {
 //   position: relative;

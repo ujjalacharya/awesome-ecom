@@ -18,6 +18,7 @@ import { ProductService } from "../services/productService";
 
 const getCartProducts = (query, ctx) => {
   return async (dispatch) => {
+    dispatch({ type: CART_START });
     const cartService = new CartService();
     const response = await cartService.getCartProducts(query, ctx);
     if (response.isSuccess) {
@@ -73,10 +74,10 @@ const getCartProducts = (query, ctx) => {
 
 const addToCart = (query, body, sliderName) => {
   return async (dispatch) => {
-    await dispatch({ type: CART_START });
+    dispatch({ type: CART_START });
     const cartService = new CartService();
     const response = await cartService.addToCart(query, body);
-    await dispatch({ type: CART_FINISH });
+    dispatch({ type: CART_FINISH });
     if (response.isSuccess) {
       if (sliderName) {
         const productService = new ProductService();
@@ -112,10 +113,10 @@ const addToCart = (query, body, sliderName) => {
 
 const removeCart = (query, sliderName) => {
   return async (dispatch) => {
-    await dispatch({ type: CART_START });
+    dispatch({ type: CART_START });
     const cartService = new CartService();
     const response = await cartService.removeCart(query);
-    await dispatch({ type: CART_FINISH });
+    dispatch({ type: CART_FINISH });
     if (response.isSuccess) {
       if (sliderName) {
         const productService = new ProductService();

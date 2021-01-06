@@ -45,7 +45,6 @@ const Category = (props) => {
 Category.getInitialProps = async (ctx) => {
   initialize(ctx);
 
-  let isServer = ctx.isServer;
   if (ctx.isServer) {
     await ctx.store.dispatch(
       actions.searchFilter(`?cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`)
@@ -57,7 +56,7 @@ Category.getInitialProps = async (ctx) => {
   }
 
   return {
-    isServer
+    isServer: ctx.isServer
   }
 }
 
