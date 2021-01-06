@@ -374,6 +374,16 @@ const keyword = req.query.keyword
 };
 
 exports.adminOrders = async (req, res) => {
+  // let order = await Order.findById("5fcc61076d6b1d0f6881f1bf")
+  // order.status.activeDate = Date.now()
+  // order.status.approvedDate = Date.now()
+  // order.status.dispatchedDetail = {
+  //   dispatchedDate: Date.now(),
+  //   dispatchedBy: "5efcb72e0ab8ab4dd0aa6b34"
+  // }
+  // order.status.completedDate = Date.now()
+  // await order.save()
+  // return res.json(order)
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
   const status = req.query.status;

@@ -16,7 +16,9 @@ const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
 const Fawn = require("fawn");
-const moment = require('moment')
+const moment = require('moment');
+const { districts } = require("../middleware/common");
+const { json, query } = require("express");
 const task = Fawn.Task();
 const perPage = 10;
 
@@ -48,7 +50,7 @@ exports.getProduct = async (req, res) => {
       .status(404)
       .json({ error: "Product is not verified or has been deleted." });
   //increament viewCount
-  req.product.viewsCount += 1
+  !req.authAdmin && (req.product.viewsCount += 1)
  
   await req.product.save()
   //user's action on this product
@@ -285,7 +287,13 @@ exports.minedProducts = async (req, res) => {
   let sortFactor
   let query = {
     isVerified: { $ne: null },
-    isDeleted: null
+    isDeleted: null,
+  }
+  if (req.header('district')) {
+    query = {
+      ...query,
+      availableDistricts: { $in: req.header('district')}
+    }
   }
   if (req.query.keyword === 'latest') {
     sortFactor = { createdAt: 'desc' }
@@ -383,8 +391,16 @@ exports.forYouProducts = async (req,res) => {
   if (!categories.length) {
     return res.status(403).json({ error: "Categories not found." });
   }
+
+  let query = { category: { $in: categories } }
+  if (req.header('district')) {
+    query = {
+      ...query,
+      availableDistricts: { $in: req.header('district') }
+    }
+  }
   
-  let products = await Product.find({ category: { $in: categories } })
+  let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -392,9 +408,7 @@ exports.forYouProducts = async (req,res) => {
     .limit(perPage)
     .lean()
     .sort(sortFactor);
-  const totalCount = await Product.countDocuments({
-    category: { $in: categories },
-  });
+  const totalCount = await Product.countDocuments(query);
 
   //user's action on each product
   products = products.map(async p => {
@@ -483,6 +497,10 @@ exports.searchProducts = async (req, res) => {
     if (warranties) searchingFactor.warranty = warranties;
     if (ratings) searchingFactor.averageRating = { $gte: +ratings };
   }
+  if (req.header('district')) {
+      searchingFactor.availableDistricts = { $in: req.header('district') }
+  }
+  console.log(searchingFactor);
   let products = await Product.find(searchingFactor)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
@@ -526,11 +544,19 @@ exports.getProductsByCategory = async (req, res) => {
   if (!categories.length) {
     return res.status(404).json({ error: "Categories not found" });
   }
-  categories = categories.map((c) => c._id.toString());
-  let products = await Product.find({ category: { $in: categories }, 
+  let query = {
+    category: { $in: categories },
     isVerified: { $ne: null },
     isDeleted: null
-  })
+  }
+  if (req.header('district')) {
+    query = {
+      ...query,
+      availableDistricts: { $in: req.header('district') }
+    }
+  }
+  categories = categories.map((c) => c._id.toString());
+  let products = await Product.find(query)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")
     .populate("images", "-createdAt -updatedAt -__v")
@@ -546,11 +572,7 @@ exports.getProductsByCategory = async (req, res) => {
   // if (!products.length) {
   //   return res.status(404).json({ error: "No products are available." });
   // }
-  const totalCount = await Product.countDocuments({
-    category: { $in: categories },
-    isVerified: { $ne: null },
-    isDeleted: null
-  });
+  const totalCount = await Product.countDocuments(query);
 
   //user's action on each product
   products = products.map(async p => {

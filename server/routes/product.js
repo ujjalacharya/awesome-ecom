@@ -4,7 +4,7 @@ const { createProduct, product, getProduct, updateProduct, productImages, delete
 const { profile } = require("../controllers/admin")
 const { uploadProductImages , waterMarker} = require("../middleware/helpers");
 const { validateProduct } = require("../middleware/validator")
-const { auth: adminAuth, isSuperAdmin, isAdmin, hasAuthorization } = require('../controllers/admin_auth')
+const { auth: adminAuth, isSuperAdmin, isAdmin, hasAuthorization, checkAdminSignin } = require('../controllers/admin_auth')
 const {checkUserSignin, auth: userAuth} = require("../controllers/user_auth")
 
 const router = express.Router();
@@ -29,7 +29,7 @@ router.get('/suggest-keywords', suggestKeywords)//?keyword=
 
 router.post("/:id", adminAuth, hasAuthorization, validateProduct, createProduct)
 router.put("/:id/:p_slug", adminAuth, hasAuthorization, validateProduct, updateProduct)
-router.get('/:p_slug',checkUserSignin, getProduct)
+router.get('/:p_slug', checkUserSignin, checkAdminSignin, getProduct)
 
 router.param('p_slug', product)
 router.param('id', profile)

@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
     },
     loginDomain: {
         type: String,
-        default: "system"//can be facebook, google as well
+        default: "system",//can be facebook, google as well
+        enum:['system', 'facebook', 'google']
     },
     password: {
         type: String,
