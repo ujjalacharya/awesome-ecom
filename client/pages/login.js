@@ -25,7 +25,13 @@ class Login extends Component {
   }
 
   responseGoogleError = (response) => {
-    message.error('Google login failed! Please try again later.')
+    if(response.error === 'idpiframe_initialization_failed'){
+      message.info('Please enable 3rd party cookies in browser settings');
+    }else if(response.error === "popup_closed_by_user"){
+      
+    }else{
+      message.error('Google login failed! Please try again later')
+    }
   }
 
   responseGoogle = (response) => {
@@ -74,6 +80,7 @@ class Login extends Component {
                     name="email"
                     rules={[
                       {
+                        type: 'email',
                         required: true,
                         message: "Please input your Email!",
                       },

@@ -57,7 +57,7 @@ const OtherDetails = (props) => {
                         <div key={index} className="vid-cov">
                           <div className="product-video" onClick={openCloseVideoModal}>
                             <div className="overlay"></div>
-                            <img src={`${IMAGE_BASE_URL}/${productDetail.images[0].large}`}
+                            <img src={`https://img.youtube.com/vi/${url.split('=').pop()}/mqdefault.jpg`}
                               onError={(ev) => {
                                 ev.target.src = "/images/default-image.png";
                               }} />

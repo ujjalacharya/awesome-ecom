@@ -19,7 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 const Search = (props) => {
   let dispatch = useDispatch();
 
-  const listing = useSelector((state) => state.listing)
+  const listing = useSelector((state) => state.listing);
+  const perPage = 10;
 
   let { query } = props.router
   let title = capitalize(query.slug.split('-').join(' '));
@@ -31,13 +32,19 @@ const Search = (props) => {
       prevQuery !== query.slug 
     ) {
       dispatch(actions.searchFilter(`?keyword=${query.slug}`))
-      dispatch(actions.searchProducts(`?page=1&perPage=10`, { keyword: query.slug }))
+      dispatch(actions.searchProducts(`?page=1&perPage=${perPage}&createdAt=asc`, { keyword: query.slug }))
     }
   }, [query.slug])
 
   return (
     <Layout title={title}>
-      <Listing getSearchFilter={listing.getSearchFilter} data={listing.getSearchData} perPage={10} />
+      <Listing 
+        getSearchFilter={listing.getSearchFilter} 
+        data={listing.getSearchData} 
+        perPage={perPage} 
+        body={{ keyword: query.slug }}
+        listType="search"
+      />
     </Layout>
   );
 }
@@ -51,7 +58,7 @@ Search.getInitialProps = async (ctx) => {
     );
 
     await ctx.store.dispatch(
-      actions.searchProducts(`?page=1&perPage=10`, { keyword: ctx.query.slug })
+      actions.searchProducts(`?page=1&perPage=10&createdAt=asc`, { keyword: ctx.query.slug })
     );
   }
 
