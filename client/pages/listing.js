@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Pagination, Drawer } from "antd";
-import _, { filter } from "lodash";
 
 // redux
 import { useDispatch } from "react-redux";
@@ -10,7 +9,7 @@ import actions from "../redux/actions";
 import { withRouter } from "next/router";
 
 // utils
-import { getFilterAppendBody, previousQuery } from "../utils/common";
+import { getFilterAppendBody, previousQuery, scrollToTop } from "../utils/common";
 
 // includes
 import ProductList from "../src/Includes/Listing/ProductList";
@@ -39,9 +38,9 @@ const Listing = (props) => {
 
   useEffect(() => {
     if (prevPath !== undefined && path !== prevPath) {
-      setFilterBody({})
-      setFilterApplied(false)
-      setCurrentRating(0)
+      setFilterBody({});
+      setFilterApplied(false);
+      setCurrentRating(0);
     }
   }, [])
 
@@ -57,15 +56,12 @@ const Listing = (props) => {
       setSelectedSize('');
       setSelectedWarrenty('');
       setCurrentRating(0);
-      console.log('hey')
-      console.log(props)
+      
       let body = props.listType === "category" ? { cat_id: query.cate } : { keyword: query.slug }
-      console.log(body)
       setFilterBody(body);
+      scrollToTop();
     }
-  }, [query.slug])
-  
-  console.log(filterBody)
+  }, [query.slug]);
 
   const showDrawerFiter = () => {
     setVisibleFilter(true)
