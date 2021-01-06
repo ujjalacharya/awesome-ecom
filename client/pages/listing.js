@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Pagination, Drawer } from "antd";
-import _ from "lodash";
+import _, { filter } from "lodash";
 
 // redux
 import { useDispatch } from "react-redux";
@@ -26,7 +26,7 @@ const Listing = (props) => {
   let [currentPage, setCurrentPage] = useState(1)
   let [checkedBrands, setCheckedBrands] = useState([])
   let [checkedColors, setCheckedColors] = useState([])
-  let [filterBody, setFilterBody] = useState({})
+  let [filterBody, setFilterBody] = useState(props.body)
   let [minPrice, setMinPrice] = useState('')
   let [maxPrice, setMaxPrice] = useState('')
   let [selectedWarrenty, setSelectedWarrenty] = useState('')
@@ -38,29 +38,34 @@ const Listing = (props) => {
   let prevPath = previousQuery(path)
 
   useEffect(() => {
-    if (path !== prevPath) {
+    if (prevPath !== undefined && path !== prevPath) {
       setFilterBody({})
       setFilterApplied(false)
       setCurrentRating(0)
     }
   }, [])
-  
+
   let { query } = props.router
   let prevQuery = previousQuery(query.slug)
 
   useEffect(() => {
-    if(query.slug !== prevQuery && query.slug){
+    if (query.slug !== prevQuery && query.slug) {
       setCheckedBrands([]);
       setCheckedColors([]);
       setMaxPrice('');
       setMinPrice('');
       setSelectedSize('');
       setSelectedWarrenty('');
-      setFilterBody({});
       setCurrentRating(0);
+      console.log('hey')
+      console.log(props)
+      let body = props.listType === "category" ? { cat_id: query.cate } : { keyword: query.slug }
+      console.log(body)
+      setFilterBody(body);
     }
   }, [query.slug])
-
+  
+  console.log(filterBody)
 
   const showDrawerFiter = () => {
     setVisibleFilter(true)
@@ -81,7 +86,7 @@ const Listing = (props) => {
   const onChangePage = (page) => {
     setCurrentPage(page)
     dispatch(actions.searchProducts(
-      `?page=${page}&perPage=${props.perPage}`,
+      `?page=${page}&perPage=${props.perPage}&createdAt=${sortBy}`,
       filterBody
     ))
   };
@@ -214,7 +219,7 @@ const Listing = (props) => {
 
   const sortProducts = (sort) => {
     setSortBy(sort)
-    
+
     dispatch(actions.searchProducts(
       `?page=${currentPage}&perPage=${props.perPage}&createdAt=${sort}`,
       filterBody
@@ -270,7 +275,7 @@ const Listing = (props) => {
     searchPrice("", "");
   };
 
-  const  removeWarrenty = () => {
+  const removeWarrenty = () => {
     onChangeWarrenty("");
   };
 
@@ -302,6 +307,8 @@ const Listing = (props) => {
       newFilterBody
     ))
   }
+
+  const totalPage = props.data ? Math.ceil(props.data.totalCount / props.perPage) : 0;
 
   return (
     <div className="wrapper">
@@ -346,16 +353,18 @@ const Listing = (props) => {
                 filterApplied={filterApplied}
               />
               <div className="pagination">
-                <div className="page-status">
-                  Page {currentPage} of{" "}
-                  {Math.ceil(
-                    props.data &&
-                    props.data.totalCount / props.perPage
-                  )}
-                </div>
+                {
+                  (totalPage !== 0) ?
+                    <div className="page-status">
+                      Page {currentPage} of{" "}
+                      {totalPage}
+                    </div> : <div></div>
+                }
+                
                 <Pagination
                   defaultCurrent={1}
-                  total={props.data && props.data.totalCount}
+                  pageSize={props.perPage}
+                  total={props.data?.totalCount}
                   onChange={onChangePage}
                 />
               </div>

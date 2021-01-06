@@ -18,21 +18,21 @@ const ProductList = (props) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart)
   const wishlist = useSelector((state) => state.wishlist)
-  
+
   let [min_price, setMinPrice] = useState('')
   let [max_price, setMaxPrice] = useState('')
   let [searchFilters, setSearchFilters] = useState(SearchFilterSkeleton);
 
   useEffect(() => {
-    if(max_price){
+    if (max_price) {
       setMaxPrice(props.currentFilter.max_price)
     }
 
-    if(min_price){
+    if (min_price) {
       setMinPrice(props.currentFilter.min_price)
     }
   }, [max_price, min_price])
-  
+
   let { cate, slug } = props.router.query;
 
   let prevAddToCartResp = previousQuery(cart.addToCartResp)
@@ -40,38 +40,39 @@ const ProductList = (props) => {
 
   let prevWishlistItemsResp = previousQuery(wishlist.wishlistItemsResp)
   let prevRemoveFromWishlistResp = previousQuery(wishlist.removeFromWishlistResp)
-  
+
   useEffect(() => {
-    if(cart.addToCartResp !== prevAddToCartResp && cart.addToCartResp){
+    if (cart.addToCartResp !== prevAddToCartResp && cart.addToCartResp) {
       dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`))
     }
-    
-    if(cart.removeFromCartResp !== prevRemoveFromCartResp && cart.removeFromCartResp){
+
+    if (cart.removeFromCartResp !== prevRemoveFromCartResp && cart.removeFromCartResp) {
       dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`))
     }
-    
-    if(wishlist.wishlistItemsResp !== prevWishlistItemsResp && wishlist.wishlistItemsResp){
+
+    if (wishlist.wishlistItemsResp !== prevWishlistItemsResp && wishlist.wishlistItemsResp) {
       dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`))
     }
-    
-    if(wishlist.removeFromWishlistResp !== prevRemoveFromWishlistResp && wishlist.removeFromWishlistResp){
+
+    if (wishlist.removeFromWishlistResp !== prevRemoveFromWishlistResp && wishlist.removeFromWishlistResp) {
       dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${cate}&cat_slug=${slug}`))
     }
 
   }, [cart, wishlist])
-  
+
   useEffect(() => {
-    if(props.searchFilter){
+    if (props.searchFilter) {
       setSearchFilters(props.searchFilter)
     }
   }, [props.searchFilter])
 
   const { data, currentFilter } = props;
-  
+
   let brandOptions = getBrandOptions(searchFilters);
   // if(!data){
   //   return <h1>Loading</h1>
   // }
+  const totalPage = data ? Math.ceil(data.totalCount / props.perPage) : 0
   return (
     <div className="product-lists">
       <div className="sorting-page">
@@ -91,10 +92,12 @@ const ProductList = (props) => {
             <Option value="desc">Descending</Option>
           </Select>
         </div>
-        <div className="page-status">
-          Page {props.currentPage} of{" "}
-          {Math.ceil(data && data.totalCount / props.perPage)}
-        </div>
+        {
+          totalPage !== 0 &&
+          <div className="page-status">
+            Page {props.currentPage} of{" "} {totalPage}
+          </div>
+        }
       </div>
       {!_.isEmpty(currentFilter) && _.size(currentFilter) > 1 && props.filterApplied && (
         <div className="filtered-by">
