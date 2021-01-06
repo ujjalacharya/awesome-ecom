@@ -126,6 +126,9 @@ exports.refreshToken = async (req, res) => {
         let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken,userIP:req.ip })
         // if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
         let tokenData = jwt.verify(refreshToken.refreshToken,process.env.REFRESH_TOKEN_KEY)
+        if (tokenData.role !== 'admin' || tokenData.role !== 'superadmin') {
+            throw 'Invalid refresh token'
+        }
         const payload = {
             _id: tokenData._id,
             name: tokenData.name,

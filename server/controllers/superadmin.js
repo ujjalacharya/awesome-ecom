@@ -18,6 +18,8 @@ const path = require("path");
 const fs = require("fs");
 const _ = require('lodash');
 const Fawn = require("fawn");
+const { districts } = require("../middleware/common");
+const Districts = require("../models/Districts");
 const task = Fawn.Task();
 // const perPage = 10;
 
@@ -545,11 +547,27 @@ exports.approveProduct = async (req, res) => {
         await Promise.all(Keywords)
     }
 
+    //add districts to Districts
+    const addDistricts = async districts => {
+        let _districts = await Districts.find().select('-_id name')
+        _districts = _districts.map(key => key.name)
+        _districts = _.flattenDeep(_districts)
+        let __districts = districts.map(async district => {
+            if (!_districts.includes(district)) {
+                let newDistrict = new Districts({ name: district })
+                await newDistrict.save()
+            }
+            return district
+        })
+        await Promise.all(__districts)
+    }
+
     if (!product.remark.length) {
         const updateProduct = product.toObject()
         updateProduct.isVerified = Date.now()
         addBrandToCategory(updateProduct.brand, categories)
         addKeywords(product.tags)
+        addDistricts(product.availableDistricts)
         const results = await task
             .update(product, updateProduct)
             .options({ viaSave: true })
@@ -566,6 +584,7 @@ exports.approveProduct = async (req, res) => {
     updateProduct.isVerified = Date.now()
     addBrandToCategory(updateProduct.brand, categories)
     addKeywords(product.tags)
+    addDistricts(product.availableDistricts)
     const results = await task
         .update(remark, updateRemark)
         .options({ viaSave: true })
