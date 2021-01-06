@@ -89,13 +89,13 @@ exports.socialLogin = async (req, res) => {
 
     if (loginDomain === 'facebook') {
         // for app access_token of facebook
-        const clientId = '207764167510635'
-        const clientSecret = '409076fa8a8b38cd881542529738f5e7'
-        const response = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`)
+        // const clientId = '207764167510635'
+        // const clientSecret = '409076fa8a8b38cd881542529738f5e7'
+        // const response = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${process.env.FB_CLIENT_ID}&client_secret=${process.env.FB_CLIENT_SECRET}&grant_type=client_credentials`)        
 
-        const appAccessToken = response.data.access_token
+        // const appAccessToken = response.data.access_token
         const resp = await axios.get(`https://graph.facebook.com/debug_token?input_token=${access_token}
-        &access_token=${appAccessToken}`).catch(err => {
+        &access_token=${process.env.FB_APP_ACCESS_TOKEN}`).catch(err => {
             // console.log(err.response.data, 'dcscsc')
             return null
         })
@@ -109,13 +109,13 @@ exports.socialLogin = async (req, res) => {
     }
 
     if (loginDomain === 'google') {
-        const clientId = '1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com'
+        // const clientId = '1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com'
         const resp = await axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${access_token}`).catch(err => {
             // console.log(err.response.data, 'dcscsc')
             return null
         })
 
-        if (!resp || resp.data.iss !== 'accounts.google.com' || resp.data.aud !== clientId) {
+        if (!resp || resp.data.iss !== 'accounts.google.com' || resp.data.aud !== process.env.GOOGLE_CLIENT_ID) {
             return res.status(401).json({ error: "Invalid OAuth access token." })
         }
         if (resp.data.sub !== userID) {
@@ -287,7 +287,9 @@ exports.checkUserSignin = async (req, res, next) => {
         const user = parseToken(token)
         const foundUser = await User.findById(user._id).select('name')
         if (foundUser) {
-            req.authUser = foundUser
+            if (!foundUser.isBlocked) {
+                req.authUser = foundUser
+            }
         }
     }
     next();

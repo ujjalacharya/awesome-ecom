@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const URLSlugs = require('mongoose-url-slugs');
+const { districts } = require("../middleware/common");
 const Schema = mongoose.Schema;
 const productSchema = mongoose.Schema({
     name: {
@@ -122,6 +123,11 @@ const productSchema = mongoose.Schema({
         type: String,
         unique: true
     },
+    availableDistricts:[{
+        type: String,
+        enum: districts,
+        required: true
+    }],
     remark: [{
         type: Schema.Types.ObjectId,
         ref: 'remark'

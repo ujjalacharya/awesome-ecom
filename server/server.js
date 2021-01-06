@@ -14,7 +14,6 @@ const socketIO = require("socket.io");
 const {
   dbConnection,
   errorHandler,
-  waterMarker,
 } = require("./middleware/helpers");
 
 // Database Connection
