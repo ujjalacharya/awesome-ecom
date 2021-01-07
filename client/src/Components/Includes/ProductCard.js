@@ -17,7 +17,7 @@ const ProductCard = (props) => {
   const dispatch = useDispatch();
   const authentication = useSelector((state) => state.authentication)
 
-  let { showQuickView, setShowQuickView } = useState(false);
+  let [ showQuickView, setShowQuickView ] = useState(false);
   let [productData, setProductData] = useState(singleProductCardSkeleton);
 
   let prevData = previousQuery(props.data);
