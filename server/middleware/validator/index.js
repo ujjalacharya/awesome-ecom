@@ -1,8 +1,10 @@
 const ProductBrand = require("../../models/ProductBrand")
 const ProductImages = require("../../models/ProductImages")
 const Category = require("../../models/Category")
+const _ = require('lodash')
 const path = require("path");
 const fs = require("fs");
+const { districts } = require("../common");
 exports.validateLead = (req, res, next) => {
     // email is not null, valid and normalized
     req.check("email", "Email must be between 3 to 32 characters")
@@ -236,6 +238,10 @@ exports.validateProduct = async (req, res, next) => {
     req.check("description", "Product description is required").notEmpty()
     req.check("warranty", "Product warranty is required").notEmpty()
     req.check("brand", "Product brand is required").notEmpty()
+    req.check("districts", "Invalid districts.").custom((values) => {
+        let dts = values ? typeof values === 'string' ? [values] : values : []
+        return values ? _.intersection(districts, dts).length === dts.length ? true : false : true
+    })
 
     // check for errors
     const errors = req.validationErrors() || [];
