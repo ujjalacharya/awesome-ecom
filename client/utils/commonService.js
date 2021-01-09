@@ -1,6 +1,8 @@
 import fetch from "isomorphic-unfetch";
 import cookie from "js-cookie";
-import { getCookie } from "./cookie";
+import { initStore } from "../redux";
+import { AUTHENTICATE } from "../redux/types";
+import { getCookie, setCookie } from "./cookie";
 
 export const postTokenService = async (url, method, body) => {
   try {
@@ -50,10 +52,41 @@ export const getTokenService = async (url, method, ctx) => {
         data,
       };
     } else {
-      return {
-        isSuccess: false,
-        errorMessage: data.error,
-      };
+      if (data.error === "jwt expired") {
+        const body = JSON.stringify({
+          refreshToken: getCookie("refresh-token", ctx?.req),
+        });
+        const resp = await fetch(
+          `http://localhost:3003/api/admin-auth/refresh-token`,
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-auth-token": getCookie("token", ctx?.req),
+            },
+            body,
+          }
+        );
+        const data = await resp.json();
+
+        if (resp.status === 200) {
+          setCookie("token", data.accessToken);
+          setCookie("refresh-token", data.refreshToken);
+      initStore().dispatch({ type: AUTHENTICATE, payload: data.token });
+      ctx?.store.dispatch({ type: AUTHENTICATE, payload: data.accessToken });
+
+
+
+          const resp = await getTokenService(url, method, ctx);
+          return resp;
+        }
+      }else {
+        return {
+          isSuccess: false,
+          errorMessage: data.error,
+        };
+      }
+      
     }
   } catch (err) {
     return {
@@ -150,5 +183,3 @@ export const uploadImageService = async (url, method, formData) => {
     };
   }
 };
-
-

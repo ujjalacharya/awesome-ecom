@@ -20,6 +20,7 @@ const getWishListItems = (query, ctx) => {
     await dispatch({ type: GET_WISHLIST_ITEMS_START });
     const wishlistService = new WishlistService();
     const response = await wishlistService.getWishListItems(query, ctx);
+    console.log(response)
     if (response.isSuccess) {
       await dispatch({ type: GET_WISHLIST_ITEMS, payload: response.data });
       await dispatch({ type: GET_WISHLIST_ITEMS_FINISH });
