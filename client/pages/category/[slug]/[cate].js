@@ -19,25 +19,33 @@ import { previousQuery } from "../../../utils/common";
 const Category = (props) => {
   let dispatch = useDispatch();
 
-  const listing = useSelector((state) => state.listing)
+  const listing = useSelector((state) => state.listing);
+  const perPage = 10
 
   let { query } = props.router
   let title = capitalize(query.slug.split('-').join(' '));
   let prevQuery = previousQuery(query.slug)
-  
+
   useEffect(() => {
     if (
-      !props.isServer && 
+      !props.isServer &&
       prevQuery !== query.slug
     ) {
       dispatch(actions.searchFilter(`?cat_id=${query.cate}&cat_slug=${query.slug}`))
-      dispatch(actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${query.cate}&cat_slug=${query.slug}`))
+      dispatch(actions.getProductsByCategory(`?page=1&perPage=${perPage}&cat_id=${query.cate}&cat_slug=${query.slug}&createdAt=asc`))
     }
   }, [query.slug])
 
+  let body = {cat_id: query.cate}
   return (
     <Layout title={title}>
-      <Listing getSearchFilter={listing.getSearchFilter} data={listing.getSearchData} perPage={10} />
+      <Listing 
+        getSearchFilter={listing.getSearchFilter} 
+        data={listing.getSearchData} 
+        perPage={perPage} 
+        body={body} 
+        listType="category"
+      />
     </Layout>
   );
 }
@@ -51,7 +59,7 @@ Category.getInitialProps = async (ctx) => {
     );
 
     await ctx.store.dispatch(
-      actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}`, ctx)
+      actions.getProductsByCategory(`?page=1&perPage=10&cat_id=${ctx.query.cate}&cat_slug=${ctx.query.slug}&createdAt=asc`, ctx)
     );
   }
 

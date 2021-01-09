@@ -110,6 +110,8 @@ class ProductSpecs extends Component {
             url={`http://sthautsav.com.np/products/${product.slug}`}
             img={`http://sthautsav.com.np:3001/uploads/${product.images[0].large}`} />
         }
+        
+        <div id="magnifyPortal" className="magnifyPortal" />
         <div className={"product-specs " + checkSkeleton}>
           <div className="price-specs">
             <div className="product-title">{product.name}</div>

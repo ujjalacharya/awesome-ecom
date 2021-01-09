@@ -73,9 +73,19 @@
       border: 1px solid #f3f0f0;
       margin-right: 10px;
       cursor: pointer;
-      &.active{
+      &.active {
         border-color: #1890ff;
       }
     }
   }
+  .magnify-img {
+    height: 400px !important;
+  }
+}
+
+.magnifyPortal {
+  position: absolute;
+  top: 0px;
+  z-index: 8;
+  padding-left: 20px;
 }

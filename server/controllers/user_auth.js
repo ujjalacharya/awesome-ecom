@@ -171,23 +171,47 @@ exports.socialLogin = async (req, res) => {
 
 };
 
+
 exports.refreshToken = async (req, res) => {
-    const { refreshToken } = req.body
-    if (refreshToken == null) return res.status(400).json({ error: " Token is Null" })
-    let token = await RefreshToken.findOne({ refreshToken })
-    if (!token) return res.status(403).json({ error: "Invalid refresh token" })
-    const user = await jwt.verify(token.refreshToken, process.env.REFRESH_TOKEN_KEY)
-    const payload = {
-        _id: user._id,
-        name: user.name,
-        email: user.email
-    };
-    const accessToken = jwt.sign(
-        payload,
-        process.env.JWT_SIGNIN_KEY,
-        { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
-    );
-    return res.json({ accessToken });
+
+    // if (Date.now() >= refreshToken.expires) {
+    //     return res.status(401).json({error:'Refresh Token has expired.'})
+    // }
+    // //extend refreshtoken expiration
+    // refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    // await refreshToken.save()
+    try {
+        let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken, userIP: req.ip })
+        // if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
+        let tokenData = jwt.verify(refreshToken.refreshToken, process.env.REFRESH_TOKEN_KEY)
+        const payload = {
+            _id: tokenData._id,
+            name: tokenData.name,
+            email: tokenData.email
+        };
+        const accessToken = jwt.sign(
+            payload,
+            process.env.JWT_SIGNIN_KEY,
+            { expiresIn: process.env.SIGNIN_EXPIRE_TIME }
+        );
+        refreshToken.refreshToken = jwt.sign(
+            payload,
+            process.env.REFRESH_TOKEN_KEY,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRE }
+        )
+        await refreshToken.save()
+
+
+        // let cookieOptions = {
+        //     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),//with that same expire date
+        //     httpOnly: true
+        // }
+        // res.cookie('refreshToken', `${refreshToken.refreshToken}`, cookieOptions);
+        return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
+    } catch (error) {
+        return res.status(401).json({ error: 'Invalid refresh token ' })
+    }
+
 }
 
 exports.forgotPassword = async (req, res) => {

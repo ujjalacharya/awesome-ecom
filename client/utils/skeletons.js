@@ -164,7 +164,7 @@ export const mutliProductCardSekelton = {
             price: "",
         }
     ],
-    totalCount: 4
+    totalCount: 0
 }
 
 export const SearchFilterSkeleton = {
