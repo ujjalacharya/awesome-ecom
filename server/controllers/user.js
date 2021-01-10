@@ -1,7 +1,8 @@
 const User = require("../models/User");
 const Address = require("../models/Address")
-const sharp = require("sharp")
-const path = require("path");
+// const sharp = require("sharp")
+// const path = require("path");
+const { fileRemover, imageCompressor } = require("../middleware/helpers");
 const fs = require("fs");
 const _ = require('lodash')
 const Fawn = require('fawn')
@@ -68,17 +69,26 @@ exports.uploadPhoto = async (req, res) => {
     if (req.file == undefined) {
         return res.status(400).json({error:'Image is required.'})
     }
-    const { filename: image } = req.file;
     //Compress image
-    await sharp(req.file.path)
-        .resize(300)
-        .jpeg({ quality: 100 })
-        .toFile(path.resolve(req.file.destination, "user", image))
-    fs.unlinkSync(req.file.path);//remove from public/uploads
+    // const { filename: image } = req.file;
+    // await sharp(req.file.path)
+    //     .resize(300)
+    //     .jpeg({ quality: 100 })
+    //     .toFile(path.resolve(req.file.destination, "user", image))
+
+    const { filename, path: filepath, destination } = req.file
+    await imageCompressor(
+        filename,
+        300,
+        filepath,
+        destination,
+        "user"
+    );
+    fs.unlinkSync(filepath);//remove from public/uploads
     // if update then remove old photo
 
     if (profile.photo ) fs.unlinkSync(`public/uploads/${profile.photo}`)
-    profile.photo = "user/" + image;
+    profile.photo = "user/" + filename;
     await profile.save()
     res.json({ photo: profile.photo, socialPhoto: profile.socialPhoto })
 }

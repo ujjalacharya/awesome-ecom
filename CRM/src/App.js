@@ -15,8 +15,7 @@ if (localStorage.token) {
 }
 const App = (props) => {
   useEffect( () => {
-    store.dispatch(loadMe());//returns socket user obj else null
-      
+    store.dispatch(loadMe());//returns socket user obj else null      
   }, []);
   return (
     <>

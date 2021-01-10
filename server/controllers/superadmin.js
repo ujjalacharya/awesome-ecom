@@ -13,13 +13,11 @@ const Product = require("../models/Product")
 const Lead = require("../models/Lead")
 const Remark = require("../models/Remark")
 const shortid = require('shortid');
-const sharp = require("sharp")
-const path = require("path");
 const fs = require("fs");
 const _ = require('lodash');
 const Fawn = require("fawn");
-const { districts } = require("../middleware/common");
 const Districts = require("../models/Districts");
+const { fileRemover, imageCompressor } = require("../middleware/helpers");
 const task = Fawn.Task();
 // const perPage = 10;
 
@@ -80,9 +78,16 @@ exports.banner = async (req, res) => {
         newBanner.product = product._id
     }
     const { filename, path: filepath, destination } = req.file
-    await sharp(filepath)
-        .resize(8480)
-        .toFile(path.resolve(destination, 'banner', filename))
+    // await sharp(filepath)
+    //     .resize(8480)
+    //     .toFile(path.resolve(destination, 'banner', filename))
+    await imageCompressor(
+        filename,
+        8480,
+        filepath,
+        destination,
+        "banner"
+    );
     // remove image from public/uploads
     const Path = `public/uploads/${filename}`;
     fs.unlinkSync(Path);
@@ -121,15 +126,24 @@ exports.editBanner = async(req,res) => {
     }
     if (req.file) {
         const { filename, path: filepath, destination } = req.file
-        await sharp(filepath)
-            .resize(8480)
-            .toFile(path.resolve(destination, 'banner', filename))
+        // await sharp(filepath)
+        //     .resize(8480)
+        //     .toFile(path.resolve(destination, 'banner', filename))
+        await imageCompressor(
+            filename,
+            8480,
+            filepath,
+            destination,
+            "banner"
+        );
         //remove old banner pic from bannner folder
-        let Path = `public/uploads/${banner.bannerPhoto}`;
-        fs.unlinkSync(Path);
-        // remove image from public/uploads
-        Path = `public/uploads/${filename}`;
-        fs.unlinkSync(Path);
+        // let Path = `public/uploads/${banner.bannerPhoto}`;
+        // fs.unlinkSync(Path);
+        // // remove image from public/uploads
+        // Path = `public/uploads/${filename}`;
+        // fs.unlinkSync(Path);
+        let files = [`public/uploads/${banner.bannerPhoto}`, `public/uploads/${filename}`]
+        fileRemover(files)
         banner.bannerPhoto = `banner/${filename}`
     }
     banner.link = req.body.link
