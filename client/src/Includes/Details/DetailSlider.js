@@ -1,15 +1,22 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import Sliderss from "react-slick";
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, ImageWithZoom } from 'pure-react-carousel';
+import ReactImageMagnify from 'react-image-magnify';
+// import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, ImageWithZoom } from 'pure-react-carousel';
 import PrevArrow from "../../Components/Includes/PrevArrow";
 import NextArrow from "../../Components/Includes/NextArrow";
 import { IMAGE_BASE_URL } from "../../../utils/constants";
 const baseImageUrl = IMAGE_BASE_URL
 
 const DetailSlider = (props) => {
-  // let [imageUrl, setImageUrl] = useState(`${baseImageUrl}/${props.data?.images[0]?.medium}`);
-  // let [largeImageUrl, setLargeImageUrl] = useState(`${baseImageUrl}/${props.data?.images[0]?.large}`);
+  
   let [curIndex, setCurIndex] = useState(0);
+  let [currentImageSmall, setCurrentImageSmall] = useState(`/images/default-image.png`);
+  let [currentImageLarge, setCurrentImageLarge] = useState(`/images/default-image.png`);
+
+  useEffect(() => {
+    setCurrentImageSmall(`${baseImageUrl}/${props.data?.images[0].medium}`)
+    setCurrentImageLarge(`${baseImageUrl}/${props.data?.images[0].large}`)
+  }, [props.data?.images])
 
   const settings = {
     dots: false,
@@ -45,9 +52,31 @@ const DetailSlider = (props) => {
       },
     ],
   };
+
   return (
     <div className="det-slider">
-      <CarouselProvider
+      <ReactImageMagnify
+        {...{
+          smallImage: {
+            alt: 'Product image',
+            isFluidWidth: true,
+            src: currentImageSmall,
+          },
+          imageClassName: 'magnify-img',
+          largeImage: {
+            src: currentImageLarge,
+            width: 1000,
+            height: 1000
+          },
+          lensStyle: { backgroundColor: 'rgba(0,0,0,.6)' },
+          enlargedImagePortalId: 'magnifyPortal',
+          enlargedImageContainerDimensions: {
+            width: '120%',
+            height: '100%'
+          }
+        }}
+      />
+      {/* <CarouselProvider
         visibleSlides={1}
         totalSlides={props.data?.images.length}
         step={1}
@@ -69,9 +98,7 @@ const DetailSlider = (props) => {
             ))
           }
         </Slider>
-        {/* <ButtonBack>Back</ButtonBack>
-        <ButtonNext>Next</ButtonNext> */}
-      </CarouselProvider>
+      </CarouselProvider> */}
 
       <div className="thumbnail">
         {
@@ -84,7 +111,11 @@ const DetailSlider = (props) => {
                       key={j}
                       className={curIndex === j ? 'active' : ''}
                       src={`${baseImageUrl}/${image.thumbnail}`}
-                      onClick={() => setCurIndex(j)}
+                      onClick={() => { 
+                        setCurIndex(j); 
+                        setCurrentImageSmall(`${baseImageUrl}/${image.medium}`); 
+                        setCurrentImageLarge(`${baseImageUrl}/${image.large}`); 
+                      }}
                     />
                   );
                 })}
@@ -97,7 +128,11 @@ const DetailSlider = (props) => {
                     key={j}
                     className={curIndex === j ? 'active' : ''}
                     src={`${baseImageUrl}/${image.thumbnail}`}
-                    onClick={() => setCurIndex(j)}
+                    onClick={() => { 
+                      setCurIndex(j); 
+                      setCurrentImageSmall(`${baseImageUrl}/${image.medium}`);
+                      setCurrentImageLarge(`${baseImageUrl}/${image.large}`); 
+                    }}
                   />
               ))
             )
