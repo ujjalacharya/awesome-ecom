@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Button,
     Form,
@@ -13,18 +12,36 @@ import {
     Row
 } from "antd";
 import ImageUploader from "./ImageUploader";
-const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) => {
+import {districts} from "../../../../utils/common";
+const DetailInformation = ({ layout, next, prev, detailFormData }) => {
     const [form] = Form.useForm()
+    const [selectedDistricts, setSelectedDistricts] = useState([]);
+    
+    const _districts = useMemo(() => {
+        let dts = districts.map(d=>({
+            label:d,
+            value:d
+        }))
+        return dts
+    }, [districts])
+
 
     useEffect(() => {
+        const {districts} = detailFormData
         form.setFieldsValue({ ...detailFormData })
+        setSelectedDistricts([...selectedDistricts, ...districts])
     }, [detailFormData])
 
+
+    const handleDeselectDistrict = (value) => {
+        return setSelectedDistricts(
+            selectedDistricts.filter((cat) => cat !== value)
+        );
+    };
     const onFinish = (values) => {
         next()
     };
     const onSubmit = () => {
-        console.log(form.getFieldsValue());
         form.submit()
     }
 
@@ -48,7 +65,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                     rules={[
                         {
                             
-                            required: true,
+                            // required: true,
                             message: "Please input your product description!",
                         },
                     ]}
@@ -68,7 +85,8 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                             })
                         }}
                         onReady={( editor) => {
-                            editor.setData(form.getFieldValue('description'))
+                            let value = form.getFieldValue('description')
+                            value && editor.setData(form.getFieldValue('description'))
                         }}
                     />
                 </Form.Item>
@@ -78,7 +96,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                     name="highlights"
                     rules={[
                         {
-                            required: true,
+                            // required: true,
                             message: "Please input highlights of the product!",
                         },
                     ]}
@@ -98,7 +116,8 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                             })
                         }}
                         onReady={(editor) => {
-                            editor.setData(form.getFieldValue('highlights'))
+                            let value = form.getFieldValue('highlights')
+                            value && editor.setData(form.getFieldValue('highlights'))
                         }}
                     />
                 </Form.Item>
@@ -137,7 +156,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                                 rules={[
                                     {
                                         type: 'string',
-                                        required: true,
+                                        // required: true,
                                         message: 'Please input product warranty!',
                                     },
                                 ]}
@@ -200,26 +219,46 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                     rules={[
                         {
                             type: 'array',
-                            required: true,
+                            // required: true,
                             message: 'Please add product images!',
                         }
                     ]}
                 >
                     <ImageUploader form={form} />
                 </Form.Item>
-                {/* <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item> */}
+                <Form.Item                    
+                    label="Available on"
+                    name="districts"
+                    rules={[
+                        {
+                            type: 'array',
+                            // required: true,
+                            message: 'Please provide product available districts!',
+                        },
+                    ]}
+                >
+                    <Select
+                        mode="multiple"
+                        showSearch
+                        style={{ width: 200 }}
+                        placeholder="Select districts"
+                        optionFilterProp="children"
+                        value={selectedDistricts}
+                        onDeselect={handleDeselectDistrict}
+                        options={_districts}
+                        filterOption={(input, option) =>
+                            option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        />
+                </Form.Item>
             </Form>
             <div className="steps-action">
-                <Button type="primary" onClick={onSubmit}>
-                    Next
-                </Button>
                 <Button style={{ margin: "0 8px" }} onClick={()=>prev(form.getFieldsValue())}>
                     Previous
             </Button>
+                <Button type="primary" onClick={onSubmit}>
+                    Next
+                </Button>
             </div>
         </>
 

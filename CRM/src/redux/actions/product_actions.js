@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVING_IMAGE} from "../types";
+import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, SUCCESS} from "../types";
 import api from "../../utils/api";
 
 export const getProducts = ({id, page, perPage, keyword = '', createdAt = '', updatedAt='' , status='',price='', outofstock=''}) => async (dispatch) => {
@@ -148,3 +148,18 @@ export const deleteImageById = (id,image_id) => async (dispatch) => {
         return false
     }
 };
+
+export const addProduct = ({ id,...body}) => async (dispatch) => {
+    body = JSON.stringify(body)
+    try {
+        await api.post(`/product/${id}`,body);
+        dispatch({
+            type: SUCCESS,
+            payload: 'Your product has been submitted and is under verification.',
+        });
+    } catch (err) {
+        console.log("****product_actions/addProduct****", err);
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
+    }
+};
+

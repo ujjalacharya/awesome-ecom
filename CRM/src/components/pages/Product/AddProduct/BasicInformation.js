@@ -8,8 +8,7 @@ import {
     Row
 } from "antd";
 import Categories from "./Categories";
-import ImageUploader  from "./ImageUploader";
-const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) => {
+const BasicInformation = ({ brands, layout, next, basicFormData }) => {
     const [form] = Form.useForm()
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [_brands, set_brands] = useState([]);
@@ -21,7 +20,7 @@ const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) =
     }, [brands]);
 
     useEffect(() => {
-        const { name, category, brand, tags, model } = basicFormData
+        const { category } = basicFormData
         // form.setFieldsValue({ name, category, brand, tags, model })
         form.setFieldsValue({...basicFormData})
         setSelectedCategories([...selectedCategories, ...category])
