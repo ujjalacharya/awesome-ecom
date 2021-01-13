@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import "antd/dist/antd.css";
-import { connect } from "react-redux";
 import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
 import "./App.scss";
@@ -19,11 +18,11 @@ const App = (props) => {
   }, []);
   return (
     <>
-      <Alert {...props} />
+      <Alert />
       {!verifyLocalStorage() ? <Signin /> : <MainRouter />}
     </>
   );
 };
 
 
-export default connect(state=>state)(App);
+export default App;

@@ -9,8 +9,7 @@ const initialState = {
     totalCount: 0,
     categories:[],
     brands:[],
-    uploadedImages:[],
-    isImageRemoved:false
+    uploadedImages:[]
 }
 
 export default function (state = initialState, action) {
@@ -52,19 +51,12 @@ export default function (state = initialState, action) {
         case UPLOAD_IMAGES:
             return {
                 ...state,
-                uploadedImages:payload,
-                isImageRemoved: false
+                uploadedImages: payload,
             }
         case REMOVE_IMAGE:
             return {
                 ...state,
                 uploadedImages: state.uploadedImages.filter(image=>image!==payload),
-                isImageRemoved:true
-            }
-        case REMOVING_IMAGE:
-            return {
-                ...state,
-                isImageRemoved: false
             }
         default:
             return state;

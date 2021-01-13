@@ -14,13 +14,10 @@ export const ProductDetail = ({product, singleLoading}) => {
         textAlign: 'center',
         background: '#364d79',
     };
-    function onChange(a, b, c) {
-        // console.log(a, b, c);
-    }
     return (
         <div className="row">
             <div className="col-xl-5">
-                <Carousel afterChange={onChange}>
+                <Carousel>
                     {
                         product?.images.map(image => (
 

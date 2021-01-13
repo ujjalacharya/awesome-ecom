@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {notification } from "antd";
-import { SmileOutlined } from "@ant-design/icons";
+import { SmileOutlined,  } from "@ant-design/icons";
 import { connect } from "react-redux";
 const Alert = ({alert}) => {
   const openNotification = (alert) => {

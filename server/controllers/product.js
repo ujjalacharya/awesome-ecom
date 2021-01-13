@@ -130,12 +130,15 @@ exports.productImages = async (req, res) => {
       destination,
       "productLarge"
     );
+    // image.large = `productLarge/${filename}`
+    // image.thumbnail = `productThumbnail/${filename}`
+    // image.medium = `productMedium/${filename}`
     // remove image from public/uploads
     const Path = `public/uploads/${filename}`;
     files.push(Path)
     // fs.unlinkSync(Path);
-    // return await image.save();
-    return image
+    return await image.save();
+    // return image
   });
   images = await Promise.all(images);
   fileRemover(files)
@@ -178,7 +181,7 @@ exports.deleteImage = async (req, res) => {
 
 exports.deleteImageById = async (req, res) => {
   let image = await ProductImages.findByIdAndRemove(req.query.image_id);
-  let files = [`public/uploads/${imageFound.thumbnail}`, `public/uploads/${imageFound.medium}`, `public/uploads/${imageFound.large}`]
+  let files = [`public/uploads/${image.thumbnail}`, `public/uploads/${image.medium}`, `public/uploads/${image.large}`]
   fileRemover(files)
   // let Path = `public/uploads/${image.thumbnail}`;
   // fs.unlinkSync(Path);

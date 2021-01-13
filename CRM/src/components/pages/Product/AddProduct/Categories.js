@@ -53,7 +53,7 @@ export const Categories = ({
         rules={[
           {
             type:'array',
-            required: true,
+            // required: true,
             message: "Please input product category!",
           },
         ]}

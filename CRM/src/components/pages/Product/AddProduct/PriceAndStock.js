@@ -13,15 +13,17 @@ import {
     Row
 } from "antd";
 import ImageUploader from "./ImageUploader";
-const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) => {
+const PriceAndStock = ({ layout, tailLayout, prev, uploadedImages}) => {
     const [form] = Form.useForm()
 
     useEffect(() => {
-        form.setFieldsValue({ ...detailFormData })
-    }, [detailFormData])
+        form.setFieldsValue({
+            images: uploadedImages.map(image=>image._id)
+        })
+    },[uploadedImages])
 
     const onFinish = (values) => {
-        next()
+        
     };
     const onSubmit = () => {
         console.log(form.getFieldsValue());
@@ -59,16 +61,13 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                             toolbar: {
                                 items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
                             },
-                            placeholder:"Product full descrption here..",
+                            placeholder:"Product full descrption here.."
                         }}
                         onChange={(event, editor) => {
                             const data = editor.getData();
                             form.setFieldsValue({
                                 description: data,
                             })
-                        }}
-                        onReady={( editor) => {
-                            editor.setData(form.getFieldValue('description'))
                         }}
                     />
                 </Form.Item>
@@ -97,21 +96,18 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                                 highlights: data,
                             })
                         }}
-                        onReady={(editor) => {
-                            editor.setData(form.getFieldValue('highlights'))
-                        }}
                     />
                 </Form.Item>
                 <Form.Item
-                    label="Video ID"
+                    label="Video Url"
                     name="videoURL"
                     rules={[
                         {
-                            type: 'string',
+                            type: 'url',
                         }
                     ]}
                 >
-                    <Input style={{ width: '100%' }} placeholder="KaAkyTd165Y" />
+                    <Input style={{ width: '100%' }} placeholder="https://www.youtube.com/watch?v=CICUUy22JpY&list" />
                 </Form.Item>
                 <Row justify="center" gutter={16}>
                     <Col className="gutter-row" span={6}>
@@ -205,7 +201,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                         }
                     ]}
                 >
-                    <ImageUploader form={form} />
+                    <ImageUploader/>
                 </Form.Item>
                 {/* <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">
@@ -217,7 +213,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
                 <Button type="primary" onClick={onSubmit}>
                     Next
                 </Button>
-                <Button style={{ margin: "0 8px" }} onClick={()=>prev(form.getFieldsValue())}>
+                <Button style={{ margin: "0 8px" }} onClick={prev}>
                     Previous
             </Button>
             </div>
@@ -226,13 +222,12 @@ const DetailInformation = ({ layout, tailLayout, next, prev, detailFormData }) =
     );
 };
 
-DetailInformation.propTypes = {
-    // uploadedImages: PropTypes.array,
-    detailFormData: PropTypes.object,
+PriceAndStock.propTypes = {
+    uploadedImages: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
-    // uploadedImages: state.product.uploadedImages
+    uploadedImages: state.product.uploadedImages
 });
 
 const mapDispatchToProps = {
@@ -241,4 +236,4 @@ const mapDispatchToProps = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(React.memo(DetailInformation));
+)(React.memo(PriceAndStock));

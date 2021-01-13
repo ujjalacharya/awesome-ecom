@@ -110,22 +110,32 @@ export const uploadImages = ({
                 }
             }
             );
-        let data = res.data.map(image=>image._id)
-        dispatch({
-            type: UPLOAD_IMAGES,
-            payload: data,
-        });
-        onSuccess(res, file)
+        let images = res.data.map(image => {
+            return {
+                _id: image._id,
+                uid: file.uid,
+                name: file.name,
+                status: 'done',
+                url: `${process.env.REACT_APP_SERVER_URL}uploads/${image.large}`,
+            }
+        })
+        onSuccess(images[0], file)
     } catch (err) {
         onError(err)
         console.log("****product_actions/uploadImages****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Error occured while uploading." });
     }
+};
+
+export const saveUploadedImages = (images) => async (dispatch) => {
+    dispatch({
+        type: UPLOAD_IMAGES,
+        payload: images,
+    });
 };
 
 export const deleteImageById = (id,image_id) => async (dispatch) => {
     try {
-        dispatch({type: REMOVING_IMAGE})
         const res = await api.delete(`/product/image/${id}?image_id=${image_id}`);
         dispatch({
             type: REMOVE_IMAGE,

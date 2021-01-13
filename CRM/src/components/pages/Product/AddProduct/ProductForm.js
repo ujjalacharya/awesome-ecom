@@ -10,6 +10,7 @@ import {
 import { getCategories, getBrands } from "../../../../redux/actions/product_actions";
 import BasicInformation from './BasicInformation'
 import DetailInformation from './DetailInformation'
+import PriceAndStock from "./PriceAndStock";
 const layout = {
   labelCol: {
     span: 4,
@@ -71,7 +72,13 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
   const next = () => {
     setCurrent(current + 1);
   };
-  const prev = () => {
+  const prev = (newFormData) => {
+    if(current === 1) {
+      setDetailFormData({
+        ...detailFormData,
+        ...newFormData
+      })
+    }
     setCurrent(current - 1);
   };
 
@@ -95,19 +102,25 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
            })
           }
           if (name === 'detail') {
-            // setDetailFormData({
-            //   ...basicFormData,
-            //   name: data.values.name,
-            //   category: data.values.category,
-            //   brand: data.values.brand
-            // })
+            setDetailFormData({
+              ...detailFormData,
+              warranty: data.values.warranty,
+              color: data.values.color,
+              description: data.values.description,
+              size: data.values.size,
+              highlights: data.values.highlights,
+              videoURL: data.values.videoURL,
+              weight: data.values.weight,
+              return: data.values.return,
+              images: data.values.images
+            })
           }
         }}
       >
 
         {current === 0 && <BasicInformation basicFormData={basicFormData} next={next} layout={layout} tailLayout={tailLayout} brands={brands} />}
-        {current === 1 && <DetailInformation next={next} prev={prev} layout={layout} tailLayout={tailLayout} />}
-        {current === 2 && 'done'}
+        {current === 1 && <DetailInformation detailFormData={detailFormData} next={next} prev={prev} layout={layout} tailLayout={tailLayout} />}
+        {current === 2 && <PriceAndStock prev={prev} layout={layout} tailLayout={tailLayout} />}
       </Form.Provider>
         {/* <div className="steps-action">
           {current === 0 && (
