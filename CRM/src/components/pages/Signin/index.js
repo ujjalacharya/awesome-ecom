@@ -8,10 +8,11 @@ const Login = (props) => {
     email: "Jhondoe@gmail.com",
     password: "helloworld1",
     error: "",
-    loading: false,
   });
 
-  const { loading, error, email,password } = state;
+  const { error, email,password } = state;
+
+  const {loading} = props;
 
   const handleChange = (event) => {
     setState({
@@ -37,15 +38,16 @@ const Login = (props) => {
 
   return (
     <div className="login-dark">
-      {loading && showLoading()}
+      {/* {loading && showLoading()} */}
       {error && showError()}
-      {!loading && (
+      {/* {!loading && ( */}
         <SigninForm
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           state={state}
+          loading={loading}
         />
-      )}
+      {/* )} */}
     </div>
   );
 };
@@ -53,6 +55,7 @@ const Login = (props) => {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.isAuth,
+    loading: state.auth.loading
   };
 };
 

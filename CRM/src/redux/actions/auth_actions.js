@@ -1,6 +1,16 @@
-import { SIGN_IN, SIGN_OUT, LOAD_ME, GLOBAL_ERROR, SAVE_SOCKET_USER } from "../types";
+import {
+  SIGN_OUT,
+  LOAD_ME,
+  GLOBAL_ERROR,
+  SAVE_SOCKET_USER,
+  AUTH_TYPES,
+} from "../types";
 import api from "../../utils/api";
 import { socket, disconnectSocket } from "../../utils/common";
+import { finish, init, success, error } from "../commonActions";
+import { AuthService } from "../api/auth_api";
+
+const authService = new AuthService();
 
 export const loadMe = () => async (dispatch) => {
   try {
@@ -9,12 +19,12 @@ export const loadMe = () => async (dispatch) => {
       type: LOAD_ME,
       payload: res.data?.admin,
     });
-  //make socket connection to the server
-    let socketUser = socket()
+    //make socket connection to the server
+    let socketUser = socket();
     dispatch({
       type: SAVE_SOCKET_USER,
-      payload: socketUser
-    })
+      payload: socketUser,
+    });
     //todo reconnect if error..
     // socketUser.on("tx", data => {
     //   console.log(data);
@@ -26,19 +36,14 @@ export const loadMe = () => async (dispatch) => {
 };
 
 export const signIn = (email, password) => async (dispatch) => {
-  const body = JSON.stringify({ email, password });
-  try {
-    const res = await api.post(`/admin-auth/signin`, body);
-    if (res && res.status === 200) {
-      dispatch({
-        type: SIGN_IN,
-        payload: res.data,
-      });
-      dispatch(loadMe());
-    }
-  } catch (err) {
-    console.log("****auth_actions/signIn****", err);
-    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found"  });
+  dispatch(init(AUTH_TYPES.SIGN_IN));
+  const response = await authService.loginUser(email, password);
+  dispatch(finish(AUTH_TYPES.SIGN_IN));
+  if (response.isSuccess) {
+    dispatch(success(AUTH_TYPES.SIGN_IN, response.data));
+    dispatch(loadMe());
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
   }
 };
 
@@ -49,7 +54,7 @@ export const signOut = () => async (dispatch) => {
     dispatch({
       type: SIGN_OUT,
     });
-    disconnectSocket()
+    disconnectSocket();
     // window.location.href = "/"
   } catch (err) {
     console.log("****auth_actions/signOut****", err);

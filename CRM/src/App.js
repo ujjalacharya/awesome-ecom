@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import "antd/dist/antd.css";
 import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
@@ -13,9 +14,14 @@ if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 const App = (props) => {
+
+  useSelector(state => state.auth.isAuth)
+
   useEffect( () => {
+    if(!localStorage.token) return;
     store.dispatch(loadMe());//returns socket user obj else null      
   }, []);
+  
   return (
     <>
       <Alert />
