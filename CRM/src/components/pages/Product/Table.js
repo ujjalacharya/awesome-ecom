@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { Table as AntdTable, Input, Button, Space, Modal, Avatar, Drawer } from 'antd';
+import { Table as AntdTable, Input, Button, Space, Popconfirm, Avatar, Drawer } from 'antd';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getProducts, getProduct } from '../../../redux/actions/product_actions'
+import { getProducts, getProduct, deleteProduct } from '../../../redux/actions/product_actions'
 import ProductDetail from './ProductDetail';
-const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, user }) => {
+const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products, totalCount, user }) => {
     // const [pagination, setPagination] = useState({
     //     current: 1,
     //     pageSize: 10,
@@ -115,7 +115,6 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
     })
 
     const openProduct = (product) => {
-        console.log(product);
         setIsDrawerOpen(true)
         getProduct(product.slug)
     }
@@ -196,15 +195,18 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             title: 'Action',
             dataIndex: '',
             width: '8%',
-            render: action => <>
-                <button onClick={() => openProduct(action)} className="btn btn-info"><i className="fas fa-eye"></i></button>
-                <button className="btn btn-warning"><i className="fas fa-marker"></i></button>
-            </>,
-            // onCell: order => {
-            //     return {
-            //         onClick: e => openProduct(order)
-            //     }
-            // }
+            render: product => <>
+                <button onClick={() => openProduct(product)} className="btn btn-info btn-sm"><i className="fas fa-eye"></i></button>
+                <button className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>
+                <Popconfirm
+                    title="Are you sure to delete this product?"
+                    onConfirm={() => deleteProduct(product.soldBy, product.slug)}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                <button className="btn btn-danger btn-sm"><i className="fas fa-trash "></i></button>
+                </Popconfirm>
+            </>
         },
     ], []);
 
@@ -236,16 +238,6 @@ const Table = ({ getProduct, getProducts, multiLoading, products, totalCount, us
             >
                 <ProductDetail isOrderDetailOpen={isDrawerOpen} />
             </Drawer>
-            {/* <Modal
-        title="Order Detail"
-        centered
-        visible={isDrawerOpen}
-        onOk={() => setIsDrawerOpen(false)}
-        onCancel={() => setIsDrawerOpen(false)}
-        width={1000}
-    >
-        <ProductDetail order={order}/>
-    </Modal> */}
         </>)
 }
 
@@ -256,6 +248,7 @@ Table.propTypes = {
     pageCount: PropTypes.number,
     getProduct: PropTypes.func.isRequired,
     getProducts: PropTypes.func.isRequired,
+    deleteProduct: PropTypes.func,
 }
 const mapStateToProps = (state) => ({
     user: state.auth.user,
@@ -264,4 +257,4 @@ const mapStateToProps = (state) => ({
     totalCount: state.product.totalCount,
 })
 
-export default connect(mapStateToProps, { getProducts, getProduct })(Table)
+export default connect(mapStateToProps, { getProducts, getProduct, deleteProduct })(Table)

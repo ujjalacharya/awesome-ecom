@@ -93,7 +93,8 @@ exports.deleteProduct = async (req, res) => {
   }
   product.isDeleted = Date.now();
   await product.save();
-  res.json(product);
+  this.getProducts(req,res)
+  // res.json(product);
 };
 
 exports.productImages = async (req, res) => {
@@ -213,7 +214,7 @@ exports.getProducts = async (req, res) => {
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { ...sortFactor, createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor, updatedAt }
   if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
-  let query = { soldBy: req.profile._id }
+  let query = { soldBy: req.profile._id, isDeleted: null }
   if (keyword) query = {
     ...query,
     name: { $regex: keyword, $options: "i" }

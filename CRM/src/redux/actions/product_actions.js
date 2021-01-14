@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, SUCCESS} from "../types";
+import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, SUCCESS, DELETE_PRODUCT} from "../types";
 import api from "../../utils/api";
 
 export const getProducts = ({id, page, perPage, keyword = '', createdAt = '', updatedAt='' , status='',price='', outofstock=''}) => async (dispatch) => {
@@ -159,6 +159,24 @@ export const addProduct = ({ id,...body}) => async (dispatch) => {
         });
     } catch (err) {
         console.log("****product_actions/addProduct****", err);
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
+    }
+};
+
+export const deleteProduct = (id, slug) => async (dispatch) => {
+    try {
+        const res = await api.patch(`/product/delete-product/${id}/${slug}`);
+        console.log(res.data);
+        dispatch({
+            type: SUCCESS,
+            payload: 'Your product has been deleted successfully.',
+        });
+        dispatch({
+            type:DELETE_PRODUCT,
+            payload:res.data._id
+        })
+    } catch (err) {
+        console.log("****product_actions/deleteProduct****", err);
         dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
     }
 };

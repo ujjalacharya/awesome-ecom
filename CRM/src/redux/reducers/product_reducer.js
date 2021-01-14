@@ -1,4 +1,4 @@
-import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE , REMOVING_IMAGE} from "../types";
+import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE , REMOVING_IMAGE, DELETE_PRODUCT} from "../types";
 
 
 const initialState = {
@@ -28,6 +28,11 @@ export default function (state = initialState, action) {
                 product: payload,
                 singleLoading: false
             };
+        case DELETE_PRODUCT:
+            return {
+                ...state,
+                products: state.products.filter(product => product._id !== payload),
+            }
         case MULTI_PRODUCT_LOADING:
             return {
             ...state,
