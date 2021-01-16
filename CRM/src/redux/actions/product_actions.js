@@ -1,4 +1,4 @@
-import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVING_IMAGE} from "../types";
+import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, SUCCESS, DELETE_PRODUCT} from "../types";
 import api from "../../utils/api";
 
 export const getProducts = ({id, page, perPage, keyword = '', createdAt = '', updatedAt='' , status='',price='', outofstock=''}) => async (dispatch) => {
@@ -110,22 +110,32 @@ export const uploadImages = ({
                 }
             }
             );
-        let data = res.data.map(image=>image._id)
-        dispatch({
-            type: UPLOAD_IMAGES,
-            payload: data,
-        });
-        onSuccess(res, file)
+        let images = res.data.map(image => {
+            return {
+                _id: image._id,
+                uid: file.uid,
+                name: file.name,
+                status: 'done',
+                url: `${process.env.REACT_APP_SERVER_URL}uploads/${image.large}`,
+            }
+        })
+        onSuccess(images[0], file)
     } catch (err) {
         onError(err)
         console.log("****product_actions/uploadImages****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Error occured while uploading." });
     }
+};
+
+export const saveUploadedImages = (images) => async (dispatch) => {
+    dispatch({
+        type: UPLOAD_IMAGES,
+        payload: images,
+    });
 };
 
 export const deleteImageById = (id,image_id) => async (dispatch) => {
     try {
-        dispatch({type: REMOVING_IMAGE})
         const res = await api.delete(`/product/image/${id}?image_id=${image_id}`);
         dispatch({
             type: REMOVE_IMAGE,
@@ -138,3 +148,36 @@ export const deleteImageById = (id,image_id) => async (dispatch) => {
         return false
     }
 };
+
+export const addProduct = ({ id,...body}) => async (dispatch) => {
+    body = JSON.stringify(body)
+    try {
+        await api.post(`/product/${id}`,body);
+        dispatch({
+            type: SUCCESS,
+            payload: 'Your product has been submitted and is under verification.',
+        });
+    } catch (err) {
+        console.log("****product_actions/addProduct****", err);
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
+    }
+};
+
+export const deleteProduct = (id, slug) => async (dispatch) => {
+    try {
+        const res = await api.patch(`/product/delete-product/${id}/${slug}`);
+        console.log(res.data);
+        dispatch({
+            type: SUCCESS,
+            payload: 'Your product has been deleted successfully.',
+        });
+        dispatch({
+            type:DELETE_PRODUCT,
+            payload:res.data._id
+        })
+    } catch (err) {
+        console.log("****product_actions/deleteProduct****", err);
+        dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
+    }
+};
+

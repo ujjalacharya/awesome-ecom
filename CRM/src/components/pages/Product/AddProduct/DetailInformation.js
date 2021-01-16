@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import {
     Button,
     Form,
@@ -11,8 +12,32 @@ import {
     Row
 } from "antd";
 import ImageUploader from "./ImageUploader";
-const DetailInformation = ({ layout, tailLayout, next, prev}) => {
+import {districts} from "../../../../utils/common";
+const DetailInformation = ({ layout, next, prev, detailFormData }) => {
     const [form] = Form.useForm()
+    const [selectedDistricts, setSelectedDistricts] = useState([]);
+    
+    const _districts = useMemo(() => {
+        let dts = districts.map(d=>({
+            label:d,
+            value:d
+        }))
+        return dts
+    }, [districts])
+
+
+    useEffect(() => {
+        const {districts} = detailFormData
+        form.setFieldsValue({ ...detailFormData })
+        setSelectedDistricts([...selectedDistricts, ...districts])
+    }, [detailFormData])
+
+
+    const handleDeselectDistrict = (value) => {
+        return setSelectedDistricts(
+            selectedDistricts.filter((cat) => cat !== value)
+        );
+    };
     const onFinish = (values) => {
         next()
     };
@@ -24,6 +49,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
         console.log("Failed:", errorInfo);
     };
 
+    
     return (
         <>
             <Form
@@ -39,7 +65,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
                     rules={[
                         {
                             
-                            required: true,
+                            // required: true,
                             message: "Please input your product description!",
                         },
                     ]}
@@ -50,13 +76,17 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
                             toolbar: {
                                 items: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
                             },
-                            placeholder:"Product full descrption here.."
+                            placeholder:"Product full descrption here..",
                         }}
                         onChange={(event, editor) => {
                             const data = editor.getData();
                             form.setFieldsValue({
                                 description: data,
                             })
+                        }}
+                        onReady={( editor) => {
+                            let value = form.getFieldValue('description')
+                            value && editor.setData(form.getFieldValue('description'))
                         }}
                     />
                 </Form.Item>
@@ -66,7 +96,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
                     name="highlights"
                     rules={[
                         {
-                            required: true,
+                            // required: true,
                             message: "Please input highlights of the product!",
                         },
                     ]}
@@ -85,18 +115,22 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
                                 highlights: data,
                             })
                         }}
+                        onReady={(editor) => {
+                            let value = form.getFieldValue('highlights')
+                            value && editor.setData(form.getFieldValue('highlights'))
+                        }}
                     />
                 </Form.Item>
                 <Form.Item
-                    label="Video Url"
+                    label="Video ID"
                     name="videoURL"
                     rules={[
                         {
-                            type: 'url',
+                            type: 'string',
                         }
                     ]}
                 >
-                    <Input style={{ width: '100%' }} placeholder="https://www.youtube.com/watch?v=CICUUy22JpY&list" />
+                    <Input style={{ width: '100%' }} placeholder="KaAkyTd165Y" />
                 </Form.Item>
                 <Row justify="center" gutter={16}>
                     <Col className="gutter-row" span={6}>
@@ -122,7 +156,7 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
                                 rules={[
                                     {
                                         type: 'string',
-                                        required: true,
+                                        // required: true,
                                         message: 'Please input product warranty!',
                                     },
                                 ]}
@@ -179,24 +213,71 @@ const DetailInformation = ({ layout, tailLayout, next, prev}) => {
                         </div>
                     </Col>
                 </Row>
-                            <ImageUploader/>
-                {/* <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item> */}
+                <Form.Item
+                    label="Images"
+                    name="images"
+                    rules={[
+                        {
+                            type: 'array',
+                            // required: true,
+                            message: 'Please add product images!',
+                        }
+                    ]}
+                >
+                    <ImageUploader form={form} />
+                </Form.Item>
+                <Form.Item                    
+                    label="Available on"
+                    name="districts"
+                    rules={[
+                        {
+                            type: 'array',
+                            // required: true,
+                            message: 'Please provide product available districts!',
+                        },
+                    ]}
+                >
+                    <Select
+                        mode="multiple"
+                        showSearch
+                        style={{ width: 200 }}
+                        placeholder="Select districts"
+                        optionFilterProp="children"
+                        value={selectedDistricts}
+                        onDeselect={handleDeselectDistrict}
+                        options={_districts}
+                        filterOption={(input, option) =>
+                            option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        />
+                </Form.Item>
             </Form>
             <div className="steps-action">
+                <Button style={{ margin: "0 8px" }} onClick={()=>prev(form.getFieldsValue())}>
+                    Previous
+            </Button>
                 <Button type="primary" onClick={onSubmit}>
                     Next
                 </Button>
-                <Button style={{ margin: "0 8px" }} onClick={prev}>
-                    Previous
-            </Button>
             </div>
         </>
 
     );
 };
 
-export default DetailInformation
+DetailInformation.propTypes = {
+    // uploadedImages: PropTypes.array,
+    detailFormData: PropTypes.object,
+};
+
+const mapStateToProps = (state) => ({
+    // uploadedImages: state.product.uploadedImages
+});
+
+const mapDispatchToProps = {
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(React.memo(DetailInformation));

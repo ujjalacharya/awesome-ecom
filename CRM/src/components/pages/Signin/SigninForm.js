@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { Button } from "antd";
 
-function SigninForm({ handleChange, handleSubmit, state }) {
+function SigninForm({ handleChange, handleSubmit, state, loading }) {
   const [value, setValue] = useState({ hidden: true });
 
   const toggleShow = () => {
@@ -56,9 +57,13 @@ function SigninForm({ handleChange, handleSubmit, state }) {
         </label>
       </div>
       <div className="form-group">
-        <button className="btn btn-primary btn-block" type="submit">
+        <Button
+          className="btn btn-primary btn-block"
+          htmlType="submit"
+          loading={loading}
+        >
           Log In
-        </button>
+        </Button>
       </div>
     </form>
   );

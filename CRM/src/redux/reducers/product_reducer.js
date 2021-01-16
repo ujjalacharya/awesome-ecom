@@ -1,4 +1,4 @@
-import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE , REMOVING_IMAGE} from "../types";
+import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE , REMOVING_IMAGE, DELETE_PRODUCT} from "../types";
 
 
 const initialState = {
@@ -9,8 +9,7 @@ const initialState = {
     totalCount: 0,
     categories:[],
     brands:[],
-    uploadedImages:[],
-    isImageRemoved:false
+    uploadedImages:[]
 }
 
 export default function (state = initialState, action) {
@@ -29,6 +28,11 @@ export default function (state = initialState, action) {
                 product: payload,
                 singleLoading: false
             };
+        case DELETE_PRODUCT:
+            return {
+                ...state,
+                products: state.products.filter(product => product._id !== payload),
+            }
         case MULTI_PRODUCT_LOADING:
             return {
             ...state,
@@ -52,19 +56,12 @@ export default function (state = initialState, action) {
         case UPLOAD_IMAGES:
             return {
                 ...state,
-                uploadedImages:payload,
-                isImageRemoved: false
+                uploadedImages: payload,
             }
         case REMOVE_IMAGE:
             return {
                 ...state,
                 uploadedImages: state.uploadedImages.filter(image=>image!==payload),
-                isImageRemoved:true
-            }
-        case REMOVING_IMAGE:
-            return {
-                ...state,
-                isImageRemoved: false
             }
         default:
             return state;

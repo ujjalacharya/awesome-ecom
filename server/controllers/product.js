@@ -10,17 +10,10 @@ const ProductBrand = require("../models/ProductBrand");
 const ProductImages = require("../models/ProductImages");
 const userHas = require("../middleware/user_actions/userHas")
 const getRatingInfo = require("../middleware/user_actions/getRatingInfo")
-const shortid = require("shortid");
-const sharp = require("sharp");
-const path = require("path");
-const fs = require("fs");
 const _ = require("lodash");
 const Fawn = require("fawn");
-const moment = require('moment');
-const { districts } = require("../middleware/common");
-const { json, query } = require("express");
+const { fileRemover, imageCompressor } = require("../middleware/helpers");
 const task = Fawn.Task();
-const perPage = 10;
 
 exports.product = async (req, res, next) => {
   const product = await Product.findOne({ slug: req.params.p_slug })
@@ -100,71 +93,56 @@ exports.deleteProduct = async (req, res) => {
   }
   product.isDeleted = Date.now();
   await product.save();
-  res.json(product);
+  this.getProducts(req,res)
+  // res.json(product);
 };
 
 exports.productImages = async (req, res) => {
   if (!req.files.length) {
     return res.status(400).json({ error: "Product images are required" });
   }
+  let files = []
   if (!req.profile.isVerified) {
-    let fileDeleter = req.files.map((file) => {
-      const { filename } = file;
-      // remove image from public/uploads
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          fs.unlinkSync(`public/uploads/${filename}`)
-          res()
-        }, 4000);//need to resolve this issue..
-      }
-      )
-    });
-    Promise.all(fileDeleter)
-    
+    files = req.files.map(({filename}) => `public/uploads/${filename}`)
+    fileRemover(files)    
     return res.status(403).json({ error: "Admin is not verified" });
   }
-  const compressImage = async (
-    filename,
-    size,
-    filepath,
-    destination,
-    foldername
-  ) => {
-    await sharp(filepath)
-      .resize(size)
-      .toFile(path.resolve(destination, `${foldername}`, filename));
-    return `${foldername}/${filename}`;
-  };
   let images = req.files.map(async (file) => {
     const image = new ProductImages();
     const { filename, path: filepath, destination } = file;
-    image.thumbnail = await compressImage(
+    image.thumbnail = await imageCompressor(
       filename,
       80,
       filepath,
       destination,
       "productThumbnail"
     );
-    image.medium = await compressImage(
+    image.medium = await imageCompressor(
       filename,
       540,
       filepath,
       destination,
       "productMedium"
     );
-    image.large = await compressImage(
+    image.large = await imageCompressor(
       filename,
       800,
       filepath,
       destination,
       "productLarge"
     );
+    // image.large = `productLarge/${filename}`
+    // image.thumbnail = `productThumbnail/${filename}`
+    // image.medium = `productMedium/${filename}`
     // remove image from public/uploads
     const Path = `public/uploads/${filename}`;
-    fs.unlinkSync(Path);
+    files.push(Path)
+    // fs.unlinkSync(Path);
     return await image.save();
+    // return image
   });
   images = await Promise.all(images);
+  fileRemover(files)
   res.json(images);
 };
 
@@ -191,24 +169,27 @@ exports.deleteImage = async (req, res) => {
     .options({ viaSave: true })
     .remove(ProductImages, { _id: req.query.image_id })
     .run({ useMongoose: true });
-
-  let Path = `public/uploads/${imageFound.thumbnail}`;
-  fs.unlinkSync(Path);
-  Path = `public/uploads/${imageFound.medium}`;
-  fs.unlinkSync(Path);
-  Path = `public/uploads/${imageFound.large}`;
-  fs.unlinkSync(Path);
+  let files = [`public/uploads/${imageFound.thumbnail}`, `public/uploads/${imageFound.medium}`, `public/uploads/${imageFound.large}`]
+  fileRemover(files)
+  // let Path = `public/uploads/${imageFound.thumbnail}`;
+  // fs.unlinkSync(Path);
+  // Path = `public/uploads/${imageFound.medium}`;
+  // fs.unlinkSync(Path);
+  // Path = `public/uploads/${imageFound.large}`;
+  // fs.unlinkSync(Path);
   res.json(updateProduct.images);
 };
 
 exports.deleteImageById = async (req, res) => {
   let image = await ProductImages.findByIdAndRemove(req.query.image_id);
-  let Path = `public/uploads/${image.thumbnail}`;
-  fs.unlinkSync(Path);
-  Path = `public/uploads/${image.medium}`;
-  fs.unlinkSync(Path);
-  Path = `public/uploads/${image.large}`;
-  fs.unlinkSync(Path);
+  let files = [`public/uploads/${image.thumbnail}`, `public/uploads/${image.medium}`, `public/uploads/${image.large}`]
+  fileRemover(files)
+  // let Path = `public/uploads/${image.thumbnail}`;
+  // fs.unlinkSync(Path);
+  // Path = `public/uploads/${image.medium}`;
+  // fs.unlinkSync(Path);
+  // Path = `public/uploads/${image.large}`;
+  // fs.unlinkSync(Path);
   res.json(image);
 };
 
@@ -233,7 +214,7 @@ exports.getProducts = async (req, res) => {
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { ...sortFactor, createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor, updatedAt }
   if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
-  let query = { soldBy: req.profile._id }
+  let query = { soldBy: req.profile._id, isDeleted: null }
   if (keyword) query = {
     ...query,
     name: { $regex: keyword, $options: "i" }

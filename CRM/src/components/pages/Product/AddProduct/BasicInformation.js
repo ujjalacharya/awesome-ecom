@@ -8,8 +8,7 @@ import {
     Row
 } from "antd";
 import Categories from "./Categories";
-import ImageUploader  from "./ImageUploader";
-const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) => {
+const BasicInformation = ({ brands, layout, next, basicFormData }) => {
     const [form] = Form.useForm()
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [_brands, set_brands] = useState([]);
@@ -21,8 +20,9 @@ const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) =
     }, [brands]);
 
     useEffect(() => {
-        const { name, category, brand, tags, model } = basicFormData
-        form.setFieldsValue({ name, category, brand, tags, model })
+        const { category } = basicFormData
+        // form.setFieldsValue({ name, category, brand, tags, model })
+        form.setFieldsValue({...basicFormData})
         setSelectedCategories([...selectedCategories, ...category])
     }, [basicFormData])
 
@@ -67,7 +67,7 @@ const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) =
                     rules={[
                         {
                             type: 'string',
-                            required: true,
+                            // required: true,
                             message: "Please input your product name!",
                         },
                     ]}
@@ -103,7 +103,7 @@ const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) =
                                 rules={[
                                     {
                                         type: 'string',
-                                        required: true,
+                                        // required: true,
                                         message: 'Please input product brand!',
                                     },
                                 ]}
@@ -136,7 +136,6 @@ const BasicInformation = ({ brands, layout, tailLayout, next, basicFormData }) =
                         </div>
                     </Col>
                 </Row>
-                <ImageUploader/>
                 
             </Form>
             <div className="steps-action">

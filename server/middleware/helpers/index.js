@@ -10,5 +10,7 @@ module.exports = {
     dbConnection: require("./dbConnection"),
     calculateDistance: require("./geoDistance"),
     createNotification: require("./createNotification"),
-    waterMarker: require("./waterMarker")
+    waterMarker: require("./waterMarker"),
+    fileRemover: require("./fileRemover"),
+    imageCompressor: require('./imageCompressor')
 }

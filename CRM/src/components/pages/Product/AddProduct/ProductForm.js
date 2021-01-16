@@ -3,13 +3,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   Steps,
-  Button,
-  message,
   Form,
 } from "antd";
-import { getCategories, getBrands } from "../../../../redux/actions/product_actions";
+import { getCategories, getBrands, addProduct } from "../../../../redux/actions/product_actions";
 import BasicInformation from './BasicInformation'
 import DetailInformation from './DetailInformation'
+import PriceAndStock from "./PriceAndStock";
 const layout = {
   labelCol: {
     span: 4,
@@ -42,14 +41,14 @@ const steps = [
   },
 ];
 
-const ProductForm = ({ getCategories, getBrands, brands }) => {
+const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => {
   const [current, setCurrent] = useState(0);
   const [basicFormData, setBasicFormData] = useState({
-    name:'',
-    category:[],
-    brand:'',
-    tags:[],
-    model:''
+    name: '',
+    category: [],
+    brand: '',
+    tags: [],
+    model: ''
   })
   const [detailFormData, setDetailFormData] = useState({
     warranty: '',
@@ -57,10 +56,16 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
     description: '',
     size: [],
     highlights: '',
-    videoURL:'',
-    weight:[],
-    return:'',
-    images:[]
+    videoURL: '',
+    weight: [],
+    return: '',
+    images: [],
+    districts: []
+  })
+  const [priceAndStockFormData, setpriceAndStockFormData] = useState({
+    price: '',
+    discountRate: '',
+    quantity: ''
   })
 
   useEffect(() => {
@@ -71,7 +76,24 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
   const next = () => {
     setCurrent(current + 1);
   };
-  const prev = () => {
+
+  const submitProductInfo = () => {
+    console.log('hello');
+    addProduct({ id: user._id, ...basicFormData, ...detailFormData, ...priceAndStockFormData })
+  }
+  const prev = (newFormData) => {
+    if (current === 1) {
+      setDetailFormData({
+        ...detailFormData,
+        ...newFormData
+      })
+    }
+    if (current === 2) {
+      setpriceAndStockFormData({
+        ...priceAndStockFormData,
+        ...newFormData
+      })
+    }
     setCurrent(current - 1);
   };
 
@@ -83,57 +105,47 @@ const ProductForm = ({ getCategories, getBrands, brands }) => {
         ))}
       </Steps>
       <Form.Provider
-        onFormFinish={(name,data) => {
+        onFormFinish={(name, data) => {
           if (name === 'basic') {
-           setBasicFormData({
-             ...basicFormData,
-             name:data.values.name,
-             category:data.values.category,
-             brand:data.values.brand,
-             tags:data.values.tags,
-             model:data.values.model
-           })
+            setBasicFormData({
+              ...basicFormData,
+              name: data.values.name,
+              category: data.values.category,
+              brand: data.values.brand,
+              tags: data.values.tags,
+              model: data.values.model
+            })
           }
           if (name === 'detail') {
-            // setDetailFormData({
-            //   ...basicFormData,
-            //   name: data.values.name,
-            //   category: data.values.category,
-            //   brand: data.values.brand
-            // })
+            setDetailFormData({
+              ...detailFormData,
+              warranty: data.values.warranty,
+              color: data.values.color,
+              description: data.values.description,
+              size: data.values.size,
+              highlights: data.values.highlights,
+              videoURL: data.values.videoURL,
+              weight: data.values.weight,
+              return: data.values.return,
+              images: data.values.images,
+              districts:data.values.districts
+            })
+          }
+          if (name === 'price_and_stock') {
+            setpriceAndStockFormData({
+              ...priceAndStockFormData,
+              price: data.values.price,
+              discountRate: data.values.discountRate,
+              quantity: data.values.quantity
+            })
           }
         }}
       >
 
         {current === 0 && <BasicInformation basicFormData={basicFormData} next={next} layout={layout} tailLayout={tailLayout} brands={brands} />}
-        {current === 1 && <DetailInformation next={next} prev={prev} layout={layout} tailLayout={tailLayout} />}
-        {current === 2 && 'done'}
+        {current === 1 && <DetailInformation detailFormData={detailFormData} next={next} prev={prev} layout={layout} tailLayout={tailLayout} />}
+        {current === 2 && <PriceAndStock submitProductInfo={submitProductInfo} prev={prev} layout={layout} tailLayout={tailLayout} />}
       </Form.Provider>
-        {/* <div className="steps-action">
-          {current === 0 && (
-            <Button type="primary" onClick={() => submitBasicForm()}>
-              Next
-            </Button>
-          )}
-        {current === 1 && (
-          <Button type="primary" onClick={() => submitDetailForm()}>
-            Next
-          </Button>
-        )}
-          {current === steps.length - 1 && (
-            <Button
-              type="primary"
-              onClick={() => message.success("Processing complete!")}
-            >
-              Done
-            </Button>
-          )}
-          {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Previous
-            </Button>
-          )}
-        </div> */}
     </>
   );
 };
@@ -141,15 +153,19 @@ ProductForm.propTypes = {
   getCategories: PropTypes.func,
   getBrands: PropTypes.func,
   brands: PropTypes.array,
+  addProduct: PropTypes.func,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
-  brands: state.product.brands
+  brands: state.product.brands,
+  user: state.auth.user
 });
 
 const mapDispatchToProps = {
   getCategories,
-  getBrands
+  getBrands,
+  addProduct
 };
 
 export default connect(

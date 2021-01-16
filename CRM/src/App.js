@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import "antd/dist/antd.css";
-import { connect } from "react-redux";
 import setAuthToken from "./utils/setAuthToken";
 import MainRouter from "./router/MainRouter";
 import "./App.scss";
@@ -14,17 +14,21 @@ if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 const App = (props) => {
+
+  useSelector(state => state.auth.isAuth)
+
   useEffect( () => {
-    store.dispatch(loadMe());//returns socket user obj else null
-      
+    if(!localStorage.token) return;
+    store.dispatch(loadMe());//returns socket user obj else null      
   }, []);
+  
   return (
     <>
-      <Alert {...props} />
+      <Alert />
       {!verifyLocalStorage() ? <Signin /> : <MainRouter />}
     </>
   );
 };
 
 
-export default connect(state=>state)(App);
+export default App;

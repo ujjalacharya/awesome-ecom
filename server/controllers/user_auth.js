@@ -182,7 +182,7 @@ exports.refreshToken = async (req, res) => {
     // await refreshToken.save()
     try {
         let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken, userIP: req.ip })
-        // if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
+        if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
         let tokenData = jwt.verify(refreshToken.refreshToken, process.env.REFRESH_TOKEN_KEY)
         const payload = {
             _id: tokenData._id,

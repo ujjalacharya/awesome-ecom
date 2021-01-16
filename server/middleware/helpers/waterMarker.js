@@ -5,7 +5,7 @@ module.exports = async (req,res,next) => {
     }
     const options = {
         ratio: 0.6,
-        opacity: 0.2,
+        opacity: 0.4,
         text: 'K I N D E E M',
         textSize: Jimp.FONT_SANS_64_BLACK,
     }
@@ -20,8 +20,8 @@ module.exports = async (req,res,next) => {
         }
         return [hh, ww];
     }
-    const watermark = await Jimp.read('./public/uploads/logo.png');
-    req.files.forEach(async file=>{
+    let results = req.files.map(async file=>{
+        const watermark = await Jimp.read('./public/uploads/logo.png');
         const imagePath = file.path
 
         const main = await Jimp.read(imagePath);
@@ -34,7 +34,8 @@ module.exports = async (req,res,next) => {
             positionX,
             positionY,
             Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE);
-            main.quality(100).write(imagePath);
+        return main.quality(100).write(imagePath);
     })
+    await Promise.all(results)
     next()
 }

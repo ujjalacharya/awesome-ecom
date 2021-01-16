@@ -4,8 +4,9 @@ const AdminBank = require("../models/AdminBank")
 const AdminWarehouse = require("../models/AdminWarehouse")
 const Notification = require("../models/Notification")
 const File = require('../models/AdminFiles')
-const sharp = require("sharp")
-const path = require("path");
+// const sharp = require("sharp")
+// const path = require("path");
+const { fileRemover, imageCompressor } = require("../middleware/helpers");
 const fs = require("fs");
 const _ = require('lodash');
 const Fawn = require("fawn");
@@ -59,16 +60,23 @@ exports.uploadPhoto = async (req, res) => {
     if (req.file == undefined) {
         return res.status(400).json({ error: 'Image is required.' })
     }
-    const { filename: image } = req.file;
+    const { filename, path: filepath, destination } = req.file
     //Compress image
-    await sharp(req.file.path)
-        .resize(300)
-        .jpeg({ quality: 100 })
-        .toFile(path.resolve(req.file.destination, "admin", image))
-    fs.unlinkSync(req.file.path);//remove from public/uploads
+    // await sharp(req.file.path)
+    //     .resize(300)
+    //     .jpeg({ quality: 100 })
+    //     .toFile(path.resolve(req.file.destination, "admin", filename))
+    await imageCompressor(
+        filename,
+        300,
+        filepath,
+        destination,
+        "admin"
+    );
+    fs.unlinkSync(filepath);//remove from public/uploads
     // if update then remove old photo
     if (profile.photo) fs.unlinkSync(`public/uploads/${profile.photo}`)
-    profile.photo = "admin/" + image;
+    profile.photo = "admin/"+ filename ;
     await profile.save()
     res.json({ photo: profile.photo })
 }
@@ -80,14 +88,22 @@ exports.adminFile = async (req, res) => {
     if (req.query.filetype !== 'bank' || req.query.filetype !== 'citizenship' || req.query.filetype !== 'businessLicence') {
         return res.status(403).json({error: 'Invalid file type.'})
     }
-    const { filename: image } = req.file;
-    //Compress image
-    await sharp(req.file.path)
-        .resize(400)
-        .toFile(path.resolve(req.file.destination, req.query.filetype, image))//filetype='bank' || 'citizenship' || 'businessLicence'
-    fs.unlinkSync(req.file.path);//remove from public/uploads
+    // const { filename: image } = req.file;
+    // //Compress image
+    // await sharp(req.file.path)
+    // .resize(400)
+    // .toFile(path.resolve(req.file.destination, req.query.filetype, image))//filetype='bank' || 'citizenship' || 'businessLicence'
+    const { filename, path: filepath, destination } = req.file
+    await imageCompressor(
+        filename,
+        400,
+        filepath,
+        destination,
+        req.query.filetype
+    );
+    fs.unlinkSync(filepath);//remove from public/uploads
 
-    const newFile = new File({ fileUri: `${req.query.filetype}/${image}`})
+    const newFile = new File({ fileUri: `${req.query.filetype}/${filename}`})
     await newFile.save()
     res.json({[req.query.filetype]:newFile})
 };
