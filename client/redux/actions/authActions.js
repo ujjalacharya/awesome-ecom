@@ -117,47 +117,69 @@ const authenticateSocialLogin = (body) => {
 
 // gets the token from the cookie and saves it in the store
 const reauthenticate = (token, refreshToken, ctx) => {
-  if (isTokenExpired(token)) {
-    return async (dispatch) => {
-      if (!refreshToken) {
+  if(!token || !refreshToken){
+    
+    return (dispatch) => {
+      // dispatch(deauthenticate("/", ctx));
         removeCookie("token");
         dispatch({ type: DEAUTHENTICATE });
-      }else{
-        const body = JSON.stringify({
-          refreshToken,
-        });
-        const resp = await fetch(
-          `http://localhost:3003/api/admin-auth/refresh-token`,
-          {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-              "x-auth-token": token,
-            },
-            body,
-          }
-        );
-        const data = await resp.json();
-        if (resp.status === 200) {
-          setCookie("token", data.accessToken);
-          setCookie("refresh-token", data.refreshToken);
-          dispatch({ type: AUTHENTICATE, payload: data.accessToken });
-          ctx?.store.dispatch({ type: AUTHENTICATE, payload: data.accessToken });
-        }
-      }
     };
   }
+  // if (isTokenExpired(token)) {
+  //   return async (dispatch) => {
+  //     if (!refreshToken) {
+  //       removeCookie("token");
+  //       dispatch({ type: DEAUTHENTICATE });
+  //     } else {
+  //       const body = JSON.stringify({
+  //         refreshToken,
+  //       });
+  //       const resp = await fetch(
+  //         `http://localhost:3001/api/user-auth/refresh-token`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "content-type": "application/json",
+  //             "x-auth-token": token,
+  //           },
+  //           body,
+  //         }
+  //       ).catch((err) => {
+  //         console.log("eta-----")
+  //         removeCookie("token");
+  //         dispatch({ type: DEAUTHENTICATE });
+  //       });
+  //       if (resp.status === 200) {
+  //         const data = await resp.json();
+  //         setCookie("token", data.accessToken);
+  //         setCookie("refresh-token", data.refreshToken);
+  //         dispatch({ type: AUTHENTICATE, payload: data.accessToken });
+  //         ctx?.store.dispatch({
+  //           type: AUTHENTICATE,
+  //           payload: data.accessToken,
+  //         });
+  //       }
+  //     }
+  //   };
+  // }
   return (dispatch) => {
     dispatch({ type: AUTHENTICATE, payload: token });
   };
 };
 
 // removing the token
-const deauthenticate = (route = "/") => {
-  console.log("deauth");
+const deauthenticate = (route = "/", ctx) => {
   return (dispatch) => {
     removeCookie("token");
-    Router.push(route);
+    removeCookie("refresh-token");
+    if (ctx?.res) {
+      ctx.res.writeHead(302, {
+        Location: route,
+      });
+      ctx.res.end();
+    } else {
+      window.location.href = route
+    }
     dispatch({ type: DEAUTHENTICATE });
   };
 };

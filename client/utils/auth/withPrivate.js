@@ -13,7 +13,7 @@ export default (WrappedComponent) => {
   const hocComponent = ({ ...props }) => <WrappedComponent {...props} />;
 
   hocComponent.getInitialProps = async (ctx) => {
-    // initialize(ctx);
+    initialize(ctx);
 
     const userAuth = await checkUserAuthentication(ctx);
 
