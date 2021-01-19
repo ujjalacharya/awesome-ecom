@@ -1,4 +1,4 @@
-import { postService, getService } from "../commonServices";
+import { postService, getService, imageService } from "../commonServices";
 
 export class ProductService {
   getProducts({id, page, perPage, keyword = '', createdAt = '', updatedAt='' , status='',price='', outofstock=''}) {
@@ -42,6 +42,11 @@ export class ProductService {
     let url = `/product/${id}`;
     let data = postService(url,body);
     return data;
+  }
+
+  uploadImages(url, body, file, onProgress) {
+    let data = imageService(url, body, file, onProgress)
+    return data
   }
 
 }

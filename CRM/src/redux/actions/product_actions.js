@@ -94,41 +94,30 @@ export const uploadImages = ({
     onProgress,
     onSuccess,
   }) => async (dispatch) => {
-    try {
-        const formData = new FormData();
-        formData.append(filename, file);
-        const res = await api.post(
-            action, 
-            formData,
-            {
-                "Content-Type": "multipart/form-data",
-                onUploadProgress: ({ total, loaded }) => {
-                    onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
-                }
-            }
-            );
-        let images = res.data.map(image => {
-            return {
-                _id: image._id,
-                uid: file.uid,
-                name: file.name,
-                status: 'done',
-                url: `${process.env.REACT_APP_SERVER_URL}uploads/${image.large}`,
-            }
-        })
-        onSuccess(images[0], file)
-    } catch (err) {
-        onError(err)
-        console.log("****product_actions/uploadImages****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Error occured while uploading." });
+    const body = new FormData();
+    body.append(filename, file);
+    const response = await productService.uploadImages(action, body, file, onProgress);
+
+    if (response.isSuccess) {
+      console.log(response);
+      let images = response.data.map(image => {
+        return {
+          _id: image._id,
+          uid: file.uid,
+          name: file.name,
+          status: 'done',
+          url: `${process.env.REACT_APP_SERVER_URL}uploads/${image.large}`,
+        }
+      })
+      onSuccess(images[0], file)
+    } else if (!response.isSuccess) {
+      onError(response)
+      dispatch(error(response.errorMessage));
     }
 };
 
 export const saveUploadedImages = (images) => async (dispatch) => {
-    dispatch({
-        type: UPLOAD_IMAGES,
-        payload: images,
-    });
+  dispatch(success(UPLOAD_IMAGES, images));
 };
 
 export const deleteImageById = (id,image_id) => async (dispatch) => {
@@ -154,17 +143,6 @@ export const addProduct = (productData) => async (dispatch) => {
   } else if (!response.isSuccess) {
     dispatch(error(response.errorMessage));
   }
-    // body = JSON.stringify(body)
-    // try {
-    //     await api.post(`/product/${id}`,body);
-    //     dispatch({
-    //         type: SUCCESS,
-    //         payload: 'Your product has been submitted and is under verification.',
-    //     });
-    // } catch (err) {
-    //     console.log("****product_actions/addProduct****", err);
-    //     dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
-    // }
 };
 
 export const deleteProduct = (id, slug) => async (dispatch) => {
