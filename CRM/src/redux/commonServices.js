@@ -13,16 +13,16 @@ export const postService = async (url, body, method = "POST") => {
         data: resp.data,
       };
     } else {
+      console.log(resp)
       return {
         isSuccess: false,
-        errorMessage: resp.data.error.message || resp.data.error_description,
+        errorMessage: typeof resp.data ==='string' ? resp.data : "Error Occurred.",
       };
     }
   } catch (err) {
-    console.log(err)
     return {
       isSuccess: false,
-      errorMessage: err || err.response.data.error.message || err.response.data.error_description,
+      errorMessage: typeof err ==='string' ? err : "Error Occurred.",
     };
   }
 };
@@ -33,7 +33,6 @@ export const getService = async (url) => {
       method: "GET",
     });
 
-
     if (resp.status >= 200 && resp.status < 300) {
       return {
         isSuccess: true,
@@ -42,13 +41,13 @@ export const getService = async (url) => {
     } else {
       return {
         isSuccess: false,
-        errorMessage: resp.data.error,
+        errorMessage:typeof resp.data ==='string' ? resp.data : "Error Occurred.",
       };
     }
   } catch (err) {
     return {
       isSuccess: false,
-      errorMessage: err.message,
+      errorMessage: typeof err ==='string' ? err : "Error Occurred.",
     };
   }
 };

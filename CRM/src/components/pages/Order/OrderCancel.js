@@ -4,15 +4,15 @@ import {Popconfirm} from 'antd'
 import { connect } from 'react-redux'
 import { cancelOrder} from '../../../redux/actions/order_actions'
 
-const OrderCancel = ({ order_id, admin_id, cancelOrder, isOrderDetailOpen}) => {
+const OrderCancel = ({ order_id, loading, admin_id, cancelOrder, isOrderDetailOpen}) => {
     const [openCancelForm, setOpenCancelForm] = useState(false)
     const [remark, setRemark] = useState('')
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         !isOrderDetailOpen && setOpenCancelForm(false)
         !isOrderDetailOpen && setRemark('')
-        !isOrderDetailOpen && setLoading(false)
+        // !isOrderDetailOpen && setLoading(false)
     }, [isOrderDetailOpen])
 
     //to be returned form 
@@ -27,7 +27,7 @@ const OrderCancel = ({ order_id, admin_id, cancelOrder, isOrderDetailOpen}) => {
     }
 
     const _cancelOrder = () => {
-        setLoading(true)
+        // setLoading(true)
         cancelOrder(admin_id,order_id, remark )
     }
     
@@ -52,7 +52,10 @@ OrderCancel.propTypes = {
     order_id: PropTypes.string,
     admin_id: PropTypes.string,
     cancelOrder: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
 }
-// const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+    loading: state.order.cancelOrderLoading
+})
 
-export default connect(null,{cancelOrder})(React.memo(OrderCancel))
+export default connect(mapStateToProps,{cancelOrder})(React.memo(OrderCancel))

@@ -142,6 +142,6 @@ TopNavbar.propTypes = {
 	user: PropTypes.object,
 }
 const mapStateToProps = state =>({
-	user:state.auth.user,
+	user:state.auth.authUser,
 })
 export default connect(mapStateToProps, { signOut })(React.memo(TopNavbar))

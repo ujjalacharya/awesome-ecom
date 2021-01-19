@@ -1,4 +1,4 @@
-import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE , REMOVING_IMAGE, DELETE_PRODUCT} from "../types";
+import { GET_PRODUCT, GET_PRODUCTS, MULTI_PRODUCT_LOADING, SINGLE_PRODUCT_LOADING, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE , DELETE_PRODUCT, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES} from "../types";
 
 
 const initialState = {
@@ -9,40 +9,55 @@ const initialState = {
     totalCount: 0,
     categories:[],
     brands:[],
-    uploadedImages:[]
+    uploadedImages:[],
+    addProductLoading: false,
 }
 
 export default function (state = initialState, action) {
     const {type, payload} = action
     switch (type) {
-        case GET_PRODUCTS:
+        case PRODUCTS_TYPES.GET_PRODUCTS:
             return {
                 ...state,
                 products: payload.products,
-                multiLoading: false,
                 totalCount:payload.totalCount
             };
-        case GET_PRODUCT:
+        case PRODUCT_TYPES.GET_PRODUCT:
             return {
                 ...state,
                 product: payload,
-                singleLoading: false
             };
-        case DELETE_PRODUCT:
+        case ADD_PRODUCT_TYPES.ADD_PRODUCT_INIT:
             return {
-                ...state,
-                products: state.products.filter(product => product._id !== payload),
-            }
-        case MULTI_PRODUCT_LOADING:
+            ...state,
+            addProductLoading: true
+        }
+        case ADD_PRODUCT_TYPES.ADD_PRODUCT_FINISH:
+            return {
+            ...state,
+            addProductLoading: false
+        }
+        case PRODUCTS_TYPES.GET_PRODUCTS_INIT:
             return {
             ...state,
             multiLoading: true
         }
-        case SINGLE_PRODUCT_LOADING:
+        case PRODUCTS_TYPES.GET_PRODUCTS_FINISH:
             return {
-                ...state,
-                singleLoading: true
-            }
+            ...state,
+            multiLoading: false
+        }
+        case PRODUCT_TYPES.GET_PRODUCT_INIT:
+            return {
+            ...state,
+            singleLoading: true,
+            product: null
+        }
+        case PRODUCT_TYPES.GET_PRODUCT_FINISH:
+            return {
+            ...state,
+            singleLoading: false
+        }
         case GET_CATEGORIES:
             return {
                 ...state,

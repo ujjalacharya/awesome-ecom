@@ -4,11 +4,11 @@ import {Switch,Popconfirm, Tooltip} from 'antd'
 import { connect } from 'react-redux'
 import { toggleOrderApproval, toggletobeReturnOrder } from '../../../redux/actions/order_actions'
 
-const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggletobeReturnOrder, remainingProductQty, isOrderDetailOpen}) => {
+const OrderStatus = ({loading, status, order_id, admin_id, toggleOrderApproval, toggletobeReturnOrder, remainingProductQty, isOrderDetailOpen}) => {
     const [defaultCheckApprove, setdefaultCheckApprove] = useState(false)
     const [defaultCheckComplete, setdefaultCheckComplete] = useState(false)
     const [switchClass, setSwitchClass] = useState('')
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const [openToBeReturnedForm, setOpenToBeReturnedForm] = useState(false)
     const [toBereturnedFormData, setToBeReturnedFormData] = useState({
         remark:'',
@@ -34,7 +34,7 @@ const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggleto
             setdefaultCheckComplete(false)
 
         }
-        setLoading(false)
+        // setLoading(false)
         setOpenToBeReturnedForm(false)
         setToBeReturnedFormData({...toBeReturnedForm,remark:'',returnedAmount:''})
 
@@ -47,21 +47,21 @@ const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggleto
 
     //active/approve
     const toggleApproval = () => {
-        setLoading(true)
+        // setLoading(true)
         toggleOrderApproval(admin_id, order_id)
     }
 
     const switchToToBeReturned = () => {
         //validata form data
         //set loading 
-        setLoading(true)
+        // setLoading(true)
         //call action creator with remark and returned amount
         toggletobeReturnOrder(admin_id, order_id, toBereturnedFormData.remark, toBereturnedFormData.returnedAmount)
         
     }
     
     const switchToComplete = () => {
-        setLoading(true)
+        // setLoading(true)
         toggletobeReturnOrder(admin_id, order_id)
 
     }
@@ -103,6 +103,7 @@ const OrderStatus = ({ status, order_id, admin_id, toggleOrderApproval, toggleto
             visible={openToBeReturnedForm}
             onConfirm={switchToToBeReturned}
             onCancel={()=>setOpenToBeReturnedForm(false)}
+            okButtonProps={{ loading }}
             okText="Submit"
             cancelText="Cancel"
         >
@@ -133,7 +134,10 @@ OrderStatus.propTypes = {
     status: PropTypes.string,
     order_id: PropTypes.string,
     admin_id: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
 }
-// const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+    loading: state.order.orderStatusLoading
+})
 
-export default connect(null,{toggleOrderApproval, toggletobeReturnOrder})(React.memo(OrderStatus))
+export default connect(mapStateToProps,{toggleOrderApproval, toggletobeReturnOrder})(React.memo(OrderStatus))

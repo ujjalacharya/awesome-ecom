@@ -154,7 +154,7 @@ ImageUploader.propTypes = {
 }
 
 const mapStateToProps = (state) =>  ({
-    user:state.auth.user,
+    user:state.auth.adminProfile,
     uploadedImages: state.product.uploadedImages
 })
 

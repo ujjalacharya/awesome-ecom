@@ -1,91 +1,88 @@
-import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, SUCCESS, DELETE_PRODUCT} from "../types";
+import { GLOBAL_ERROR, MULTI_PRODUCT_LOADING, GET_PRODUCTS, SINGLE_PRODUCT_LOADING, GET_PRODUCT, GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, SUCCESS, DELETE_PRODUCT, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES} from "../types";
 import api from "../../utils/api";
+import { finish, init, success, error } from "../commonActions";
+import { ProductService } from "../api/product_api";
 
-export const getProducts = ({id, page, perPage, keyword = '', createdAt = '', updatedAt='' , status='',price='', outofstock=''}) => async (dispatch) => {
-    try {
-        dispatch({ type: MULTI_PRODUCT_LOADING })
-        const res = await api.get(`/product/products/${id}?page=${page}&perPage=${perPage}&createdAt=${createdAt}&price=${price}&updatedAt=${updatedAt}&status=${status}&keyword=${keyword}&outofstock=${outofstock}`);
-        dispatch({
-            type: GET_PRODUCTS,
-            payload: res.data,
-        });
-    } catch (err) {
-        console.log("****product_actions/getProducts****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
-    }
+const productService = new ProductService();
+
+export const getProducts = ({id, page, perPage, keyword , createdAt , updatedAt , status,price, outofstock}) => async (dispatch) => {
+    dispatch(init(PRODUCTS_TYPES.GET_PRODUCTS));
+
+  const response = await productService.getProducts({id, page, perPage, keyword , createdAt , updatedAt , status,price, outofstock});
+
+  dispatch(finish(PRODUCTS_TYPES.GET_PRODUCTS));
+
+  if (response.isSuccess) {
+    dispatch(success(PRODUCTS_TYPES.GET_PRODUCTS, response.data));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
 };
 
 export const getProduct = (product_slug) => async (dispatch) => {
-    try {
-        dispatch({ type: SINGLE_PRODUCT_LOADING })
-        const res = await api.get(`/product/${product_slug}`);
-        dispatch({
-            type: GET_PRODUCT,
-            payload: res.data.product,
-        });
-    } catch (err) {
-        console.log("****product_actions/getProduct****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
-    }
+    dispatch(init(PRODUCT_TYPES.GET_PRODUCT));
+
+  const response = await productService.getProduct(product_slug);
+
+  dispatch(finish(PRODUCT_TYPES.GET_PRODUCT));
+
+  if (response.isSuccess) {
+    dispatch(success(PRODUCT_TYPES.GET_PRODUCT, response.data.product));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
 };
 
 export const getCategories = () => async (dispatch) => {
-    try {
-        const res = await api.get(`/superadmin/product-categories`);
-        let categories = res.data.categories
+  const response = await productService.getCategories();
 
-        const getChildCategories = (allCategories, parentCategory) => {
-            let newParentCate = [];
-            parentCategory.forEach((parentCate) => {
-                let parentCategoryElements = { ...parentCate };
-                let childCate = [];
-                allCategories.forEach((allCate) => {
-                    if (allCate.parent === parentCate._id) {
-                        childCate.push(allCate);
-                    }
-                });
-                parentCategoryElements.childCate = childCate;
-                newParentCate.push(parentCategoryElements);
+  if (response.isSuccess) {
+    let categories = response.data.categories
+    const getChildCategories = (allCategories, parentCategory) => {
+        let newParentCate = [];
+        parentCategory.forEach((parentCate) => {
+            let parentCategoryElements = { ...parentCate };
+            let childCate = [];
+            allCategories.forEach((allCate) => {
+                if (allCate.parent === parentCate._id) {
+                    childCate.push(allCate);
+                }
             });
-            return newParentCate;
-        };
-        let parentCategory = [];
-        let parentCate = [];
-
-        categories.map((cate) => {
-            if (cate.parent === undefined) {
-                parentCategory.push(cate);
-            }
+            parentCategoryElements.childCate = childCate;
+            newParentCate.push(parentCategoryElements);
         });
+        return newParentCate;
+    };
+    let parentCategory = [];
+    let parentCate = [];
 
-        let allCates = getChildCategories(categories, parentCategory);
+    categories.map((cate) => {
+        if (cate.parent === undefined) {
+            parentCategory.push(cate);
+        }
+    });
 
-        allCates.map((newChild) => {
-            let newallCates = getChildCategories(categories, newChild.childCate);
-            let parentCateEle = { ...newChild, childCate: newallCates };
-            parentCate.push(parentCateEle);
-        });
+    let allCates = getChildCategories(categories, parentCategory);
 
-        dispatch({
-            type: GET_CATEGORIES,
-            payload: parentCate,
-        });
-    } catch (err) {
-        console.log("****product_actions/getCategories****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
-    }
+    allCates.map((newChild) => {
+        let newallCates = getChildCategories(categories, newChild.childCate);
+        let parentCateEle = { ...newChild, childCate: newallCates };
+        parentCate.push(parentCateEle);
+    });
+
+    dispatch(success(GET_CATEGORIES, parentCate));
+
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));    
+  }
 };
 
 export const getBrands = () => async (dispatch) => {
-    try {
-        const res = await api.get(`/superadmin/product-brands`);
-        dispatch({
-            type: GET_BRANDS,
-            payload: res.data,
-        });
-    } catch (err) {
-        console.log("****product_actions/getBrands****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+    const response = await productService.getBrands();
+    if (response.isSuccess) {
+      dispatch(success(GET_BRANDS, response.data));
+    } else if (!response.isSuccess) {
+      dispatch(error(response.errorMessage));
     }
 };
 
@@ -135,49 +132,53 @@ export const saveUploadedImages = (images) => async (dispatch) => {
 };
 
 export const deleteImageById = (id,image_id) => async (dispatch) => {
-    try {
-        const res = await api.delete(`/product/image/${id}?image_id=${image_id}`);
-        dispatch({
-            type: REMOVE_IMAGE,
-            payload: res.data._id,
-        });
-        return true
-    } catch (err) {
-        console.log("****product_actions/deleteImageById****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
-        return false
+    const response = await productService.deleteImageById(id,image_id);
+    if (response.isSuccess) {
+      dispatch(success(REMOVE_IMAGE, response.data._id));
+      return true
+    } else if (!response.isSuccess) {
+      dispatch(error(response.errorMessage));
+      return false
     }
 };
 
-export const addProduct = ({ id,...body}) => async (dispatch) => {
-    body = JSON.stringify(body)
-    try {
-        await api.post(`/product/${id}`,body);
-        dispatch({
-            type: SUCCESS,
-            payload: 'Your product has been submitted and is under verification.',
-        });
-    } catch (err) {
-        console.log("****product_actions/addProduct****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
-    }
+export const addProduct = (productData) => async (dispatch) => {
+    dispatch(init(ADD_PRODUCT_TYPES.ADD_PRODUCT));
+
+  const response = await productService.addProduct(productData);
+
+  dispatch(finish(ADD_PRODUCT_TYPES.ADD_PRODUCT));
+
+  if (response.isSuccess) {
+    dispatch(success(SUCCESS, 'Your product has been submitted and is under verification.'))
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
+    // body = JSON.stringify(body)
+    // try {
+    //     await api.post(`/product/${id}`,body);
+    //     dispatch({
+    //         type: SUCCESS,
+    //         payload: 'Your product has been submitted and is under verification.',
+    //     });
+    // } catch (err) {
+    //     console.log("****product_actions/addProduct****", err);
+    //     dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
+    // }
 };
 
 export const deleteProduct = (id, slug) => async (dispatch) => {
-    try {
-        const res = await api.patch(`/product/delete-product/${id}/${slug}`);
-        console.log(res.data);
-        dispatch({
-            type: SUCCESS,
-            payload: 'Your product has been deleted successfully.',
-        });
-        dispatch({
-            type:DELETE_PRODUCT,
-            payload:res.data._id
-        })
-    } catch (err) {
-        console.log("****product_actions/deleteProduct****", err);
-        dispatch({ type: GLOBAL_ERROR, payload: err || "Please try again." });
-    }
+    dispatch(init(PRODUCTS_TYPES.GET_PRODUCTS));
+
+  const response = await productService.deleteProduct(id, slug);
+
+  dispatch(finish(PRODUCTS_TYPES.GET_PRODUCTS));
+
+  if (response.isSuccess) {
+    dispatch(success(SUCCESS, 'Your product has been deleted successfully.'))
+    dispatch(getProducts({id}));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
 };
 

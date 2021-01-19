@@ -1,87 +1,79 @@
-import { GLOBAL_ERROR, GET_ORDERS, GET_ORDER, MULTI_ORDER_LOADING, SINGLE_ORDER_LOADING, TOGGLE_ORDER_APPROVAL, SUCCESS, TOGGLE_TOBERETURN_ORDER, CANCEL_ORDER } from "../types";
-import api from "../../utils/api";
+import { SUCCESS, CANCEL_ORDER_TYPES , ORDERS_TYPES, ORDER_TYPES,TOGGLE_ORDER_APPROVAL_TYPES, TOGGLE_TOBERETURN_ORDER_TYPES} from "../types";
+import { finish, init, success, error } from "../commonActions";
+import { OrderService } from "../api/order_api";
 
+const orderService = new OrderService();
 
-export const getOrders = (id,page,perPage,status='', keyword='') => async (dispatch) => {
-  try {
-    dispatch({type:MULTI_ORDER_LOADING})
-    const res = await api.get(`/order/orders/${id}?page=${page}&perPage=${perPage}&status=${status}&keyword=${keyword}`);
-    dispatch({
-      type: GET_ORDERS,
-      payload: res.data,
-    });
-  } catch (err) {
-    console.log("****order_actions/getOrders****", err);
-    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+export const getOrders = (id,page,perPage,status, keyword) => async (dispatch) => {
+  dispatch(init(ORDERS_TYPES.GET_ORDERS));
+
+  const response = await orderService.getOrders(id,page,perPage,status, keyword);
+
+  dispatch(finish(ORDERS_TYPES.GET_ORDERS));
+
+  if (response.isSuccess) {
+    dispatch(success(ORDERS_TYPES.GET_ORDERS, response.data));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
   }
 };
 
 export const getOrder = (id,order_id) => async (dispatch) => {
-  try {
-    dispatch({ type: SINGLE_ORDER_LOADING })
-    const res = await api.get(`/order/admin-order/${id}/${order_id}`);
-    dispatch({
-      type: GET_ORDER,
-      payload: res.data,
-    });
-  } catch (err) {
-    console.log("****order_actions/getOrder****", err);
-    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+  dispatch(init(ORDER_TYPES.GET_ORDER));
+
+  const response = await orderService.getOrder(id,order_id);
+
+  dispatch(finish(ORDER_TYPES.GET_ORDER));
+
+  if (response.isSuccess) {
+    dispatch(success(ORDER_TYPES.GET_ORDER, response.data));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
   }
 };
 
 export const toggleOrderApproval = (id, order_id) => async (dispatch) => {
-    try {
-    const res = await api.patch(`/order/toggle-order-approval/${id}/${order_id}`);
-    dispatch({
-      type: TOGGLE_ORDER_APPROVAL,
-      payload: res.data,
-    });
-    dispatch({
-      type: SUCCESS,
-      payload: `Order status has sucessfully changed to ${res.data.status.currentStatus}`,
-    });
-  } catch (err) {
-    console.log("****order_actions/toggleOrderApproval****", err);
-    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+  dispatch(init(TOGGLE_ORDER_APPROVAL_TYPES.TOGGLE_ORDER_APPROVAL));
+
+  const response = await orderService.toggleOrderApproval(id,order_id);
+
+  dispatch(finish(TOGGLE_ORDER_APPROVAL_TYPES.TOGGLE_ORDER_APPROVAL));
+
+  if (response.isSuccess) {
+    dispatch(success(TOGGLE_ORDER_APPROVAL_TYPES.TOGGLE_ORDER_APPROVAL, response.data));
+    dispatch(success(SUCCESS, `Order status has sucessfully changed to ${response.data.status.currentStatus}`));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
   }
 };
 
-export const toggletobeReturnOrder = (id, order_id, remark = '', returnedAmount = '' ) => async (dispatch) => {
-  const body = JSON.stringify({ remark, returnedAmount });//required only if complete to tobereturned
-  try {
-    const res = await api.patch(`/order/toggle-order-to-get-return/${id}/${order_id}`,body);
-    // dispatch({
-    //   type: TOGGLE_TOBERETURN_ORDER,
-    //   payload: res.data,
-    // });
-    dispatch(getOrder(id,order_id))
-    dispatch({
-      type: SUCCESS,
-      payload: `Order status has sucessfully changed to ${res.data[0].status.currentStatus}`,
-    });
-  } catch (err) {
-    console.log("****order_actions/toggletobeReturnOrder****", err);
-    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+export const toggletobeReturnOrder = (id, order_id, remark, returnedAmount ) => async (dispatch) => {
+  dispatch(init(TOGGLE_TOBERETURN_ORDER_TYPES.TOGGLE_TOBERETURN_ORDER));
+
+  const response = await orderService.toggletobeReturnOrder(id, order_id, remark, returnedAmount );
+
+  dispatch(finish(TOGGLE_TOBERETURN_ORDER_TYPES.TOGGLE_TOBERETURN_ORDER));
+
+  if (response.isSuccess) {
+    dispatch(success(TOGGLE_TOBERETURN_ORDER_TYPES.TOGGLE_TOBERETURN_ORDER, response.data));
+    dispatch(success(SUCCESS, `Order status has sucessfully changed to ${response.data.status.currentStatus}`));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
   }
 };
 
 export const cancelOrder = (id, order_id, remark) => async (dispatch) => {
-  const body = JSON.stringify({remark})
-  try {
-    const res = await api.patch(`/order/cancel-order/${id}/${order_id}`, body);
-    // dispatch({
-    //   type: CANCEL_ORDER,
-    //   payload: res.data,
-    // });
-    dispatch(getOrder(id, order_id))
-    dispatch({
-      type: SUCCESS,
-      payload: 'Order cancelled sucessfully',
-    });
-  } catch (err) {
-    console.log("****order_actions/orderCancel****", err);
-    dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
+  dispatch(init(CANCEL_ORDER_TYPES.CANCEL_ORDER));
+
+  const response = await orderService.cancelOrder(id, order_id, remark );
+
+  dispatch(finish(CANCEL_ORDER_TYPES.CANCEL_ORDER));
+
+  if (response.isSuccess) {
+    dispatch(success(CANCEL_ORDER_TYPES.CANCEL_ORDER, response.data));
+    dispatch(success(SUCCESS, 'Order cancelled sucessfully'));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
   }
 };
 

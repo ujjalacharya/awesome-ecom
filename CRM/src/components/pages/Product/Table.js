@@ -251,7 +251,7 @@ Table.propTypes = {
     deleteProduct: PropTypes.func,
 }
 const mapStateToProps = (state) => ({
-    user: state.auth.user,
+    user: state.auth.adminProfile,
     products: state.product.products,
     multiLoading: state.product.multiLoading,
     totalCount: state.product.totalCount,

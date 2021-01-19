@@ -159,7 +159,7 @@ ProductForm.propTypes = {
 
 const mapStateToProps = (state) => ({
   brands: state.product.brands,
-  user: state.auth.user
+  user: state.auth.adminProfile
 });
 
 const mapDispatchToProps = {

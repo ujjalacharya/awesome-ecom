@@ -249,7 +249,7 @@ Table.propTypes = {
     getOrders: PropTypes.func.isRequired,
 }
 const mapStateToProps = (state) => ({
-    user: state.auth.user,
+    user: state.auth.adminProfile,
     orders: state.order.orders,
     multiLoading: state.order.multiLoading,
     totalCount: state.order.totalCount,

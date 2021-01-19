@@ -1,4 +1,4 @@
-import { GET_ORDERS, GET_ORDER, MULTI_ORDER_LOADING,SINGLE_ORDER_LOADING, TOGGLE_ORDER_APPROVAL, TOGGLE_TOBERETURN_ORDER, CANCEL_ORDER } from "../types";
+import { ORDERS_TYPES, ORDER_TYPES, TOGGLE_ORDER_APPROVAL_TYPES, TOGGLE_TOBERETURN_ORDER_TYPES, CANCEL_ORDER_TYPES} from "../types";
 
 
 const initialState = {
@@ -6,28 +6,29 @@ const initialState = {
     orders: [],
     multiLoading: true,
     singleLoading: true,
+    orderStatusLoading: false,
+    cancelOrderLoading: false,
     totalCount: 0
 }
 
 export default function (state = initialState, action) {
     const {type, payload} = action
     switch (type) {
-        case GET_ORDERS:
+        case ORDERS_TYPES.GET_ORDERS:
             return {
                 ...state,
                 orders: payload.orders,
-                multiLoading: false,
                 totalCount:payload.totalCount
             };
-        case CANCEL_ORDER:
-        case GET_ORDER:
+        case ORDER_TYPES.GET_ORDER:
             return {
                 ...state,
                 order: payload,
                 singleLoading: false
             };
-        case TOGGLE_TOBERETURN_ORDER:
-        case TOGGLE_ORDER_APPROVAL:
+        case CANCEL_ORDER_TYPES.CANCEL_ORDER:
+        case TOGGLE_TOBERETURN_ORDER_TYPES.TOGGLE_TOBERETURN_ORDER:
+        case TOGGLE_ORDER_APPROVAL_TYPES.TOGGLE_ORDER_APPROVAL:
             return {
                 ...state,
                 order: payload,
@@ -39,16 +40,51 @@ export default function (state = initialState, action) {
                 })
 
             };
-        case MULTI_ORDER_LOADING:
+        case ORDERS_TYPES.GET_ORDERS_INIT:
             return {
             ...state,
-            multiLoading: true
+            multiLoading: true,
+            // orders:[],
+            // totalCount:0
         }
-        case SINGLE_ORDER_LOADING:
+        case ORDERS_TYPES.GET_ORDERS_FINISH:
+            return {
+            ...state,
+            multiLoading: false
+        }
+        case ORDER_TYPES.GET_ORDER_FINISH:
+            return {
+            ...state,
+            singleLoading: false
+        }
+        case ORDER_TYPES.GET_ORDER_INIT:
             return {
                 ...state,
-                singleLoading: true
+                singleLoading: true,
+                order: null
             }
+        case CANCEL_ORDER_TYPES.CANCEL_ORDER_INIT: 
+            return {
+                ...state,
+                cancelOrderLoading: true
+            }
+        case CANCEL_ORDER_TYPES.CANCEL_ORDER_FINISH: 
+            return {
+                ...state,
+                cancelOrderLoading: false
+            }
+        case TOGGLE_ORDER_APPROVAL_TYPES.TOGGLE_ORDER_APPROVAL_INIT: 
+        case TOGGLE_TOBERETURN_ORDER_TYPES.TOGGLE_TOBERETURN_ORDER_INIT: 
+        return {
+            ...state,
+            orderStatusLoading: true
+        }
+        case TOGGLE_TOBERETURN_ORDER_TYPES.TOGGLE_TOBERETURN_ORDER_FINISH: 
+        case TOGGLE_ORDER_APPROVAL_TYPES.TOGGLE_ORDER_APPROVAL_FINISH: 
+        return {
+            ...state,
+            orderStatusLoading: false
+        }
         default:
             return state;
     }

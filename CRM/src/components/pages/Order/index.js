@@ -11,4 +11,4 @@ const Order = () => {
 }
 
 
-export default Order
+export default React.memo(Order)

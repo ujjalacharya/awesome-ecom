@@ -541,9 +541,21 @@ exports.orderCancelByAdmin = async (req, res) => {
     .options({ viaSave: true })
     .update(product, updateProduct)
     .options({ viaSave: true })
-    .run({ useMongoose: true });
-  results[1].soldBy = undefined;
-  return res.json(results);
+    // .run({ useMongoose: true });
+  // return res.json(results);
+    order.status.currentStatus = updateOrder.status.currentStatus
+    order.status.cancelledDetail.cancelledDate = updateOrder.status.cancelledDetail.cancelledDate;
+    const cancelledBy = {
+      // _id: req.profile._id,
+      name: req.profile.name,
+      phone: req.profile.phone
+    };
+    order.status.cancelledDetail.cancelledBy = cancelledBy
+    order.status.cancelledDetail.remark = newRemark;
+    order.soldBy = order.soldBy._id
+    console.log(req.profile.name)
+    console.log(order.status.cancelledDetail)
+    return res.json(order);
 };
 
 exports.orderCancelByUser = async (req, res) => {
@@ -740,7 +752,11 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .save(remark)
       .run({ useMongoose: true });
     // return res.redirect(`/api/admin-order/${req.profile._id}/${order._id}`)
-    return res.json(results);
+    // return res.json(results);
+    order.status.currentStatus = updateOrder.status.currentStatus
+    order.status.tobereturnedDate = updateOrder.status.tobereturnedDate
+    order.soldBy = order.soldBy._id
+    return res.json(order);
   }
   if (order.status.currentStatus === "tobereturned") {
     updateOrder.status.currentStatus = "complete";
@@ -759,7 +775,11 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .options({ viaSave: true })
       .run({ useMongoose: true });
     // return res.redirect(`/api/admin-order/${req.profile._id}/${order._id}`)
-    return res.json(results);
+    // return res.json(results);
+    order.status.currentStatus = updateOrder.status.currentStatus
+    order.status.tobereturnedDate = updateOrder.status.tobereturnedDate
+    order.soldBy = order.soldBy._id
+    return res.json(order);
   }
 };
 

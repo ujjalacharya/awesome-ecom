@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../redux/store";
-import { SIGN_OUT, REFRESH_TOKEN, AUTH_ERROR } from "../redux/types";
+import { SIGN_OUT, REFRESH_TOKEN, AUTH_ERROR , AUTH_TYPES} from "../redux/types";
 import { SERVER_URL, refreshTokenKey, accessTokenKey } from "./config";
 import setAuthToken from './setAuthToken'
 import { verifyLocalStorage } from "./common";
@@ -30,7 +30,10 @@ api.interceptors.request.use(function (config) {
 api.interceptors.response.use(
   (res) => res,
   async (err) => {
-    if (err.response.data.error === "jwt expired") {
+    if(err.message === "Network Error") {
+      return Promise.reject("You are offline.")
+    }
+    if (err.response?.data?.error === "jwt expired") {
       //call for refresh token
       const originalReq = err.config;
       try {
@@ -39,26 +42,30 @@ api.interceptors.response.use(
         });
         const res = await api.post(`/admin-auth/refresh-token`, body);
         store.dispatch({
-          type: REFRESH_TOKEN,
+          type: AUTH_TYPES.REFRESH_TOKEN,
           payload: res.data,
         });
         originalReq.headers["x-auth-token"] = res.data.accessToken;
         return api(originalReq);
       } catch (err) {
-        console.log("****refresh token error****", err.response);
+        console.log("****refresh token error****", err);
         store.dispatch({
-          type: AUTH_ERROR,
+          type: AUTH_TYPES.AUTH_ERROR,
         });
-        return Promise.reject(err.response.data.error);
+        return Promise.reject(err);
       }
     }
-    if (err.response.status === 401) {
-      store.dispatch({ type: AUTH_ERROR });
+    if (err.response?.status === 401) {
+      store.dispatch({ type:AUTH_TYPES.AUTH_ERROR });
       return Promise.reject(err.response.data.error);
     }
-    if (err.response.status >= 400 && err.response.status <= 500) {
+    if (err.response?.status === 404) {
+      return Promise.reject("Page not found");
+    }
+    if (err.response?.status >= 400 && err.response?.status <= 500) {
       return Promise.reject(err.response.data.error);
     }
+    return Promise.reject(err)
   }
 );
 

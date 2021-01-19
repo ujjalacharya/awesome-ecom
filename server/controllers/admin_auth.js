@@ -123,10 +123,10 @@ exports.refreshToken = async (req, res) => {
         // refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
         // await refreshToken.save()
         try {
-        let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken,userIP:req.ip })
+        let refreshToken = await RefreshToken.findOne({ refreshToken: req.body.refreshToken, userIP:req.ip})
         if (!refreshToken) return res.status(401).json({ error: "Invalid refreshToken" })
         let tokenData = jwt.verify(refreshToken.refreshToken,process.env.REFRESH_TOKEN_KEY)
-        if (tokenData.role !== 'admin' || tokenData.role !== 'superadmin') {
+        if (tokenData.role !== 'admin' && tokenData.role !== 'superadmin') {
             throw 'Invalid refresh token'
         }
         const payload = {

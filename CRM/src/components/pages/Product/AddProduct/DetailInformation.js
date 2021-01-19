@@ -2,7 +2,6 @@ import React, {useEffect, useState, useMemo} from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import {
     Button,
     Form,
@@ -270,14 +269,5 @@ DetailInformation.propTypes = {
     detailFormData: PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
-    // uploadedImages: state.product.uploadedImages
-});
 
-const mapDispatchToProps = {
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(React.memo(DetailInformation));
+export default React.memo(DetailInformation);

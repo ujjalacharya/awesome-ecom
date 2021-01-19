@@ -1,6 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import ProductForm from './ProductForm'
 import Layout from '../../../core/Layout'
 
@@ -13,14 +11,4 @@ export const index = () => {
     )
 }
 
-index.propTypes = {
-    prop: PropTypes
-}
-
-// const mapStateToProps = (state) => null
-
-const mapDispatchToProps = {
-
-}
-
-export default connect(null, mapDispatchToProps)(index)
+export default React.memo(index)

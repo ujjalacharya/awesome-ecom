@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { connect } from 'react-redux'
 import {
     Button,
     Form,
@@ -8,7 +8,7 @@ import {
     Col,
     Row
 } from "antd";
-const PriceAndStock = ({ layout, prev, submitProductInfo }) => {
+const PriceAndStock = ({ layout, prev, submitProductInfo, loading }) => {
     const [form] = Form.useForm()
 
     const onFinish = (values) => {
@@ -73,7 +73,7 @@ const PriceAndStock = ({ layout, prev, submitProductInfo }) => {
                 <Button style={{ margin: "0 8px" }} onClick={() => prev(form.getFieldsValue())}>
                     Previous
                 </Button>
-                <Button type="primary" onClick={onSubmit}>
+                <Button disabled={loading} type="primary" onClick={onSubmit}>
                     Submit
                 </Button>
             </div>
@@ -83,17 +83,13 @@ const PriceAndStock = ({ layout, prev, submitProductInfo }) => {
 };
 
 PriceAndStock.propTypes = {
-    uploadedImages: PropTypes.array,
+    loading: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-    uploadedImages: state.product.uploadedImages
-});
+const mapStateToProps = (state) =>  ({
+    loading: state.product.addProductLoading
+})
 
-const mapDispatchToProps = {
-};
+const mapDispatchToProps = {}
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(React.memo(PriceAndStock));
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(PriceAndStock))

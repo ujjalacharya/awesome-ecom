@@ -14,7 +14,7 @@ export const finish = (type) => {
 
 export const success = (type, payload) => {
   return {
-    type: `${type}_SUCCESS`,
+    type,
     payload,
   };
 };

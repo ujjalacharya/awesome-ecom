@@ -1,7 +1,4 @@
 import React, { useMemo } from 'react'
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-// import { logout } from '../../../actions/auth_actions'
 import SideBar from '../../common/SideBar'
 
 const AdminBar = ({}) => {
@@ -35,8 +32,5 @@ const AdminBar = ({}) => {
         <SideBar titles={titles}/>
     )
 }
-// AdminBar.propTypes = {
-//     logout: PropTypes.func.isRequired
-// }
 
-export default connect(null, { })(AdminBar)
+export default (AdminBar)
