@@ -1,6 +1,10 @@
 import fetch from "isomorphic-unfetch";
 import cookie from "js-cookie";
-import { getCookie } from "./cookie";
+import { Router } from "next/router";
+import { initStore } from "../redux";
+import { AUTHENTICATE, DEAUTHENTICATE } from "../redux/types";
+import { BASE_URL } from "./constants";
+import { getCookie, setCookie } from "./cookie";
 
 export const postTokenService = async (url, method, body) => {
   try {
@@ -34,12 +38,12 @@ export const postTokenService = async (url, method, body) => {
   }
 };
 
-export const getTokenService = async (url, method, ctx) => {
+export const getTokenService = async (url, method, ctx, accessToken) => {
   try {
     const resp = await fetch(url, {
       method,
       headers: {
-        "x-auth-token": getCookie("token", ctx?.req),
+        "x-auth-token": getCookie("token", ctx?.req, accessToken),
       },
     });
 
@@ -50,10 +54,20 @@ export const getTokenService = async (url, method, ctx) => {
         data,
       };
     } else {
-      return {
-        isSuccess: false,
-        errorMessage: data.error,
-      };
+      if (data.error === "jwt expired") {
+        const response = await refreshTheToken(
+          url,
+          method,
+          ctx,
+          getTokenService
+        );
+        return response;
+      } else {
+        return {
+          isSuccess: false,
+          errorMessage: data.error,
+        };
+      }
     }
   } catch (err) {
     return {
@@ -151,4 +165,38 @@ export const uploadImageService = async (url, method, formData) => {
   }
 };
 
+const refreshTheToken = async (url, method, ctx, callbackUrl) => {
+  const body = JSON.stringify({
+    refreshToken: getCookie("refresh-token", ctx?.req),
+  });
+  const resp = await fetch(`${BASE_URL}/api/user-auth/refresh-token`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-auth-token": getCookie("token", ctx?.req),
+    },
+    body,
+  });
+  const newdata = await resp.json();
 
+  if (resp.status === 200) {
+    setCookie("token", newdata.accessToken, ctx?.req, ctx?.res);
+    setCookie("refresh-token", newdata.refreshToken, ctx?.req, ctx?.res);
+    initStore().dispatch({ type: AUTHENTICATE, payload: newdata.accessToken });
+    const resp = await callbackUrl(url, method, ctx, newdata.accessToken);
+    return resp;
+  } else {
+    initStore().dispatch({ type: DEAUTHENTICATE });
+    ctx?.store.dispatch({
+      type: DEAUTHENTICATE,
+    });
+    if (ctx?.res) {
+      ctx.res.writeHead(302, {
+        Location: "/login",
+      });
+      ctx.res.end();
+    } else {
+      window.location.href = "/";
+    }
+  }
+};

@@ -6,7 +6,7 @@ import { getCookie } from "../utils/cookie";
 export default function (ctx) {
   if (ctx.isServer) {
     if (ctx.req.headers.cookie) {
-      ctx.store.dispatch(actions.reauthenticate(getCookie("token", ctx.req)));
+      ctx.store.dispatch(actions.reauthenticate(getCookie("token", ctx.req), getCookie("refresh-token", ctx.req), ctx));
     }
   } else {
     const token = ctx.store.getState().authentication.token;

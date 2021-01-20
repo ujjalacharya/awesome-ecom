@@ -7,7 +7,7 @@ import {
   REGISTER_FINISH,
   REGISTER_START,
   RESET_PASSWORD,
-  AUTHENTICATE_FINISH
+  AUTHENTICATE_FINISH,
 } from "../types";
 import { setCookie, removeCookie } from "../../utils/cookie";
 import { isTokenExpired, openNotification } from "../../utils/common";
@@ -23,27 +23,25 @@ const register = (body) => {
     if (response.isSuccess) {
       openNotification("Success", "User registered successfully");
 
-      window.location.href = '/login';
+      window.location.href = "/login";
     } else if (!response.isSuccess) {
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     }
   };
 };
 
-
 // reset password
 const sendResendPasswordLink = (body, data, setData) => {
-  return async (dispatch) => { 
-    setData({...data, loading: true, success: false})
+  return async (dispatch) => {
+    setData({ ...data, loading: true, success: false });
 
     const authService = new AuthService();
     const response = await authService.sendResendPasswordLink(body);
 
     if (response.isSuccess) {
-      setData({...data, loading: false, success: true, data: response.data})
-      
+      setData({ ...data, loading: false, success: true, data: response.data });
     } else if (!response.isSuccess) {
-      setData({...data, loading: false, success: false})
+      setData({ ...data, loading: false, success: false });
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     }
   };
@@ -51,20 +49,19 @@ const sendResendPasswordLink = (body, data, setData) => {
 
 // reset password
 const resetMyPassword = (body, data, setData) => {
-  return async (dispatch) => { 
-    setData({...data, loading: true, success: false})
+  return async (dispatch) => {
+    setData({ ...data, loading: true, success: false });
 
     const authService = new AuthService();
     const response = await authService.resetMyPassword(body);
 
     if (response.isSuccess) {
-      setData({...data, loading: true, success: true, data: response.data})
+      setData({ ...data, loading: true, success: true, data: response.data });
       openNotification("Success", "Password reset successfully");
 
-      window.location.href = '/login';
-      
+      window.location.href = "/login";
     } else if (!response.isSuccess) {
-      setData({...data, loading: false, success: false})
+      setData({ ...data, loading: false, success: false });
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     }
   };
@@ -81,6 +78,7 @@ const authenticate = (body, type, redirectUrl) => {
     await dispatch({ type: AUTHENTICATE_FINISH });
     if (response.isSuccess) {
       setCookie("token", response.data.accessToken);
+      setCookie("refresh-token", response.data.refreshToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.token });
 
       const redirectUrl = window.location.search
@@ -102,7 +100,7 @@ const authenticateSocialLogin = (body) => {
     const response = await authService.loginUserSocialLogin(body);
 
     await dispatch({ type: AUTHENTICATE_FINISH });
-    
+
     if (response.isSuccess) {
       setCookie("token", response.data.accessToken);
       dispatch({ type: AUTHENTICATE, payload: response.data.token });
@@ -118,23 +116,70 @@ const authenticateSocialLogin = (body) => {
 };
 
 // gets the token from the cookie and saves it in the store
-const reauthenticate = (token) => {
-  if (isTokenExpired(token)) {
+const reauthenticate = (token, refreshToken, ctx) => {
+  if(!token || !refreshToken){
+    
     return (dispatch) => {
-      removeCookie("token");
-      dispatch({ type: DEAUTHENTICATE });
+      // dispatch(deauthenticate("/", ctx));
+        removeCookie("token");
+        dispatch({ type: DEAUTHENTICATE });
     };
   }
+  // if (isTokenExpired(token)) {
+  //   return async (dispatch) => {
+  //     if (!refreshToken) {
+  //       removeCookie("token");
+  //       dispatch({ type: DEAUTHENTICATE });
+  //     } else {
+  //       const body = JSON.stringify({
+  //         refreshToken,
+  //       });
+  //       const resp = await fetch(
+  //         `http://localhost:3001/api/user-auth/refresh-token`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "content-type": "application/json",
+  //             "x-auth-token": token,
+  //           },
+  //           body,
+  //         }
+  //       ).catch((err) => {
+  //         console.log("eta-----")
+  //         removeCookie("token");
+  //         dispatch({ type: DEAUTHENTICATE });
+  //       });
+  //       if (resp.status === 200) {
+  //         const data = await resp.json();
+  //         setCookie("token", data.accessToken);
+  //         setCookie("refresh-token", data.refreshToken);
+  //         dispatch({ type: AUTHENTICATE, payload: data.accessToken });
+  //         ctx?.store.dispatch({
+  //           type: AUTHENTICATE,
+  //           payload: data.accessToken,
+  //         });
+  //       }
+  //     }
+  //   };
+  // }
   return (dispatch) => {
     dispatch({ type: AUTHENTICATE, payload: token });
   };
 };
 
 // removing the token
-const deauthenticate = (route = "/") => {
+const deauthenticate = (route = "/", ctx) => {
   return (dispatch) => {
     removeCookie("token");
-    Router.push(route);
+    removeCookie("refresh-token");
+    if (ctx?.res) {
+      ctx.res.writeHead(302, {
+        Location: route,
+      });
+      ctx.res.end();
+    } else {
+      window.location.href = route
+    }
     dispatch({ type: DEAUTHENTICATE });
   };
 };
@@ -146,5 +191,5 @@ export default {
   register,
   authenticateSocialLogin,
   sendResendPasswordLink,
-  resetMyPassword
+  resetMyPassword,
 };
