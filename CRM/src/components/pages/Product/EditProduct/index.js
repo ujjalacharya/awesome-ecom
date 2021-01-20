@@ -4,10 +4,9 @@ import Layout from '../../../core/Layout'
 
 const EditProduct = () => {
     return (
-        <p>helloworld</p>
-        // <Layout>
-        //     <ProductForm/>
-        // </Layout>
+        <Layout>
+            <ProductForm/>
+        </Layout>
 
     )
 }

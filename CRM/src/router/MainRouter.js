@@ -23,7 +23,7 @@ const MainRouter = (props) => {
       <AdminRoute exact path="/add-product" component={AddProduct} />
       <AdminRoute exact path="/order" component= {Order} />
       <SuperAdminRoute exact path="/superadmin" component={() => <h1>Sup SuperAdmin</h1>}/>
-      <AdminRoute exact path="/edit-product/:slug" component={EditProduct} />
+      <AdminRoute exact path="/edit-product/:slug?" component={EditProduct} />
     </Switch>
   );
 };
