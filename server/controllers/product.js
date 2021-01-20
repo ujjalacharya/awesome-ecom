@@ -93,8 +93,8 @@ exports.deleteProduct = async (req, res) => {
   }
   product.isDeleted = Date.now();
   await product.save();
-  this.getProducts(req,res)
-  // res.json(product);
+  // this.getProducts(req,res)
+  res.json(product);
 };
 
 exports.productImages = async (req, res) => {

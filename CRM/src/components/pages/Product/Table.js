@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
+import { useHistory } from "react-router-dom";
 import { Table as AntdTable, Input, Button, Space, Popconfirm, Avatar, Drawer } from 'antd';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
@@ -8,6 +9,7 @@ import { connect } from 'react-redux'
 import { getProducts, getProduct, deleteProduct } from '../../../redux/actions/product_actions'
 import ProductDetail from './ProductDetail';
 const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products, totalCount, user }) => {
+    let history = useHistory();
     // const [pagination, setPagination] = useState({
     //     current: 1,
     //     pageSize: 10,
@@ -197,7 +199,7 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
             width: '8%',
             render: product => <>
                 <button onClick={() => openProduct(product)} className="btn btn-info btn-sm"><i className="fas fa-eye"></i></button>
-                <button className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>
+                <button onClick={() => history.push(`/edit-product/${product.slug}`)} className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>
                 <Popconfirm
                     title="Are you sure to delete this product?"
                     onConfirm={() => deleteProduct(product.soldBy, product.slug)}

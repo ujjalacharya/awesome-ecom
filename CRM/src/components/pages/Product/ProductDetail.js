@@ -61,7 +61,7 @@ export const ProductDetail = ({product, singleLoading}) => {
                     </div>
                     <Tabs >
                         <TabPane tab="Description" key="a">
-                            {product?.description}
+                            {product && parse(product?.description)}
                         </TabPane>
                         <TabPane tab="Other" key="b">
                             helloworld

@@ -11,4 +11,4 @@ export const index = () => {
     )
 }
 
-export default React.memo(index)
+export default index

@@ -545,8 +545,9 @@ exports.orderCancelByAdmin = async (req, res) => {
   // return res.json(results);
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.cancelledDetail.cancelledDate = updateOrder.status.cancelledDetail.cancelledDate;
+    
     const cancelledBy = {
-      // _id: req.profile._id,
+      _id: req.profile._id,
       name: req.profile.name,
       phone: req.profile.phone
     };
