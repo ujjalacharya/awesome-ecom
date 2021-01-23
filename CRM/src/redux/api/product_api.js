@@ -44,6 +44,13 @@ export class ProductService {
     return data;
   }
 
+  updateProduct({ id, ...restProductData }) {
+    let body = JSON.stringify(restProductData)
+    let url = `/product/${id}`;
+    let data = postService(url, body);
+    return data;
+  }
+
   uploadImages(url, body, file, onProgress) {
     let data = imageService(url, body, file, onProgress)
     return data

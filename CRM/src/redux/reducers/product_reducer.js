@@ -1,4 +1,4 @@
-import { GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES} from "../types";
+import { GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVE_UPLOAD_IMAGES, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES} from "../types";
 
 
 const initialState = {
@@ -77,6 +77,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 uploadedImages: state.uploadedImages.filter(image=>image!==payload),
+            }
+        case REMOVE_UPLOAD_IMAGES:
+            return {
+                ...state,
+                uploadedImages: [],
             }
         default:
             return state;

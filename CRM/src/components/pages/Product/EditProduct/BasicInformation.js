@@ -21,6 +21,7 @@ const BasicInformation = ({ brands, layout, next, basicFormData }) => {
 
     useEffect(() => {
         const { category } = basicFormData
+        console.log(category,'basicform');
         // form.setFieldsValue({ name, category, brand, tags, model })
         form.setFieldsValue({...basicFormData})
         setSelectedCategories([...selectedCategories, ...category])

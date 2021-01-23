@@ -28,10 +28,6 @@ const ImageUploader = ({ user, uploadImages, deleteImageById, uploadedImages,for
         setFileList(uploadedImages)
     }, [uploadedImages,form])
 
-    // useMemo(()=>{
-    //     saveUploadedImages(fileList)
-    // },[fileList.length])
-
     function getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();

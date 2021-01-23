@@ -60,7 +60,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
     weight: [],
     return: '',
     images: [],
-    districts: []
+    availableDistricts: []
   })
   const [priceAndStockFormData, setpriceAndStockFormData] = useState({
     price: '',
@@ -128,7 +128,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
               weight: data.values.weight,
               return: data.values.return,
               images: data.values.images,
-              districts:data.values.districts
+              availableDistricts:data.values.availableDistricts
             })
           }
           if (name === 'price_and_stock') {
@@ -144,7 +144,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
 
         {current === 0 && <BasicInformation basicFormData={basicFormData} next={next} layout={layout} tailLayout={tailLayout} brands={brands} />}
         {current === 1 && <DetailInformation detailFormData={detailFormData} next={next} prev={prev} layout={layout} tailLayout={tailLayout} />}
-        {current === 2 && <PriceAndStock submitProductInfo={submitProductInfo} prev={prev} layout={layout} tailLayout={tailLayout} />}
+        {current === 2 && <PriceAndStock priceAndStockFormData={priceAndStockFormData} submitProductInfo={submitProductInfo} prev={prev} layout={layout} tailLayout={tailLayout} />}
       </Form.Provider>
     </>
   );

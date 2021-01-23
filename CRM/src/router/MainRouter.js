@@ -1,7 +1,7 @@
 //package
 import React from "react";
-import { Switch, Route} from "react-router-dom";
-import { connect } from "react-redux";
+import { Switch} from "react-router-dom";
+// import { connect } from "react-redux";
 //router
 import SuperAdminRoute from "./SuperAdminRoute";
 import AdminRoute from './AdminRoute'
@@ -28,8 +28,9 @@ const MainRouter = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth,
-});
+// const mapStateToProps = (state) => ({
+//   isAuthenticated: state.auth,
+// });
 
-export default connect(mapStateToProps)(MainRouter);
+// export default connect(mapStateToProps)(MainRouter);
+export default MainRouter

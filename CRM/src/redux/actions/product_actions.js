@@ -1,4 +1,4 @@
-import {GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, SUCCESS, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES} from "../types";
+import { GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVE_UPLOAD_IMAGES, SUCCESS, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES} from "../types";
 import { finish, init, success, error } from "../commonActions";
 import { ProductService } from "../api/product_api";
 
@@ -118,7 +118,9 @@ export const uploadImages = ({
 export const saveUploadedImages = (images) => async (dispatch) => {
   dispatch(success(UPLOAD_IMAGES, images));
 };
-
+export const removeUploadedImages = () => async (dispatch) => {
+  dispatch({type: REMOVE_UPLOAD_IMAGES});
+};
 export const deleteImageById = (id,image_id) => async (dispatch) => {
     const response = await productService.deleteImageById(id,image_id);
     if (response.isSuccess) {
@@ -134,6 +136,20 @@ export const addProduct = (productData) => async (dispatch) => {
     dispatch(init(ADD_PRODUCT_TYPES.ADD_PRODUCT));
 
   const response = await productService.addProduct(productData);
+
+  dispatch(finish(ADD_PRODUCT_TYPES.ADD_PRODUCT));
+
+  if (response.isSuccess) {
+    dispatch(success(SUCCESS, 'Your product has been submitted and is under verification.'))
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
+};
+
+export const updateProduct = (productData) => async (dispatch) => {
+  dispatch(init(ADD_PRODUCT_TYPES.ADD_PRODUCT));
+
+  const response = await productService.updateProduct(productData);
 
   dispatch(finish(ADD_PRODUCT_TYPES.ADD_PRODUCT));
 

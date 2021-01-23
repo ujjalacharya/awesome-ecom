@@ -47,8 +47,9 @@ export const Categories = ({
   
   return (
     <>
+      <Form.Item label="Categories">
       <Form.Item
-        label="Categories"
+        // label="Categories"
         name="category"
         rules={[
           {
@@ -70,8 +71,9 @@ export const Categories = ({
         placeholder="Select Categories"
         onDeselect={handleDeselect}
       />
-      {openMenu && megaMenu(categories)}
       </Form.Item>      
+      {openMenu && megaMenu(categories)}
+      </Form.Item>
     </>
   );
 };

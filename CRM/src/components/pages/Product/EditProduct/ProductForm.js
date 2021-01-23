@@ -6,7 +6,7 @@ import {
   Steps,
   Form,
 } from "antd";
-import { getCategories, getBrands, addProduct } from "../../../../redux/actions/product_actions";
+import { getCategories, getBrands, updateProduct, getProduct } from "../../../../redux/actions/product_actions";
 import BasicInformation from './BasicInformation'
 import DetailInformation from './DetailInformation'
 import PriceAndStock from "./PriceAndStock";
@@ -42,11 +42,8 @@ const steps = [
   },
 ];
 
-const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => {
-  let product = useParams();
-  console.log(product);
-  let location = useLocation();
-  console.log(location);
+const ProductForm = ({ getCategories, getBrands, brands, user , updateProduct, getProduct, product}) => {
+  let {slug: productSlug} = useParams();
   const [current, setCurrent] = useState(0);
   const [basicFormData, setBasicFormData] = useState({
     name: '',
@@ -65,18 +62,51 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
     weight: [],
     return: '',
     images: [],
-    districts: []
+    availableDistricts: []
   })
   const [priceAndStockFormData, setpriceAndStockFormData] = useState({
     price: '',
     discountRate: '',
     quantity: ''
-  })
+  })  
 
   useEffect(() => {
     getCategories();
     getBrands();
-  }, []);
+    getProduct(productSlug);
+  }, [productSlug]);
+
+  useEffect(() => {
+    product && setBasicFormData({
+    ...basicFormData,
+    name: product.name,
+    category: product.category.map(cat=>cat.slug),
+    brand: product.brand.slug,
+    tags: product.tags,
+    model: product.model
+    })
+    
+    product && setDetailFormData({
+      ...detailFormData,
+      warranty: product.warranty,
+      color: product.color,
+      description: product.description,
+      size: product.size,
+      highlights: product.highlights,
+      videoURL: product.videoURL[0],
+      weight: product.weight,
+      return: product.return,
+      // images: product.images,
+      availableDistricts: product.availableDistricts
+    })
+
+    product && setpriceAndStockFormData({
+      ...priceAndStockFormData,
+      price: product.price.$numberDecimal,
+      discountRate: product.discountRate,
+      quantity: product.quantity
+    })
+  }, [product]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -84,7 +114,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
 
   const submitProductInfo = () => {
     console.log('hello');
-    addProduct({ id: user._id, ...basicFormData, ...detailFormData, ...priceAndStockFormData })
+    updateProduct({ id: user._id, ...basicFormData, ...detailFormData, ...priceAndStockFormData })
   }
   const prev = (newFormData) => {
     if (current === 1) {
@@ -133,7 +163,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
               weight: data.values.weight,
               return: data.values.return,
               images: data.values.images,
-              districts:data.values.districts
+              availableDistricts:data.values.availableDistricts
             })
           }
           if (name === 'price_and_stock') {
@@ -149,7 +179,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
 
         {current === 0 && <BasicInformation basicFormData={basicFormData} next={next} layout={layout} tailLayout={tailLayout} brands={brands} />}
         {current === 1 && <DetailInformation detailFormData={detailFormData} next={next} prev={prev} layout={layout} tailLayout={tailLayout} />}
-        {current === 2 && <PriceAndStock submitProductInfo={submitProductInfo} prev={prev} layout={layout} tailLayout={tailLayout} />}
+        {current === 2 && <PriceAndStock priceAndStockFormData={priceAndStockFormData} submitProductInfo={submitProductInfo} prev={prev} layout={layout} tailLayout={tailLayout} />}
       </Form.Provider>
     </>
   );
@@ -158,19 +188,22 @@ ProductForm.propTypes = {
   getCategories: PropTypes.func,
   getBrands: PropTypes.func,
   brands: PropTypes.array,
-  addProduct: PropTypes.func,
+  updateProduct: PropTypes.func,
   user: PropTypes.object,
+  getProduct: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   brands: state.product.brands,
-  user: state.auth.adminProfile
+  user: state.auth.adminProfile,
+  product: state.product.product
 });
 
 const mapDispatchToProps = {
   getCategories,
   getBrands,
-  addProduct
+  updateProduct,
+  getProduct
 };
 
 export default connect(

@@ -26,9 +26,9 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
 
 
     useEffect(() => {
-        const {districts} = detailFormData
+        const {availableDistricts} = detailFormData
         form.setFieldsValue({ ...detailFormData })
-        setSelectedDistricts([...selectedDistricts, ...districts])
+        setSelectedDistricts([...selectedDistricts, ...availableDistricts])
     }, [detailFormData])
 
 
@@ -63,7 +63,7 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                     name="description"
                     rules={[
                         {
-                            
+                            type: 'string',
                             // required: true,
                             message: "Please input your product description!",
                         },
@@ -85,7 +85,7 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                         }}
                         onReady={( editor) => {
                             let value = form.getFieldValue('description')
-                            value && editor.setData(form.getFieldValue('description'))
+                            value && editor.setData(value)
                         }}
                     />
                 </Form.Item>
@@ -95,6 +95,7 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                     name="highlights"
                     rules={[
                         {
+                            type:'string',
                             // required: true,
                             message: "Please input highlights of the product!",
                         },
@@ -116,7 +117,7 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                         }}
                         onReady={(editor) => {
                             let value = form.getFieldValue('highlights')
-                            value && editor.setData(form.getFieldValue('highlights'))
+                            value && editor.setData(value)
                         }}
                     />
                 </Form.Item>
@@ -227,7 +228,7 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                 </Form.Item>
                 <Form.Item                    
                     label="Available on"
-                    name="districts"
+                    name="availableDistricts"
                     rules={[
                         {
                             type: 'array',

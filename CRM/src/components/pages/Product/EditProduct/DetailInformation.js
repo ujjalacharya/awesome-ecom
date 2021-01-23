@@ -26,9 +26,9 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
 
 
     useEffect(() => {
-        const {districts} = detailFormData
+        const {availableDistricts} = detailFormData
         form.setFieldsValue({ ...detailFormData })
-        setSelectedDistricts([...selectedDistricts, ...districts])
+        setSelectedDistricts([...selectedDistricts, ...availableDistricts])
     }, [detailFormData])
 
 
@@ -63,7 +63,7 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                     name="description"
                     rules={[
                         {
-                            
+                            type: 'string',
                             // required: true,
                             message: "Please input your product description!",
                         },
@@ -94,7 +94,8 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                     label="Highlights"
                     name="highlights"
                     rules={[
-                        {
+                        {   
+                            type:'string',
                             // required: true,
                             message: "Please input highlights of the product!",
                         },
@@ -227,7 +228,7 @@ const DetailInformation = ({ layout, next, prev, detailFormData }) => {
                 </Form.Item>
                 <Form.Item                    
                     label="Available on"
-                    name="districts"
+                    name="availableDistricts"
                     rules={[
                         {
                             type: 'array',

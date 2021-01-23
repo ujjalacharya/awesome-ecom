@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Upload, Modal, message } from 'antd';
 import { SideBySideMagnifier } from "react-image-magnifiers";
-import {saveUploadedImages,uploadImages, deleteImageById,} from '../../../../redux/actions/product_actions'
-const ImageUploader = ({ user, uploadImages, deleteImageById, uploadedImages,form,saveUploadedImages}) => {
+import { saveUploadedImages, uploadImages, deleteImageById, removeUploadedImages} from '../../../../redux/actions/product_actions'
+const ImageUploader = ({ user, uploadImages, productImages, deleteImageById, uploadedImages,removeUploadedImages, form,saveUploadedImages}) => {
     const [fileList, setFileList] = useState([
         // {
         //     uid: '-1',
@@ -20,17 +20,32 @@ const ImageUploader = ({ user, uploadImages, deleteImageById, uploadedImages,for
     })
     useEffect(() => {
         // console.log(uploadedImages);
-        form && form.setFieldsValue({
-            images: uploadedImages.map(image => {
-                return image.response?._id
+        if (uploadedImages.length && form) {
+            
+            form.setFieldsValue({
+                images: uploadedImages.map(image => {
+                    return image.response?._id
+                })
             })
-        })
-        setFileList(uploadedImages)
+            setFileList(uploadedImages)
+        }
     }, [uploadedImages,form])
 
-    // useMemo(()=>{
-    //     saveUploadedImages(fileList)
-    // },[fileList.length])
+    useEffect(() => {
+        let images = productImages.map(image => {
+            return {
+                _id: image._id,
+                uid: image._id,
+                name: image.large.split('/')[1],
+                status: 'done',
+                url: `${process.env.REACT_APP_SERVER_URL}uploads/${image.large}`,
+            }
+        })
+        saveUploadedImages(images)
+        return () => {
+            removeUploadedImages()
+        }
+    }, [productImages])
 
     function getBase64(file) {
         return new Promise((resolve, reject) => {
@@ -151,17 +166,20 @@ ImageUploader.propTypes = {
     uploadImages:PropTypes.func.isRequired,
     saveUploadedImages: PropTypes.func.isRequired,
     uploadedImages: PropTypes.array,
+    productImages: PropTypes.array,
 }
 
 const mapStateToProps = (state) =>  ({
     user:state.auth.adminProfile,
-    uploadedImages: state.product.uploadedImages
+    uploadedImages: state.product.uploadedImages,
+    productImages: state.product.product?.images || []
 })
 
 const mapDispatchToProps = {
     uploadImages,
     deleteImageById,
-    saveUploadedImages
+    saveUploadedImages,
+    removeUploadedImages
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImageUploader)

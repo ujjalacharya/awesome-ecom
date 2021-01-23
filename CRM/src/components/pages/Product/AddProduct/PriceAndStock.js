@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 import { connect } from 'react-redux'
 import {
@@ -8,8 +8,11 @@ import {
     Col,
     Row
 } from "antd";
-const PriceAndStock = ({ layout, prev, submitProductInfo, loading }) => {
+const PriceAndStock = ({ layout, prev, submitProductInfo, loading, priceAndStockFormData }) => {
     const [form] = Form.useForm()
+    useEffect(() => {
+        form.setFieldsValue({ ...priceAndStockFormData })
+    }, [priceAndStockFormData])
 
     const onFinish = (values) => {
         submitProductInfo()
@@ -39,6 +42,8 @@ const PriceAndStock = ({ layout, prev, submitProductInfo, loading }) => {
                     rules={[
                         {
                             type: 'string',
+                            // required: true,
+                            message: "Please input product selling price!",
                         }
                     ]}
                 >
@@ -51,22 +56,26 @@ const PriceAndStock = ({ layout, prev, submitProductInfo, loading }) => {
                     rules={[
                         {
                             type: 'string',
+                            // required: true,
+                            message: "Please input product discount rate!",
                         }
                     ]}
                 >
-                    <Input style={{ width: '100%' }} placeholder="15.6" />
+                    <Input type='number' style={{ width: '100%' }} placeholder="15" />
                 </Form.Item>
 
                 <Form.Item
                     label="Quantity on Stock"
-                    name="price"
+                    name="quantity"
                     rules={[
                         {
                             type: 'string',
+                            // required: true,
+                            message: "Please input product quantity!",
                         }
                     ]}
                 >
-                    <Input style={{ width: '100%' }} placeholder="100" />
+                    <Input type='number' style={{ width: '100%' }} placeholder="100" />
                 </Form.Item>
             </Form>
             <div className="steps-action">

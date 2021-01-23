@@ -238,7 +238,7 @@ exports.validateProduct = async (req, res, next) => {
     req.check("description", "Product description is required").notEmpty()
     req.check("warranty", "Product warranty is required").notEmpty()
     req.check("brand", "Product brand is required").notEmpty()
-    req.check("districts", "Invalid districts.").custom((values) => {
+    req.check("availableDistricts", "Invalid districts.").custom((values) => {
         let dts = values ? typeof values === 'string' ? [values] : values : []
         return values ? _.intersection(districts, dts).length === dts.length ? true : false : true
     })

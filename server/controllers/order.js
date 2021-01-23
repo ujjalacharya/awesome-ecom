@@ -466,6 +466,7 @@ exports.toggleOrderApproval = async (req, res) => {
     // return { order: results[0] }
     // await order.save();
     //for response
+    order = order.toObject()
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.approvedDate = updateOrder.status.approvedDate
     order.soldBy = order.soldBy._id
@@ -490,6 +491,7 @@ exports.toggleOrderApproval = async (req, res) => {
     // return { order: results[0] }
     // await order.save();
     //for response
+    order = order.toObject()
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.approvedDate = updateOrder.status.approvedDate
     order.soldBy = order.soldBy._id
@@ -541,16 +543,16 @@ exports.orderCancelByAdmin = async (req, res) => {
     .options({ viaSave: true })
     .update(product, updateProduct)
     .options({ viaSave: true })
-    // .run({ useMongoose: true });
+    .run({ useMongoose: true });
   // return res.json(results);
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.cancelledDetail.cancelledDate = updateOrder.status.cancelledDetail.cancelledDate;
-    
     const cancelledBy = {
       _id: req.profile._id,
       name: req.profile.name,
       phone: req.profile.phone
     };
+    order = order.toObject()
     order.status.cancelledDetail.cancelledBy = cancelledBy
     order.status.cancelledDetail.remark = newRemark;
     order.soldBy = order.soldBy._id
@@ -754,6 +756,7 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .run({ useMongoose: true });
     // return res.redirect(`/api/admin-order/${req.profile._id}/${order._id}`)
     // return res.json(results);
+    order = order.toObject()
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.tobereturnedDate = updateOrder.status.tobereturnedDate
     order.soldBy = order.soldBy._id
@@ -777,6 +780,7 @@ exports.toggletobeReturnOrder = async (req, res) => {
       .run({ useMongoose: true });
     // return res.redirect(`/api/admin-order/${req.profile._id}/${order._id}`)
     // return res.json(results);
+    order = order.toObject()
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.tobereturnedDate = updateOrder.status.tobereturnedDate
     order.soldBy = order.soldBy._id
