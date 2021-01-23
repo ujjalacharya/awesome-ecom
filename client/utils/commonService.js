@@ -1,9 +1,9 @@
 import fetch from "isomorphic-unfetch";
 import cookie from "js-cookie";
-import { Router } from "next/router";
 import { initStore } from "../redux";
 import { AUTHENTICATE, DEAUTHENTICATE } from "../redux/types";
 import { BASE_URL } from "./constants";
+import { deauthenticate } from "../redux/actions/authActions";
 import { getCookie, setCookie } from "./cookie";
 
 export const postTokenService = async (url, method, body) => {
@@ -25,10 +25,21 @@ export const postTokenService = async (url, method, body) => {
         data,
       };
     } else {
-      return {
-        isSuccess: false,
-        errorMessage: data.error,
-      };
+      if (data.error === "jwt expired") {
+        initStore().dispatch(deauthenticate());
+        if(window){
+          window.location.href = "/"
+        }
+        return {
+          isSuccess: false,
+          errorMessage: "Login Expired",
+        };
+      } else {
+        return {
+          isSuccess: false,
+          errorMessage: data.error,
+        };
+      }
     }
   } catch (err) {
     return {
@@ -196,7 +207,7 @@ const refreshTheToken = async (url, method, ctx, callbackUrl) => {
       });
       ctx.res.end();
     } else {
-      window.location.href = "/";
+      window.location.href = "/login";
     }
   }
 };

@@ -168,7 +168,7 @@ const reauthenticate = (token, refreshToken, ctx) => {
 };
 
 // removing the token
-const deauthenticate = (route = "/", ctx) => {
+export const deauthenticate = (route = "/login", ctx) => {
   return (dispatch) => {
     removeCookie("token");
     removeCookie("refresh-token");

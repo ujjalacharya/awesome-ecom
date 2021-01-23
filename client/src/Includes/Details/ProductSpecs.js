@@ -74,8 +74,8 @@ class ProductSpecs extends Component {
     }
   };
 
-  addToCart = () => {
-    this.props.addToCart(this.props.router.query.slug, {
+  addToCart = (slug) => {
+    this.props.addToCart(slug, {
       quantity: this.state.pdQty,
     });
   };
@@ -262,7 +262,7 @@ class ProductSpecs extends Component {
                         </span>
                       </div>
 
-                      <Button disabled={this.props.cart.loading || this.state.disableBuyNow || this.props.products.productDetailsLoading} className="primary" onClick={this.addToCart}>
+                      <Button disabled={this.props.cart.loading || this.state.disableBuyNow || this.props.products.productDetailsLoading} className="primary" onClick={() => this.addToCart(product.slug)}>
                         {this.props.cart.loading && <Spin indicator={antIcon} />} Add to Cart
                     </Button>
                       <Link href="/checkout">
