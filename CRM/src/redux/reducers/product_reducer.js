@@ -76,7 +76,7 @@ export default function (state = initialState, action) {
         case REMOVE_IMAGE:
             return {
                 ...state,
-                uploadedImages: state.uploadedImages.filter(image=>image!==payload),
+                uploadedImages: state.uploadedImages.filter(image=>image._id!==payload),
             }
         case REMOVE_UPLOAD_IMAGES:
             return {

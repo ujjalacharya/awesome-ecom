@@ -118,9 +118,11 @@ export const uploadImages = ({
 export const saveUploadedImages = (images) => async (dispatch) => {
   dispatch(success(UPLOAD_IMAGES, images));
 };
+
 export const removeUploadedImages = () => async (dispatch) => {
   dispatch({type: REMOVE_UPLOAD_IMAGES});
 };
+
 export const deleteImageById = (id,image_id) => async (dispatch) => {
     const response = await productService.deleteImageById(id,image_id);
     if (response.isSuccess) {
@@ -128,9 +130,10 @@ export const deleteImageById = (id,image_id) => async (dispatch) => {
       return true
     } else if (!response.isSuccess) {
       dispatch(error(response.errorMessage));
-      return false
+      return true
     }
 };
+
 
 export const addProduct = (productData) => async (dispatch) => {
     dispatch(init(ADD_PRODUCT_TYPES.ADD_PRODUCT));
@@ -146,7 +149,8 @@ export const addProduct = (productData) => async (dispatch) => {
   }
 };
 
-export const updateProduct = (productData) => async (dispatch) => {
+export const updateProduct = (productData, deletedProductImages) => async (dispatch) => {
+  console.log(deletedProductImages);
   dispatch(init(ADD_PRODUCT_TYPES.ADD_PRODUCT));
 
   const response = await productService.updateProduct(productData);

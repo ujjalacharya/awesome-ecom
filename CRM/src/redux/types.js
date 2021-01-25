@@ -76,5 +76,5 @@ export const ADD_PRODUCT_TYPES = {
 export const GET_CATEGORIES = "GET_CATEGORIES";
 export const GET_BRANDS = "GET_BRANDS";
 export const UPLOAD_IMAGES = "UPLOAD_IMAGES";
-export const REMOVE_IMAGE = "REMOVE_IMAGE"
-export const REMOVE_UPLOAD_IMAGES = "REMOVE_UPLOAD_IMAGES";
+export const REMOVE_IMAGE = "REMOVE_IMAGE"//add product ma use hunchha
+export const REMOVE_UPLOAD_IMAGES = "REMOVE_UPLOAD_IMAGES";//edit prodcut unmount huda use hunchha

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams , useLocation} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   Steps,
   Form,
 } from "antd";
-import { getCategories, getBrands, updateProduct, getProduct } from "../../../../redux/actions/product_actions";
+import { getCategories, getBrands, updateProduct, getProduct, removeUploadedImages, saveUploadedImages } from "../../../../redux/actions/product_actions";
 import BasicInformation from './BasicInformation'
 import DetailInformation from './DetailInformation'
 import PriceAndStock from "./PriceAndStock";
@@ -42,7 +42,7 @@ const steps = [
   },
 ];
 
-const ProductForm = ({ getCategories, getBrands, brands, user , updateProduct, getProduct, product}) => {
+const ProductForm = ({ getCategories, getBrands, brands, user, updateProduct, saveUploadedImages,removeUploadedImages, getProduct, product, productImages}) => {
   let {slug: productSlug} = useParams();
   const [current, setCurrent] = useState(0);
   const [basicFormData, setBasicFormData] = useState({
@@ -106,6 +106,22 @@ const ProductForm = ({ getCategories, getBrands, brands, user , updateProduct, g
       discountRate: product.discountRate,
       quantity: product.quantity
     })
+
+    let productImages = product?.images || []
+    let images = productImages.map(image => {
+      return {
+        isLinkedWithProduct: true,
+        _id: image._id,
+        uid: image._id,
+        name: image.large.split('/')[1],
+        status: 'done',
+        url: `${process.env.REACT_APP_SERVER_URL}uploads/${image.large}`,
+      }
+    })
+    saveUploadedImages(images)
+    return () => {
+      removeUploadedImages()
+    }
   }, [product]);
 
   const next = () => {
@@ -113,8 +129,8 @@ const ProductForm = ({ getCategories, getBrands, brands, user , updateProduct, g
   };
 
   const submitProductInfo = () => {
-    console.log('hello');
-    updateProduct({ id: user._id, ...basicFormData, ...detailFormData, ...priceAndStockFormData })
+    let deletedProductImages = productImages.filter(img => img.status === 'removed')
+    updateProduct({ id: user._id, ...basicFormData, ...detailFormData, ...priceAndStockFormData }, deletedProductImages)
   }
   const prev = (newFormData) => {
     if (current === 1) {
@@ -196,14 +212,17 @@ ProductForm.propTypes = {
 const mapStateToProps = (state) => ({
   brands: state.product.brands,
   user: state.auth.adminProfile,
-  product: state.product.product
+  product: state.product.product,
+  productImages: state.product.uploadedImages
 });
 
 const mapDispatchToProps = {
   getCategories,
   getBrands,
   updateProduct,
-  getProduct
+  getProduct,
+  removeUploadedImages,
+  saveUploadedImages
 };
 
 export default connect(
