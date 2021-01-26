@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import SideBar from '../../common/SideBar'
 
-const AdminBar = ({}) => {
+const AdminBar = ({adminProfile}) => {
     const titles = useMemo(()=>[
      {
         key:'product',
@@ -29,7 +29,7 @@ const AdminBar = ({}) => {
     ],[])
 
     return (
-        <SideBar titles={titles}/>
+        <SideBar titles={titles} adminProfile={adminProfile}/>
     )
 }
 

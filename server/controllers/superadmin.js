@@ -214,9 +214,9 @@ exports.getAdmins = async (req, res) => {
     if (status && status === 'blocked') query = {
         isBlocked: { $ne: null }
     }
-    if (status && status === 'unblocked') query = {
-        isBlocked: null
-    }
+    // if (status && status === 'unblocked') query = {
+    //     isBlocked: null
+    // }
     const admins = await Admin.find(query)
         .select("-password -salt -resetPasswordLink -emailVerifyLink")
         .skip(perPage * page - perPage)

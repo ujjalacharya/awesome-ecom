@@ -1,7 +1,15 @@
 import React from 'react'
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import {beSuperAdmin} from '../../redux/actions/superadmin_action'
 
-const SideBar = ({titles}) => {
+const SideBar = ({titles, adminProfile, beSuperAdmin}) => {
+    let history = useHistory();
+    const exitBeingAdmin = () => {
+        beSuperAdmin()
+        history.push('/manage-admins')
+    }
     
     return (
         <nav id="sidebar" className="sidebar" width='10%'>
@@ -45,17 +53,17 @@ const SideBar = ({titles}) => {
 
                 </ul>
 
-                {/* <div className="sidebar-bottom d-none d-lg-block">
+                {adminProfile && <div className="sidebar-bottom d-none d-lg-block">
                     <div className="media">
-                        <img className="rounded-circle mr-3" src="img\avatars\avatar.jpg" alt="Chris Wood" width="40" height="40" />
+                        <img className="rounded-circle mr-3" src={`${process.env.REACT_APP_SERVER_URL}/uploads/${adminProfile.photo}`} alt="Admin" width="40" height="40" />
                         <div className="media-body">
-                            <h5 className="mb-1">Chris Wood</h5>
+                            <h5 className="mb-1">{adminProfile.name}</h5>
                             <div>
-                                <i className="fas fa-circle text-success"></i> Online
-							</div>
+                                <button onClick={exitBeingAdmin} className="btn btn-info btn-sm"><i className="fas fa-fw fa-backspace text-danger"></i> Exit View As</button>
+                            </div>
                         </div>
                     </div>
-                </div> */}
+                </div>}
 
             </div>
         </nav>
@@ -63,4 +71,9 @@ const SideBar = ({titles}) => {
     )
 }
 
-export default React.memo(SideBar)
+// export default React.memo(SideBar)
+SideBar.propTypes = {
+    beSuperAdmin: PropTypes.func.isRequired,
+}
+
+export default connect(null, { beSuperAdmin })(React.memo(SideBar))

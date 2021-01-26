@@ -78,3 +78,18 @@ export const GET_BRANDS = "GET_BRANDS";
 export const UPLOAD_IMAGES = "UPLOAD_IMAGES";
 export const REMOVE_IMAGE = "REMOVE_IMAGE"//add product ma use hunchha
 export const REMOVE_UPLOAD_IMAGES = "REMOVE_UPLOAD_IMAGES";//edit prodcut unmount huda use hunchha
+
+//superadmin
+export const ADMINS_TYPES = {
+  GET_ADMINS: "GET_ADMINS",
+  GET_ADMINS_INIT: "GET_ADMINS_INIT",
+  GET_ADMINS_FINISH: "GET_ADMINS_FINISH",
+};
+export const ADMIN_TYPES = {
+  GET_ADMIN: "GET_ADMIN",
+  GET_ADMIN_INIT: "GET_ADMIN_INIT",
+  GET_ADMIN_FINISH: "GET_ADMIN_FINISH",
+};
+
+export const BEING_ADMIN = "BEING_ADMIN"
+export const BEING_SUPERADMIN = "BEING_SUPERADMIN"

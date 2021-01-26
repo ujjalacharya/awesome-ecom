@@ -4,6 +4,7 @@ import test_actions from "./test_actions";
 import notification_actions from './notification_actions'
 import order_actions from "./order_actions";
 import product_actions from './product_actions'
+import superadmin_action from './superadmin_action'
 
 export default {
   ...auth_actions,
@@ -11,5 +12,6 @@ export default {
   ...notification_actions,
   ...test_actions,
   ...order_actions,
-  ...product_actions
+  ...product_actions,
+  ...superadmin_action
 };

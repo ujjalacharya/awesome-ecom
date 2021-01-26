@@ -1,5 +1,5 @@
 // import jwt from "jsonwebtoken";
-import { UPDATE_USER, AUTH_TYPES} from "../types";
+import { UPDATE_USER, AUTH_TYPES, BEING_ADMIN, BEING_SUPERADMIN } from "../types";
 // import store from '../store'
 // import api from '../../utils/api'
 import { accessTokenKey, refreshTokenKey } from "../../utils/config";
@@ -14,15 +14,15 @@ const initialState = {
 
 
 export default function (state = initialState, action) {
-  const { type, payload} = action;
+  const { type, payload } = action;
   switch (type) {
     case AUTH_TYPES.SIGN_IN_INIT:
-        return {
-          ...state,
-          token: "",
-          isAuth: null,
-          loading: true,
-          authUser: null
+      return {
+        ...state,
+        token: "",
+        isAuth: null,
+        loading: true,
+        authUser: null
       };
 
     case AUTH_TYPES.REFRESH_TOKEN:
@@ -34,25 +34,35 @@ export default function (state = initialState, action) {
         token: payload.accessToken,
         isAuth: true,
         loading: false
-    };
+      };
 
     case AUTH_TYPES.SIGN_IN_FINISH:
       return {
         ...state,
         loading: false
-    };
+      };
 
     case UPDATE_USER:
     case AUTH_TYPES.LOAD_ME:
       return {
         ...state,
-        isAuth: true,
+        // isAuth: true,
         loading: false,
         authUser: payload,
         adminProfile: payload.role === 'admin' ? payload : null
       }
-      case AUTH_TYPES.AUTH_ERROR:
-      case AUTH_TYPES.SIGN_OUT:
+    case BEING_ADMIN:
+      return {
+        ...state,
+        adminProfile: payload
+      }
+    case BEING_SUPERADMIN:
+      return {
+        ...state,
+        adminProfile: null
+      }
+    case AUTH_TYPES.AUTH_ERROR:
+    case AUTH_TYPES.SIGN_OUT:
       localStorage.removeItem(accessTokenKey);
       localStorage.removeItem(refreshTokenKey);
       return {

@@ -1,16 +1,20 @@
 import React, { Fragment } from "react";
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+// import { getOrders, getOrder } from '../../../redux/actions/order_actions'
 import SuperadminBar from "./navbar/SuperadminBar";
 import Footer from "./Footer";
 import TopNavbar from './navbar/TopNavbar'
 import AdminBar from './navbar/AdminBar'
 import {verifyLocalStorage} from '../../utils/common'
 
-const Layout = ({ children}) => {
-  console.log('hello from layout');
+const Layout = ({ children, user}) => {
+  console.log('hello from layout',user);
   return (
     <Fragment>
       <div className="wrapper">
-        {verifyLocalStorage().role === 'superadmin' && <SuperadminBar />}
+        {(verifyLocalStorage().role === 'superadmin' && user?.role === 'admin') ? <AdminBar adminProfile={user} /> : <SuperadminBar />}
+        {/* {verifyLocalStorage().role === 'superadmin' && <SuperadminBar />} */}
         {verifyLocalStorage().role === 'admin' && <AdminBar />}
         <div className='main'>
           <TopNavbar />
@@ -27,4 +31,12 @@ const Layout = ({ children}) => {
     </Fragment>
   );
 };
-export default Layout;
+// export default Layout;
+Layout.propTypes = {
+  user: PropTypes.object,
+}
+const mapStateToProps = (state) => ({
+  user: state.auth.adminProfile,
+})
+
+export default connect(mapStateToProps, {})(Layout)
