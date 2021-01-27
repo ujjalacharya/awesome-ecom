@@ -8,14 +8,25 @@ import TopNavbar from './navbar/TopNavbar'
 import AdminBar from './navbar/AdminBar'
 import {verifyLocalStorage} from '../../utils/common'
 
+const SideBar = ({user}) => {
+  if (verifyLocalStorage().role === 'admin' ) {
+    return <AdminBar />
+  }
+  if (verifyLocalStorage().role === 'superadmin' && user?.role === 'admin') {
+     return <AdminBar adminProfile={user} />
+  }
+  return verifyLocalStorage().role === 'superadmin' && <SuperadminBar />
+}
+
 const Layout = ({ children, user}) => {
   console.log('hello from layout',user);
   return (
     <Fragment>
       <div className="wrapper">
-        {(verifyLocalStorage().role === 'superadmin' && user?.role === 'admin') ? <AdminBar adminProfile={user} /> : <SuperadminBar />}
+      <SideBar user={user}/>
+        {/* {(verifyLocalStorage().role === 'superadmin' && user?.role === 'admin') ? <AdminBar adminProfile={user} /> : <SuperadminBar />} */}
         {/* {verifyLocalStorage().role === 'superadmin' && <SuperadminBar />} */}
-        {verifyLocalStorage().role === 'admin' && <AdminBar />}
+        {/* {verifyLocalStorage().role === 'admin' && <AdminBar />} */}
         <div className='main'>
           <TopNavbar />
           <main className='content'>

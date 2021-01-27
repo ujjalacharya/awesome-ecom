@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { signIn } from "../../../redux/actions/auth_actions";
 const Login = (props) => {
   const [state, setState] = useState({
-    email: "prakashagrawal@gmail.com",
+    email: "aanandbhandari143@gmail.com",
     password: "helloworld1",
     error: "",
   });
