@@ -23,7 +23,7 @@ const Layout = ({ children, user}) => {
   return (
     <Fragment>
       <div className="wrapper">
-      <SideBar user={user}/>
+        <SideBar user={user}/>
         {/* {(verifyLocalStorage().role === 'superadmin' && user?.role === 'admin') ? <AdminBar adminProfile={user} /> : <SuperadminBar />} */}
         {/* {verifyLocalStorage().role === 'superadmin' && <SuperadminBar />} */}
         {/* {verifyLocalStorage().role === 'admin' && <AdminBar />} */}

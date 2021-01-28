@@ -110,36 +110,36 @@ exports.productImages = async (req, res) => {
   let images = req.files.map(async (file) => {
     const image = new ProductImages();
     const { filename, path: filepath, destination } = file;
-    // image.thumbnail = await imageCompressor(
-    //   filename,
-    //   80,
-    //   filepath,
-    //   destination,
-    //   "productThumbnail"
-    // );
-    // image.medium = await imageCompressor(
-    //   filename,
-    //   540,
-    //   filepath,
-    //   destination,
-    //   "productMedium"
-    // );
-    // image.large = await imageCompressor(
-    //   filename,
-    //   800,
-    //   filepath,
-    //   destination,
-    //   "productLarge"
-    // );
-    image.large = `productLarge/${filename}`
-    image.thumbnail = `productThumbnail/${filename}`
-    image.medium = `productMedium/${filename}`
+    image.thumbnail = await imageCompressor(
+      filename,
+      80,
+      filepath,
+      destination,
+      "productThumbnail"
+    );
+    image.medium = await imageCompressor(
+      filename,
+      540,
+      filepath,
+      destination,
+      "productMedium"
+    );
+    image.large = await imageCompressor(
+      filename,
+      800,
+      filepath,
+      destination,
+      "productLarge"
+    );
+    // image.large = `productLarge/${filename}`
+    // image.thumbnail = `productThumbnail/${filename}`
+    // image.medium = `productMedium/${filename}`
     // remove image from public/uploads
     const Path = `public/uploads/${filename}`;
     files.push(Path)
     // fs.unlinkSync(Path);
-    // return await image.save();
-    return image
+    return await image.save();
+    // return image
   });
   images = await Promise.all(images);
   fileRemover(files)

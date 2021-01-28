@@ -10,7 +10,7 @@ const TopNavbar = ({ signOut,user }) => {
 	// console.log(data);
 	console.log('hello from top nav bar');
     return (
-		<nav className="navbar navbar-expand navbar-light bg-white">
+		<nav className="navbar navbar-expand navbar-light bg-white sticky-top">
 			<Link className="sidebar-toggle d-flex mr-2" to=''>
 				<i className="hamburger align-self-center"></i>
 			</Link>

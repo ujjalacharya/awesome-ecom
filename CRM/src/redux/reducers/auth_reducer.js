@@ -2,14 +2,14 @@
 import { UPDATE_USER, AUTH_TYPES, BEING_ADMIN, BEING_SUPERADMIN } from "../types";
 // import store from '../store'
 // import api from '../../utils/api'
-import { accessTokenKey, refreshTokenKey } from "../../utils/config";
+import { accessTokenKey, persistAdminProfile, refreshTokenKey } from "../../utils/config";
 
 const initialState = {
   token: localStorage.getItem('token'),
   isAuth: null,
   loading: false,
   authUser: null,
-  adminProfile: null
+  adminProfile: JSON.parse(localStorage.getItem(persistAdminProfile))  || null
 }
 
 
@@ -49,14 +49,16 @@ export default function (state = initialState, action) {
         // isAuth: true,
         loading: false,
         authUser: payload,
-        adminProfile: payload.role === 'admin' ? payload : null
+        adminProfile: payload.role === 'admin' ? payload : state.adminProfile
       }
     case BEING_ADMIN:
+      localStorage.setItem(persistAdminProfile,JSON.stringify(payload))
       return {
         ...state,
         adminProfile: payload
       }
     case BEING_SUPERADMIN:
+      localStorage.removeItem(persistAdminProfile)
       return {
         ...state,
         adminProfile: null
@@ -65,6 +67,7 @@ export default function (state = initialState, action) {
     case AUTH_TYPES.SIGN_OUT:
       localStorage.removeItem(accessTokenKey);
       localStorage.removeItem(refreshTokenKey);
+      localStorage.removeItem(persistAdminProfile)
       return {
         ...state,
         token: "",

@@ -1,12 +1,12 @@
 import React from "react";
-// import PropTypes from "prop-types";
-// import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 import { decodeLocalStorage } from "../utils/common";
 
 const AdminRoute = ({
   component: Component,
-  // auth: { isAuth, loading, user },
+  user,
   ...rest
 }) => (
   <Route
@@ -16,7 +16,7 @@ const AdminRoute = ({
         window.location.reload()
       }
       return decodeLocalStorage()?.role === "admin" ||
-        decodeLocalStorage()?.role === "superadmin" ? (
+        (decodeLocalStorage()?.role === "superadmin") ? (
         <Component {...props} />
       ) : (
         // <Component {...props} />
@@ -31,13 +31,13 @@ const AdminRoute = ({
   />
 );
 
-export default AdminRoute
+// export default AdminRoute
 
-// AdminRoute.propTypes = {
-//   auth: PropTypes.object.isRequired,
-// };
+AdminRoute.propTypes = {
+  user: PropTypes.object.isRequired,
+};
 
-// const mapStateToProps = (state) => ({
-//   auth: state.Auth,
-// });
-// export default connect(mapStateToProps)(AdminRoute);
+const mapStateToProps = (state) => ({
+  user: state.auth.adminProfile || {},
+});
+export default connect(mapStateToProps)(AdminRoute);

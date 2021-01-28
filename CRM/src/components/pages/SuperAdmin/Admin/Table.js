@@ -11,30 +11,25 @@ import AdminDetail from './AdminDetail';
 
 const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount, user }) => {
     let history = useHistory();
-    // const [pagination, setPagination] = useState({
-    //     current: 1,
-    //     pageSize: 10,
-    //     total: 0
-    // })
+    const [pagination, setPagination] = useState({
+        defaultPageSize:5,
+        total: 0,
+        pageSizeOptions: [5, 10, 15, 20, 50, 100],
+        showQuickJumper: true
+    })
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const searchInput = useRef(null);
-    const pagination = useMemo(()=>{
-        return {
-            // current: 1,
-            pageSize: 5,
-            total:totalCount
-        }
-    },[totalCount])
+
     useEffect(() => {
          getAdmins(pagination.current, pagination.pageSize)
     }, [])
 
 
-    // useEffect(() => {
-    //     setPagination({ ...pagination, total: totalCount })
-    // }, [totalCount])
+    useEffect(() => {
+        setPagination({ ...pagination, total: totalCount })
+    }, [totalCount])
 
     const handleTableChange = (pagination, filters) => {
         getAdmins(pagination.current, pagination.pageSize, filters.status?.[0])
@@ -121,13 +116,13 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
             title: 'Admin',
             dataIndex: '',
             key:'admin',
-            width: '20%',
+            width: '15%',
             ...getAdminsearchProps('')
         },
         {
             title: 'Shop Name',
             dataIndex: 'shopName',
-            width: '10%',
+            width: '15%',
         },
         {
             title: 'Admin Address',
@@ -136,7 +131,7 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
                     title: 'District',
                     dataIndex: 'district',
                     key: 'city',
-                    width: '5%',
+                    width: '10%',
                 },
                 {
                     title: 'City',
@@ -174,7 +169,7 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
                 if (admin.isVerified) return (<span className="badge badge-pill badge-success">verified</span>)
                 if (!admin.isVerified) return (<span className="badge badge-pill badge-warning">unverified</span>)
             },
-            width: '5%',
+            width: '8%',
         },
         {
             title: 'Date',
@@ -185,11 +180,11 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
         {
             title: 'Action',
             dataIndex: '',
-            width: '5%',
+            width: '10%',
             render: admin => <>
             {admin.wardno ? <>
-                    <button onClick={e => openAdmin(admin)} className="btn btn-info"><i className="fas fa-eye"></i></button>
-                    <button onClick={e => beingAdmin(admin)} className="btn btn-info"><i className="fas fa-pen"></i></button>
+                    <button onClick={e => openAdmin(admin)} className="btn btn-info btn-sm"><i className="fas fa-eye"></i></button>
+                    <button onClick={e => beingAdmin(admin)} className="btn btn-info btn-sm"><i className="fas fa-pen"></i></button>
             </>:null}
             </>,
         },
@@ -206,6 +201,7 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
         loading={multiLoading}
         onChange={handleTableChange}
         size='small'
+        // scroll={{ y: 400 }}
     />
     <Drawer
         title="Admin Details"

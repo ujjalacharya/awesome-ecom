@@ -12,8 +12,8 @@ const SideBar = ({titles, adminProfile, beSuperAdmin}) => {
     }
     
     return (
-        <nav id="sidebar" className="sidebar" width='10%'>
-            <div className="sidebar-content ">
+        <nav id="sidebar" className="sidebar sidebar-sticky" width='10%'>
+            <div className="sidebar-content">
                 {/* <Link className="sidebar-brand" to={'/'}>
                     <img className=" mr-3" src="img\logo.png" alt="logo" width="60%" height="50%" />
                 </Link> */}

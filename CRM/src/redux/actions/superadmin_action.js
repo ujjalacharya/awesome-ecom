@@ -35,7 +35,7 @@ export const getAdmin = (id) => async (dispatch) => {
 export const beAdmin = (id) => async (dispatch) => {
 
   const response = await superadminService.getAdmin(id);
-
+  
   if (response.isSuccess) {
     dispatch(success(BEING_ADMIN, response.data));
   } else if (!response.isSuccess) {

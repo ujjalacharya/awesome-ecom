@@ -9,32 +9,30 @@ import { getOrders, getOrder } from '../../../redux/actions/order_actions'
 import OrderDetail from './OrderDetail';
 
 const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) => {
-    // const [pagination, setPagination] = useState({
-    //     current: 1,
-    //     pageSize: 10,
-    //     total: 0
-    // })
+    const [pagination, setPagination] = useState({
+        total: 0,
+        defaultPageSize: 5,
+        pageSizeOptions:[5,10,15,20,50,100],
+        showQuickJumper: true
+    })
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const searchInput = useRef(null);
-    const pagination = useMemo(()=>{
-        return {
-            // current: 1,
-            pageSize: 5,
-            total:totalCount
-        }
-    },[totalCount])
+    useEffect(()=>{
+        setPagination({
+            ...pagination,
+            total: totalCount
+        })
+    }, [totalCount])
+
     useEffect(() => {
         user && getOrders(user._id, pagination.current, pagination.pageSize)
     }, [user])
 
 
-    // useEffect(() => {
-    //     setPagination({ ...pagination, total: totalCount })
-    // }, [totalCount])
-
     const handleTableChange = (pagination, filters) => {
+        console.log(pagination);
         user && getOrders(user._id, pagination.current, pagination.pageSize, filters.status?.[0],filters.product?.[0])
     }
 
@@ -114,7 +112,7 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         {
             title: 'Product',
             dataIndex: 'product',
-            width: '20%',
+            width: '30%',
             ...getOrderSearchProps('product')
         },
         {
@@ -131,7 +129,7 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
                     dataIndex: 'shipto',
                     key: 'city',
                     render: shipto => `${shipto.city}`,
-                    width: '5%',
+                    width: '10%',
                 },
                 {
                     title: 'Area',
@@ -173,7 +171,7 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
                 "badge badge-pill badge-dark"
                 return(<span className={badgeClass}>{status.currentStatus}</span>)
             },
-            width: '5%',
+            width: '10%',
         },
         {
             title: 'Qty',
@@ -183,14 +181,14 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         {
             title: 'Date',
             dataIndex: 'createdAt',
-            width: '10%',
+            width: '9%',
             render: date => `${moment(date).format("MMM Do YYYY")}`
         },
         {
             title: 'Action',
             dataIndex: '',
-            width: '5%',
-            render: action => <button className="btn btn-info"><i className="fas fa-eye"></i></button>,
+            width: '6%',
+            render: action => <button className="btn btn-info btn-sm"><i className="fas fa-eye"></i></button>,
             onCell:order => {
                 return {
                     onClick: e => openOrder(order)
@@ -210,11 +208,8 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         loading={multiLoading}
         onChange={handleTableChange}
         size='small'
-        // onRow={ order => {
-        //     return {
-        //         onClick:e => openOrder(order)
-        //     }
-        // }}
+        sticky
+        // scroll={{ y: 400 }}
     />
     <Drawer
         title="Order Details"

@@ -10,30 +10,26 @@ import { getProducts, getProduct, deleteProduct } from '../../../redux/actions/p
 import ProductDetail from './ProductDetail';
 const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products, totalCount, user }) => {
     let history = useHistory();
-    // const [pagination, setPagination] = useState({
-    //     current: 1,
-    //     pageSize: 10,
-    //     total: 0
-    // })
+    const [pagination, setPagination] = useState({
+        defaultPageSize:5,
+        total: 0,
+        pageSizeOptions: [5, 10, 15, 20, 50, 100],
+        showQuickJumper: true
+    })
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const searchInput = useRef(null);
-    const pagination = useMemo(() => {
-        return {
-            // current: 1,
-            pageSize: 5,
+    useEffect(() => {
+        setPagination({
+            ...pagination,
             total: totalCount
-        }
+        })
     }, [totalCount])
     useEffect(() => {
         user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize })
     }, [user])
 
-
-    // useEffect(() => {
-    //     setPagination({ ...pagination, total: totalCount })
-    // }, [totalCount])
 
     const handleTableChange = (pagination, filters, sorter) => {
         if (!sorter.length) {
@@ -126,7 +122,7 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
             title: 'Product',
             dataIndex: '',
             key: 'product',
-            width: '20%',
+            width: '30%',
             ...getProductsearchProps('')
         },
         {
@@ -138,7 +134,7 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
                 })
                 return str.toString()
             },
-            width: '10%',
+            width: '15%',
         },
         {
             title: 'Price',
@@ -190,13 +186,13 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
                 multiple: 2
             },
             key: 'createdAt',
-            width: '10%',
+            width: '12%',
             render: date => `${moment(date).format("MMM Do YYYY")}`
         },
         {
-            title: 'Action',
+            title: 'Actions',
             dataIndex: '',
-            width: '8%',
+            width: '10%',
             render: product => <>
                 <button onClick={() => openProduct(product)} className="btn btn-info btn-sm"><i className="fas fa-eye"></i></button>
                 <button onClick={() => history.push(`/edit-product/${product.slug}`)} className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>
@@ -223,11 +219,7 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
                 loading={multiLoading}
                 onChange={handleTableChange}
                 size='small'
-            // onRow={ order => {
-            //     return {
-            //         onClick:e => openProduct(order)
-            //     }
-            // }}
+                // scroll={{ y: 400 }}
             />
             <Drawer
                 title="Product Detail"
