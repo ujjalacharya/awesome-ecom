@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import socketIOClient from "socket.io-client";
-import { JWT_SIGNIN_KEY, accessTokenKey, SERVER_URL } from "./config";
+import { JWT_SIGNIN_KEY, accessTokenKey, SERVER_URL, persistAdminProfile } from "./config";
 var socketUser
 export const socket = () => {
   socketUser = socketIOClient(SERVER_URL, { transport : ['websocket'] })
@@ -14,6 +14,14 @@ export const disconnectSocket = () => {
 // export const getRealTimeNotifications = () => {
 //   return socketUser.on("notification", data => data);
 // }
+
+export const isAdminOnLocalStorage = () => {
+  const admin = JSON.parse(localStorage.getItem(persistAdminProfile))
+  if (admin && admin.role === 'admin') {
+    return true;
+  }
+  return false
+}
 
 export const decodeLocalStorage = () => {
     const token = localStorage.getItem(accessTokenKey);

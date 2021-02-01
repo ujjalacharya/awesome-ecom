@@ -14,7 +14,7 @@ const PriceAndStock = ({ layout, prev, submitProductInfo, loading, priceAndStock
         form.setFieldsValue({ ...priceAndStockFormData })
     }, [priceAndStockFormData])
     const onFinish = (values) => {
-        submitProductInfo()
+        submitProductInfo(values)
     };
     const onSubmit = () => {
         form.submit()

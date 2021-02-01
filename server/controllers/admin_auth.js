@@ -315,7 +315,7 @@ exports.checkAdminSignin = async (req, res, next) => {
     const token = req.header('x-auth-token');
     if (token) {
         const admin = parseToken(token)
-        const foundUser = await Admin.findById(admin._id).select('name')
+        const foundUser = await Admin.findById(admin._id).select('name role')
         if (foundUser) {
             if (!foundUser.isBlocked) {
                 req.authAdmin = foundUser

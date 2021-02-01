@@ -31,6 +31,12 @@ export class ProductService {
     return data;
   }
 
+  deleteProductImage(id,product_slug, image_id) {
+    let url = `/product/image/${id}/${product_slug}?image_id=${image_id}`;
+    let data = postService(url, undefined, 'DELETE');
+    return data;
+  }
+
   deleteProduct(id, slug) {
     let url = `/product/delete-product/${id}/${slug}`;
     let data = postService(url,undefined,'PATCH');
@@ -44,10 +50,10 @@ export class ProductService {
     return data;
   }
 
-  updateProduct({ id, ...restProductData }) {
+  updateProduct({ id, product_slug, ...restProductData }) {
     let body = JSON.stringify(restProductData)
-    let url = `/product/${id}`;
-    let data = postService(url, body);
+    let url = `/product/${id}/${product_slug}`;
+    let data = postService(url, body, 'PUT');
     return data;
   }
 

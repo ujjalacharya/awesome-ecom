@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -77,10 +77,12 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
     setCurrent(current + 1);
   };
 
-  const submitProductInfo = () => {
+  const submitProductInfo = (priceAndStockFormData) => {
     console.log('hello');
+    // console.log(priceAndStockFormData);
     addProduct({ id: user._id, ...basicFormData, ...detailFormData, ...priceAndStockFormData })
   }
+
   const prev = (newFormData) => {
     if (current === 1) {
       setDetailFormData({

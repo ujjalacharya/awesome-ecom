@@ -110,7 +110,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user, updateProduct, sa
     let productImages = product?.images || []
     let images = productImages.map(image => {
       return {
-        isLinkedWithProduct: true,
+        isLinkedWithProduct: product.slug,
         _id: image._id,
         uid: image._id,
         name: image.large.split('/')[1],
@@ -128,9 +128,11 @@ const ProductForm = ({ getCategories, getBrands, brands, user, updateProduct, sa
     setCurrent(current + 1);
   };
 
-  const submitProductInfo = () => {
+  const submitProductInfo = (priceAndStockFormData) => {
     let deletedProductImages = productImages.filter(img => img.status === 'removed')
-    updateProduct({ id: user._id, ...basicFormData, ...detailFormData, ...priceAndStockFormData }, deletedProductImages)
+
+    let _detailFormData = { ...detailFormData, images: productImages.filter(img => img.status === 'done').map(img => img._id || img.response._id)}
+    product && updateProduct({ id: user._id, ...basicFormData, ..._detailFormData, ...priceAndStockFormData, product_slug:product.slug }, deletedProductImages)
   }
   const prev = (newFormData) => {
     if (current === 1) {

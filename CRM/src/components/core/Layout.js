@@ -19,7 +19,7 @@ const SideBar = ({user}) => {
 }
 
 const Layout = ({ children, user}) => {
-  console.log('hello from layout',user);
+  console.log('hello from layout');
   return (
     <Fragment>
       <div className="wrapper">

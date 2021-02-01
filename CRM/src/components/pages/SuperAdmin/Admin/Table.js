@@ -25,6 +25,9 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
     useEffect(() => {
          getAdmins(pagination.current, pagination.pageSize)
     }, [])
+    // useEffect(() => {
+    //     adminProfile && history.push('/')
+    // }, [adminProfile])
 
 
     useEffect(() => {
@@ -107,8 +110,8 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
         getAdmin(admin._id)
     }
     const beingAdmin = (admin) => {
-        beAdmin(admin._id)
-        history.push('/')
+        let isAdmin = beAdmin(admin._id,history)
+        // isAdmin && history.push('/')
     }
 
     const columns = useMemo(() => [
@@ -228,6 +231,7 @@ Table.propTypes = {
 }
 const mapStateToProps = (state) => ({
     user: state.auth.user,
+    // adminProfile: state.auth.adminProfile,
     admins: state.superadmin.admins,
     multiLoading: state.superadmin.multiAdminLoading,
     totalCount: state.superadmin.totalCount,

@@ -204,7 +204,7 @@ exports.getAdmins = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10;
     const status = req.query.status
-    let query = {}
+    let query = {role:'admin'}
     if (status && status === 'verified') query = {
         isVerified: { $ne: null }
     }

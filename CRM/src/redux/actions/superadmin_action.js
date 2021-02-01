@@ -32,14 +32,17 @@ export const getAdmin = (id) => async (dispatch) => {
   }
 };
 
-export const beAdmin = (id) => async (dispatch) => {
+export const beAdmin = (id, history) => async (dispatch) => {
 
   const response = await superadminService.getAdmin(id);
   
   if (response.isSuccess) {
     dispatch(success(BEING_ADMIN, response.data));
+    history.push('/')
+    return true
   } else if (!response.isSuccess) {
     dispatch(error(response.errorMessage));
+    return false
   }
 };
 

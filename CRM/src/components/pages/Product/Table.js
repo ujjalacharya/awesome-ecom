@@ -95,7 +95,7 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
         },
         render: product => {
             return (<>
-                {product.name}{' '}<Avatar shape="square" size='small' src={`${process.env.REACT_APP_SERVER_URL}/uploads/${product.images[0].thumbnail}`} />
+                {product.name}{' '}{product.images?.length && <Avatar shape="square" size='small' src={`${process.env.REACT_APP_SERVER_URL}/uploads/${product.images[0].thumbnail}`} />}
             </>)
 
             // return searchedColumn === dataIndex ? (

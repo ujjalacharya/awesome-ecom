@@ -150,17 +150,41 @@ export const addProduct = (productData) => async (dispatch) => {
 };
 
 export const updateProduct = (productData, deletedProductImages) => async (dispatch) => {
-  console.log(deletedProductImages);
-  dispatch(init(ADD_PRODUCT_TYPES.ADD_PRODUCT));
+  let errors = []
+  if (deletedProductImages.length) {
+    deletedProductImages = deletedProductImages.map(async img => {
+      if (!img.isLinkedWithProduct) {
+        const deleteImgRes = await productService.deleteImageById(productData.id, img._id);
+        if (!deleteImgRes.isSuccess) {
+          errors.push("Error occurs while updating product.1")
+        }
+      }
+      if (img.isLinkedWithProduct) {
+        const deleteImgRes = await productService.deleteProductImage(productData.id, img.isLinkedWithProduct, img._id);
+        if (!deleteImgRes.isSuccess) {
+          errors.push("Error occurs while updating product.2")
+        }
+      }
+      return img
+    })
+    await Promise.all(deletedProductImages)
 
-  const response = await productService.updateProduct(productData);
+  }
+  if (errors.length) {
+    dispatch(error(errors[0]))
+  } else {
 
-  dispatch(finish(ADD_PRODUCT_TYPES.ADD_PRODUCT));
-
-  if (response.isSuccess) {
-    dispatch(success(SUCCESS, 'Your product has been submitted and is under verification.'))
-  } else if (!response.isSuccess) {
-    dispatch(error(response.errorMessage));
+    dispatch(init(ADD_PRODUCT_TYPES.ADD_PRODUCT));
+  
+    const response = await productService.updateProduct(productData);
+  
+    dispatch(finish(ADD_PRODUCT_TYPES.ADD_PRODUCT));
+  
+    if (response.isSuccess) {
+      dispatch(success(SUCCESS, 'Your product has been submitted and is under verification.'))
+    } else if (!response.isSuccess) {
+      dispatch(error(response.errorMessage));
+    }
   }
 };
 

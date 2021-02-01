@@ -49,7 +49,7 @@ export const Categories = ({
     <>
     <Form.Item label="Categories">
       <Form.Item
-        label="Categories"
+        // label="Categories"
         name="category"
         rules={[
           {

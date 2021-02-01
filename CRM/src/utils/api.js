@@ -60,7 +60,7 @@ api.interceptors.response.use(
       return Promise.reject(err.response.data.error);
     }
     if (err.response?.status === 404) {
-      return Promise.reject("Page not found");
+      return Promise.reject(err.response.data?.error || "Page not found");
     }
     if (err.response?.status >= 400 && err.response?.status <= 500) {
       return Promise.reject(err.response.data.error);

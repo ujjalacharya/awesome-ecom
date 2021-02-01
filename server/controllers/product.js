@@ -43,8 +43,10 @@ exports.getProduct = async (req, res) => {
       .status(404)
       .json({ error: "Product is not verified or has been deleted." });
   //increament viewCount
-  !req.authAdmin && (req.product.viewsCount += 1)
- 
+  // !req.authAdmin && (req.product.viewsCount += 1)
+  if (!req.authAdmin) {
+    req.product.viewsCount = 0
+  }
   await req.product.save()
   //user's action on this product
   const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser, 'product')
