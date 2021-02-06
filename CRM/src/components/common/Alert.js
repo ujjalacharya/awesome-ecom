@@ -8,6 +8,8 @@ const Alert = ({alert}) => {
       message: alert.hasError?"Oops...": "Cool...",
       description: alert.msg,
       icon: alert.hasError ? <SmileOutlined style={{ color: "#108ee9" }} /> : <SmileOutlined style={{ color: "#108ee9" }} />,
+      // style: { position: 'relative', zIndex: '2'  }
+      placement:'bottomRight'
     });
   };
   useEffect(() => {

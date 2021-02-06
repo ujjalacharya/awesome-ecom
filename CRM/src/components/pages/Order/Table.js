@@ -13,7 +13,8 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         total: 0,
         defaultPageSize: 5,
         pageSizeOptions:[5,10,15,20,50,100],
-        showQuickJumper: true
+        showQuickJumper: true,
+        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
     })
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')

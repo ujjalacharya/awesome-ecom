@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useHistory } from "react-router-dom";
-import { Table as AntdTable, Input, Button, Space, Popconfirm, Avatar, Drawer } from 'antd';
+import { Table as AntdProductTable, Input, Button, Space, Popconfirm, Avatar, Drawer } from 'antd';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment'
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { getProducts, getProduct, deleteProduct } from '../../../redux/actions/product_actions'
-import ProductDetail from './ProductDetail';
-const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products, totalCount, user }) => {
+import ProductDetail from './ProductDetail'
+const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, products, totalCount, user }) => {
     let history = useHistory();
     const [pagination, setPagination] = useState({
-        defaultPageSize:5,
+        defaultPageSize: 5,
         total: 0,
         pageSizeOptions: [5, 10, 15, 20, 50, 100],
-        showQuickJumper: true
+        showQuickJumper: true,
+        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
     })
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
@@ -31,7 +30,7 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
     }, [user])
 
 
-    const handleTableChange = (pagination, filters, sorter) => {
+    const handleProductTableChange = (pagination, filters, sorter) => {
         if (!sorter.length) {
             sorter = [sorter]
         }
@@ -113,9 +112,22 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
     })
 
     const openProduct = (product) => {
-        setIsDrawerOpen(true)
         getProduct(product.slug)
+        setIsDrawerOpen(true)
     }
+    const filters = useMemo(() => {
+        let filters = [
+            { text: 'All', value: 'undefined' },
+            { text: 'Unverified', value: 'unverified' },
+            { text: 'Verified', value: 'verified' },
+            { text: 'Rejected', value: 'rejected' },
+            { text: 'Deleted', value: 'deleted' },
+        ]
+        if (user?.role === 'admin') filters.length = 3
+        return filters
+    }, [user])
+
+    const isSuperadmin = useMemo(()=>user?.role === 'superadmin'? true : false,[user])
 
     const columns = useMemo(() => [
         {
@@ -153,13 +165,11 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
             dataIndex: '',
             key: 'status',
             filterMultiple: false,
-            filters: [
-                { text: 'All', value: 'undefined' },
-                { text: 'Verified', value: 'verified' },
-                { text: 'Unverified', value: 'unverified' }
-            ],
+            filters,
             render: product => {
+                if (user?.role === 'superadmin' && product.isDeleted) return (<span className="badge badge-pill badge-dark">deleted</span>)
                 if (product.isVerified) return (<span className="badge badge-pill badge-success">verified</span>)
+                if (product.isRejected) return (<span className="badge badge-pill badge-warning">rejected</span>)
                 if (!product.isVerified) return (<span className="badge badge-pill badge-danger">unverified</span>)
             },
             width: '5%',
@@ -195,14 +205,14 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
             width: '10%',
             render: product => <>
                 <button onClick={() => openProduct(product)} className="btn btn-info btn-sm"><i className="fas fa-eye"></i></button>
-                <button onClick={() => history.push(`/edit-product/${product.slug}`)} className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>
+                {user?.role === 'admin' && <button onClick={() => history.push(`/edit-product/${product.slug}`)} className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>}
                 <Popconfirm
                     title="Are you sure to delete this product?"
                     onConfirm={() => deleteProduct(product.soldBy, product.slug)}
                     okText="Yes"
                     cancelText="No"
                 >
-                <button className="btn btn-danger btn-sm"><i className="fas fa-trash "></i></button>
+                    <button className="btn btn-danger btn-sm"><i className="fas fa-trash "></i></button>
                 </Popconfirm>
             </>
         },
@@ -211,15 +221,15 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
 
     return (
         <>
-            <AntdTable
+            <AntdProductTable
                 columns={columns}
                 rowKey={record => record._id}
                 dataSource={products}
                 pagination={pagination}
                 loading={multiLoading}
-                onChange={handleTableChange}
+                onChange={handleProductTableChange}
                 size='small'
-                // scroll={{ y: 400 }}
+            // scroll={{ y: 400 }}
             />
             <Drawer
                 title="Product Detail"
@@ -230,12 +240,15 @@ const Table = ({ getProduct, getProducts, deleteProduct, multiLoading, products,
                 visible={isDrawerOpen}
                 closeIcon={<i className="fas fa-times btn btn-danger"></i>}
             >
-                <ProductDetail isOrderDetailOpen={isDrawerOpen} />
+                <ProductDetail
+                    isOrderDetailOpen={isDrawerOpen}
+                    isSuperadmin={isSuperadmin}
+                />
             </Drawer>
         </>)
 }
 
-Table.propTypes = {
+ProductTable.propTypes = {
     user: PropTypes.object,
     products: PropTypes.array,
     multiLoading: PropTypes.bool,
@@ -244,11 +257,5 @@ Table.propTypes = {
     getProducts: PropTypes.func.isRequired,
     deleteProduct: PropTypes.func,
 }
-const mapStateToProps = (state) => ({
-    user: state.auth.adminProfile,
-    products: state.product.products,
-    multiLoading: state.product.multiLoading,
-    totalCount: state.product.totalCount,
-})
 
-export default connect(mapStateToProps, { getProducts, getProduct, deleteProduct })(Table)
+export default ProductTable

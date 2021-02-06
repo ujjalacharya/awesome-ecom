@@ -99,6 +99,10 @@ const productSchema = mongoose.Schema({
         type: Date,
         default: null
     },
+    isRejected: {
+        type: Date,
+        default: null
+    },
     isDeleted: {
         type: Date,
         default: null

@@ -8,6 +8,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getAdmins, getAdmin, beAdmin} from '../../../../redux/actions/superadmin_action'
 import AdminDetail from './AdminDetail';
+import { filter } from 'lodash';
 
 const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount, user }) => {
     let history = useHistory();
@@ -15,7 +16,8 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
         defaultPageSize:5,
         total: 0,
         pageSizeOptions: [5, 10, 15, 20, 50, 100],
-        showQuickJumper: true
+        showQuickJumper: true,
+        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
     })
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
@@ -35,7 +37,7 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
     }, [totalCount])
 
     const handleTableChange = (pagination, filters) => {
-        getAdmins(pagination.current, pagination.pageSize, filters.status?.[0])
+        getAdmins(pagination.current, pagination.pageSize, filters.status?.[0], filters.admin?.[0])
     }
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {

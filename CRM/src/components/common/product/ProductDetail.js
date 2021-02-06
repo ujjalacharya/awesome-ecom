@@ -4,9 +4,11 @@ import { connect } from 'react-redux'
 import { Carousel, Tabs } from 'antd';
 import { SideBySideMagnifier } from "react-image-magnifiers";
 import parse from 'html-react-parser';
+import ProductStatus from './ProductStatus'
 const { TabPane } = Tabs
 
-export const ProductDetail = ({product, singleLoading}) => {
+
+export const ProductDetail = ({product, singleLoading, isSuperadmin}) => {
     const contentStyle = {
         height: '170px',
         color: '#fff',
@@ -46,6 +48,7 @@ export const ProductDetail = ({product, singleLoading}) => {
                 <div className="mb-2">
                     <p><strong>tags:</strong> {product?.tags?.join(', ')}</p>
                 </div>
+                <ProductStatus isSuperadmin={isSuperadmin} product={product}/>
             </div>
             <div className="row mb-12">
                 <div className="col-md-12">
@@ -77,6 +80,7 @@ export const ProductDetail = ({product, singleLoading}) => {
 ProductDetail.propTypes = {
     product: PropTypes.object,
     singleLoading: PropTypes.bool,
+    isSuperadmin:PropTypes.bool,
 }
 
 const mapStateToProps = (state) => ({

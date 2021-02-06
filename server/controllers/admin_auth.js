@@ -315,6 +315,9 @@ exports.checkAdminSignin = async (req, res, next) => {
     const token = req.header('x-auth-token');
     if (token) {
         const admin = parseToken(token)
+        if (admin.error === 'jwt expired') {
+            return res.json(admin)//{error:'jwt expired'}
+        }
         const foundUser = await Admin.findById(admin._id).select('name role')
         if (foundUser) {
             if (!foundUser.isBlocked) {

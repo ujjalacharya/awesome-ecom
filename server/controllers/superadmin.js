@@ -205,16 +205,24 @@ exports.getAdmins = async (req, res) => {
     const perPage = +req.query.perPage || 10;
     const status = req.query.status
     let query = {role:'admin'}
+    if (req.query.keyword) query = {
+        ...query,
+        name: { $regex: req.query.keyword, $options: "i" }
+    }
     if (status && status === 'verified') query = {
+        ...query,
         isVerified: { $ne: null }
     }
     if (status && status === 'unverified') query = {
+        ...query,
         isVerified: null
     }
     if (status && status === 'blocked') query = {
+        ...query,
         isBlocked: { $ne: null }
     }
     // if (status && status === 'unblocked') query = {
+    // ...query,
     //     isBlocked: null
     // }
     const admins = await Admin.find(query)
@@ -579,6 +587,7 @@ exports.approveProduct = async (req, res) => {
     if (!product.remark.length) {
         const updateProduct = product.toObject()
         updateProduct.isVerified = Date.now()
+        updateProduct.isRejected = null
         addBrandToCategory(updateProduct.brand, categories)
         addKeywords(product.tags)
         addDistricts(product.availableDistricts)
@@ -596,6 +605,7 @@ exports.approveProduct = async (req, res) => {
 
     const updateProduct = product.toObject()
     updateProduct.isVerified = Date.now()
+    updateProduct.isRejected = null
     addBrandToCategory(updateProduct.brand, categories)
     addKeywords(product.tags)
     addDistricts(product.availableDistricts)
@@ -617,7 +627,8 @@ exports.disApproveProduct = async (req, res) => {
         comment:req.body.comment
     })
     const updateProduct = product.toObject()
-    updateProduct.isVerified = null
+    updateProduct.isVerified = null,
+    updateProduct.isRejected = Date.now()
     updateProduct.remark.push(newRemark._id)
     const results = await task
         .save(newRemark)
@@ -630,7 +641,7 @@ exports.disApproveProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
     const page = +req.query.page || 1
     const perPage = +req.query.perPage || 10
-    const { createdAt, updatedAt, price ,status} = req.query
+    const { createdAt, updatedAt, price ,status, keyword, outofstock} = req.query
 
     let sortFactor = { createdAt: 'desc' };
     if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
@@ -638,19 +649,32 @@ exports.getProducts = async (req, res) => {
     if (price && (price === 'asc' || price === 'desc')) sortFactor = { price }
 
     let query = { }
+    if (keyword) query = {
+        ...query,
+        name: { $regex: keyword, $options: "i" }
+    }
     if (status && status === 'verified') query = {
+        ...query,
         isVerified: { $ne: null }
     }
+    if (status && status === 'rejected') query = {
+        ...query,
+        isRejected: { $ne: null }
+    }
     if (status && status === 'unverified') query = {
+        ...query,
         isVerified: null
     }
     if (status && status === 'deleted') query = {
+        ...query,
         isDeleted: { $ne: null }
     }
     if (status && status === 'notdeleted') query = {
+        ...query,
         isDeleted: null
     }
-    if (status && status === 'outofstock') query = {
+    if (outofstock && outofstock === 'yes') query = {
+        ...query,
         quantity: 0
     }
 
@@ -664,11 +688,11 @@ exports.getProducts = async (req, res) => {
         .lean()
         .sort(sortFactor)
     //rating on each product
-    products = products.map(async p => {
-        p.stars = await getRatingInfo(p)
-        return p
-    })
-    products = await Promise.all(products)
+    // products = products.map(async p => {
+    //     p.stars = await getRatingInfo(p)
+    //     return p
+    // })
+    // products = await Promise.all(products)
     let totalCount = await Product.countDocuments(query)
     res.json({products,totalCount});
 }

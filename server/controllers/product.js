@@ -38,25 +38,35 @@ exports.product = async (req, res, next) => {
   next();
 };
 exports.getProduct = async (req, res) => {
-  if (req.product.isVerified === null && req.product.isDeleted !== null)
+  let role = req.authAdmin && req.authAdmin.role || 'user'
+    if (role === 'user' && req.product.isVerified === null && req.product.isDeleted !== null){
+    return res
+    .status(404)
+    .json({ error: "Product is not verified or has been deleted." });
+    }
+  if (role === 'admin' && req.product.isDeleted !== null) {
     return res
       .status(404)
-      .json({ error: "Product is not verified or has been deleted." });
+      .json({ error: "Product has been deleted." });
+  }
   //increament viewCount
   // !req.authAdmin && (req.product.viewsCount += 1)
   if (!req.authAdmin) {
     req.product.viewsCount = 0
   }
   await req.product.save()
-  //user's action on this product
-  const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser, 'product')
   //ratings of this product
   const product = req.product.toObject()
   product.stars = await getRatingInfo(req.product)
-  product.hasOnCart = hasOnCart
-  product.hasBought = hasBought
-  product.hasOnWishlist = hasOnWishlist
-  product.hasReviewed = hasReviewed
+  //user's action on this product
+  if (req.authUser) {
+    
+    const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser, 'product')
+    product.hasOnCart = hasOnCart
+    product.hasBought = hasBought
+    product.hasOnWishlist = hasOnWishlist
+    product.hasReviewed = hasReviewed
+  }
   res.json({ product });
 };
 
@@ -203,6 +213,7 @@ exports.updateProduct = async (req, res) => {
       .json({ error: "Cannot update. Product has already been verified." });
   }
   product = _.extend(product, req.body);
+  product.isRejected = null
   await product.save();
   res.json(product);
 };
@@ -228,6 +239,10 @@ exports.getProducts = async (req, res) => {
   if (status && status === 'unverified') query = {
     ...query,
     isVerified: null
+  }
+  if (status && status === 'rejected') query = {
+    ...query,
+    isRejected: { $ne: null }
   }
   // if (status && status === 'deleted') query = {
   //   ...query,
@@ -312,16 +327,19 @@ exports.minedProducts = async (req, res) => {
   let totalCount = await Product.countDocuments(query)
   // if (totalCount > 50) totalCount = 50
   //user's action on each product
-  products = products.map(async p => {
-    //user's action on this product
-    const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
-    //ratings of this product
-    // p.stars = await getRatingInfo(p)
-    p.hasOnCart = hasOnCart,
+  if (req.authUser) {
+    
+    products = products.map(async p => {
+      //user's action on this product
+      const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
+      //ratings of this product
+      // p.stars = await getRatingInfo(p)
+      p.hasOnCart = hasOnCart,
       p.hasOnWishlist = hasOnWishlist
-    return p
-  })
-  products = await Promise.all(products)
+      return p
+    })
+    products = await Promise.all(products)
+  }
   res.json({ products, totalCount });
 };
 exports.forYouProducts = async (req,res) => {
@@ -394,6 +412,7 @@ exports.forYouProducts = async (req,res) => {
   const totalCount = await Product.countDocuments(query);
 
   //user's action on each product
+  
   products = products.map(async p => {
     //user's action on this product
     const { hasOnCart, hasOnWishlist } = await userHas(p, req.user, 'products')
@@ -499,16 +518,19 @@ exports.searchProducts = async (req, res) => {
   // }
   let totalCount = await Product.countDocuments(searchingFactor);
   //user's action on each product
-  products = products.map(async p => {
-    //user's action on this product
-    const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
-    //ratings of this product
-    // p.stars = await getRatingInfo(p)
-    p.hasOnCart = hasOnCart,
+  if (req.authUser) {
+    products = products.map(async p => {
+      
+      //user's action on this product
+      const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
+      //ratings of this product
+      // p.stars = await getRatingInfo(p)
+      p.hasOnCart = hasOnCart,
       p.hasOnWishlist = hasOnWishlist
-    return p
-  })
-  products = await Promise.all(products)
+      return p
+    })
+    products = await Promise.all(products)
+  }
   res.json({ products, totalCount });
 };
 
@@ -558,16 +580,19 @@ exports.getProductsByCategory = async (req, res) => {
   const totalCount = await Product.countDocuments(query);
 
   //user's action on each product
-  products = products.map(async p => {
-    //user's action on this product
-    const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
-    //ratings of this product
-    // p.stars = await getRatingInfo(p)
-    p.hasOnCart = hasOnCart,
+  if (req.authUser) {
+    
+    products = products.map(async p => {
+      //user's action on this product
+      const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
+      //ratings of this product
+      // p.stars = await getRatingInfo(p)
+      p.hasOnCart = hasOnCart,
       p.hasOnWishlist = hasOnWishlist
-    return p
-  })
-  products = await Promise.all(products)
+      return p
+    })
+    products = await Promise.all(products)
+  }
   res.json({ products, totalCount });
 };
 

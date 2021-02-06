@@ -1,13 +1,13 @@
-import { SUCCESS, ADMINS_TYPES,ADMIN_TYPES, BEING_ADMIN, BEING_SUPERADMIN} from "../types";
+import { SUCCESS, ADMINS_TYPES,ADMIN_TYPES, BEING_ADMIN, BEING_SUPERADMIN, PRODUCTS_TYPES, TOGGLE_PRODUCT_APPROVAL_TYPES} from "../types";
 import { finish, init, success, error } from "../commonActions";
 import { SuperadminService } from "../api/superadmin_api";
 
 const superadminService = new SuperadminService();
 
-export const getAdmins = (page,perPage,status) => async (dispatch) => {
+export const getAdmins = (page,perPage,status, keyword) => async (dispatch) => {
   dispatch(init(ADMINS_TYPES.GET_ADMINS));
 
-  const response = await superadminService.getAdmins(page,perPage,status);
+  const response = await superadminService.getAdmins(page,perPage,status, keyword);
 
   dispatch(finish(ADMINS_TYPES.GET_ADMINS));
 
@@ -50,3 +50,30 @@ export const beSuperAdmin = () => async dispatch => {
   dispatch({type:BEING_SUPERADMIN})
 }
 
+export const getProducts = ({ id, page, perPage, keyword, createdAt, updatedAt, status, price, outofstock }) => async (dispatch) => {
+  dispatch(init(PRODUCTS_TYPES.GET_PRODUCTS));
+
+  const response = await superadminService.getProducts({ page, perPage, keyword, createdAt, updatedAt, status, price, outofstock });
+
+  dispatch(finish(PRODUCTS_TYPES.GET_PRODUCTS));
+
+  if (response.isSuccess) {
+    dispatch(success(PRODUCTS_TYPES.GET_PRODUCTS, response.data));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
+};
+
+export const approveProduct = (product_slug) => async (dispatch) => {
+  dispatch(init(TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL));
+
+  const response = await superadminService.approveProduct(product_slug);
+
+  dispatch(finish(TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL));
+
+  if (response.isSuccess) {
+    dispatch(success(TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL, response.data));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
+};

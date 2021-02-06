@@ -329,6 +329,9 @@ exports.checkUserSignin = async (req, res, next) => {
   const token = req.header("x-auth-token");
   if (token) {
     const user = parseToken(token);
+    if (user.error === 'jwt expired') {
+      return res.json(user)//{error:'jwt expired'}
+    }
     const foundUser = await User.findById(user._id).select("name");
     if (foundUser) {
       if (!foundUser.isBlocked) {

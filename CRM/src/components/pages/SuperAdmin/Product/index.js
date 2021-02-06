@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../../core/Layout'
+import Layout from '../../../core/Layout'
 import Products from './Products'
 
 export const index = () => {

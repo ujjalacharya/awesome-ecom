@@ -14,6 +14,7 @@ import AddProduct from '../components/pages/Product/AddProduct'
 import EditProduct from '../components/pages/Product/EditProduct'
 import Order from '../components/pages/Order'
 import Admin from "../components/pages/SuperAdmin/Admin";
+import SProduct from "../components/pages/SuperAdmin/Product";
 
 const MainRouter = (props) => {
   return (
@@ -24,6 +25,7 @@ const MainRouter = (props) => {
       <AdminRoute exact path="/add-product" component={AddProduct} />
       <AdminRoute exact path="/order" component= {Order} />
       <SuperAdminRoute exact path="/superadmin" component={Home}/>
+      <SuperAdminRoute exact path="/superadmin/manage-products" component={SProduct} />
       <SuperAdminRoute exact path="/manage-admins" component={Admin} />
       <AdminRoute exact path="/edit-product/:slug?" component={EditProduct} />
     </Switch>

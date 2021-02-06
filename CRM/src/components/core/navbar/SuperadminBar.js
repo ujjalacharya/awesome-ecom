@@ -33,7 +33,7 @@ const SuberadminBar = ({}) => {
                 path: '/add-product'
             }, {
                 name: 'Manage Product',
-                path: '/manage-products'
+                path: '/superadmin/manage-products'
             }]
         },
         {

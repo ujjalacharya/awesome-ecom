@@ -1,4 +1,4 @@
-import { GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVE_UPLOAD_IMAGES, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES} from "../types";
+import { GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVE_UPLOAD_IMAGES, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES, TOGGLE_PRODUCT_APPROVAL_TYPES} from "../types";
 
 
 const initialState = {
@@ -11,6 +11,7 @@ const initialState = {
     brands:[],
     uploadedImages:[],
     addProductLoading: false,
+    toggleProductApprovalLoading: false
 }
 
 export default function (state = initialState, action) {
@@ -58,6 +59,16 @@ export default function (state = initialState, action) {
             ...state,
             singleLoading: false
         }
+        case TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL_INIT:
+            return {
+                ...state,
+                toggleProductApprovalLoading: true
+            }
+        case TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL_FINISH:
+            return {
+                ...state,
+                toggleProductApprovalLoading: false
+            }
         case GET_CATEGORIES:
             return {
                 ...state,
