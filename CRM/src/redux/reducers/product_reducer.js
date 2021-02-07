@@ -1,4 +1,4 @@
-import { GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVE_UPLOAD_IMAGES, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES, TOGGLE_PRODUCT_APPROVAL_TYPES} from "../types";
+import { GET_CATEGORIES, GET_BRANDS, UPLOAD_IMAGES, REMOVE_IMAGE, REMOVE_UPLOAD_IMAGES, PRODUCTS_TYPES, PRODUCT_TYPES, ADD_PRODUCT_TYPES, TOGGLE_PRODUCT_STATUS_TYPES} from "../types";
 
 
 const initialState = {
@@ -59,12 +59,32 @@ export default function (state = initialState, action) {
             ...state,
             singleLoading: false
         }
-        case TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL_INIT:
+        case TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS_INIT:
             return {
                 ...state,
                 toggleProductApprovalLoading: true
             }
-        case TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL_FINISH:
+        case TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS:
+            return {
+                ...state,
+                product:{
+                    ...state.product,
+                    isVerified : payload.isVerified,
+                    isRejected : payload.isRejected,
+                    isFeatured : payload.isFeatured,
+                    isDeleted : payload.isDeleted
+                },
+                products:state.products.map(p=>{
+                    if(p._id === payload._id ){
+                        p.isVerified = payload.isVerified
+                        p.isRejected = payload.isRejected
+                        p.isFeatured = payload.isFeatured
+                        p.isDeleted = payload.isDeleted
+                    }
+                    return p
+                })
+            }
+        case TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS_FINISH:
             return {
                 ...state,
                 toggleProductApprovalLoading: false

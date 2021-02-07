@@ -519,20 +519,20 @@ exports.flipCategoryAvailablity = async (req, res) => {
     res.json(category)
 }
 
-exports.makeProductFeatured = async (req, res) => {
-    let product = await Product.findOne({ slug: req.params.p_slug, isVerified:{$ne:null}, isDeleted:null })
+exports.toggleProductFeatured = async (req, res) => {
+    let product = await Product.findOne({ slug: req.params.p_slug, isVerified:{$ne:null}, isDeleted:null, isRejected:null })
     if (!product)
         return res
             .status(404)
             .json({ error: "Product not found." });
 
-    product.isFeatured = Date.now()
+    product.isFeatured = product.isFeatured ? null : Date.now()
     product = await product.save()
     res.json({ product })
 }
 
 exports.approveProduct = async (req, res) => {
-    const product = await Product.findOne({ slug: req.params.p_slug }).populated({
+    const product = await Product.findOne({ slug: req.params.p_slug }).populate({
         path: "remark",
         model: "remark",
         match:{
@@ -629,6 +629,8 @@ exports.disApproveProduct = async (req, res) => {
     const updateProduct = product.toObject()
     updateProduct.isVerified = null,
     updateProduct.isRejected = Date.now()
+    updateProduct.isDeleted = null
+    updateProduct.isFeatured = null
     updateProduct.remark.push(newRemark._id)
     const results = await task
         .save(newRemark)
@@ -660,6 +662,10 @@ exports.getProducts = async (req, res) => {
     if (status && status === 'rejected') query = {
         ...query,
         isRejected: { $ne: null }
+    }
+    if (status && status === 'featured') query = {
+        ...query,
+        isFeatured: { $ne: null }
     }
     if (status && status === 'unverified') query = {
         ...query,

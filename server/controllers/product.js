@@ -39,20 +39,20 @@ exports.product = async (req, res, next) => {
 };
 exports.getProduct = async (req, res) => {
   let role = req.authAdmin && req.authAdmin.role || 'user'
-    if (role === 'user' && req.product.isVerified === null && req.product.isDeleted !== null){
+    if (role === 'user' && (!req.product.isVerified || req.product.isDeleted)){
     return res
     .status(404)
     .json({ error: "Product is not verified or has been deleted." });
     }
-  if (role === 'admin' && req.product.isDeleted !== null) {
+  if (role === 'admin' && req.product.isDeleted) {
     return res
       .status(404)
       .json({ error: "Product has been deleted." });
   }
   //increament viewCount
   // !req.authAdmin && (req.product.viewsCount += 1)
-  if (!req.authAdmin) {
-    req.product.viewsCount = 0
+  if (role === 'user') {
+    req.product.viewsCount += 1
   }
   await req.product.save()
   //ratings of this product
@@ -76,9 +76,14 @@ exports.createProduct = async (req, res) => {
     return res.status(403).json({ error: "Admin is not verified" });
   if (req.admin.role!== 'superadmin') {
     req.body.isFeatured = undefined
+    req.body.isVerified = undefined
   }
-  if (req.admin.role === 'superadmin' && req.body.isFeatured) {
-    req.body.isFeatured = Date.now()
+  if (req.admin.role === 'superadmin') {
+    if (req.body.isFeatured) {
+      
+      req.body.isFeatured = Date.now()
+    }
+    req.body.isVerified = Date.now()
   }
   let newProduct = new Product(req.body);
   newProduct.soldBy = req.profile._id;
@@ -104,6 +109,9 @@ exports.deleteProduct = async (req, res) => {
     return res.status(404).json({ error: "Product not found" });
   }
   product.isDeleted = Date.now();
+  product.isVerified = null
+  product.isFeatured = null
+  product.isRejected = null
   await product.save();
   // this.getProducts(req,res)
   res.json(product);
@@ -502,7 +510,6 @@ exports.searchProducts = async (req, res) => {
   if (req.header('district')) {
       searchingFactor.availableDistricts = { $in: req.header('district') }
   }
-  console.log(searchingFactor);
   let products = await Product.find(searchingFactor)
     .populate("category", "displayName slug")
     .populate("brand", "brandName slug")

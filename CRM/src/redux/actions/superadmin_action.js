@@ -1,4 +1,4 @@
-import { SUCCESS, ADMINS_TYPES,ADMIN_TYPES, BEING_ADMIN, BEING_SUPERADMIN, PRODUCTS_TYPES, TOGGLE_PRODUCT_APPROVAL_TYPES} from "../types";
+import { SUCCESS, ADMINS_TYPES,ADMIN_TYPES, BEING_ADMIN, BEING_SUPERADMIN, PRODUCTS_TYPES, TOGGLE_PRODUCT_STATUS_TYPES} from "../types";
 import { finish, init, success, error } from "../commonActions";
 import { SuperadminService } from "../api/superadmin_api";
 
@@ -65,14 +65,28 @@ export const getProducts = ({ id, page, perPage, keyword, createdAt, updatedAt, 
 };
 
 export const approveProduct = (product_slug) => async (dispatch) => {
-  dispatch(init(TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL));
+  dispatch(init(TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS));
 
   const response = await superadminService.approveProduct(product_slug);
 
-  dispatch(finish(TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL));
+  dispatch(finish(TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS));
 
   if (response.isSuccess) {
-    dispatch(success(TOGGLE_PRODUCT_APPROVAL_TYPES.TOGGLE_PRODUCT_APPROVAL, response.data));
+    dispatch(success(TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS, response.data));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
+};
+
+export const disApproveProduct = (product_slug, comment) => async (dispatch) => {
+  dispatch(init(TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS));
+
+  const response = await superadminService.disApproveProduct(product_slug, comment);
+
+  dispatch(finish(TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS));
+
+  if (response.isSuccess) {
+    dispatch(success(TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS, response.data[1]));
   } else if (!response.isSuccess) {
     dispatch(error(response.errorMessage));
   }

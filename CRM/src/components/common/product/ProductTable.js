@@ -122,8 +122,9 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             { text: 'Verified', value: 'verified' },
             { text: 'Rejected', value: 'rejected' },
             { text: 'Deleted', value: 'deleted' },
+            { text: 'Featured', value: 'featured' },
         ]
-        if (user?.role === 'admin') filters.length = 3
+        if (user?.role === 'admin') filters.length = 4
         return filters
     }, [user])
 
@@ -168,9 +169,10 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             filters,
             render: product => {
                 if (user?.role === 'superadmin' && product.isDeleted) return (<span className="badge badge-pill badge-dark">deleted</span>)
-                if (product.isVerified) return (<span className="badge badge-pill badge-success">verified</span>)
-                if (product.isRejected) return (<span className="badge badge-pill badge-warning">rejected</span>)
+                if (product.isRejected) return (<><span className="badge badge-pill badge-warning">rejected</span><span className="badge badge-pill badge-danger">unverified</span></>)
+                if (product.isFeatured) return (<><span className="badge badge-pill badge-secondary">featured</span><span className="badge badge-pill badge-success">verified</span></>)
                 if (!product.isVerified) return (<span className="badge badge-pill badge-danger">unverified</span>)
+                if (product.isVerified) return (<span className="badge badge-pill badge-success">verified</span>)
             },
             width: '5%',
         },
@@ -240,10 +242,10 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
                 visible={isDrawerOpen}
                 closeIcon={<i className="fas fa-times btn btn-danger"></i>}
             >
-                <ProductDetail
+                {isDrawerOpen && <ProductDetail //as we need to unmount ProductDetail
                     isOrderDetailOpen={isDrawerOpen}
                     isSuperadmin={isSuperadmin}
-                />
+                />}
             </Drawer>
         </>)
 }
