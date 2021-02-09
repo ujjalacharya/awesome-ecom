@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {updateProfile} from '../../../redux/actions/profile_actions'
 
-const ProfileForm = ({user, updateProfile}) => {
+const ProfileForm = ({user, updateProfile, loading}) => {
     const [profile, setProfile] = useState({
         name:'',
         shopName:'',
@@ -17,9 +17,8 @@ const ProfileForm = ({user, updateProfile}) => {
         holidayStart:'',
         holidayEnd:'',
     });
-    const [isDisable,setIsDisabled] = useState(false)
     useEffect(()=>{
-        setProfile({
+        user && setProfile({
             ...profile,
             name:user?.name?user.name:'',
             shopName:user?.shopName?user.shopName:'',
@@ -36,9 +35,8 @@ const ProfileForm = ({user, updateProfile}) => {
    const onChange = e => setProfile({...profile,[e.target.name]:e.target.value})
     const onSubmit = async e => {
         e.preventDefault()
-        setIsDisabled(true)
-        await updateProfile(profile,user._id)
-        // setIsDisabled(false)
+        updateProfile(profile,user._id)
+        
     }
     return (
         <>
@@ -135,7 +133,7 @@ const ProfileForm = ({user, updateProfile}) => {
                                 />
                             </div>
                         </div>
-                        <button type="submit" className="btn btn-primary" disabled={isDisable}>Submit</button>
+                        <button type="submit" className="btn btn-primary" disabled={loading}>Submit</button>
                     </form>
                 </div>
             </div>
@@ -145,12 +143,14 @@ const ProfileForm = ({user, updateProfile}) => {
 }
 
 ProfileForm.propTypes = {
-    user: PropTypes.object.isRequired,
+    user: PropTypes.object,
     updateProfile: PropTypes.func.isRequired,
+    loading: PropTypes.bool,
 }
-// const mapStateToProps = (state) => ({
-//     user: state.auth.user,
-// })
+const mapStateToProps = (state) => ({
+    loading: state.auth.loading,
+    user: state.auth.adminProfile,
+})
 
 
-export default connect(null,{updateProfile})(ProfileForm)
+export default connect(mapStateToProps,{updateProfile})(React.memo(ProfileForm))

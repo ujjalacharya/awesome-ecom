@@ -11,6 +11,11 @@ export const AUTH_TYPES = {
 };
 
 //profile
+export const UPDATE_ADMIN_TYPES = {
+  UPDATE_ADMIN: "UPDATE_ADMIN",
+  UPDATE_ADMIN_INIT: "UPDATE_ADMIN_INIT",
+  UPDATE_ADMIN_FINISH: "UPDATE_ADMIN_FINISH",
+};
 export const UPDATE_USER = "UPDATE_USER";
 export const GET_PROFILE = "GET_PROFILE";
 export const UPDATE_BANK = "UPDATE_BANK";

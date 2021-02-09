@@ -1,5 +1,5 @@
 // import jwt from "jsonwebtoken";
-import { UPDATE_USER, AUTH_TYPES, BEING_ADMIN, BEING_SUPERADMIN } from "../types";
+import { UPDATE_USER, AUTH_TYPES, BEING_ADMIN, BEING_SUPERADMIN, UPDATE_ADMIN_TYPES } from "../types";
 // import store from '../store'
 // import api from '../../utils/api'
 import { accessTokenKey, persistAdminProfile, refreshTokenKey } from "../../utils/config";
@@ -35,14 +35,23 @@ export default function (state = initialState, action) {
         isAuth: true,
         loading: false
       };
-
+    case UPDATE_ADMIN_TYPES.UPDATE_ADMIN_INIT:
+      return {
+        ...state,
+        loading:true
+      }
+    case UPDATE_ADMIN_TYPES.UPDATE_ADMIN_FINISH:
     case AUTH_TYPES.SIGN_IN_FINISH:
       return {
         ...state,
         loading: false
       };
 
-    case UPDATE_USER:
+    case UPDATE_ADMIN_TYPES.UPDATE_ADMIN:
+      return {
+        ...state,
+        adminProfile: payload
+      }
     case AUTH_TYPES.LOAD_ME:
       return {
         ...state,

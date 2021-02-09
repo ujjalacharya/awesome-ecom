@@ -34,6 +34,7 @@ exports.getProfile = async (req, res) => {
 // update or complete profile
 exports.updateProfile = async (req, res) => {
     let profile = req.profile
+    profile = _.extend(profile, req.body)
     // password update
     if (req.body.oldPassword && req.body.newPassword) {
         let admin = await Admin.findByCredentials(profile.email, req.body.oldPassword)
@@ -47,11 +48,12 @@ exports.updateProfile = async (req, res) => {
     
     profile.holidayMode.start = req.body.holidayStart && req.body.holidayStart
     profile.holidayMode.end = req.body.holidayEnd && req.body.holidayEnd
-    profile.password = undefined//for security
-    profile.salt = undefined//for security
-    profile = _.extend(profile, req.body)
     profile.isVerified = null
     await profile.save();
+    profile.password = undefined
+    profile.salt = undefined
+    profile.resetPasswordLink = undefined
+    profile.emailVerifyLink = undefined
     res.json(profile);
 }
 

@@ -24,7 +24,7 @@ const Profile = ({user}) => {
                                 <div className="col-md-12">
                                     <Tabs >
                                         <TabPane tab="Profile" key="a">
-                                            <ProfileForm user={user} />
+                                            <ProfileForm />
                                         </TabPane>
                                         <TabPane tab="Business" key="b">
                                             <BusinessForm/>

@@ -1,7 +1,21 @@
-import { GLOBAL_ERROR, UPDATE_BANK, UPDATE_USER, GET_BANK_INFO } from "../types";
+import { GLOBAL_ERROR, UPDATE_BANK, UPDATE_USER, GET_BANK_INFO, UPDATE_ADMIN_TYPES} from "../types";
 import api from "../../utils/api";
+import { finish, init, success, error } from "../commonActions";
+import { ProfileService } from "../api/profile_api";
 
+const profileService = new ProfileService();
 export const updateProfile = (profile, id) => async (dispatch) => {
+  dispatch(init(UPDATE_ADMIN_TYPES.UPDATE_ADMIN));
+
+  const response = await profileService.updateProfile(profile,id);
+
+  dispatch(finish(UPDATE_ADMIN_TYPES.UPDATE_ADMIN));
+
+  if (response.isSuccess) {
+    dispatch(success(UPDATE_ADMIN_TYPES.UPDATE_ADMIN, response.data));
+  } else if (!response.isSuccess) {
+    dispatch(error(response.errorMessage));
+  }
   try {
     profile = JSON.stringify(profile);
     const res = await api.put(`/admin/${id}`, profile);
@@ -51,8 +65,4 @@ export const getAdminBank = (id) => async (dispatch) => {
     console.log("****profile_actions/getBank****", err);
     dispatch({ type: GLOBAL_ERROR, payload: err || "Not Found" });
   }
-};
-
-export default {
-  updateProfile,
 };

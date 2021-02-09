@@ -2,10 +2,11 @@ import { GET_PROFILE, UPDATE_BANK, GET_BANK_INFO } from "../types";
 
 
 const initialState = {
-    profile : null,
+    // profile : null,
     bank: null,
     warehouse: null,
-    business: null
+    business: null,
+    profileLoading: false
 }
 
 export default function (state = initialState, action) {

@@ -168,7 +168,7 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             filterMultiple: false,
             filters,
             render: product => {
-                if (user?.role === 'superadmin' && product.isDeleted) return (<span className="badge badge-pill badge-dark">deleted</span>)
+                if (user?.role === 'superadmin' && product.isDeleted) return (<><span className="badge badge-pill badge-dark">deleted</span><span className="badge badge-pill badge-danger">unverified</span></>)
                 if (product.isRejected) return (<><span className="badge badge-pill badge-warning">rejected</span><span className="badge badge-pill badge-danger">unverified</span></>)
                 if (product.isFeatured) return (<><span className="badge badge-pill badge-secondary">featured</span><span className="badge badge-pill badge-success">verified</span></>)
                 if (!product.isVerified) return (<span className="badge badge-pill badge-danger">unverified</span>)
@@ -210,7 +210,7 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
                 {user?.role === 'admin' && <button onClick={() => history.push(`/edit-product/${product.slug}`)} className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>}
                 <Popconfirm
                     title="Are you sure to delete this product?"
-                    onConfirm={() => deleteProduct(product.soldBy, product.slug)}
+                    onConfirm={() => deleteProduct(isSuperadmin?product.soldBy._id: product.soldBy, product.slug)}
                     okText="Yes"
                     cancelText="No"
                 >
