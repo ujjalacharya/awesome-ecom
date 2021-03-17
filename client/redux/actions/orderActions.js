@@ -56,7 +56,7 @@ const placeOrder = (body) => {
     if (response.isSuccess) {
       await dispatch({ type: PLACE_ORDER, payload: response.data });
       openNotification("Success", "Order placed successfully");
-      window.location.href = "/myprofile";
+      window.location.href = "/myprofile/manageAccount";
     } else if (!response.isSuccess) {
       dispatch({
         type: GLOBAL_ERROR,
