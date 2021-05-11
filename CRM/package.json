@@ -11,7 +11,7 @@
     "chart.js": "^2.9.3",
     "html-react-parser": "^0.14.2",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^16.9.0",
     "react-chartjs-2": "^2.9.0",
