@@ -371,7 +371,7 @@ class ProductSpecs extends Component {
                   <b>Share this product:</b>
                   <span>
                     <FacebookShareButton
-                      url={`http://157.245.106.101:3000/products/${product.slug}`}
+                      url={`http://143.110.177.168:3001/products/${product.slug}`}
                       quote={"Kindeem - explore the mall"}
                       hashtag="#kindeem" >
                       <FacebookIcon size={32} round={true} />
