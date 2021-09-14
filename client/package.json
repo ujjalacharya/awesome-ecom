@@ -13,6 +13,7 @@
     "@zeit/next-sass": "^1.0.1",
     "antd": "^4.2.2",
     "antd-mobile": "^2.3.3",
+    "axios": "^0.21.1",
     "cookie-parser": "^1.4.5",
     "cookies": "^0.8.0",
     "isomorphic-unfetch": "^3.0.0",

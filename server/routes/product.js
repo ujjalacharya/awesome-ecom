@@ -21,7 +21,7 @@ router.patch('/delete-product/:id/:p_slug', adminAuth, hasAuthorization, deleteP
 router.get('/for-you', userAuth, forYouProducts)
 
 //public
-router.get('/mined-products',checkUserSignin,minedProducts)   
+router.get('/mined-products',minedProducts)   
 router.get('/by-category', checkUserSignin, getProductsByCategory)//?cat_id=&cat_slug=
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
 router.post('/search',checkUserSignin,searchProducts)//need to work on rating nd $option in regex

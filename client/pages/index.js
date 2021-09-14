@@ -47,9 +47,24 @@ const Index = (props) => {
   return (
     <Layout title="Home">
       <div className="wrapper">
-        <div className="main-carousel">
-          <MainCarousel data={bannerImages} />
-        </div>
+        <Row>
+          <Col lg={6}>
+            <ul className="top-categories">
+              <li className="title">Top Categories</li>
+              <li>Fashion</li>
+              <li>Electronics</li>
+              <li>Gifts</li>
+              <li>Home & Garden</li>
+              <li>Music</li>
+              <li>Sports</li>
+            </ul>
+          </Col>
+          <Col lg={18}>
+            <div className="main-carousel">
+              <MainCarousel data={bannerImages} />
+            </div>
+          </Col>
+        </Row>
         <div className="container">
           {
             !isEmpty(allProducts.featuredProducts?.products) && (

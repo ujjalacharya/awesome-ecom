@@ -34,7 +34,7 @@ export default function Main() {
   // reauthenticate token if token exists
   useEffect(() => {
     if (token) {
-      dispatch(reauthenticate(token));
+      // dispatch(reauthenticate(token));
     }
   }, [token]);
 
