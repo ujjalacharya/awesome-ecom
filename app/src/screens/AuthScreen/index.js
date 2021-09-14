@@ -14,9 +14,9 @@ const Stack = createStackNavigator();
 const AuthRender = ({ navigation }) => (
   <Background>
     <Logo />
-    <Header>Login Header</Header>
+    <Header>Login to continue</Header>
 
-    <Paragraph>Yadyy yaady yaada, Some random description</Paragraph>
+    <Paragraph>This feature is available only after you're logged in</Paragraph>
     <Button mode="contained" onPress={() => navigation.navigate("Login")}>
       Login
     </Button>

@@ -4,8 +4,9 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export class ProductService {
   getLatestProducts() {
-    let url = `${SERVER_BASE_URL}/api/product/latest`
+    let url = `${SERVER_BASE_URL}/api/product/mined-products?page=1&perPage=12&keyword=trending`
     let data = getService(url, 'GET');
+    console.log({data})
     return data;
   }
 
