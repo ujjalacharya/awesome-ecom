@@ -202,15 +202,15 @@ class Header extends Component {
                       </a>
                     </Link>
                   ) : (
-                      <Link href={`/login?origin=${this.props.router.asPath}`}>
-                        <a>
-                          <div className="list-icon">
-                            <img src="/images/heart.png" />
-                          </div>
-                          <div className="list-text">Wishlist</div>
-                        </a>
-                      </Link>
-                    )
+                    <Link href={`/login?origin=${this.props.router.asPath}`}>
+                      <a>
+                        <div className="list-icon">
+                          <img src="/images/heart.png" />
+                        </div>
+                        <div className="list-text">Wishlist</div>
+                      </a>
+                    </Link>
+                  )
                 }
               </div>
               <div className="menu-right-items">
@@ -225,13 +225,13 @@ class Header extends Component {
                       </a>
                     </Link>
                   ) : <Link href={`/login?origin=${this.props.router.asPath}`}>
-                      <a>
-                        <div className="list-icon">
-                          <img src="/images/bag.png" />
-                        </div>
-                        <div className="list-text">Cart</div>
-                      </a>
-                    </Link>
+                    <a>
+                      <div className="list-icon">
+                        <img src="/images/bag.png" />
+                      </div>
+                      <div className="list-text">Cart</div>
+                    </a>
+                  </Link>
                 }
               </div>
             </Col>
@@ -241,6 +241,17 @@ class Header extends Component {
           <div className="all-menu">
             <div className="sub-menu-header">
               <div className="parent-cate-cover">
+                <div
+                  className={"parent-cate "}
+                  // onMouseEnter={() => {
+                  //   this.getCurrentChildCates(cate);
+                  //   this.setState({
+                  //     currentActiveChildId: ''
+                  //   })
+                  // }}
+                >
+                  Home
+                </div>
                 {
                   !isEmpty(parentCate) && parentCate.map((cate, i) => {
                     return (
@@ -289,7 +300,7 @@ class Header extends Component {
                                   onMouseEnter={() => {
                                     this.getCurrentChildChildCates(cate);
                                   }}
-                                >{">"} {cate.displayName}</span>
+                                >{cate.displayName}</span>
                               </div>
                             )
                           })
@@ -318,7 +329,7 @@ class Header extends Component {
                                   )
                                 }
                               >
-                                <span>{">"} {cate.displayName}</span>
+                                <span>{cate.displayName}</span>
                               </div>
                             )
                           })

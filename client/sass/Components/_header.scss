@@ -11,10 +11,15 @@
   }
   .all-menu {
     position: relative;
-    height: 35px;
-    line-height: 35px;
-    background: #61ce70;
-    padding: 0 23%;
+    height: 40px;
+    line-height: 40px;
+    background: #f4f4f4;
+    padding: 5px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-transform: uppercase;
+    // padding: 0 23%;
     @media screen and (max-width: 1130px) {
       padding: 0 20%;
     }
@@ -43,13 +48,19 @@
       .parent-cate-cover {
         display: flex;
         align-items: center;
-        justify-content: center;
+        // justify-content: center;
         .parent-cate {
           cursor: pointer;
           margin-right: 40px;
-          color: #fff;
+          color: $text;
+          font-size: 14px;
           @media screen and (max-width: 680px) {
             margin-right: 20px;
+          }
+          &:first-child{
+            &::after{
+              display: none;
+            }
           }
           &:last-child {
             margin-right: 0;
@@ -66,7 +77,7 @@
             border-right: none;
             border-bottom: none;
             border-left: none;
-            color: #fff;
+            color: #6b7a83;
             font-family: "FontAwesome";
             margin-right: 15px;
             font-size: 13px;
@@ -76,14 +87,14 @@
       }
       .child-cates-cover {
         position: absolute;
-        top: 35px;
+        top: 40px;
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
         .child-cates-row {
           background: #fff;
-          width: 100%;
+          width: 60%;
           box-shadow: $box-shadow;
           padding: 0 20px;
           display: none;
@@ -94,15 +105,13 @@
           border-right: 1px solid #eee;
         }
         .child-cate {
-          margin-bottom: 5px;
+          line-height: 30px;
           cursor: pointer;
-          span {
-            padding: 1px 8px;
-          }
+          color: #6b7a83;
+          font-size: 12px;
           &.active {
             span {
-              color: #fff;
-              background: #48b5dc;
+              text-decoration: underline;
               // padding: 1px 8px;
               // padding-left: 0;
             }
@@ -263,7 +272,7 @@
       align-items: center;
       justify-content: center;
       text-align: left;
-      input{
+      input {
         font-size: 14px !important;
       }
       .search-btn {
@@ -275,7 +284,7 @@
         border-radius: 0 !important;
         padding-left: 10px;
         cursor: pointer;
-        &:hover{
+        &:hover {
           color: inherit;
         }
         .anticon {

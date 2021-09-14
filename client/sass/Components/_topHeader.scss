@@ -2,11 +2,11 @@
   display: flex;
   justify-content: space-between;
   padding: 5px 60px;
-  background: #f7f7f7;
-  color: #969696;
+  background: #61ce70;
+  color: #fff;
   @media screen and (max-width: 998px) {
     padding: 5px 20px;
-    font-size: 13px
+    font-size: 13px;
   }
   @media screen and (max-width: 576px) {
     padding: 5px 15px;
@@ -23,7 +23,7 @@
     li {
       display: inline-block;
       margin-left: 10px;
-      border-right: 2px solid #cacaca;
+      border-right: 2px solid #fff;
       padding-right: 10px;
       cursor: pointer;
       &:last-child {
@@ -34,18 +34,19 @@
         padding-right: 5px;
         margin-left: 5px;
       }
-      &.profile-top-head, &.register-top-head{
+      &.profile-top-head,
+      &.register-top-head {
         @media screen and (max-width: 576px) {
           display: none;
         }
       }
-      &.about-top-head{
+      &.about-top-head {
         @media screen and (max-width: 576px) {
           border: 0;
         }
       }
-      a{
-        color: #969696;
+      a {
+        color: #fff;
       }
     }
   }
