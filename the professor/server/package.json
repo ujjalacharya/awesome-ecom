@@ -18,7 +18,7 @@
     "express-async-errors": "^3.1.1",
     "express-validator": "^5.3.0",
     "fawn": "^2.1.5",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "mongoose": "^5.6.10",
     "mongoose-url-slugs": "^1.0.2",
