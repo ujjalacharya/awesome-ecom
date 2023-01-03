@@ -12,7 +12,7 @@
     "react-dom": "^16.13.1",
     "react-image-magnify": "^2.7.4",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "react-slick": "^0.25.2",
     "react-sticky": "^6.0.3"
   },
