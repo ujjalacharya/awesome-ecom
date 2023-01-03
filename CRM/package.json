@@ -20,7 +20,7 @@
     "react-image-magnifiers": "^1.4.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.1",
+    "react-scripts": "5.0.1",
     "react-table": "^7.6.0",
     "react-toastify": "^6.0.8",
     "redux": "^4.0.5",
